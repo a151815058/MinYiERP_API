@@ -32,7 +32,7 @@ class BillInfo extends Model
         });
     }
 
-        // 🔍 透過 TermsNo 查詢    // 🔍 透過 TermsNo 查詢付款條件
+    // 🔍 透過 TermsNo 查詢    // 🔍 透過 TermsNo 查詢付款條件
     public static function findByBillNo($BillNo)
     {
         return self::where('BillNo', $BillNo)->first();

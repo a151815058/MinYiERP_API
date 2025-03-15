@@ -7,6 +7,7 @@ use App\Http\Controllers\SysuserController;
 use App\Http\Controllers\DeptSysUserController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\BillInfoController;
+use App\Http\Controllers\SupplierController;
 
 //部門相關  API
 Route::post('/createdept', [DeptController::class, 'store']); // 新增部門資訊
@@ -35,6 +36,10 @@ Route::post('/createBillInfo', [BillInfoController::class, 'store']);// 新增�
 Route::get('/BillInfo/{BilltNo}', [BillInfoController::class, 'show']);  // 透過 TermsNo 查詢
 Route::get('/BillInfos/valid', [BillInfoController::class, 'getValidBillNos']);  // 查詢所有有效付款條件
 
+//供應商資料相關  API
+Route::post('/createsupplier', [SupplierController::class, 'store']);// 新增供應商資料
+Route::get('/supplier/{supplierNo}', [SupplierController::class, 'show']);  // 透過 supplierNo 查詢
+Route::get('/supplier/valid', [SupplierController::class, 'getValidsuppliers']);  // 查詢所有有效供應商
 
 
 // 新增人員部門關聯
