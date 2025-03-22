@@ -58,7 +58,7 @@ class PaymentTermController extends Controller
         return response()->json($dept);
     }
 
-    // 🔍 查詢所有有效部門
+    // 🔍 查詢所有有效付款條件
     public function getValidTerms()
     {
         return response()->json(PaymentTerm::getValidTerms());

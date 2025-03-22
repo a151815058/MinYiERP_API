@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class supplier extends Model
+
+class Supplier extends Model
 {
     use HasFactory;
 
@@ -36,13 +37,13 @@ class supplier extends Model
     // 🔍 透過 supplierNo 查詢    // 🔍 透過 supplierNo 查詢付款條件
     public static function findBysupplierNo($supplierNo)
     {
-        return self::where('supplierNo', $supplierNo)->first();
+        return static::where('supplierNo', $supplierNo)->first();
     }
 
      // 🔍 查詢所有有效供應商資料
     public static function getValidsuppliers()
     {
-        return self::where('IsVaild', operator: '1')->get();
+        return static::where('IsVaild', operator: '1')->get();
     }
 
 

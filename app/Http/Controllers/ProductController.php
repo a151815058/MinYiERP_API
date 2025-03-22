@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Supplier;
 use Illuminate\Http\Request;
+use App\Models\Product;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\DB;
 
-class SupplierController extends Controller
+class ProductController extends Controller
 {
-    // 儲存供應商
+    // 儲存品號
     public function store(Request $request)
     {
         // 驗證請求
@@ -41,29 +40,25 @@ class SupplierController extends Controller
         // ]);
         
     
-        // 建立供應商資料
-        $supplier = Supplier::create([
-            'supplierNo'     => $request['supplierNo'],
-            'supplierShortNM'     => $request['supplierShortNM'],
-            'supplierFullNM'   => $request['supplierFullNM'],
-            'ZipCode1'   => $request['ZipCode1'],
-            'Address1' => $request['Address1'],
-            'ZipCode2'   => $request['ZipCode2'],
-            'Address2' => $request['Address2'],
-            'TaxID'   => $request['TaxID'],
-            'ResponsiblePerson'  => $request['ResponsiblePerson'],
-            'EstablishedDate'   => $request['EstablishedDate'],
-            'Phone' => $request['Phone'],
-            'Fax'   => $request['Fax'],
-            'ContactPerson'  => $request['ContactPerson'],
-            'ContactPhone'   => $request['ContactPhone'],
-            'MobilePhone' => $request['MobilePhone'],
-            'ContactEmail'   => $request['ContactEmail'],
-            'CurrencyID'  => $request['CurrencyID'],
-            'TaxType'  => $request['TaxType'],
-            'PaymentTermID'  => $request['PaymentTermID'],
-            'UserID'  => $request['UserID'],
-            'Note'       => $request['Note'] ?? null,
+        // 建立品號資料
+        $Product = Product::create([
+            'ProductNO'     => $request['ProductNO'],
+            'ProductNM'     => $request['ProductNM'],
+            'Specification'   => $request['Specification'],
+            'Barcode'   => $request['Barcode'],
+            'Price_1' => $request['Price_1'],
+            'Price_2'   => $request['Price_2'],
+            'Price_3' => $request['Price_3'],
+            'Cost_1'   => $request['Cost_1'],
+            'Cost_2'  => $request['Cost_2'],
+            'Cost_3'   => $request['Cost_3'],
+            'Batch_control' => $request['Batch_control'],
+            'Valid_days'   => $request['Valid_days'],
+            'Effective_date'  => $request['Effective_date'],
+            'Stock_control'   => $request['Stock_control'],
+            'Safety_stock' => $request['Safety_stock'],
+            'Expiry_date'   => $request['Expiry_date'],
+            'Description'  => $request['Description'],
             'IsValid'    => $request['IsValid'],
             'Createuser' => $request['Createuser'],
             'UpdateUser' => $request['UpdateUser'],
@@ -73,31 +68,28 @@ class SupplierController extends Controller
 
         // 回應 JSON
         return response()->json([
-            'message'  => '供應商資料建立成功',
-            'supplier' => $supplier
+            'message'  => '品號建立成功',
+            'supplier' => $Product
         ], 201);
 
     }
 
-    // 🔍 查詢供應商
-    public function show($supplierNo)
+    // 🔍 查詢單一品號
+    public function show($ProductNO)
     {
-        $supplierNo = Supplier::findBysupplierNo($supplierNo);
+        $ProductNO = Product::findByProductNO($ProductNO);
         
-        if (!$supplierNo) {
-            return response()->json(['message' => '供應商未找到'], 404);
+        if (!$ProductNO) {
+            return response()->json(['message' => '品號未找到'], 404);
         }
 
-        return response()->json($supplierNo);
+        return response()->json($ProductNO);
     }
 
-    // 🔍 查詢所有有效供應商
-    public function getValidsuppliers()
+    // 🔍 查詢所有有效品號
+    public function getValidProducts()
     {
-        if (!Supplier::getValidsuppliers()) {
-            return response()->json(['message' => '供應商未找到123'], 404);
-        }
-
-        return response()->json(Supplier::getValidsuppliers());
+        return response()->json(Product::where('IsVaild', '1')->get());
     }
+
 }
