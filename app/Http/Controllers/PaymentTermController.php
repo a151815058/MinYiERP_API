@@ -5,7 +5,36 @@ namespace App\Http\Controllers;
 use App\Models\PaymentTerm;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-
+use OpenApi\Annotations as OA;
+    /**
+     * @OA\Get(
+     *     path="/PaymentTerm/{deptNo}",
+     *     summary="取得單一部門資訊",
+     *     description="根據部門編號查詢部門資訊",
+     *     operationId="getPaymentTerm",
+     *     tags={"PaymentTerm"},
+     *     @OA\Parameter(
+     *         name="deptNo",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="成功",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="DeptNo", type="string", example="D001"),
+     *             @OA\Property(property="DeptNM", type="string", example="資訊部"),
+     *             @OA\Property(property="IsVaild", type="boolean", example=true)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="未找到部門"
+     *     )
+     * )
+     */
 class PaymentTermController extends Controller
 {
     // 儲存付款條件

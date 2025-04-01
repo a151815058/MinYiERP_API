@@ -15,12 +15,14 @@ use App\Http\Controllers\InventoryController;
 Route::post('/createdept', [DeptController::class, 'store']); // 新增部門資訊
 Route::get('/dept/{deptNo}', [DeptController::class, 'show']);  // 透過 DeptNo 查詢
 Route::get('/depts/valid', [DeptController::class, 'getValidDepts']);  // 查詢所有有效部門
+Route::patch('/dept/{deptNo}/disable', [DeptController::class, 'disable']); // 軟刪除部門
 
 
 //人員相關  API
 Route::post('/createuser', [SysuserController::class, 'store']);// 新增人員資訊
 Route::get('/user/{UsrNo}', [SysuserController::class, 'show']);  // 透過 UsrNo 查詢
 Route::get('/users/valid', [SysuserController::class, 'getValidusers']);  // 查詢所有有效人員
+Route::patch('/user/{UsrNo}/disable', [SysuserController::class, 'disable']); // 軟刪除人員
 
 // 新增人員部門關聯
 Route::post('/assign-userdept', [DeptSysUserController::class, 'store']);
@@ -34,7 +36,9 @@ Route::get('/user-depts/{userId}', [DeptSysUserController::class, 'getDeptsByUse
 Route::post('/createCurrency', [CurrencyController::class, 'store']);// 新增貨幣資訊
 Route::get('/Currency/{CurrencyNo}', [CurrencyController::class, 'show']);  // 透過 CurrencyNo 查詢
 Route::get('/Currencys/valid', [CurrencyController::class, 'getValidCurrencys']);  // 查詢所有有效幣別
-Route::get('/exchange-rate/{currency?}', [CurrencyController::class, 'getExchangeRate']); // 讀取匯率
+Route::get('/exchange-rate/{currency}', [CurrencyController::class, 'getExchangeRate']); // 讀取匯率
+Route::patch('/Currencys/{CurrencyNo}/disable', [CurrencyController::class, 'disable']); // 軟刪除貨幣資訊
+
 
 //付款條件相關  API
 Route::post('/createPaymentTerm', [PaymentTermController::class, 'store']);// 新增付款條件
@@ -43,8 +47,9 @@ Route::get('/PaymentTerms/valid', [PaymentTermController::class, 'getValidTerms'
 
 //單據資料相關  API
 Route::post('/createBillInfo', [BillInfoController::class, 'store']);// 新增單據資料
-Route::get('/BillInfo/{BillNo}', [BillInfoController::class, 'show']);  // 透過 TermsNo 查詢
+Route::get('/BillInfo/{BillNo}', [BillInfoController::class, 'show']);  // 透過 BillNo 查詢
 Route::get('/BillInfos/valid', [BillInfoController::class, 'getValidBillNos']);  // 查詢所有有效付款條件
+Route::patch('/BillInfo/{BillNo}/disable', [BillInfoController::class, 'disable']); // 軟刪除單據資訊
 
 //供應商資料相關  API
 Route::post('/createsupplier', [SupplierController::class, 'store']);// 新增供應商資料

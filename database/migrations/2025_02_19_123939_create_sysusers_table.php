@@ -12,15 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('sysusers', function (Blueprint $table) {
-            $table->uuid('uuid')->primary();
-            $table->string('UsrNo')->unique();
-            $table->string('UsrNM');
-            $table->string('Note')->nullable();
-            $table->boolean('IsVaild')->default(1);
-            $table->string('Createuser');
-            $table->dateTime('CreateTime')->nullable();
-            $table->string('UpdateUser');
-            $table->dateTime('UpdateTime')->nullable();
+            $table->uuid('uuid')->comment('KEY')->primary();
+            $table->string('UsrNo')->comment('人員代號')->unique();
+            $table->string('UsrNM')->comment('人員名稱');
+            $table->string('Note')->comment('備註')->nullable();
+            $table->boolean('IsVaild')->comment('是否有效')->default(1);
+            $table->string('Createuser')->comment('建立人員');
+            $table->dateTime('CreateTime')->comment('建立時間')->nullable();
+            $table->string('UpdateUser')->comment('異動人員');
+            $table->dateTime('UpdateTime')->comment('異動時間')->nullable();
         });
     }
 

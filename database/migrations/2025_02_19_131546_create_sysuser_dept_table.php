@@ -12,14 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('sysuser_depts', function (Blueprint $table) {
-            $table->id()->unique();;
-            $table->uuid('Dept_id');
-            $table->uuid('User_id');
-            $table->boolean('IsVaild')->default(1);
-            $table->string('Createuser');
-            $table->dateTime('CreateTime')->nullable();
-            $table->string('UpdateUser');
-            $table->dateTime('UpdateTime')->nullable();
+            $table->id()->comment('KEY')->unique();;
+            $table->uuid('Dept_id')->comment('DeptId');
+            $table->uuid('User_id')->comment('UserId');
+            $table->boolean('IsVaild')->comment('是否有效')->default(1);
+            $table->string('Createuser')->comment(comment: '建立人員');
+            $table->dateTime('CreateTime')->comment(comment: '建立時間')->nullable();
+            $table->string('UpdateUser')->comment(comment: '異動人員');
+            $table->dateTime('UpdateTime')->comment(comment: '異動時間')->nullable();
 
             // 設定外鍵約束
             $table->foreign('Dept_id')->references('uuid')->on('depts')->onDelete('cascade');

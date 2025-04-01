@@ -5,11 +5,77 @@ use App\Models\Dept;
 use App\Models\SysUser;
 use Illuminate\Contracts\Cache\Store;
 use Illuminate\Http\Request;
+use OpenApi\Annotations as OA;
 
 class DeptSysUserController extends Controller
 {
      /**
      * 新增部門與使用者關聯 (包含 'IsVaild','Createuser', 'CreateTime','UpdateUser', 'UpdateTime')
+     */
+    /**
+     * @OA\POST(
+     *     path="/api/assign-userdept",
+     *     summary="新增人員部門關聯",
+     *     description="新增人員部門關聯",
+     *     operationId="assign-userdept",
+     *     tags={"AssignUserDept"},
+     *     @OA\Parameter(
+     *         name="UsrNo",
+     *         in="query",
+     *         required=true,
+     *         description="人員代號",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="DeptNo",
+     *         in="query",
+     *         required=true,
+     *         description="部門代號",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="Note",
+     *         in="query",
+     *         required=false,
+     *         description="備註",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="IsVaild",
+     *         in="query",
+     *         required=true,
+     *         description="是否有效",
+     *         @OA\Schema(type="string", example=1)
+     *     ),
+     *     @OA\Parameter(
+     *         name="Createuser",
+     *         in="query",
+     *         required=true,
+     *         description="建立者",
+     *         @OA\Schema(type="string", example="admin")
+     *     ),
+     *     @OA\Parameter(
+     *         name="UpdateUser",
+     *         in="query",
+     *         required=true,
+     *         description="更新者",
+     *         @OA\Schema(type="string", example="admin")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="成功",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
+     *             @OA\Property(property="UsrNo", type="string", example="U001"),
+     *             @OA\Property(property="DeptNo", type="string", example="A001")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="客戶端請求錯誤"
+     *     )
+     * )
      */
     // 驗證請求
     public function store(Request $request)
@@ -27,7 +93,12 @@ class DeptSysUserController extends Controller
         $dept = Dept::where('DeptNo', $validated['DeptNo'])->first(); // 使用 `first()` 獲取模型
 
         if (!$dept || !$user) {
-            return response()->json(['error' => '使用者或部門不存在'], 404);
+            return response()->json([
+                'status' => false,
+                'message' => '使用者或部門不存在',
+                'User'    =>  $user->UsrNM,
+                'Dept'    =>  $dept->DeptNM
+            ], status: 400);
         }
 
         // 新增關聯
@@ -40,48 +111,145 @@ class DeptSysUserController extends Controller
         ]);
 
 
-        return response()->json(['message' => '使用者成功加入部門', 'user' => $user->UsrNM, 'dept' => $dept->DeptNM], 201);
+        return response()->json([
+                'status' => true,
+                'message' => 'success',
+                'user' => $user->UsrNO,
+                'dept' => $dept->DeptNO,
+            ], 201);
     }
 
+    /**
+     * @OA\GET(
+     *     path="/api/dept-users/{deptId}",
+     *     summary="讀取部門成員",
+     *     description="讀取部門成員",
+     *     operationId="dept-users",
+     *     tags={"AssignUserDept"},
+     *     @OA\Parameter(
+     *         name="deptId",
+     *         in="path",
+     *         required=true,
+     *         description="部門代號",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="成功",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="success"),
+     *             @OA\Property(property="dept", type="string", example="財務部"),
+     *             @OA\Property(property="userId", type="string", example="cd7edb27-a1e2-4df1-aa1a-2f0346935cb2"),
+     *             @OA\Property(property="userNo", type="string", example="U001"),
+     *             @OA\Property(property="username", type="string", example="姚佩彤"),
+     *             @OA\Property(property="IsVaild", type="boolean", example=true),   
+     *             @OA\Property(property="Createuser", type="string", example="admin"),
+     *             @OA\Property(property="CreateTime", type="string", format="date-time", example="2023-10-01T12:00:00Z"),
+     *             @OA\Property(property="UpdateUser", type="string", example="admin"),
+     *             @OA\Property(property="UpdateTime", type="string", format="date-time", example="2023-10-01T12:00:00Z")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="部門未找到人員"
+     *     )
+     * )
+     */
     // 讀取某個部門的所有使用者
     public function getUsersByDept($deptNo)
     {
         $dept = Dept::with('sysusers')->where('DeptNo', $deptNo)->first();
 
         if (!$dept) {
-            return response()->json(['error' => '部門不存在'], 404);
+            return response()->json([
+                'status' => false,
+                'message' => '未找到部門',
+                'dept'    => null,
+                'users'   => null
+            ], 404);
+        }else{
+            return response()->json([
+                'status' => true,
+                'message' => 'success',
+                'dept' => $dept->DeptNM,
+                'users' => $dept->sysusers->map(function ($user) {
+                    return [
+                        'id' => $user->uuid,
+                        'userNo' => $user->UsrNo,
+                        'username' => $user->UsrNM,
+                        'IsVaild' => $user->IsVaild,
+                        'Createuser' => $user->pivot->Createuser,
+                        'CreateTime' => $user->pivot->CreateTime,
+                        'UpdateUser' => $user->pivot->UpdateUser,
+                        'UpdateTime' => $user->pivot->UpdateTime
+                    ];
+                }),
+            ]);
         }
-
-        return response()->json([
-            'dept' => $dept->DeptNM,
-            'users' => $dept->sysusers->map(function ($user) {
-                return [
-                    'id' => $user->id,
-                    'username' => $user->username,
-                    'IsVaild' => $user->pivot->IsVaild,
-                    'Createuser' => $user->pivot->Createuser,
-                    'CreateTime' => $user->pivot->CreateTime,
-                    'UpdateUser' => $user->pivot->UpdateUser,
-                    'UpdateTime' => $user->pivot->UpdateTime
-                ];
-            }),
-        ]);
     }
 
+
+    /**
+     * @OA\GET(
+     *     path="/api/user-depts/{userId}",
+     *     summary="讀取使用者部門",
+     *     description="讀取使用者部門",
+     *     operationId="user-depts",
+     *     tags={"AssignUserDept"},
+     *     @OA\Parameter(
+     *         name="userId",
+     *         in="path",
+     *         required=true,
+     *         description="人員代號",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="成功",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="success"),
+     *             @OA\Property(property="user", type="string", example="姚佩彤"),
+     *             @OA\Property(property="Deptid", type="string", example="cd7edb27-a1e2-4df1-aa1a-2f0346935cb2"),
+     *             @OA\Property(property="DeptNo", type="string", example="A002"),
+     *             @OA\Property(property="DeptNM", type="string", example="財務部"),
+     *             @OA\Property(property="IsVaild", type="boolean", example=true),   
+     *             @OA\Property(property="Createuser", type="string", example="admin"),
+     *             @OA\Property(property="CreateTime", type="string", format="date-time", example="2023-10-01T12:00:00Z"),
+     *             @OA\Property(property="UpdateUser", type="string", example="admin"),
+     *             @OA\Property(property="UpdateTime", type="string", format="date-time", example="2023-10-01T12:00:00Z")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="人員未找到部門"
+     *     )
+     * )
+     */
     //讀取某個使用者所屬的部門
     public function getDeptsByUser($userNo)
     {
         $user = SysUser::with('depts')->where('UsrNo', $userNo)->first();
 
         if (!$user) {
-            return response()->json(['error' => '使用者不存在'], 404);
+            return response()->json([
+                'status' => false,
+                'message' => '使用者不存在',
+                'user' => $user
+            ], 404);
         }
 
-        return response()->json([
+        return response()->json([         
+            'status' => true,
+            'message' => 'success',
             'user' => $user->username,
             'departments' => $user->depts->map(function ($dept) {
                 return [
-                    'id' => $dept->id,
+                    'Deptid' => $dept->id,
+                    'DeptNo' => $dept->DeptNo,
                     'DeptNM' => $dept->DeptNM,
                     'IsVaild' => $dept->pivot->IsVaild,
                     'Createuser' => $dept->pivot->Createuser,

@@ -1,0 +1,2075 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "My Laravel API",
+        "description": "這是我們的 API 文件",
+        "contact": {
+            "email": "xxx"
+        },
+        "version": "1.0"
+    },
+    "servers": [
+        {
+            "url": "http://127.0.0.1:8000",
+            "description": "本機開發環境"
+        }
+    ],
+    "paths": {
+        "/api/createBillInfo": {
+            "post": {
+                "tags": [
+                    "BillInfo"
+                ],
+                "summary": "新增單據資料",
+                "description": "新增單據資料",
+                "operationId": "createBillInfo",
+                "parameters": [
+                    {
+                        "name": "BillNo",
+                        "in": "query",
+                        "description": "單據代號",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "BillNM",
+                        "in": "query",
+                        "description": "單據名稱",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "BillType",
+                        "in": "query",
+                        "description": "單據類型",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "BillEncode",
+                        "in": "query",
+                        "description": "單據編碼方式",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "BillCalc",
+                        "in": "query",
+                        "description": "單據計算方式",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "AutoReview",
+                        "in": "query",
+                        "description": "是否自動核准",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "GenOrder",
+                        "in": "query",
+                        "description": "自動產生銷貨單",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "OrderType",
+                        "in": "query",
+                        "description": "銷貨單別",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "Note",
+                        "in": "query",
+                        "description": "備註",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "IsValid",
+                        "in": "query",
+                        "description": "是否有效",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "Createuser",
+                        "in": "query",
+                        "description": "建立者",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "admin"
+                        }
+                    },
+                    {
+                        "name": "UpdateUser",
+                        "in": "query",
+                        "description": "更新者",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "admin"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "BillNo": {
+                                            "type": "string",
+                                            "example": "T001"
+                                        },
+                                        "BillNM": {
+                                            "type": "string",
+                                            "example": "客戶訂單"
+                                        },
+                                        "BillType": {
+                                            "type": "string",
+                                            "example": "61"
+                                        },
+                                        "BillEncode": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "BillCalc": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "AutoReview": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "GenOrder": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "OrderType": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "Note": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "IsVaild": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "Createuser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "UpdateUser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "CreateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "UpdateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "單據建立失敗"
+                    }
+                }
+            }
+        },
+        "/api/BillInfo/{BillNo}": {
+            "get": {
+                "tags": [
+                    "BillInfo"
+                ],
+                "summary": "查詢特定單據資訊",
+                "description": "查詢特定單據資訊",
+                "operationId": "getBillInfo",
+                "parameters": [
+                    {
+                        "name": "BillNo",
+                        "in": "path",
+                        "description": "單據代號",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "BillNo": {
+                                            "type": "string",
+                                            "example": "T001"
+                                        },
+                                        "BillNM": {
+                                            "type": "string",
+                                            "example": "客戶訂單"
+                                        },
+                                        "BillType": {
+                                            "type": "string",
+                                            "example": "61"
+                                        },
+                                        "BillEncode": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "BillCalc": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "AutoReview": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "GenOrder": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "OrderType": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "Note": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "IsVaild": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "Createuser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "UpdateUser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "CreateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "UpdateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "未找到單據資訊"
+                    }
+                }
+            }
+        },
+        "/api/BillInfos/valid": {
+            "get": {
+                "tags": [
+                    "BillInfo"
+                ],
+                "summary": "查詢所有有效單據資訊",
+                "description": "查詢所有有效單據資訊",
+                "operationId": "GetAllBills",
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "BillNo": {
+                                            "type": "string",
+                                            "example": "T001"
+                                        },
+                                        "BillNM": {
+                                            "type": "string",
+                                            "example": "客戶訂單"
+                                        },
+                                        "BillType": {
+                                            "type": "string",
+                                            "example": "61"
+                                        },
+                                        "BillEncode": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "BillCalc": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "AutoReview": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "GenOrder": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "OrderType": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "Note": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "IsVaild": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "Createuser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "UpdateUser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "CreateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "UpdateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "未找到有效單據資訊"
+                    }
+                }
+            }
+        },
+        "/api/BillInfo/{BillNo}/disable": {
+            "patch": {
+                "tags": [
+                    "BillInfo"
+                ],
+                "summary": "刪除特定部門資訊",
+                "description": "刪除特定部門資訊",
+                "operationId": "DelteBill",
+                "parameters": [
+                    {
+                        "name": "BillNo",
+                        "in": "path",
+                        "description": "單據代號",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "BillNo": {
+                                            "type": "string",
+                                            "example": "T001"
+                                        },
+                                        "BillNM": {
+                                            "type": "string",
+                                            "example": "客戶訂單"
+                                        },
+                                        "BillType": {
+                                            "type": "string",
+                                            "example": "61"
+                                        },
+                                        "BillEncode": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "BillCalc": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "AutoReview": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "GenOrder": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "OrderType": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "Note": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "IsVaild": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "Createuser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "UpdateUser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "CreateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "UpdateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "未找到部門"
+                    }
+                }
+            }
+        },
+        "/api/createCurrency": {
+            "post": {
+                "tags": [
+                    "Currency"
+                ],
+                "summary": "新增貨幣資訊",
+                "description": "新增貨幣資訊",
+                "operationId": "createCurrency",
+                "parameters": [
+                    {
+                        "name": "CurrencyNo",
+                        "in": "query",
+                        "description": "貨幣代號",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "CurrencyNM",
+                        "in": "query",
+                        "description": "貨幣名稱",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "Note",
+                        "in": "query",
+                        "description": "備註",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "IsVaild",
+                        "in": "query",
+                        "description": "是否有效",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "Createuser",
+                        "in": "query",
+                        "description": "建立者",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "admin"
+                        }
+                    },
+                    {
+                        "name": "UpdateUser",
+                        "in": "query",
+                        "description": "更新者",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "admin"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "CurrencyNo": {
+                                            "type": "string",
+                                            "example": "C001"
+                                        },
+                                        "CurrencyNM": {
+                                            "type": "string",
+                                            "example": "台幣"
+                                        },
+                                        "Note": {
+                                            "type": "string",
+                                            "example": "測試測試"
+                                        },
+                                        "IsVaild": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "Createuser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "UpdateUser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "CreateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "UpdateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "建立失敗"
+                    }
+                }
+            }
+        },
+        "/api/Currency/{CurrencyNo}": {
+            "get": {
+                "tags": [
+                    "Currency"
+                ],
+                "summary": "查詢特定貨幣資訊",
+                "description": "查詢特定貨幣資訊",
+                "operationId": "getCurrency",
+                "parameters": [
+                    {
+                        "name": "CurrencyNo",
+                        "in": "path",
+                        "description": "貨幣代號",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "CurrencyNo": {
+                                            "type": "string",
+                                            "example": "C001"
+                                        },
+                                        "CurrencyNM": {
+                                            "type": "string",
+                                            "example": "台幣"
+                                        },
+                                        "Note": {
+                                            "type": "string",
+                                            "example": "測試測試"
+                                        },
+                                        "IsVaild": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "Createuser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "UpdateUser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "CreateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "UpdateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "未找到貨幣資訊"
+                    }
+                }
+            }
+        },
+        "/api/Currencys/valid": {
+            "get": {
+                "tags": [
+                    "Currency"
+                ],
+                "summary": "查詢所有有效貨幣資訊",
+                "description": "查詢所有有效貨幣資訊",
+                "operationId": "GetAllCurrency",
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "CurrencyNo": {
+                                            "type": "string",
+                                            "example": "C001"
+                                        },
+                                        "CurrencyNM": {
+                                            "type": "string",
+                                            "example": "台幣"
+                                        },
+                                        "Note": {
+                                            "type": "string",
+                                            "example": "測試測試"
+                                        },
+                                        "IsVaild": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "Createuser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "UpdateUser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "CreateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "UpdateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "未找到有效貨幣資訊"
+                    }
+                }
+            }
+        },
+        "/api/exchange-rate/{CurrencyNo}": {
+            "get": {
+                "tags": [
+                    "Currency"
+                ],
+                "summary": "讀取匯率",
+                "description": "讀取匯率",
+                "operationId": "exchangeRate",
+                "parameters": [
+                    {
+                        "name": "CurrencyNo",
+                        "in": "path",
+                        "description": "貨幣代號",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "CurrencyNo": {
+                                            "type": "string",
+                                            "example": "C001"
+                                        },
+                                        "CurrencyNM": {
+                                            "type": "string",
+                                            "example": "台幣"
+                                        },
+                                        "Note": {
+                                            "type": "string",
+                                            "example": "測試測試"
+                                        },
+                                        "IsVaild": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "Createuser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "UpdateUser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "CreateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "UpdateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "未找到貨幣資訊"
+                    }
+                }
+            }
+        },
+        "/api/Currencys/{CurrencyNo}/disable": {
+            "patch": {
+                "tags": [
+                    "Currency"
+                ],
+                "summary": "刪除特定貨幣資訊",
+                "description": "刪除特定貨幣資訊",
+                "operationId": "DelteCurrency",
+                "parameters": [
+                    {
+                        "name": "CurrencyNo",
+                        "in": "path",
+                        "description": "貨幣代號",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "CurrencyNo": {
+                                            "type": "string",
+                                            "example": "C001"
+                                        },
+                                        "CurrencyNM": {
+                                            "type": "string",
+                                            "example": "台幣"
+                                        },
+                                        "Note": {
+                                            "type": "string",
+                                            "example": "測試測試"
+                                        },
+                                        "IsVaild": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "Createuser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "UpdateUser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "CreateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "UpdateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "未找到部門"
+                    }
+                }
+            }
+        },
+        "/api/createdept": {
+            "post": {
+                "tags": [
+                    "dept"
+                ],
+                "summary": "新增部門資訊",
+                "description": "新增部門資訊",
+                "operationId": "createdept",
+                "parameters": [
+                    {
+                        "name": "DeptNo",
+                        "in": "query",
+                        "description": "部門代號",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "DeptNM",
+                        "in": "query",
+                        "description": "部門名稱",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "Note",
+                        "in": "query",
+                        "description": "備註",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "IsVaild",
+                        "in": "query",
+                        "description": "是否有效",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "Createuser",
+                        "in": "query",
+                        "description": "建立者",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "admin"
+                        }
+                    },
+                    {
+                        "name": "UpdateUser",
+                        "in": "query",
+                        "description": "更新者",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "admin"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "DeptNo": {
+                                            "type": "string",
+                                            "example": "A02"
+                                        },
+                                        "DeptNM": {
+                                            "type": "string",
+                                            "example": "財務處"
+                                        },
+                                        "Note": {
+                                            "type": "string",
+                                            "example": "測試測試"
+                                        },
+                                        "IsVaild": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "Createuser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "UpdateUser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "CreateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "UpdateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "未找到部門"
+                    }
+                }
+            }
+        },
+        "/api/dept/{DeptNo}": {
+            "get": {
+                "tags": [
+                    "dept"
+                ],
+                "summary": "查詢特定部門資訊",
+                "description": "查詢特定部門資訊",
+                "operationId": "getdept",
+                "parameters": [
+                    {
+                        "name": "DeptNo",
+                        "in": "path",
+                        "description": "部門代號",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "DeptNo": {
+                                            "type": "string",
+                                            "example": "A02"
+                                        },
+                                        "DeptNM": {
+                                            "type": "string",
+                                            "example": "財務處"
+                                        },
+                                        "Note": {
+                                            "type": "string",
+                                            "example": "測試測試"
+                                        },
+                                        "IsVaild": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "Createuser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "UpdateUser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "CreateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "UpdateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "未找到部門"
+                    }
+                }
+            }
+        },
+        "/api/depts/valid": {
+            "get": {
+                "tags": [
+                    "dept"
+                ],
+                "summary": "查詢所有有效部門資訊",
+                "description": "查詢所有有效部門資訊",
+                "operationId": "GetAllDept",
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "DeptNo": {
+                                            "type": "string",
+                                            "example": "A02"
+                                        },
+                                        "DeptNM": {
+                                            "type": "string",
+                                            "example": "財務處"
+                                        },
+                                        "Note": {
+                                            "type": "string",
+                                            "example": "測試測試"
+                                        },
+                                        "IsVaild": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "Createuser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "UpdateUser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "CreateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "UpdateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "未找到有效部門"
+                    }
+                }
+            }
+        },
+        "/api/dept/{deptNo}/disable": {
+            "patch": {
+                "tags": [
+                    "dept"
+                ],
+                "summary": "刪除特定部門資訊",
+                "description": "刪除特定部門資訊",
+                "operationId": "DelteDept",
+                "parameters": [
+                    {
+                        "name": "deptNo",
+                        "in": "path",
+                        "description": "部門代號",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "DeptNo": {
+                                            "type": "string",
+                                            "example": "A02"
+                                        },
+                                        "DeptNM": {
+                                            "type": "string",
+                                            "example": "財務處"
+                                        },
+                                        "Note": {
+                                            "type": "string",
+                                            "example": "測試測試"
+                                        },
+                                        "IsVaild": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "Createuser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "UpdateUser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "CreateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "UpdateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "未找到部門"
+                    }
+                }
+            }
+        },
+        "/api/assign-userdept": {
+            "post": {
+                "tags": [
+                    "AssignUserDept"
+                ],
+                "summary": "新增人員部門關聯",
+                "description": "新增人員部門關聯",
+                "operationId": "assign-userdept",
+                "parameters": [
+                    {
+                        "name": "UsrNo",
+                        "in": "query",
+                        "description": "人員代號",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "DeptNo",
+                        "in": "query",
+                        "description": "部門代號",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "Note",
+                        "in": "query",
+                        "description": "備註",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "IsVaild",
+                        "in": "query",
+                        "description": "是否有效",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "Createuser",
+                        "in": "query",
+                        "description": "建立者",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "admin"
+                        }
+                    },
+                    {
+                        "name": "UpdateUser",
+                        "in": "query",
+                        "description": "更新者",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "admin"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "UsrNo": {
+                                            "type": "string",
+                                            "example": "U001"
+                                        },
+                                        "DeptNo": {
+                                            "type": "string",
+                                            "example": "A001"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "客戶端請求錯誤"
+                    }
+                }
+            }
+        },
+        "/api/dept-users/{deptId}": {
+            "get": {
+                "tags": [
+                    "AssignUserDept"
+                ],
+                "summary": "讀取部門成員",
+                "description": "讀取部門成員",
+                "operationId": "dept-users",
+                "parameters": [
+                    {
+                        "name": "deptId",
+                        "in": "path",
+                        "description": "部門代號",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "dept": {
+                                            "type": "string",
+                                            "example": "財務部"
+                                        },
+                                        "userId": {
+                                            "type": "string",
+                                            "example": "cd7edb27-a1e2-4df1-aa1a-2f0346935cb2"
+                                        },
+                                        "userNo": {
+                                            "type": "string",
+                                            "example": "U001"
+                                        },
+                                        "username": {
+                                            "type": "string",
+                                            "example": "姚佩彤"
+                                        },
+                                        "IsVaild": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "Createuser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "CreateTime": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2023-10-01T12:00:00Z"
+                                        },
+                                        "UpdateUser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "UpdateTime": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2023-10-01T12:00:00Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "部門未找到人員"
+                    }
+                }
+            }
+        },
+        "/api/user-depts/{userId}": {
+            "get": {
+                "tags": [
+                    "AssignUserDept"
+                ],
+                "summary": "讀取使用者部門",
+                "description": "讀取使用者部門",
+                "operationId": "user-depts",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "description": "人員代號",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "user": {
+                                            "type": "string",
+                                            "example": "姚佩彤"
+                                        },
+                                        "Deptid": {
+                                            "type": "string",
+                                            "example": "cd7edb27-a1e2-4df1-aa1a-2f0346935cb2"
+                                        },
+                                        "DeptNo": {
+                                            "type": "string",
+                                            "example": "A002"
+                                        },
+                                        "DeptNM": {
+                                            "type": "string",
+                                            "example": "財務部"
+                                        },
+                                        "IsVaild": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "Createuser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "CreateTime": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2023-10-01T12:00:00Z"
+                                        },
+                                        "UpdateUser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "UpdateTime": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2023-10-01T12:00:00Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "人員未找到部門"
+                    }
+                }
+            }
+        },
+        "/Inventory/{InventoryNO}": {
+            "get": {
+                "tags": [
+                    "InventoryNO"
+                ],
+                "summary": "取得單一部門資訊",
+                "description": "根據部門編號查詢部門資訊",
+                "operationId": "getInventoryNO",
+                "parameters": [
+                    {
+                        "name": "deptNo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "DeptNo": {
+                                            "type": "string",
+                                            "example": "D001"
+                                        },
+                                        "DeptNM": {
+                                            "type": "string",
+                                            "example": "資訊部"
+                                        },
+                                        "IsVaild": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "未找到部門"
+                    }
+                }
+            }
+        },
+        "/PaymentTerm/{deptNo}": {
+            "get": {
+                "tags": [
+                    "PaymentTerm"
+                ],
+                "summary": "取得單一部門資訊",
+                "description": "根據部門編號查詢部門資訊",
+                "operationId": "getPaymentTerm",
+                "parameters": [
+                    {
+                        "name": "deptNo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "DeptNo": {
+                                            "type": "string",
+                                            "example": "D001"
+                                        },
+                                        "DeptNM": {
+                                            "type": "string",
+                                            "example": "資訊部"
+                                        },
+                                        "IsVaild": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "未找到部門"
+                    }
+                }
+            }
+        },
+        "/product/{ProductNO}": {
+            "get": {
+                "tags": [
+                    "ProductNO"
+                ],
+                "summary": "取得單一部門資訊",
+                "description": "根據部門編號查詢部門資訊",
+                "operationId": "getProduct",
+                "parameters": [
+                    {
+                        "name": "deptNo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "DeptNo": {
+                                            "type": "string",
+                                            "example": "D001"
+                                        },
+                                        "DeptNM": {
+                                            "type": "string",
+                                            "example": "資訊部"
+                                        },
+                                        "IsVaild": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "未找到部門"
+                    }
+                }
+            }
+        },
+        "/Supplier/{supplierNo}": {
+            "get": {
+                "tags": [
+                    "supplier"
+                ],
+                "summary": "取得單一部門資訊",
+                "description": "根據部門編號查詢部門資訊",
+                "operationId": "getsupplierNo",
+                "parameters": [
+                    {
+                        "name": "deptNo",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "DeptNo": {
+                                            "type": "string",
+                                            "example": "D001"
+                                        },
+                                        "DeptNM": {
+                                            "type": "string",
+                                            "example": "資訊部"
+                                        },
+                                        "IsVaild": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "未找到部門"
+                    }
+                }
+            }
+        },
+        "/api/createuser": {
+            "post": {
+                "tags": [
+                    "user"
+                ],
+                "summary": "新增人員資訊",
+                "description": "新增人員資訊",
+                "operationId": "createuser",
+                "parameters": [
+                    {
+                        "name": "UsrNo",
+                        "in": "query",
+                        "description": "人員代號",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "UsrNM",
+                        "in": "query",
+                        "description": "人員名稱",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "Note",
+                        "in": "query",
+                        "description": "備註",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "IsVaild",
+                        "in": "query",
+                        "description": "是否有效",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "Createuser",
+                        "in": "query",
+                        "description": "建立者",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "admin"
+                        }
+                    },
+                    {
+                        "name": "UpdateUser",
+                        "in": "query",
+                        "description": "更新者",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "admin"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "UsrNo": {
+                                            "type": "string",
+                                            "example": "U001"
+                                        },
+                                        "UsrNM": {
+                                            "type": "string",
+                                            "example": "姚佩彤"
+                                        },
+                                        "Note": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "IsVaild": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "Createuser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "UpdateUser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "CreateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "UpdateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "客戶端請求錯誤"
+                    }
+                }
+            }
+        },
+        "/api/user/{UsrNo}": {
+            "get": {
+                "tags": [
+                    "user"
+                ],
+                "summary": "查詢特定人員資訊",
+                "description": "查詢特定人員資訊",
+                "operationId": "getuser",
+                "parameters": [
+                    {
+                        "name": "UsrNo",
+                        "in": "path",
+                        "description": "人員代號",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "UsrNo": {
+                                            "type": "string",
+                                            "example": "U001"
+                                        },
+                                        "UsrNM": {
+                                            "type": "string",
+                                            "example": "姚佩彤"
+                                        },
+                                        "Note": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "IsVaild": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "Createuser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "UpdateUser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "CreateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "UpdateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "未找到人員"
+                    }
+                }
+            }
+        },
+        "/api/users/valid": {
+            "get": {
+                "tags": [
+                    "user"
+                ],
+                "summary": "查詢所有有效人員資訊",
+                "description": "查詢所有有效人員資訊",
+                "operationId": "GetAllUser",
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "UsrNo": {
+                                            "type": "string",
+                                            "example": "U001"
+                                        },
+                                        "UsrNM": {
+                                            "type": "string",
+                                            "example": "姚佩彤"
+                                        },
+                                        "Note": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "IsVaild": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "Createuser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "UpdateUser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "CreateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "UpdateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "未有效找到人員"
+                    }
+                }
+            }
+        },
+        "/api/user/{UsrNo}/disable": {
+            "patch": {
+                "tags": [
+                    "user"
+                ],
+                "summary": "刪除特定人員資訊",
+                "description": "刪除特定人員資訊",
+                "operationId": "DelteUser",
+                "parameters": [
+                    {
+                        "name": "UsrNo",
+                        "in": "path",
+                        "description": "人員代號",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "UsrNo": {
+                                            "type": "string",
+                                            "example": "U001"
+                                        },
+                                        "UsrNM": {
+                                            "type": "string",
+                                            "example": "姚佩彤"
+                                        },
+                                        "Note": {
+                                            "type": "string",
+                                            "example": "測試測試"
+                                        },
+                                        "IsVaild": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "Createuser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "UpdateUser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "CreateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "UpdateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "未找到人員"
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "BillInfo",
+            "description": "BillInfo"
+        },
+        {
+            "name": "Currency",
+            "description": "Currency"
+        },
+        {
+            "name": "dept",
+            "description": "dept"
+        },
+        {
+            "name": "AssignUserDept",
+            "description": "AssignUserDept"
+        },
+        {
+            "name": "InventoryNO",
+            "description": "InventoryNO"
+        },
+        {
+            "name": "PaymentTerm",
+            "description": "PaymentTerm"
+        },
+        {
+            "name": "ProductNO",
+            "description": "ProductNO"
+        },
+        {
+            "name": "supplier",
+            "description": "supplier"
+        },
+        {
+            "name": "user",
+            "description": "user"
+        }
+    ]
+}

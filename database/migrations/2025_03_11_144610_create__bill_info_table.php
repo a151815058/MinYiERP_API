@@ -12,21 +12,21 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('billinfo', function (Blueprint $table) {
-            $table->uuid('uuid')->primary();
-            $table->string('BillNo')->unique();
-            $table->string('BillNM');
-            $table->integer('BillType');
-            $table->string('BillEncode');
-            $table->integer('BillCalc');
-            $table->integer('AutoReview');
-            $table->string('GenOrder');
-            $table->integer('OrderType');
-            $table->string('Note')->nullable();
-            $table->boolean('IsVaild')->default(1);
-            $table->string('Createuser');
-            $table->dateTime('CreateTime')->nullable();
-            $table->string('UpdateUser');
-            $table->dateTime('UpdateTime')->nullable();
+            $table->uuid('uuid')->comment('KEY')->primary();
+            $table->string('BillNo')->comment('單據代號')->unique();
+            $table->string('BillNM')->comment('單據名稱');
+            $table->string('BillType')->comment('單據類型');
+            $table->string('BillEncode')->comment('單據編碼方式');
+            $table->integer('BillCalc')->comment('單據計算方式');
+            $table->integer('AutoReview')->comment('是否自動核准');
+            $table->string('GenOrder')->comment('自動產生銷貨單');
+            $table->integer('OrderType')->comment('銷貨單別');
+            $table->string('Note')->comment('備註')->nullable();
+            $table->boolean('IsVaild')->comment('是否有效')->default(1);
+            $table->string('Createuser')->comment('建立人員');
+            $table->dateTime('CreateTime')->comment('建立時間')->nullable();
+            $table->string('UpdateUser')->comment('異動人員');
+            $table->dateTime('UpdateTime')->comment('異動時間')->nullable();
         });
     }
 
