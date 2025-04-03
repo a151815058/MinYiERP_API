@@ -42,6 +42,6 @@ class PaymentTerm extends Model
      // 🔍 查詢所有有效付款條件
     public static function getValidTerms()
     {
-        return self::where('IsVaild', '1')->get();
+        return self::where('IsValid', '1')->get();
     }
 }

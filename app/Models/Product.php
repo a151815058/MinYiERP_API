@@ -41,6 +41,6 @@ class Product extends Model
      // 🔍 查詢所有有效品號
     public static function getValidProducts()
     {
-        return self::where('IsVaild', 1)->get();
+        return self::where('IsValid', 1)->get();
     }
 }

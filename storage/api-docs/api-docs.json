@@ -177,7 +177,7 @@
                                             "type": "string",
                                             "example": ""
                                         },
-                                        "IsVaild": {
+                                        "IsValid": {
                                             "type": "boolean",
                                             "example": true
                                         },
@@ -275,7 +275,7 @@
                                             "type": "string",
                                             "example": ""
                                         },
-                                        "IsVaild": {
+                                        "IsValid": {
                                             "type": "boolean",
                                             "example": true
                                         },
@@ -362,7 +362,7 @@
                                             "type": "string",
                                             "example": ""
                                         },
-                                        "IsVaild": {
+                                        "IsValid": {
                                             "type": "boolean",
                                             "example": true
                                         },
@@ -460,7 +460,7 @@
                                             "type": "string",
                                             "example": ""
                                         },
-                                        "IsVaild": {
+                                        "IsValid": {
                                             "type": "boolean",
                                             "example": true
                                         },
@@ -529,7 +529,7 @@
                         }
                     },
                     {
-                        "name": "IsVaild",
+                        "name": "IsValid",
                         "in": "query",
                         "description": "是否有效",
                         "required": true,
@@ -582,7 +582,7 @@
                                             "type": "string",
                                             "example": "測試測試"
                                         },
-                                        "IsVaild": {
+                                        "IsValid": {
                                             "type": "boolean",
                                             "example": true
                                         },
@@ -656,7 +656,7 @@
                                             "type": "string",
                                             "example": "測試測試"
                                         },
-                                        "IsVaild": {
+                                        "IsValid": {
                                             "type": "boolean",
                                             "example": true
                                         },
@@ -719,7 +719,7 @@
                                             "type": "string",
                                             "example": "測試測試"
                                         },
-                                        "IsVaild": {
+                                        "IsValid": {
                                             "type": "boolean",
                                             "example": true
                                         },
@@ -793,7 +793,7 @@
                                             "type": "string",
                                             "example": "測試測試"
                                         },
-                                        "IsVaild": {
+                                        "IsValid": {
                                             "type": "boolean",
                                             "example": true
                                         },
@@ -867,7 +867,7 @@
                                             "type": "string",
                                             "example": "測試測試"
                                         },
-                                        "IsVaild": {
+                                        "IsValid": {
                                             "type": "boolean",
                                             "example": false
                                         },
@@ -936,7 +936,7 @@
                         }
                     },
                     {
-                        "name": "IsVaild",
+                        "name": "IsValid",
                         "in": "query",
                         "description": "是否有效",
                         "required": true,
@@ -989,7 +989,7 @@
                                             "type": "string",
                                             "example": "測試測試"
                                         },
-                                        "IsVaild": {
+                                        "IsValid": {
                                             "type": "boolean",
                                             "example": true
                                         },
@@ -1063,7 +1063,7 @@
                                             "type": "string",
                                             "example": "測試測試"
                                         },
-                                        "IsVaild": {
+                                        "IsValid": {
                                             "type": "boolean",
                                             "example": true
                                         },
@@ -1126,7 +1126,7 @@
                                             "type": "string",
                                             "example": "測試測試"
                                         },
-                                        "IsVaild": {
+                                        "IsValid": {
                                             "type": "boolean",
                                             "example": true
                                         },
@@ -1200,7 +1200,7 @@
                                             "type": "string",
                                             "example": "測試測試"
                                         },
-                                        "IsVaild": {
+                                        "IsValid": {
                                             "type": "boolean",
                                             "example": false
                                         },
@@ -1269,7 +1269,7 @@
                         }
                     },
                     {
-                        "name": "IsVaild",
+                        "name": "IsValid",
                         "in": "query",
                         "description": "是否有效",
                         "required": true,
@@ -1380,7 +1380,7 @@
                                             "type": "string",
                                             "example": "姚佩彤"
                                         },
-                                        "IsVaild": {
+                                        "IsValid": {
                                             "type": "boolean",
                                             "example": true
                                         },
@@ -1464,7 +1464,7 @@
                                             "type": "string",
                                             "example": "財務部"
                                         },
-                                        "IsVaild": {
+                                        "IsValid": {
                                             "type": "boolean",
                                             "example": true
                                         },
@@ -1498,18 +1498,180 @@
                 }
             }
         },
-        "/Inventory/{InventoryNO}": {
-            "get": {
+        "/api/createInventory": {
+            "post": {
                 "tags": [
-                    "InventoryNO"
+                    "Inventory"
                 ],
-                "summary": "取得單一部門資訊",
-                "description": "根據部門編號查詢部門資訊",
-                "operationId": "getInventoryNO",
+                "summary": "新增庫別資訊",
+                "description": "新增庫別資訊",
+                "operationId": "createInventory",
                 "parameters": [
                     {
-                        "name": "deptNo",
+                        "name": "InventoryNO",
+                        "in": "query",
+                        "description": "庫別代號",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "InventoryNM",
+                        "in": "query",
+                        "description": "庫別名稱",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "InventoryQty",
+                        "in": "query",
+                        "description": "庫存數量",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "LotNum",
+                        "in": "query",
+                        "description": "批號",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "Safety_stock",
+                        "in": "query",
+                        "description": "安全庫存",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "LastStockReceiptDate",
+                        "in": "query",
+                        "description": "最近一次進貨日",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "IsValid",
+                        "in": "query",
+                        "description": "是否有效",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "Createuser",
+                        "in": "query",
+                        "description": "建立者",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "admin"
+                        }
+                    },
+                    {
+                        "name": "UpdateUser",
+                        "in": "query",
+                        "description": "更新者",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "admin"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "InventoryNO": {
+                                            "type": "string",
+                                            "example": "INV001"
+                                        },
+                                        "InventoryNM": {
+                                            "type": "string",
+                                            "example": "庫別1"
+                                        },
+                                        "InventoryQty": {
+                                            "type": "integer",
+                                            "example": "1000"
+                                        },
+                                        "Safety_stock": {
+                                            "type": "integer",
+                                            "example": "500"
+                                        },
+                                        "LotNum": {
+                                            "type": "string",
+                                            "example": "LOT123"
+                                        },
+                                        "LastStockReceiptDate": {
+                                            "type": "string",
+                                            "example": "2025-03-31"
+                                        },
+                                        "IsValid": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "Createuser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "UpdateUser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "CreateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "UpdateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "建立庫別失敗"
+                    }
+                }
+            }
+        },
+        "/api/Inventory/{InventoryNO}": {
+            "get": {
+                "tags": [
+                    "Inventory"
+                ],
+                "summary": "查詢特定庫別資訊",
+                "description": "查詢特定庫別資訊",
+                "operationId": "getInventory",
+                "parameters": [
+                    {
+                        "name": "InventoryNO",
                         "in": "path",
+                        "description": "庫別代號",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -1523,17 +1685,375 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "DeptNo": {
+                                        "uuid": {
                                             "type": "string",
-                                            "example": "D001"
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
                                         },
-                                        "DeptNM": {
+                                        "InventoryNO": {
                                             "type": "string",
-                                            "example": "資訊部"
+                                            "example": "INV001"
                                         },
-                                        "IsVaild": {
+                                        "InventoryNM": {
+                                            "type": "string",
+                                            "example": "庫別1"
+                                        },
+                                        "InventoryQty": {
+                                            "type": "integer",
+                                            "example": "1000"
+                                        },
+                                        "Safety_stock": {
+                                            "type": "integer",
+                                            "example": "500"
+                                        },
+                                        "LotNum": {
+                                            "type": "string",
+                                            "example": "LOT123"
+                                        },
+                                        "LastStockReceiptDate": {
+                                            "type": "string",
+                                            "example": "2025-03-31"
+                                        },
+                                        "IsValid": {
                                             "type": "boolean",
                                             "example": true
+                                        },
+                                        "Createuser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "UpdateUser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "CreateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "UpdateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "未找到庫別"
+                    }
+                }
+            }
+        },
+        "/api/Inventory/Valid": {
+            "get": {
+                "tags": [
+                    "Inventory"
+                ],
+                "summary": "查詢所有有效庫別資訊",
+                "description": "查詢所有有效庫別資訊",
+                "operationId": "GetAllInventory",
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "InventoryNO": {
+                                            "type": "string",
+                                            "example": "INV001"
+                                        },
+                                        "InventoryNM": {
+                                            "type": "string",
+                                            "example": "庫別1"
+                                        },
+                                        "InventoryQty": {
+                                            "type": "integer",
+                                            "example": "1000"
+                                        },
+                                        "Safety_stock": {
+                                            "type": "integer",
+                                            "example": "500"
+                                        },
+                                        "LotNum": {
+                                            "type": "string",
+                                            "example": "LOT123"
+                                        },
+                                        "LastStockReceiptDate": {
+                                            "type": "string",
+                                            "example": "2025-03-31"
+                                        },
+                                        "IsValid": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "Createuser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "UpdateUser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "CreateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "UpdateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "未找到有效庫別"
+                    }
+                }
+            }
+        },
+        "/api/Inventory/{InventoryNO}/disable": {
+            "patch": {
+                "tags": [
+                    "Inventory"
+                ],
+                "summary": "刪除特定庫別資訊",
+                "description": "刪除特定庫別資訊",
+                "operationId": "DeleteInventory",
+                "parameters": [
+                    {
+                        "name": "InventoryNO",
+                        "in": "path",
+                        "description": "庫別代號",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "InventoryNO": {
+                                            "type": "string",
+                                            "example": "INV001"
+                                        },
+                                        "InventoryNM": {
+                                            "type": "string",
+                                            "example": "庫別1"
+                                        },
+                                        "InventoryQty": {
+                                            "type": "integer",
+                                            "example": "1000"
+                                        },
+                                        "Safety_stock": {
+                                            "type": "integer",
+                                            "example": "500"
+                                        },
+                                        "LotNum": {
+                                            "type": "string",
+                                            "example": "LOT123"
+                                        },
+                                        "LastStockReceiptDate": {
+                                            "type": "string",
+                                            "example": "2025-03-31"
+                                        },
+                                        "IsValid": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "Createuser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "UpdateUser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "CreateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "UpdateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "未找到庫別"
+                    }
+                }
+            }
+        },
+        "/api/createPaymentTerm": {
+            "post": {
+                "tags": [
+                    "PaymentTerm"
+                ],
+                "summary": "新增付款條件",
+                "description": "新增付款條件",
+                "operationId": "createPaymentTerm",
+                "parameters": [
+                    {
+                        "name": "TermsNo",
+                        "in": "query",
+                        "description": "付款條件代碼",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "TermsNM",
+                        "in": "query",
+                        "description": "付款條件名稱",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "TermsDays",
+                        "in": "query",
+                        "description": "付款條件月結天數",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "PayMode",
+                        "in": "query",
+                        "description": "付款條件 當月/隔月",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "PayDay",
+                        "in": "query",
+                        "description": "付款時間",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "Note",
+                        "in": "query",
+                        "description": "備註",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "IsValid",
+                        "in": "query",
+                        "description": "是否有效",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "Createuser",
+                        "in": "query",
+                        "description": "建立者",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "admin"
+                        }
+                    },
+                    {
+                        "name": "UpdateUser",
+                        "in": "query",
+                        "description": "更新者",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "admin"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "TermsNo": {
+                                            "type": "string",
+                                            "example": "T001"
+                                        },
+                                        "TermsNM": {
+                                            "type": "string",
+                                            "example": "月結30天"
+                                        },
+                                        "TermsDays": {
+                                            "type": "integer",
+                                            "example": "30"
+                                        },
+                                        "PayMode": {
+                                            "type": "string",
+                                            "example": "M001"
+                                        },
+                                        "PayDay": {
+                                            "type": "integer",
+                                            "example": "30"
+                                        },
+                                        "Note": {
+                                            "type": "string",
+                                            "example": "測試測試"
+                                        },
+                                        "IsValid": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "Createuser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "UpdateUser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "CreateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "UpdateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
                                         }
                                     },
                                     "type": "object"
@@ -1547,18 +2067,19 @@
                 }
             }
         },
-        "/PaymentTerm/{deptNo}": {
+        "/api/PaymentTerm/{TermNo}": {
             "get": {
                 "tags": [
                     "PaymentTerm"
                 ],
-                "summary": "取得單一部門資訊",
-                "description": "根據部門編號查詢部門資訊",
+                "summary": "查詢特定付款條件",
+                "description": "查詢特定付款條件",
                 "operationId": "getPaymentTerm",
                 "parameters": [
                     {
-                        "name": "deptNo",
+                        "name": "TermNo",
                         "in": "path",
+                        "description": "付款條件代號",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -1572,17 +2093,53 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "DeptNo": {
+                                        "uuid": {
                                             "type": "string",
-                                            "example": "D001"
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
                                         },
-                                        "DeptNM": {
+                                        "TermsNo": {
                                             "type": "string",
-                                            "example": "資訊部"
+                                            "example": "T001"
                                         },
-                                        "IsVaild": {
+                                        "TermsNM": {
+                                            "type": "string",
+                                            "example": "月結30天"
+                                        },
+                                        "TermsDays": {
+                                            "type": "integer",
+                                            "example": "30"
+                                        },
+                                        "PayMode": {
+                                            "type": "string",
+                                            "example": "M001"
+                                        },
+                                        "PayDay": {
+                                            "type": "integer",
+                                            "example": "30"
+                                        },
+                                        "Note": {
+                                            "type": "string",
+                                            "example": "測試測試"
+                                        },
+                                        "IsValid": {
                                             "type": "boolean",
                                             "example": true
+                                        },
+                                        "Createuser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "UpdateUser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "CreateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "UpdateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
                                         }
                                     },
                                     "type": "object"
@@ -1591,23 +2148,99 @@
                         }
                     },
                     "404": {
-                        "description": "未找到部門"
+                        "description": "未找到付款條件"
                     }
                 }
             }
         },
-        "/product/{ProductNO}": {
+        "/api/PaymentTerms/valid": {
             "get": {
                 "tags": [
-                    "ProductNO"
+                    "PaymentTerm"
                 ],
-                "summary": "取得單一部門資訊",
-                "description": "根據部門編號查詢部門資訊",
-                "operationId": "getProduct",
+                "summary": "查詢所有有效付款條件",
+                "description": "查詢所有有效付款條件",
+                "operationId": "GetAllPaymentTerm",
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "TermsNo": {
+                                            "type": "string",
+                                            "example": "T001"
+                                        },
+                                        "TermsNM": {
+                                            "type": "string",
+                                            "example": "月結30天"
+                                        },
+                                        "TermsDays": {
+                                            "type": "integer",
+                                            "example": "30"
+                                        },
+                                        "PayMode": {
+                                            "type": "string",
+                                            "example": "M001"
+                                        },
+                                        "PayDay": {
+                                            "type": "integer",
+                                            "example": "30"
+                                        },
+                                        "Note": {
+                                            "type": "string",
+                                            "example": "測試測試"
+                                        },
+                                        "IsValid": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "Createuser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "UpdateUser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "CreateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "UpdateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "未找到有效付款條件"
+                    }
+                }
+            }
+        },
+        "/api/PaymentTerm/{TermNo}/disable": {
+            "patch": {
+                "tags": [
+                    "PaymentTerm"
+                ],
+                "summary": "刪除特定付款條件",
+                "description": "刪除特定付款條件",
+                "operationId": "DeletePaymentTerm",
                 "parameters": [
                     {
-                        "name": "deptNo",
+                        "name": "TermNo",
                         "in": "path",
+                        "description": "付款條件代號",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -1621,17 +2254,53 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "DeptNo": {
+                                        "uuid": {
                                             "type": "string",
-                                            "example": "D001"
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
                                         },
-                                        "DeptNM": {
+                                        "TermsNo": {
                                             "type": "string",
-                                            "example": "資訊部"
+                                            "example": "T001"
                                         },
-                                        "IsVaild": {
+                                        "TermsNM": {
+                                            "type": "string",
+                                            "example": "月結30天"
+                                        },
+                                        "TermsDays": {
+                                            "type": "integer",
+                                            "example": "30"
+                                        },
+                                        "PayMode": {
+                                            "type": "string",
+                                            "example": "M001"
+                                        },
+                                        "PayDay": {
+                                            "type": "integer",
+                                            "example": "30"
+                                        },
+                                        "Note": {
+                                            "type": "string",
+                                            "example": "測試測試"
+                                        },
+                                        "IsValid": {
                                             "type": "boolean",
                                             "example": true
+                                        },
+                                        "Createuser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "UpdateUser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "CreateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "UpdateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
                                         }
                                     },
                                     "type": "object"
@@ -1640,7 +2309,690 @@
                         }
                     },
                     "404": {
-                        "description": "未找到部門"
+                        "description": "未找到付款條件"
+                    }
+                }
+            }
+        },
+        "/api/createproduct": {
+            "post": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "新增品號資訊",
+                "description": "新增品號資訊",
+                "operationId": "createProduct",
+                "parameters": [
+                    {
+                        "name": "ProductNO",
+                        "in": "query",
+                        "description": "品號",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "ProductNM",
+                        "in": "query",
+                        "description": "品名",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "Specification",
+                        "in": "query",
+                        "description": "規格",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "Barcode",
+                        "in": "query",
+                        "description": "條碼",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "Price_1",
+                        "in": "query",
+                        "description": "售價一",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "Price_2",
+                        "in": "query",
+                        "description": "售價二",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "Price_3",
+                        "in": "query",
+                        "description": "售價三",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "Cost_1",
+                        "in": "query",
+                        "description": "進價一",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "Cost_2",
+                        "in": "query",
+                        "description": "進價二",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "Cost_3",
+                        "in": "query",
+                        "description": "進價三",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "Batch_control",
+                        "in": "query",
+                        "description": "批號管理",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "Valid_days",
+                        "in": "query",
+                        "description": "有效天數",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "Effective_date",
+                        "in": "query",
+                        "description": "生效日期",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "Stock_control",
+                        "in": "query",
+                        "description": "是否庫存管理",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "Safety_stock",
+                        "in": "query",
+                        "description": "安全庫存",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "Expiry_date",
+                        "in": "query",
+                        "description": "失效日期",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "Description",
+                        "in": "query",
+                        "description": "商品描述",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "IsValid",
+                        "in": "query",
+                        "description": "是否有效",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "Createuser",
+                        "in": "query",
+                        "description": "建立者",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "admin"
+                        }
+                    },
+                    {
+                        "name": "UpdateUser",
+                        "in": "query",
+                        "description": "更新者",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "admin"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "ProductNO": {
+                                            "type": "string",
+                                            "example": "P001"
+                                        },
+                                        "ProductNM": {
+                                            "type": "string",
+                                            "example": "螺絲起子"
+                                        },
+                                        "Specification": {
+                                            "type": "string",
+                                            "example": "SP001"
+                                        },
+                                        "Barcode": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "Price_1": {
+                                            "type": "integer",
+                                            "example": 100
+                                        },
+                                        "Price_2": {
+                                            "type": "integer",
+                                            "example": 0
+                                        },
+                                        "Price_3": {
+                                            "type": "integer",
+                                            "example": 0
+                                        },
+                                        "Cost_1": {
+                                            "type": "decimal",
+                                            "example": 60
+                                        },
+                                        "Cost_2": {
+                                            "type": "integer",
+                                            "example": 0
+                                        },
+                                        "Cost_3": {
+                                            "type": "integer",
+                                            "example": 0
+                                        },
+                                        "Batch_control": {
+                                            "type": "integer",
+                                            "example": true
+                                        },
+                                        "Valid_days": {
+                                            "type": "integer",
+                                            "example": 0
+                                        },
+                                        "Effective_date": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "Stock_control": {
+                                            "type": "integer",
+                                            "example": true
+                                        },
+                                        "Safety_stock": {
+                                            "type": "integer",
+                                            "example": 0
+                                        },
+                                        "Expiry_date": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "Description": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "IsValid": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "Createuser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "UpdateUser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "CreateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "UpdateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "建立失敗"
+                    }
+                }
+            }
+        },
+        "/api/product/{ProductNO}": {
+            "get": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "查詢特定品號",
+                "description": "查詢特定品號",
+                "operationId": "getproduct",
+                "parameters": [
+                    {
+                        "name": "ProductNO",
+                        "in": "path",
+                        "description": "品號代號",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "ProductNO": {
+                                            "type": "string",
+                                            "example": "P001"
+                                        },
+                                        "ProductNM": {
+                                            "type": "string",
+                                            "example": "螺絲起子"
+                                        },
+                                        "Specification": {
+                                            "type": "string",
+                                            "example": "SP001"
+                                        },
+                                        "Barcode": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "Price_1": {
+                                            "type": "integer",
+                                            "example": 100
+                                        },
+                                        "Price_2": {
+                                            "type": "integer",
+                                            "example": 0
+                                        },
+                                        "Price_3": {
+                                            "type": "integer",
+                                            "example": 0
+                                        },
+                                        "Cost_1": {
+                                            "type": "decimal",
+                                            "example": 60
+                                        },
+                                        "Cost_2": {
+                                            "type": "integer",
+                                            "example": 0
+                                        },
+                                        "Cost_3": {
+                                            "type": "integer",
+                                            "example": 0
+                                        },
+                                        "Batch_control": {
+                                            "type": "integer",
+                                            "example": true
+                                        },
+                                        "Valid_days": {
+                                            "type": "integer",
+                                            "example": 0
+                                        },
+                                        "Effective_date": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "Stock_control": {
+                                            "type": "integer",
+                                            "example": true
+                                        },
+                                        "Safety_stock": {
+                                            "type": "integer",
+                                            "example": 0
+                                        },
+                                        "Expiry_date": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "Description": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "IsValid": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "Createuser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "UpdateUser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "CreateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "UpdateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "未找到品號"
+                    }
+                }
+            }
+        },
+        "/api/product/valid": {
+            "get": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "查詢所有有效品號",
+                "description": "查詢所有有效品號",
+                "operationId": "GetAllProduct",
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "ProductNO": {
+                                            "type": "string",
+                                            "example": "P001"
+                                        },
+                                        "ProductNM": {
+                                            "type": "string",
+                                            "example": "螺絲起子"
+                                        },
+                                        "Specification": {
+                                            "type": "string",
+                                            "example": "SP001"
+                                        },
+                                        "Barcode": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "Price_1": {
+                                            "type": "integer",
+                                            "example": 100
+                                        },
+                                        "Price_2": {
+                                            "type": "integer",
+                                            "example": 0
+                                        },
+                                        "Price_3": {
+                                            "type": "integer",
+                                            "example": 0
+                                        },
+                                        "Cost_1": {
+                                            "type": "decimal",
+                                            "example": 60
+                                        },
+                                        "Cost_2": {
+                                            "type": "integer",
+                                            "example": 0
+                                        },
+                                        "Cost_3": {
+                                            "type": "integer",
+                                            "example": 0
+                                        },
+                                        "Batch_control": {
+                                            "type": "integer",
+                                            "example": true
+                                        },
+                                        "Valid_days": {
+                                            "type": "integer",
+                                            "example": 0
+                                        },
+                                        "Effective_date": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "Stock_control": {
+                                            "type": "integer",
+                                            "example": true
+                                        },
+                                        "Safety_stock": {
+                                            "type": "integer",
+                                            "example": 0
+                                        },
+                                        "Expiry_date": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "Description": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "IsValid": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "Createuser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "UpdateUser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "CreateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "UpdateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "未找到有效品號"
+                    }
+                }
+            }
+        },
+        "/api/product/{ProductNO}/disable": {
+            "patch": {
+                "tags": [
+                    "Product"
+                ],
+                "summary": "刪除特定品號",
+                "description": "刪除特定品號",
+                "operationId": "DeleteProduct",
+                "parameters": [
+                    {
+                        "name": "ProductNO",
+                        "in": "path",
+                        "description": "品號",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "ProductNO": {
+                                            "type": "string",
+                                            "example": "P001"
+                                        },
+                                        "ProductNM": {
+                                            "type": "string",
+                                            "example": "螺絲起子"
+                                        },
+                                        "Specification": {
+                                            "type": "string",
+                                            "example": "SP001"
+                                        },
+                                        "Barcode": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "Price_1": {
+                                            "type": "integer",
+                                            "example": 100
+                                        },
+                                        "Price_2": {
+                                            "type": "integer",
+                                            "example": 0
+                                        },
+                                        "Price_3": {
+                                            "type": "integer",
+                                            "example": 0
+                                        },
+                                        "Cost_1": {
+                                            "type": "decimal",
+                                            "example": 60
+                                        },
+                                        "Cost_2": {
+                                            "type": "integer",
+                                            "example": 0
+                                        },
+                                        "Cost_3": {
+                                            "type": "integer",
+                                            "example": 0
+                                        },
+                                        "Batch_control": {
+                                            "type": "integer",
+                                            "example": true
+                                        },
+                                        "Valid_days": {
+                                            "type": "integer",
+                                            "example": 0
+                                        },
+                                        "Effective_date": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "Stock_control": {
+                                            "type": "integer",
+                                            "example": true
+                                        },
+                                        "Safety_stock": {
+                                            "type": "integer",
+                                            "example": 0
+                                        },
+                                        "Expiry_date": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "Description": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "IsValid": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "Createuser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "UpdateUser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "CreateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "UpdateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "未找到品號"
                     }
                 }
             }
@@ -1678,7 +3030,7 @@
                                             "type": "string",
                                             "example": "資訊部"
                                         },
-                                        "IsVaild": {
+                                        "IsValid": {
                                             "type": "boolean",
                                             "example": true
                                         }
@@ -1731,7 +3083,7 @@
                         }
                     },
                     {
-                        "name": "IsVaild",
+                        "name": "IsValid",
                         "in": "query",
                         "description": "是否有效",
                         "required": true,
@@ -1784,7 +3136,7 @@
                                             "type": "string",
                                             "example": ""
                                         },
-                                        "IsVaild": {
+                                        "IsValid": {
                                             "type": "boolean",
                                             "example": true
                                         },
@@ -1858,7 +3210,7 @@
                                             "type": "string",
                                             "example": ""
                                         },
-                                        "IsVaild": {
+                                        "IsValid": {
                                             "type": "boolean",
                                             "example": true
                                         },
@@ -1921,7 +3273,7 @@
                                             "type": "string",
                                             "example": ""
                                         },
-                                        "IsVaild": {
+                                        "IsValid": {
                                             "type": "boolean",
                                             "example": true
                                         },
@@ -1995,7 +3347,7 @@
                                             "type": "string",
                                             "example": "測試測試"
                                         },
-                                        "IsVaild": {
+                                        "IsValid": {
                                             "type": "boolean",
                                             "example": false
                                         },
@@ -2046,16 +3398,16 @@
             "description": "AssignUserDept"
         },
         {
-            "name": "InventoryNO",
-            "description": "InventoryNO"
+            "name": "Inventory",
+            "description": "Inventory"
         },
         {
             "name": "PaymentTerm",
             "description": "PaymentTerm"
         },
         {
-            "name": "ProductNO",
-            "description": "ProductNO"
+            "name": "Product",
+            "description": "Product"
         },
         {
             "name": "supplier",

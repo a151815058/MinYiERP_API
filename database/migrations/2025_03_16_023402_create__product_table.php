@@ -12,29 +12,29 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('Product', function (Blueprint $table) {
-            $table->uuid('Uuid')->primary();
-            $table->string('ProductNO')->unique();
-            $table->string('ProductNM');
-            $table->string('Specification');
-            $table->string('Barcode')->nullable();
-            $table->decimal('Price_1');
-            $table->decimal('Price_2')->nullable();
-            $table->decimal('Price_3')->nullable();
-            $table->decimal('Cost_1');
-            $table->decimal('Cost_2')->nullable();
-            $table->decimal('Cost_3')->nullable();
-            $table->boolean('Batch_control')->default(1);
-            $table->integer('Valid_days');
-            $table->date('Effective_date');
-            $table->boolean('Stock_control')->default(1);
-            $table->integer('Safety_stock');
-            $table->date('Expiry_date');
-            $table->string(column: 'Description');
-            $table->boolean('IsVaild')->default(1);
-            $table->string('Createuser');
-            $table->dateTime('CreateTime')->nullable();
-            $table->string('UpdateUser');
-            $table->dateTime('UpdateTime')->nullable();
+            $table->uuid('uuid')->comment('KEY')->primary();
+            $table->string('ProductNO')->comment('品號')->unique();
+            $table->string('ProductNM')->comment('品名');
+            $table->string('Specification')->comment('規格');
+            $table->string('Barcode')->comment('條碼')->nullable();
+            $table->decimal('Price_1')->comment('售價一');
+            $table->decimal('Price_2')->comment('售價二')->nullable();
+            $table->decimal('Price_3')->comment('售價三')->nullable();
+            $table->decimal('Cost_1')->comment('進價一');
+            $table->decimal('Cost_2')->comment('進價二')->nullable();
+            $table->decimal('Cost_3')->comment('進價三')->nullable();
+            $table->boolean('Batch_control')->comment('批號管理')->default(1);
+            $table->integer('Valid_days')->comment('有效天數');
+            $table->date('Effective_date')->comment('生效日期');
+            $table->boolean('Stock_control')->comment('是否庫存管理')->default(1);
+            $table->integer('Safety_stock')->comment('安全庫存');
+            $table->date('Expiry_date')->comment('失效日期');
+            $table->string(column: 'Description')->comment('商品描述')->nullable();
+            $table->boolean('IsValid')->comment('是否有效')->default(1);
+            $table->string('Createuser')->comment('建立人員');
+            $table->dateTime('CreateTime')->comment('建立時間')->nullable();
+            $table->string('UpdateUser')->comment('異動人員');
+            $table->dateTime('UpdateTime')->comment('異動時間')->nullable();
         });
     }
 

@@ -12,18 +12,18 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('paymentterms', function (Blueprint $table) {
-            $table->uuid('uuid')->primary();
-            $table->string('TermsNo')->unique();
-            $table->string('TermsNM');
-            $table->integer('TermsDays');
-            $table->string('PayMode');
-            $table->integer('PayDay');
-            $table->string('Note')->nullable();
-            $table->boolean('IsVaild')->default(1);
-            $table->string('Createuser');
-            $table->dateTime('CreateTime')->nullable();
-            $table->string('UpdateUser');
-            $table->dateTime('UpdateTime')->nullable();
+            $table->uuid('uuid')->comment('KEY')->primary();
+            $table->string('TermsNo')->comment('付款條件代碼')->unique();
+            $table->string('TermsNM')->comment('付款條件名稱');
+            $table->integer('TermsDays')->comment('付款條件月結天數');
+            $table->string('PayMode')->comment('付款條件 當月/隔月');
+            $table->integer('PayDay')->comment('付款時間');
+            $table->string('Note')->comment('備註')->nullable();
+            $table->boolean('IsValid')->comment('是否有效')->default(1);
+            $table->string('Createuser')->comment('建立人員');
+            $table->dateTime('CreateTime')->comment('建立時間')->nullable();
+            $table->string('UpdateUser')->comment('異動人員');
+            $table->dateTime('UpdateTime')->comment('異動時間')->nullable();
         });
     }
 

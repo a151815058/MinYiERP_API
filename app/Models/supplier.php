@@ -43,7 +43,7 @@ class Supplier extends Model
      // 🔍 查詢所有有效供應商資料
     public static function getValidsuppliers()
     {
-        return static::where('IsVaild', operator: '1')->get();
+        return static::where('IsValid', operator: '1')->get();
     }
 
 

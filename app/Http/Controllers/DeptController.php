@@ -40,7 +40,7 @@ class DeptController extends Controller
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="IsVaild",
+     *         name="IsValid",
      *         in="query",
      *         required=true,
      *         description="是否有效",
@@ -69,7 +69,7 @@ class DeptController extends Controller
      *             @OA\Property(property="DeptNo", type="string", example="A02"),
      *             @OA\Property(property="DeptNM", type="string", example="財務處"),
      *             @OA\Property(property="Note", type="string", example="測試測試"),
-     *             @OA\Property(property="IsVaild", type="boolean", example=true),
+     *             @OA\Property(property="IsValid", type="boolean", example=true),
      *             @OA\Property(property="Createuser", type="string", example="admin"),
      *             @OA\Property(property="UpdateUser", type="string", example="admin"),
      *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
@@ -90,7 +90,7 @@ class DeptController extends Controller
             'DeptNo'     => 'required|string|max:255|unique:depts,DeptNo',
             'DeptNM'     => 'required|string|max:255',
             'Note'       => 'nullable|string|max:255',
-            'IsVaild'    => 'required|boolean',
+            'IsValid'    => 'required|boolean',
             'Createuser' => 'required|string|max:255',
             'UpdateUser' => 'required|string|max:255',
         ]);
@@ -101,7 +101,7 @@ class DeptController extends Controller
             'DeptNo'     => $validated['DeptNo'],
             'DeptNM'     => $validated['DeptNM'],
             'Note'       => $validated['Note'] ?? null,
-            'IsVaild'    => $validated['IsVaild'],
+            'IsValid'    => $validated['IsValid'],
             'Createuser' => $validated['Createuser'],
             'UpdateUser' => $validated['UpdateUser'],
             'CreateTime' => now(),  // 設定當前時間
@@ -147,7 +147,7 @@ class DeptController extends Controller
      *             @OA\Property(property="DeptNo", type="string", example="A02"),
      *             @OA\Property(property="DeptNM", type="string", example="財務處"),
      *             @OA\Property(property="Note", type="string", example="測試測試"),
-     *             @OA\Property(property="IsVaild", type="boolean", example=true),
+     *             @OA\Property(property="IsValid", type="boolean", example=true),
      *             @OA\Property(property="Createuser", type="string", example="admin"),
      *             @OA\Property(property="UpdateUser", type="string", example="admin"),
      *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
@@ -195,7 +195,7 @@ class DeptController extends Controller
      *             @OA\Property(property="DeptNo", type="string", example="A02"),
      *             @OA\Property(property="DeptNM", type="string", example="財務處"),
      *             @OA\Property(property="Note", type="string", example="測試測試"),
-     *             @OA\Property(property="IsVaild", type="boolean", example=true),
+     *             @OA\Property(property="IsValid", type="boolean", example=true),
      *             @OA\Property(property="Createuser", type="string", example="admin"),
      *             @OA\Property(property="UpdateUser", type="string", example="admin"),
      *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
@@ -248,7 +248,7 @@ class DeptController extends Controller
      *             @OA\Property(property="DeptNo", type="string", example="A02"),
      *             @OA\Property(property="DeptNM", type="string", example="財務處"),
      *             @OA\Property(property="Note", type="string", example="測試測試"),
-     *             @OA\Property(property="IsVaild", type="boolean", example=false),
+     *             @OA\Property(property="IsValid", type="boolean", example=false),
      *             @OA\Property(property="Createuser", type="string", example="admin"),
      *             @OA\Property(property="UpdateUser", type="string", example="admin"),
      *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
@@ -274,7 +274,7 @@ class DeptController extends Controller
             ], 404);
         }
 
-        $dept->IsVaild = 0;
+        $dept->IsValid = 0;
         $dept->UpdateTime = now();
         $dept->save();
 

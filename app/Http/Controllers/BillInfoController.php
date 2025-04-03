@@ -115,7 +115,7 @@ class BillInfoController extends Controller
      *             @OA\Property(property="GenOrder", type="string", example="1"),
      *             @OA\Property(property="OrderType", type="string", example="1"),
      *             @OA\Property(property="Note", type="string", example=""),
-     *             @OA\Property(property="IsVaild", type="boolean", example=true),
+     *             @OA\Property(property="IsValid", type="boolean", example=true),
      *             @OA\Property(property="Createuser", type="string", example="admin"),
      *             @OA\Property(property="UpdateUser", type="string", example="admin"),
      *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
@@ -212,7 +212,7 @@ class BillInfoController extends Controller
      *             @OA\Property(property="GenOrder", type="string", example="1"),
      *             @OA\Property(property="OrderType", type="string", example="1"),
      *             @OA\Property(property="Note", type="string", example=""),
-     *             @OA\Property(property="IsVaild", type="boolean", example=true),
+     *             @OA\Property(property="IsValid", type="boolean", example=true),
      *             @OA\Property(property="Createuser", type="string", example="admin"),
      *             @OA\Property(property="UpdateUser", type="string", example="admin"),
      *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
@@ -265,7 +265,7 @@ class BillInfoController extends Controller
      *             @OA\Property(property="GenOrder", type="string", example="1"),
      *             @OA\Property(property="OrderType", type="string", example="1"),
      *             @OA\Property(property="Note", type="string", example=""),
-     *             @OA\Property(property="IsVaild", type="boolean", example=true),
+     *             @OA\Property(property="IsValid", type="boolean", example=true),
      *             @OA\Property(property="Createuser", type="string", example="admin"),
      *             @OA\Property(property="UpdateUser", type="string", example="admin"),
      *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
@@ -323,7 +323,7 @@ class BillInfoController extends Controller
      *             @OA\Property(property="GenOrder", type="string", example="1"),
      *             @OA\Property(property="OrderType", type="string", example="1"),
      *             @OA\Property(property="Note", type="string", example=""),
-     *             @OA\Property(property="IsVaild", type="boolean", example=true),
+     *             @OA\Property(property="IsValid", type="boolean", example=true),
      *             @OA\Property(property="Createuser", type="string", example="admin"),
      *             @OA\Property(property="UpdateUser", type="string", example="admin"),
      *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
@@ -349,7 +349,7 @@ class BillInfoController extends Controller
             ], 404);
         }
 
-        $BillNo->IsVaild = 0;
+        $BillNo->IsValid = 0;
         $BillNo->UpdateTime = now();
         $BillNo->save();
 

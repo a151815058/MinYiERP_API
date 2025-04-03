@@ -39,7 +39,7 @@ class SysuserController extends Controller
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="IsVaild",
+     *         name="IsValid",
      *         in="query",
      *         required=true,
      *         description="是否有效",
@@ -68,7 +68,7 @@ class SysuserController extends Controller
      *             @OA\Property(property="UsrNo", type="string", example="U001"),
      *             @OA\Property(property="UsrNM", type="string", example="姚佩彤"),
      *             @OA\Property(property="Note", type="string", example=""),
-     *             @OA\Property(property="IsVaild", type="boolean", example=true),
+     *             @OA\Property(property="IsValid", type="boolean", example=true),
      *             @OA\Property(property="Createuser", type="string", example="admin"),
      *             @OA\Property(property="UpdateUser", type="string", example="admin"),
      *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
@@ -89,7 +89,7 @@ class SysuserController extends Controller
             'UsrNo'     => 'required|string|max:255|unique:sysusers,UsrNo',
             'UsrNM'     => 'required|string|max:255',
             'Note'       => 'nullable|string|max:255',
-            'IsVaild'    => 'required|boolean',
+            'IsValid'    => 'required|boolean',
             'Createuser' => 'required|string|max:255',
             'UpdateUser' => 'required|string|max:255',
         ]);
@@ -100,7 +100,7 @@ class SysuserController extends Controller
             'UsrNo'     => $validated['UsrNo'],
             'UsrNM'     => $validated['UsrNM'],
             'Note'       => $validated['Note'] ?? null,
-            'IsVaild'    => $validated['IsVaild'],
+            'IsValid'    => $validated['IsValid'],
             'Createuser' => $validated['Createuser'],
             'UpdateUser' => $validated['UpdateUser'],
             'CreateTime' => now(),  // 設定當前時間
@@ -146,7 +146,7 @@ class SysuserController extends Controller
      *             @OA\Property(property="UsrNo", type="string", example="U001"),
      *             @OA\Property(property="UsrNM", type="string", example="姚佩彤"),
      *             @OA\Property(property="Note", type="string", example=""),
-     *             @OA\Property(property="IsVaild", type="boolean", example=true),
+     *             @OA\Property(property="IsValid", type="boolean", example=true),
      *             @OA\Property(property="Createuser", type="string", example="admin"),
      *             @OA\Property(property="UpdateUser", type="string", example="admin"),
      *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
@@ -196,7 +196,7 @@ class SysuserController extends Controller
      *             @OA\Property(property="UsrNo", type="string", example="U001"),
      *             @OA\Property(property="UsrNM", type="string", example="姚佩彤"),
      *             @OA\Property(property="Note", type="string", example=""),
-     *             @OA\Property(property="IsVaild", type="boolean", example=true),
+     *             @OA\Property(property="IsValid", type="boolean", example=true),
      *             @OA\Property(property="Createuser", type="string", example="admin"),
      *             @OA\Property(property="UpdateUser", type="string", example="admin"),
      *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
@@ -253,7 +253,7 @@ class SysuserController extends Controller
      *             @OA\Property(property="UsrNo", type="string", example="U001"),
      *             @OA\Property(property="UsrNM", type="string", example="姚佩彤"),
      *             @OA\Property(property="Note", type="string", example="測試測試"),
-     *             @OA\Property(property="IsVaild", type="boolean", example=false),
+     *             @OA\Property(property="IsValid", type="boolean", example=false),
      *             @OA\Property(property="Createuser", type="string", example="admin"),
      *             @OA\Property(property="UpdateUser", type="string", example="admin"),
      *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
@@ -279,7 +279,7 @@ class SysuserController extends Controller
             ], 404);
         }
 
-        $user->IsVaild = 0;
+        $user->IsValid = 0;
         $user->UpdateTime = now();
         $user->save();
 

@@ -39,7 +39,7 @@ class CurrencyController extends Controller
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="IsVaild",
+     *         name="IsValid",
      *         in="query",
      *         required=true,
      *         description="是否有效",
@@ -68,7 +68,7 @@ class CurrencyController extends Controller
      *             @OA\Property(property="CurrencyNo", type="string", example="C001"),
      *             @OA\Property(property="CurrencyNM", type="string", example="台幣"),
      *             @OA\Property(property="Note", type="string", example="測試測試"),
-     *             @OA\Property(property="IsVaild", type="boolean", example=true),
+     *             @OA\Property(property="IsValid", type="boolean", example=true),
      *             @OA\Property(property="Createuser", type="string", example="admin"),
      *             @OA\Property(property="UpdateUser", type="string", example="admin"),
      *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
@@ -89,7 +89,7 @@ class CurrencyController extends Controller
             'CurrencyNo'     => 'required|string|max:255|unique:currencys,CurrencyNo',
             'CurrencyNM'     => 'required|string|max:255',
             'Note'       => 'nullable|string|max:255',
-            'IsVaild'    => 'required|boolean',
+            'IsValid'    => 'required|boolean',
             'Createuser' => 'required|string|max:255',
             'UpdateUser' => 'required|string|max:255',
         ]);
@@ -100,7 +100,7 @@ class CurrencyController extends Controller
             'CurrencyNo'     => $validated['CurrencyNo'],
             'CurrencyNM'     => $validated['CurrencyNM'],
             'Note'       => $validated['Note'] ?? null,
-            'IsVaild'    => $validated['IsVaild'],
+            'IsValid'    => $validated['IsValid'],
             'Createuser' => $validated['Createuser'],
             'UpdateUser' => $validated['UpdateUser'],
             'CreateTime' => now(),  // 設定當前時間
@@ -146,7 +146,7 @@ class CurrencyController extends Controller
      *             @OA\Property(property="CurrencyNo", type="string", example="C001"),
      *             @OA\Property(property="CurrencyNM", type="string", example="台幣"),
      *             @OA\Property(property="Note", type="string", example="測試測試"),
-     *             @OA\Property(property="IsVaild", type="boolean", example=true),
+     *             @OA\Property(property="IsValid", type="boolean", example=true),
      *             @OA\Property(property="Createuser", type="string", example="admin"),
      *             @OA\Property(property="UpdateUser", type="string", example="admin"),
      *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
@@ -194,7 +194,7 @@ class CurrencyController extends Controller
      *             @OA\Property(property="CurrencyNo", type="string", example="C001"),
      *             @OA\Property(property="CurrencyNM", type="string", example="台幣"),
      *             @OA\Property(property="Note", type="string", example="測試測試"),
-     *             @OA\Property(property="IsVaild", type="boolean", example=true),
+     *             @OA\Property(property="IsValid", type="boolean", example=true),
      *             @OA\Property(property="Createuser", type="string", example="admin"),
      *             @OA\Property(property="UpdateUser", type="string", example="admin"),
      *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
@@ -250,7 +250,7 @@ class CurrencyController extends Controller
      *             @OA\Property(property="CurrencyNo", type="string", example="C001"),
      *             @OA\Property(property="CurrencyNM", type="string", example="台幣"),
      *             @OA\Property(property="Note", type="string", example="測試測試"),
-     *             @OA\Property(property="IsVaild", type="boolean", example=true),
+     *             @OA\Property(property="IsValid", type="boolean", example=true),
      *             @OA\Property(property="Createuser", type="string", example="admin"),
      *             @OA\Property(property="UpdateUser", type="string", example="admin"),
      *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
@@ -330,7 +330,7 @@ class CurrencyController extends Controller
      *             @OA\Property(property="CurrencyNo", type="string", example="C001"),
      *             @OA\Property(property="CurrencyNM", type="string", example="台幣"),
      *             @OA\Property(property="Note", type="string", example="測試測試"),
-     *             @OA\Property(property="IsVaild", type="boolean", example=false),
+     *             @OA\Property(property="IsValid", type="boolean", example=false),
      *             @OA\Property(property="Createuser", type="string", example="admin"),
      *             @OA\Property(property="UpdateUser", type="string", example="admin"),
      *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
@@ -356,7 +356,7 @@ class CurrencyController extends Controller
             ], 404);
         }
 
-        $Currency->IsVaild = 0;
+        $Currency->IsValid = 0;
         $Currency->UpdateTime = now();
         $Currency->save();
 

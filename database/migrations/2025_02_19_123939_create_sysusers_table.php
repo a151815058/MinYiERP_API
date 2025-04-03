@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('UsrNo')->comment('人員代號')->unique();
             $table->string('UsrNM')->comment('人員名稱');
             $table->string('Note')->comment('備註')->nullable();
-            $table->boolean('IsVaild')->comment('是否有效')->default(1);
+            $table->boolean('IsValid')->comment('是否有效')->default(1);
             $table->string('Createuser')->comment('建立人員');
             $table->dateTime('CreateTime')->comment('建立時間')->nullable();
             $table->string('UpdateUser')->comment('異動人員');

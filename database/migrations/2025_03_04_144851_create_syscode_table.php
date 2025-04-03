@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('Paramcode');
             $table->string('Param');
             $table->string('Note')->nullable();
-            $table->boolean('IsVaild')->default(1);
+            $table->boolean('IsValid')->default(1);
             $table->string('Createuser');
             $table->dateTime('CreateTime')->nullable();
             $table->string('UpdateUser');

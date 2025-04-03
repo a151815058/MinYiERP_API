@@ -42,8 +42,9 @@ Route::patch('/Currencys/{CurrencyNo}/disable', [CurrencyController::class, 'dis
 
 //付款條件相關  API
 Route::post('/createPaymentTerm', [PaymentTermController::class, 'store']);// 新增付款條件
-Route::get('/PaymentTerm/{deptNo}', [PaymentTermController::class, 'show']);  // 透過 TermsNo 查詢
+Route::get('/PaymentTerm/{TermNo}', [PaymentTermController::class, 'show']);  // 透過 TermsNo 查詢
 Route::get('/PaymentTerms/valid', [PaymentTermController::class, 'getValidTerms']);  // 查詢所有有效付款條件
+Route::patch('/PaymentTerm/{TermNo}/disable', [PaymentTermController::class, 'disable']); // 軟刪除付款條件資訊
 
 //單據資料相關  API
 Route::post('/createBillInfo', [BillInfoController::class, 'store']);// 新增單據資料
@@ -59,13 +60,14 @@ Route::get('/Supplier/valid', [SupplierController::class, 'getValidsuppliers']);
 //品號資料相關  API
 Route::post('/createproduct', [ProductController::class, 'store']);// 新增品號資料
 Route::get('/product/{ProductNO}', [ProductController::class, 'show']);  // 透過 ProductNO 查詢
-Route::get('/product/valid', [ProductController::class, 'getValidProducts']);  // 查詢所有有效品號
+Route::get('/product/valid', [ProductController::class, 'getValidProduct']);  // 查詢所有有效品號
+Route::patch('/product/{ProductNO}/disable', [ProductController::class, 'disable']); // 軟刪除品號資訊
 
 //庫別資料相關  API
 Route::post('/createInventory', [InventoryController::class, 'store']);// 新增庫別資料
 Route::get('/Inventory/{InventoryNO}', action: [InventoryController::class, 'show']);  // 透過 InventoryNO 查詢
-Route::get('/Inventory/valid', [InventoryController::class, 'getValidInventory']);  // 查詢所有有效庫別
-
+Route::get('/Inventory/Valid', [InventoryController::class, 'getVaildInventory']);  // 查詢所有有效庫別
+Route::patch('/Inventory/{InventoryNO}/disable', [InventoryController::class, 'disable']); // 軟刪除庫別資訊
 
 
 

@@ -27,7 +27,7 @@ use OpenApi\Annotations as OA;
      *             type="object",
      *             @OA\Property(property="DeptNo", type="string", example="D001"),
      *             @OA\Property(property="DeptNM", type="string", example="資訊部"),
-     *             @OA\Property(property="IsVaild", type="boolean", example=true)
+     *             @OA\Property(property="IsValid", type="boolean", example=true)
      *         )
      *     ),
      *     @OA\Response(

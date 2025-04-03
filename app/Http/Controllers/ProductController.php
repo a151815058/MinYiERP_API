@@ -6,17 +6,275 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use Illuminate\Support\Str;
 use OpenApi\Annotations as OA;
+
+class ProductController extends Controller
+{
     /**
-     * @OA\Get(
-     *     path="/product/{ProductNO}",
-     *     summary="取得單一部門資訊",
-     *     description="根據部門編號查詢部門資訊",
-     *     operationId="getProduct",
-     *     tags={"ProductNO"},
+     * @OA\POST(
+     *     path="/api/createproduct",
+     *     summary="新增品號資訊",
+     *     description="新增品號資訊",
+     *     operationId="createProduct",
+     *     tags={"Product"},
      *     @OA\Parameter(
-     *         name="deptNo",
+     *         name="ProductNO",
+     *         in="query",
+     *         required=true,
+     *         description="品號",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="ProductNM",
+     *         in="query",
+     *         required=true,
+     *         description="品名",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="Specification",
+     *         in="query",
+     *         required=true,
+     *         description="規格",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="Barcode",
+     *         in="query",
+     *         required=false,
+     *         description="條碼",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="Price_1",
+     *         in="query",
+     *         required=true,
+     *         description="售價一",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="Price_2",
+     *         in="query",
+     *         required=false,
+     *         description="售價二",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="Price_3",
+     *         in="query",
+     *         required=false,
+     *         description="售價三",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="Cost_1",
+     *         in="query",
+     *         required=true,
+     *         description="進價一",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="Cost_2",
+     *         in="query",
+     *         required=false,
+     *         description="進價二",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="Cost_3",
+     *         in="query",
+     *         required=false,
+     *         description="進價三",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="Batch_control",
+     *         in="query",
+     *         required=true,
+     *         description="批號管理",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="Valid_days",
+     *         in="query",
+     *         required=true,
+     *         description="有效天數",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="Effective_date",
+     *         in="query",
+     *         required=true,
+     *         description="生效日期",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="Stock_control",
+     *         in="query",
+     *         required=true,
+     *         description="是否庫存管理",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="Safety_stock",
+     *         in="query",
+     *         required=true,
+     *         description="安全庫存",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="Expiry_date",
+     *         in="query",
+     *         required=true,
+     *         description="失效日期",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="Description",
+     *         in="query",
+     *         required=false,
+     *         description="商品描述",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="IsValid",
+     *         in="query",
+     *         required=true,
+     *         description="是否有效",
+     *         @OA\Schema(type="string", example=1)
+     *     ),
+     *     @OA\Parameter(
+     *         name="Createuser",
+     *         in="query",
+     *         required=true,
+     *         description="建立者",
+     *         @OA\Schema(type="string", example="admin")
+     *     ),
+     *     @OA\Parameter(
+     *         name="UpdateUser",
+     *         in="query",
+     *         required=true,
+     *         description="更新者",
+     *         @OA\Schema(type="string", example="admin")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="成功",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
+     *             @OA\Property(property="ProductNO", type="string", example="P001"),
+     *             @OA\Property(property="ProductNM", type="string", example="螺絲起子"),
+     *             @OA\Property(property="Specification", type="string", example="SP001"),
+     *             @OA\Property(property="Barcode", type="string", example=""),
+     *             @OA\Property(property="Price_1", type="integer", example=100),
+     *             @OA\Property(property="Price_2", type="integer", example=0),
+     *             @OA\Property(property="Price_3", type="integer", example=0),
+     *             @OA\Property(property="Cost_1", type="decimal", example=60),
+     *             @OA\Property(property="Cost_2", type="integer", example=0),
+     *             @OA\Property(property="Cost_3", type="integer", example=0),
+     *             @OA\Property(property="Batch_control", type="integer", example=true),
+     *             @OA\Property(property="Valid_days", type="integer", example=0),
+     *             @OA\Property(property="Effective_date", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="Stock_control", type="integer", example=true),
+     *             @OA\Property(property="Safety_stock", type="integer", example=0),
+     *             @OA\Property(property="Expiry_date", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="Description", type="string", example=""),
+     *             @OA\Property(property="IsValid", type="boolean", example=true),
+     *             @OA\Property(property="Createuser", type="string", example="admin"),
+     *             @OA\Property(property="UpdateUser", type="string", example="admin"),
+     *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="UpdateTime", type="string", example="2025-03-31T08:58:52.001986Z")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="建立失敗",
+     *     )
+     * )
+     */
+    // 儲存品號
+    public function store(Request $request)
+    {
+        // 驗證請求
+         $validated = $request->validate([
+             'ProductNO'         => 'required|string|max:255|unique:product,ProductNO',
+             'ProductNM'         => 'required|string|max:255',
+             'Specification'     => 'required|string|max:255',
+             'Barcode'            => 'nullable|string|max:255',
+             'Price_1'            => 'required|integer|max:10000',
+             'Price_2'            => 'nullable|integer|max:10000',
+             'Price_3'            => 'nullable|integer|max:10000',
+             'Cost_1'            => 'required|integer|max:10000',
+             'Cost_2'            => 'nullable|integer|max:10000',
+             'Cost_3'            => 'nullable|integer|max:10000',
+             'Batch_control'     => 'required|boolean',
+             'Valid_days'        => 'required|integer|max:10000',
+             'Effective_date'    => 'required|date',
+             'Stock_control'     => 'required|boolean',
+             'Safety_stock'      => 'required|integer|max:10000',
+             'Expiry_date'       => 'required|date',
+             'Description'       => 'nullable|string|max:255',
+             'IsValid'            => 'required|boolean',
+             'Createuser'         => 'required|string|max:255',
+             'UpdateUser'         => 'required|string|max:255',
+         ]);
+        
+    
+        // 建立品號資料
+        $Product = Product::create([
+            'ProductNO'     => $validated['ProductNO'],
+            'ProductNM'     => $validated['ProductNM'],
+            'Specification'   => $validated['Specification'],
+            'Barcode'   => $validated['Barcode']?? null,
+            'Price_1' => $validated['Price_1'],
+            'Price_2'   => $validated['Price_2']?? null,
+            'Price_3' => $validated['Price_3']?? null,
+            'Cost_1'   => $validated['Cost_1'],
+            'Cost_2'  => $validated['Cost_2']?? null,
+            'Cost_3'   => $validated['Cost_3']?? null,
+            'Batch_control' => $validated['Batch_control'],
+            'Valid_days'   => $validated['Valid_days'],
+            'Effective_date'  => $validated['Effective_date'],
+            'Stock_control'   => $validated['Stock_control'],
+            'Safety_stock' => $validated['Safety_stock'],
+            'Expiry_date'   => $validated['Expiry_date'],
+            'Description'  => $validated['Description']?? null,
+            'IsValid'    => $validated['IsValid'],
+            'Createuser' => $validated['Createuser'],
+            'UpdateUser' => $validated['UpdateUser'],
+            'CreateTime' => now(),
+            'UpdateTime' => now()
+        ]);
+
+        // 回應 JSON
+        if (!$Product) {
+            return response()->json([
+                'status' => false,
+                'message' => '品號建立失敗',
+                'Product'    => null
+            ], status: 404);
+        }else {
+            // 回應 JSON
+            return response()->json([
+                'status' => true,
+                'message' => 'success',
+                'Product'    => $Product
+            ], 200);
+        }
+
+    }
+    /**
+     * @OA\GET(
+     *     path="/api/product/{ProductNO}",
+     *     summary="查詢特定品號",
+     *     description="查詢特定品號",
+     *     operationId="getproduct",
+     *     tags={"Product"},
+     *     @OA\Parameter(
+     *         name="ProductNO",
      *         in="path",
      *         required=true,
+     *         description="品號代號",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Response(
@@ -24,101 +282,187 @@ use OpenApi\Annotations as OA;
      *         description="成功",
      *         @OA\JsonContent(
      *             type="object",
-     *             @OA\Property(property="DeptNo", type="string", example="D001"),
-     *             @OA\Property(property="DeptNM", type="string", example="資訊部"),
-     *             @OA\Property(property="IsVaild", type="boolean", example=true)
+     *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
+     *             @OA\Property(property="ProductNO", type="string", example="P001"),
+     *             @OA\Property(property="ProductNM", type="string", example="螺絲起子"),
+     *             @OA\Property(property="Specification", type="string", example="SP001"),
+     *             @OA\Property(property="Barcode", type="string", example=""),
+     *             @OA\Property(property="Price_1", type="integer", example=100),
+     *             @OA\Property(property="Price_2", type="integer", example=0),
+     *             @OA\Property(property="Price_3", type="integer", example=0),
+     *             @OA\Property(property="Cost_1", type="decimal", example=60),
+     *             @OA\Property(property="Cost_2", type="integer", example=0),
+     *             @OA\Property(property="Cost_3", type="integer", example=0),
+     *             @OA\Property(property="Batch_control", type="integer", example=true),
+     *             @OA\Property(property="Valid_days", type="integer", example=0),
+     *             @OA\Property(property="Effective_date", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="Stock_control", type="integer", example=true),
+     *             @OA\Property(property="Safety_stock", type="integer", example=0),
+     *             @OA\Property(property="Expiry_date", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="Description", type="string", example=""),
+     *             @OA\Property(property="IsValid", type="boolean", example=true),
+     *             @OA\Property(property="Createuser", type="string", example="admin"),
+     *             @OA\Property(property="UpdateUser", type="string", example="admin"),
+     *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="UpdateTime", type="string", example="2025-03-31T08:58:52.001986Z")
      *         )
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="未找到部門"
+     *         description="未找到品號"
      *     )
      * )
      */
-class ProductController extends Controller
-{
-    // 儲存品號
-    public function store(Request $request)
-    {
-        // 驗證請求
-        // $validated = $request->validate([
-        //     'supplierNo'         => 'required|string|max:255|unique:supplier,supplierNo',
-        //     'supplierShortNM'    => 'required|string|max:255',
-        //     'supplierFullNM'     => 'required|string|max:255',
-        //     'ZipCode1'           => 'nullable|string|max:20',
-        //     'Address1'           => 'nullable|string|max:255',
-        //     'ZipCode2'           => 'required|string|max:20',
-        //     'Address2'           => 'required|string|max:255',
-        //     'TaxID'              => 'required|string|max:255', 
-        //     'ResponsiblePerson'  => 'required|string|max:255',   
-        //     'EstablishedDate'    => 'required|string|max:20',  
-        //     'Phone'              => 'required|string|max:20',  
-        //     'Fax'                => 'required|string|max:10',  
-        //     'ContactPerson'      => 'required|string|max:255',  
-        //     'ContactPhone'       => 'required|string|max:255',  
-        //     'MobilePhone'        => 'required|string|max:255',  
-        //     'ContactEmail'       => 'required|string|max:255',  
-        //     'CurrencyID'         => 'required|string|max:255',  
-        //     'TaxType'            => 'required|string|max:255',  
-        //     'PaymentTermID'      => 'required|string|max:255',    
-        //     'UserID'             => 'required|string|max:255',     
-        //     'Note'               => 'nullable|string|max:255',
-        //     'IsValid'            => 'required|boolean',
-        //     'Createuser'         => 'required|string|max:255',
-        //     'UpdateUser'         => 'required|string|max:255',
-        // ]);
-        
-    
-        // 建立品號資料
-        $Product = Product::create([
-            'ProductNO'     => $request['ProductNO'],
-            'ProductNM'     => $request['ProductNM'],
-            'Specification'   => $request['Specification'],
-            'Barcode'   => $request['Barcode'],
-            'Price_1' => $request['Price_1'],
-            'Price_2'   => $request['Price_2'],
-            'Price_3' => $request['Price_3'],
-            'Cost_1'   => $request['Cost_1'],
-            'Cost_2'  => $request['Cost_2'],
-            'Cost_3'   => $request['Cost_3'],
-            'Batch_control' => $request['Batch_control'],
-            'Valid_days'   => $request['Valid_days'],
-            'Effective_date'  => $request['Effective_date'],
-            'Stock_control'   => $request['Stock_control'],
-            'Safety_stock' => $request['Safety_stock'],
-            'Expiry_date'   => $request['Expiry_date'],
-            'Description'  => $request['Description'],
-            'IsValid'    => $request['IsValid'],
-            'Createuser' => $request['Createuser'],
-            'UpdateUser' => $request['UpdateUser'],
-            'CreateTime' => now(),
-            'UpdateTime' => now()
-        ]);
-
-        // 回應 JSON
-        return response()->json([
-            'message'  => '品號建立成功',
-            'supplier' => $Product
-        ], 201);
-
-    }
-
     // 🔍 查詢單一品號
     public function show($ProductNO)
     {
-        $ProductNO = Product::findByProductNO($ProductNO);
-        
-        if (!$ProductNO) {
-            return response()->json(['message' => '品號未找到'], 404);
+        $Product = Product::findByProductNO($ProductNO);
+        // 判斷品號是否存在
+        if (!$Product) {
+            return response()->json([
+                'status' => false,
+                'message' => '品號未找到',
+                'Product'    => null
+            ], 404);
         }
 
-        return response()->json($ProductNO);
+        return response()->json([                
+            'status' => true,
+            'message' => 'success',
+            'Product'    => $Product
+        ],200);
     }
-
+    /**
+     * @OA\GET(
+     *     path="/api/product/valid",
+     *     summary="查詢所有有效品號",
+     *     description="查詢所有有效品號",
+     *     operationId="GetAllProduct",
+     *     tags={"Product"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="成功",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
+     *             @OA\Property(property="ProductNO", type="string", example="P001"),
+     *             @OA\Property(property="ProductNM", type="string", example="螺絲起子"),
+     *             @OA\Property(property="Specification", type="string", example="SP001"),
+     *             @OA\Property(property="Barcode", type="string", example=""),
+     *             @OA\Property(property="Price_1", type="integer", example=100),
+     *             @OA\Property(property="Price_2", type="integer", example=0),
+     *             @OA\Property(property="Price_3", type="integer", example=0),
+     *             @OA\Property(property="Cost_1", type="decimal", example=60),
+     *             @OA\Property(property="Cost_2", type="integer", example=0),
+     *             @OA\Property(property="Cost_3", type="integer", example=0),
+     *             @OA\Property(property="Batch_control", type="integer", example=true),
+     *             @OA\Property(property="Valid_days", type="integer", example=0),
+     *             @OA\Property(property="Effective_date", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="Stock_control", type="integer", example=true),
+     *             @OA\Property(property="Safety_stock", type="integer", example=0),
+     *             @OA\Property(property="Expiry_date", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="Description", type="string", example=""),
+     *             @OA\Property(property="IsValid", type="boolean", example=true),
+     *             @OA\Property(property="Createuser", type="string", example="admin"),
+     *             @OA\Property(property="UpdateUser", type="string", example="admin"),
+     *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="UpdateTime", type="string", example="2025-03-31T08:58:52.001986Z")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="未找到有效品號"
+     *     )
+     * )
+     */
     // 🔍 查詢所有有效品號
-    public function getValidProducts()
+    public function getValidProduct()
     {
-        return response()->json(Product::where('IsVaild', '1')->get());
+        $Product = Product::where('IsValid', '1')->get();
+        if ($Product->isEmpty()) {
+            return response()->json([
+                'status' => false,
+                'message' => '未找到有效品號',
+                'Product'    => null
+            ], 404);
+        }
+        return response()->json([                
+            'status' => true,
+            'message' => 'success',
+            'Product'    => $Product
+        ],200);
     }
+    /**
+     * @OA\patch(
+     *     path="/api/product/{ProductNO}/disable",
+     *     summary="刪除特定品號",
+     *     description="刪除特定品號",
+     *     operationId="DeleteProduct",
+     *     tags={"Product"},
+     *     @OA\Parameter(
+     *         name="ProductNO",
+     *         in="path",
+     *         required=true,
+     *         description="品號",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="成功",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
+     *             @OA\Property(property="ProductNO", type="string", example="P001"),
+     *             @OA\Property(property="ProductNM", type="string", example="螺絲起子"),
+     *             @OA\Property(property="Specification", type="string", example="SP001"),
+     *             @OA\Property(property="Barcode", type="string", example=""),
+     *             @OA\Property(property="Price_1", type="integer", example=100),
+     *             @OA\Property(property="Price_2", type="integer", example=0),
+     *             @OA\Property(property="Price_3", type="integer", example=0),
+     *             @OA\Property(property="Cost_1", type="decimal", example=60),
+     *             @OA\Property(property="Cost_2", type="integer", example=0),
+     *             @OA\Property(property="Cost_3", type="integer", example=0),
+     *             @OA\Property(property="Batch_control", type="integer", example=true),
+     *             @OA\Property(property="Valid_days", type="integer", example=0),
+     *             @OA\Property(property="Effective_date", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="Stock_control", type="integer", example=true),
+     *             @OA\Property(property="Safety_stock", type="integer", example=0),
+     *             @OA\Property(property="Expiry_date", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="Description", type="string", example=""),
+     *             @OA\Property(property="IsValid", type="boolean", example=true),
+     *             @OA\Property(property="Createuser", type="string", example="admin"),
+     *             @OA\Property(property="UpdateUser", type="string", example="admin"),
+     *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="UpdateTime", type="string", example="2025-03-31T08:58:52.001986Z")
+     *         )   
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="未找到品號",
+     *     )
+     * )
+     */
+    // 🔍 刪除特定品號
+    public function disable($ProductNO)
+    {
+        $Product = Product::findByProductNO($ProductNO);
+        
+        if (!$Product) {
+            return response()->json([
+                'status' => false,
+                'message' => '品號未找到',
+                'Product'    => null
+            ], 404);
+        }
 
+        $Product->IsValid = 0;
+        $Product->UpdateTime = now();
+        $Product->save();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'success',
+            'Product'    => $Product
+        ], 200);
+    }
 }

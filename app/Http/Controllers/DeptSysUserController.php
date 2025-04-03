@@ -10,7 +10,7 @@ use OpenApi\Annotations as OA;
 class DeptSysUserController extends Controller
 {
      /**
-     * 新增部門與使用者關聯 (包含 'IsVaild','Createuser', 'CreateTime','UpdateUser', 'UpdateTime')
+     * 新增部門與使用者關聯 (包含 'IsValid','Createuser', 'CreateTime','UpdateUser', 'UpdateTime')
      */
     /**
      * @OA\POST(
@@ -41,7 +41,7 @@ class DeptSysUserController extends Controller
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="IsVaild",
+     *         name="IsValid",
      *         in="query",
      *         required=true,
      *         description="是否有效",
@@ -83,7 +83,7 @@ class DeptSysUserController extends Controller
         $validated = $request->validate([
             'DeptNo'   => 'required|exists:depts,DeptNo',
             'UsrNo'   => 'required|exists:sysusers,UsrNo',
-            'IsVaild'    => 'required|boolean',
+            'IsValid'    => 'required|boolean',
             'Createuser' => 'required|string|max:255',
             'UpdateUser' => 'required|string|max:255',
         ]);
@@ -103,7 +103,7 @@ class DeptSysUserController extends Controller
 
         // 新增關聯
         $dept->sysusers()->attach($user->uuid, [
-            'IsVaild'    => $validated['IsVaild'],
+            'IsValid'    => $validated['IsValid'],
             'Createuser' => $validated['Createuser'],
             'UpdateUser' => $validated['UpdateUser'],
             'CreateTime' => now(),  // 設定當前時間
@@ -144,7 +144,7 @@ class DeptSysUserController extends Controller
      *             @OA\Property(property="userId", type="string", example="cd7edb27-a1e2-4df1-aa1a-2f0346935cb2"),
      *             @OA\Property(property="userNo", type="string", example="U001"),
      *             @OA\Property(property="username", type="string", example="姚佩彤"),
-     *             @OA\Property(property="IsVaild", type="boolean", example=true),   
+     *             @OA\Property(property="IsValid", type="boolean", example=true),   
      *             @OA\Property(property="Createuser", type="string", example="admin"),
      *             @OA\Property(property="CreateTime", type="string", format="date-time", example="2023-10-01T12:00:00Z"),
      *             @OA\Property(property="UpdateUser", type="string", example="admin"),
@@ -179,7 +179,7 @@ class DeptSysUserController extends Controller
                         'id' => $user->uuid,
                         'userNo' => $user->UsrNo,
                         'username' => $user->UsrNM,
-                        'IsVaild' => $user->IsVaild,
+                        'IsValid' => $user->IsValid,
                         'Createuser' => $user->pivot->Createuser,
                         'CreateTime' => $user->pivot->CreateTime,
                         'UpdateUser' => $user->pivot->UpdateUser,
@@ -216,7 +216,7 @@ class DeptSysUserController extends Controller
      *             @OA\Property(property="Deptid", type="string", example="cd7edb27-a1e2-4df1-aa1a-2f0346935cb2"),
      *             @OA\Property(property="DeptNo", type="string", example="A002"),
      *             @OA\Property(property="DeptNM", type="string", example="財務部"),
-     *             @OA\Property(property="IsVaild", type="boolean", example=true),   
+     *             @OA\Property(property="IsValid", type="boolean", example=true),   
      *             @OA\Property(property="Createuser", type="string", example="admin"),
      *             @OA\Property(property="CreateTime", type="string", format="date-time", example="2023-10-01T12:00:00Z"),
      *             @OA\Property(property="UpdateUser", type="string", example="admin"),
@@ -251,7 +251,7 @@ class DeptSysUserController extends Controller
                     'Deptid' => $dept->id,
                     'DeptNo' => $dept->DeptNo,
                     'DeptNM' => $dept->DeptNM,
-                    'IsVaild' => $dept->pivot->IsVaild,
+                    'IsValid' => $dept->pivot->IsValid,
                     'Createuser' => $dept->pivot->Createuser,
                     'CreateTime' => $dept->pivot->CreateTime,
                     'UpdateUser' => $dept->pivot->UpdateUser,
