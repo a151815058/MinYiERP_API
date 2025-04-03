@@ -7,7 +7,12 @@ return [
             'api' => [
                 'title' => 'MinYi Laravel API Documentation',
             ],
-
+            'servers' => [
+            [
+                'url' => 'http://20.165.244.65:8000', // 修改為你的 API IP
+                'description' => 'Development Server'
+            ],
+            ],
             'routes' => [
                 /*
                  * Route for accessing api documentation interface
