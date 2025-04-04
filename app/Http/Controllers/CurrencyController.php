@@ -112,14 +112,14 @@ class CurrencyController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => '部門建立失敗',
-                'CurrencyNM'    => null
+                'output'    => null
             ], status: 404);
         }else {
             // 回應 JSON
             return response()->json([
                 'status' => true,
                 'message' => 'success',
-                'CurrencyNM'  => $currency
+                'output'  => $currency
             ], 200);
         }
     }
@@ -168,14 +168,14 @@ class CurrencyController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => '未找到貨幣資訊',
-                'Currency' => null
+                'output' => null
             ], 404);
         }
         // 回應 JSON
         return response()->json([                
             'status' => true,
             'message' => 'success',
-            'Currency'    => $Currency
+            'output'    => $Currency
         ],200);
     }
     /**
@@ -215,13 +215,13 @@ class CurrencyController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => '未找到有效貨幣資訊',
-                'Currencys' => null
+                'output' => null
             ], 404);
         }
         return response()->json([                
             'status' => true,
             'message' => 'success',
-            'Currencys'    => Currency::getValidCurrencys()
+            'output'    => Currency::getValidCurrencys()
         ],200);
     }
     /**
@@ -271,7 +271,7 @@ class CurrencyController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => '無效的貨幣代號',
-                'Currency' => null
+                'output' => null
             ], 400);
         }
 
@@ -279,7 +279,8 @@ class CurrencyController extends Controller
         if (empty(env('EXCHANGE_RATE_API_KEY')) || empty(env('EXCHANGE_RATE_API_URL'))) {
             return response()->json([
                 'status' => false,
-                'message' => 'API 金鑰或 URL 未設定'
+                'message' => 'API 金鑰或 URL 未設定',
+                'output' => 'API 金鑰或 URL 未設定'
             ], 500);
         }
         // 從 .env 讀取 API KEY 和 URL
@@ -293,7 +294,8 @@ class CurrencyController extends Controller
         if ($response->failed()) {
             return response()->json([
                 'status' => false,
-                'message' => '無法獲取匯率資訊'
+                'message' => '無法獲取匯率資訊',
+                'output' => null
             ], 500);
         }
 
@@ -352,7 +354,7 @@ class CurrencyController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => '貨幣未找到',
-                'Currency'    => null
+                'output'    => null
             ], 404);
         }
 
@@ -363,7 +365,7 @@ class CurrencyController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'success',
-            'Currency'    => $Currency
+            'output'    => $Currency
         ], 200);
     }
 }

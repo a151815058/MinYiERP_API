@@ -112,14 +112,14 @@ class DeptController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => '部門建立失敗',
-                'Dept'    => null
+                'output'    => null
             ], status: 404);
         }else {
             // 回應 JSON
             return response()->json([
                 'status' => true,
                 'message' => 'success',
-                'Dept'    => $dept
+                'output'    => $dept
             ], 200);
         }
 
@@ -169,14 +169,14 @@ class DeptController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => '部門未找到',
-                'Dept'    => null
+                'output'    => null
             ], 404);
         }
 
         return response()->json([                
             'status' => true,
             'message' => 'success',
-            'Dept'    => $dept
+            'output'    => $dept
         ],200);
     }
     /**
@@ -216,13 +216,13 @@ class DeptController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => '未找到有效部門',
-                'Dept'    => null
+                'output'    => null
             ], 404);
         }
         return response()->json([                
             'status' => true,
             'message' => 'success',
-            'Dept'    => $depts
+            'output'    => $depts
         ],200);
     }
     /**
@@ -270,7 +270,7 @@ class DeptController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => '部門未找到',
-                'Dept'    => null
+                'output'    => null
             ], 404);
         }
 
@@ -281,7 +281,7 @@ class DeptController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'success',
-            'Dept'    => $dept
+            'output'    => $dept
         ], 200);
     }
 }

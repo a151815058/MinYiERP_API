@@ -172,14 +172,14 @@ class BillInfoController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => '單據資料失敗',
-                'BillInfo'    => null
+                'output'    => null
             ], status: 404);
         }else {
             // 回應 JSON
             return response()->json([
                 'status' => true,
                 'message' => 'success',
-                'BillInfo'    => $BillInfo
+                'output'    => $BillInfo
             ], 200);
         }
     }
@@ -233,14 +233,15 @@ class BillInfoController extends Controller
         if (!$BillNo) {
             return response()->json([
                 'status' => false,
-                'message' => '付款條件未找到'
+                'message' => '付款條件未找到',
+                'output'    => null
             ], 404);
         }
 
         return response()->json([                
             'status' => true,
             'message' => 'success',
-            'BillNo'    => $BillNo
+            'output'    => $BillNo
         ],200);
     }
     /**
@@ -285,13 +286,14 @@ class BillInfoController extends Controller
         if (!$BillInfo) {
             return response()->json([
                 'status' => false,
-                'message' => '有效單據資訊未找到'
+                'message' => '有效單據資訊未找到',
+                'output'    => null
             ], 404);
         }
         return response()->json([                
             'status' => true,
             'message' => 'success',
-            'BillInfo'    => $BillInfo
+            'output'    => $BillInfo
         ],200);        
     }
     /**
@@ -345,7 +347,7 @@ class BillInfoController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => '單據未找到',
-                'Bill'    => null
+                'output'    => null
             ], 404);
         }
 
@@ -356,7 +358,7 @@ class BillInfoController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'success',
-            'Bill'    => $BillNo
+            'output'    => $BillNo
         ], 200);
     }
 }

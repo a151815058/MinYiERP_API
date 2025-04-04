@@ -140,14 +140,14 @@ class PaymentTermController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => '付款條件建立失敗',
-                'PaymentTerm'    => null
+                'output'    => null
             ], status: 404);
         }else {
             // 回應 JSON
             return response()->json([
                 'status' => true,
                 'message' => 'success',
-                'PaymentTerm'   => $PaymentTerm
+                'output'   => $PaymentTerm
             ], 200);
         }
     }
@@ -199,14 +199,14 @@ class PaymentTermController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => '付款條件未找到',
-                'PaymentTerm'    => null
+                'output'    => null
             ], 404);
         }
 
         return response()->json([                
             'status' => true,
             'message' => 'success',
-            'PaymentTerm'    => $PaymentTerm
+            'output'    => $PaymentTerm
         ],200);
     }
     /**
@@ -250,13 +250,13 @@ class PaymentTermController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => '未找到有效付款條件',
-                'PaymentTerm'    => null
+                'output'    => null
             ], 404);
         }
         return response()->json([                
             'status' => true,
             'message' => 'success',
-            'PaymentTerm'    => $PaymentTerm
+            'output'    => $PaymentTerm
         ],200);
     }
     /**
@@ -298,7 +298,7 @@ class PaymentTermController extends Controller
      *     )
      * )
      */
-    // 🔍 刪除特定部門
+    // 🔍 刪除特定付款條件
     public function disable($TermsNo)
     {
         $PaymentTerm = PaymentTerm::findByTermsNo($TermsNo);
@@ -307,7 +307,7 @@ class PaymentTermController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => '付款條件未找到',
-                'Dept'    => null
+                'output'    => null
             ], 404);
         }
 
@@ -318,7 +318,7 @@ class PaymentTermController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'success',
-            'Dept'    => $PaymentTerm
+            'output'    => $PaymentTerm
         ], 200);
     }
 }

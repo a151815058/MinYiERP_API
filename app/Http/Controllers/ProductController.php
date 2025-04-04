@@ -251,14 +251,14 @@ class ProductController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => '品號建立失敗',
-                'Product'    => null
+                'output'    => null
             ], status: 404);
         }else {
             // 回應 JSON
             return response()->json([
                 'status' => true,
                 'message' => 'success',
-                'Product'    => $Product
+                'output'    => $Product
             ], 200);
         }
 
@@ -322,14 +322,14 @@ class ProductController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => '品號未找到',
-                'Product'    => null
+                'output'    => null
             ], 404);
         }
 
         return response()->json([                
             'status' => true,
             'message' => 'success',
-            'Product'    => $Product
+            'output'    => $Product
         ],200);
     }
     /**
@@ -383,13 +383,13 @@ class ProductController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => '未找到有效品號',
-                'Product'    => null
+                'output'    => null
             ], 404);
         }
         return response()->json([                
             'status' => true,
             'message' => 'success',
-            'Product'    => $Product
+            'output'    => $Product
         ],200);
     }
     /**
@@ -451,7 +451,7 @@ class ProductController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => '品號未找到',
-                'Product'    => null
+                'output'    => null
             ], 404);
         }
 
@@ -462,7 +462,7 @@ class ProductController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'success',
-            'Product'    => $Product
+            'output'    => $Product
         ], 200);
     }
 }

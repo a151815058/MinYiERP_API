@@ -141,14 +141,14 @@ class InventoryController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => '庫別建立失敗',
-                'Inventory'    => null
+                'output'    => null
             ], status: 404);
         }else {
             // 回應 JSON
             return response()->json([
                 'status' => true,
                 'message' => 'success',
-                'Inventory'    => $Inventory
+                'output'    => $Inventory
             ], 200);
         }
     }
@@ -200,14 +200,14 @@ class InventoryController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => '庫別未找到',
-                'Inventory'    => null
+                'output'    => null
             ], 404);
         }
 
         return response()->json([                
             'status' => true,
             'message' => 'success',
-            'Inventory'    => $Inventory
+            'output'    => $Inventory
         ],200);
     }
     /**
@@ -251,13 +251,13 @@ class InventoryController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => '未找到有效庫別',
-                'Inventory'    => null
+                'output'    => null
             ], 404);
         }
         return response()->json([                
             'status' => true,
             'message' => 'success',
-            'Inventory'    => $Inventory
+            'output'    => $Inventory
         ],200);        
     }
     /**
@@ -308,7 +308,7 @@ class InventoryController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => '庫別未找到',
-                'Dept'    => null
+                'output'    => null
             ], 404);
         }
 
@@ -319,7 +319,7 @@ class InventoryController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'success',
-            'InventoryNO'    => $Inventory
+            'output'    => $Inventory
         ], 200);
     }
 }

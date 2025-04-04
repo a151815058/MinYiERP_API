@@ -174,7 +174,7 @@ class DeptSysUserController extends Controller
                 'status' => true,
                 'message' => 'success',
                 'dept' => $dept->DeptNM,
-                'users' => $dept->sysusers->map(function ($user) {
+                'output' => $dept->sysusers->map(function ($user) {
                     return [
                         'id' => $user->uuid,
                         'userNo' => $user->UsrNo,
@@ -246,7 +246,7 @@ class DeptSysUserController extends Controller
             'status' => true,
             'message' => 'success',
             'user' => $user->username,
-            'departments' => $user->depts->map(function ($dept) {
+            'output' => $user->depts->map(function ($dept) {
                 return [
                     'Deptid' => $dept->id,
                     'DeptNo' => $dept->DeptNo,
