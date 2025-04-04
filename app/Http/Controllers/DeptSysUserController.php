@@ -85,8 +85,8 @@ class DeptSysUserController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => '使用者或部門不存在',
-                'User'    =>  $user->UsrNM,
-                'Dept'    =>  $dept->DeptNM
+                'User'    =>  null,
+                'Dept'    =>  null
             ], status: 400);
         }
 
@@ -99,8 +99,8 @@ class DeptSysUserController extends Controller
         return response()->json([
                 'status' => true,
                 'message' => 'success',
-                'user' => $user->UsrNO,
-                'dept' => $dept->DeptNO,
+                'user' => $user,
+                'dept' => $dept,
             ], 201);
     }
 
@@ -230,10 +230,10 @@ class DeptSysUserController extends Controller
         return response()->json([         
             'status' => true,
             'message' => 'success',
-            'user' => $user->username,
+            'user' => $user->UsrNM,
             'output' => $user->depts->map(function ($dept) {
                 return [
-                    'Deptid' => $dept->id,
+                    'Deptid' => $dept->uuid,
                     'DeptNo' => $dept->DeptNo,
                     'DeptNM' => $dept->DeptNM,
                     'IsValid' => $dept->pivot->IsValid,
