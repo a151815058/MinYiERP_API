@@ -18,7 +18,7 @@ class DeptSysUserController extends Controller
      *     summary="新增人員部門關聯",
      *     description="新增人員部門關聯",
      *     operationId="assign-userdept",
-     *     tags={"AssignUserDept"},
+     *     tags={"Base_AssignUserDept"},
      *     @OA\Parameter(
      *         name="UsrNo",
      *         in="query",
@@ -47,20 +47,6 @@ class DeptSysUserController extends Controller
      *         description="是否有效",
      *         @OA\Schema(type="string", example=1)
      *     ),
-     *     @OA\Parameter(
-     *         name="Createuser",
-     *         in="query",
-     *         required=true,
-     *         description="建立者",
-     *         @OA\Schema(type="string", example="admin")
-     *     ),
-     *     @OA\Parameter(
-     *         name="UpdateUser",
-     *         in="query",
-     *         required=true,
-     *         description="更新者",
-     *         @OA\Schema(type="string", example="admin")
-     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="成功",
@@ -68,7 +54,12 @@ class DeptSysUserController extends Controller
      *             type="object",
      *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
      *             @OA\Property(property="UsrNo", type="string", example="U001"),
-     *             @OA\Property(property="DeptNo", type="string", example="A001")
+     *             @OA\Property(property="DeptNo", type="string", example="A001"),
+     *             @OA\Property(property="IsValid", type="boolean", example=true),
+     *             @OA\Property(property="Createuser", type="string", example="admin"),
+     *             @OA\Property(property="UpdateUser", type="string", example="admin"),
+     *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="UpdateTime", type="string", example="2025-03-31T08:58:52.001986Z")
      *         )
      *     ),
      *     @OA\Response(
@@ -83,9 +74,7 @@ class DeptSysUserController extends Controller
         $validated = $request->validate([
             'DeptNo'   => 'required|exists:depts,DeptNo',
             'UsrNo'   => 'required|exists:sysusers,UsrNo',
-            'IsValid'    => 'required|boolean',
-            'Createuser' => 'required|string|max:255',
-            'UpdateUser' => 'required|string|max:255',
+            'IsValid'    => 'required|boolean'
         ]);
 
         // 取得使用者與部門ID
@@ -103,11 +92,7 @@ class DeptSysUserController extends Controller
 
         // 新增關聯
         $dept->sysusers()->attach($user->uuid, [
-            'IsValid'    => $validated['IsValid'],
-            'Createuser' => $validated['Createuser'],
-            'UpdateUser' => $validated['UpdateUser'],
-            'CreateTime' => now(),  // 設定當前時間
-            'UpdateTime' => now()  // 設定當前時間
+            'IsValid'    => $validated['IsValid']
         ]);
 
 
@@ -125,7 +110,7 @@ class DeptSysUserController extends Controller
      *     summary="讀取部門成員",
      *     description="讀取部門成員",
      *     operationId="dept-users",
-     *     tags={"AssignUserDept"},
+     *     tags={"Base_AssignUserDept"},
      *     @OA\Parameter(
      *         name="deptId",
      *         in="path",
@@ -197,7 +182,7 @@ class DeptSysUserController extends Controller
      *     summary="讀取使用者部門",
      *     description="讀取使用者部門",
      *     operationId="user-depts",
-     *     tags={"AssignUserDept"},
+     *     tags={"Base_AssignUserDept"},
      *     @OA\Parameter(
      *         name="userId",
      *         in="path",

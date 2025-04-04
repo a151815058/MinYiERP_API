@@ -18,10 +18,10 @@ return new class extends Migration
             $table->string('Param');
             $table->string('Note')->nullable();
             $table->boolean('IsValid')->default(1);
-            $table->string('Createuser');
-            $table->dateTime('CreateTime')->nullable();
-            $table->string('UpdateUser');
-            $table->dateTime('UpdateTime')->nullable();
+            $table->string('Createuser')->comment('建立人員')->default('admin');
+            $table->dateTime('CreateTime')->comment('建立時間')->default(now());
+            $table->string('UpdateUser')->comment('異動人員')->nullable();
+            $table->dateTime('UpdateTime')->comment('異動時間')->nullable();
         });
     }
 

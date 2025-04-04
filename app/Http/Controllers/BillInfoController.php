@@ -15,7 +15,7 @@ class BillInfoController extends Controller
      *     summary="新增單據資料",
      *     description="新增單據資料",
      *     operationId="createBillInfo",
-     *     tags={"BillInfo"},
+     *     tags={"Base_BillInfo"},
      *     @OA\Parameter(
      *         name="BillNo",
      *         in="query",
@@ -86,20 +86,6 @@ class BillInfoController extends Controller
      *         description="是否有效",
      *         @OA\Schema(type="string", example=1)
      *     ),
-     *     @OA\Parameter(
-     *         name="Createuser",
-     *         in="query",
-     *         required=true,
-     *         description="建立者",
-     *         @OA\Schema(type="string", example="admin")
-     *     ),
-     *     @OA\Parameter(
-     *         name="UpdateUser",
-     *         in="query",
-     *         required=true,
-     *         description="更新者",
-     *         @OA\Schema(type="string", example="admin")
-     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="成功",
@@ -142,9 +128,7 @@ class BillInfoController extends Controller
             'GenOrder'   => 'required|string|max:10', 
             'OrderType'  => 'required|integer|max:10',           
             'Note'       => 'nullable|string|max:255',
-            'IsValid'    => 'required|boolean',
-            'Createuser' => 'required|string|max:255',
-            'UpdateUser' => 'required|string|max:255',
+            'IsValid'    => 'required|boolean'
         ]);
 
     
@@ -159,11 +143,7 @@ class BillInfoController extends Controller
             'GenOrder'   => $validated['GenOrder'],
             'OrderType'  => $validated['OrderType'],
             'Note'       => $validated['Note'] ?? null,
-            'IsValid'    => $validated['IsValid'],
-            'Createuser' => $validated['Createuser'],
-            'UpdateUser' => $validated['UpdateUser'],
-            'CreateTime' => now(),
-            'UpdateTime' => now()
+            'IsValid'    => $validated['IsValid']
         ]);
 
     
@@ -189,7 +169,7 @@ class BillInfoController extends Controller
      *     summary="查詢特定單據資訊",
      *     description="查詢特定單據資訊",
      *     operationId="getBillInfo",
-     *     tags={"BillInfo"},
+     *     tags={"Base_BillInfo"},
      *     @OA\Parameter(
      *         name="BillNo",
      *         in="path",
@@ -250,7 +230,7 @@ class BillInfoController extends Controller
      *     summary="查詢所有有效單據資訊",
      *     description="查詢所有有效單據資訊",
      *     operationId="GetAllBills",
-     *     tags={"BillInfo"},
+     *     tags={"Base_BillInfo"},
      *     @OA\Response(
      *         response=200,
      *         description="成功",
@@ -302,7 +282,7 @@ class BillInfoController extends Controller
      *     summary="刪除特定部門資訊",
      *     description="刪除特定部門資訊",
      *     operationId="DelteBill",
-     *     tags={"BillInfo"},
+     *     tags={"Base_BillInfo"},
      *     @OA\Parameter(
      *         name="BillNo",
      *         in="path",
@@ -352,6 +332,7 @@ class BillInfoController extends Controller
         }
 
         $BillNo->IsValid = 0;
+        $BillNo->UpdateUser = 'admin';
         $BillNo->UpdateTime = now();
         $BillNo->save();
 

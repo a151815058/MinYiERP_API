@@ -17,7 +17,7 @@ class DeptController extends Controller
      *     summary="新增部門資訊",
      *     description="新增部門資訊",
      *     operationId="createdept",
-     *     tags={"dept"},
+     *     tags={"Base_Dept"},
      *     @OA\Parameter(
      *         name="DeptNo",
      *         in="query",
@@ -45,20 +45,6 @@ class DeptController extends Controller
      *         required=true,
      *         description="是否有效",
      *         @OA\Schema(type="string", example=1)
-     *     ),
-     *     @OA\Parameter(
-     *         name="Createuser",
-     *         in="query",
-     *         required=true,
-     *         description="建立者",
-     *         @OA\Schema(type="string", example="admin")
-     *     ),
-     *     @OA\Parameter(
-     *         name="UpdateUser",
-     *         in="query",
-     *         required=true,
-     *         description="更新者",
-     *         @OA\Schema(type="string", example="admin")
      *     ),
      *     @OA\Response(
      *         response=200,
@@ -90,9 +76,7 @@ class DeptController extends Controller
             'DeptNo'     => 'required|string|max:255|unique:depts,DeptNo',
             'DeptNM'     => 'required|string|max:255',
             'Note'       => 'nullable|string|max:255',
-            'IsValid'    => 'required|boolean',
-            'Createuser' => 'required|string|max:255',
-            'UpdateUser' => 'required|string|max:255',
+            'IsValid'    => 'required|boolean'
         ]);
 
         // 建立部門資料
@@ -101,11 +85,7 @@ class DeptController extends Controller
             'DeptNo'     => $validated['DeptNo'],
             'DeptNM'     => $validated['DeptNM'],
             'Note'       => $validated['Note'] ?? null,
-            'IsValid'    => $validated['IsValid'],
-            'Createuser' => $validated['Createuser'],
-            'UpdateUser' => $validated['UpdateUser'],
-            'CreateTime' => now(),  // 設定當前時間
-            'UpdateTime' => now(),
+            'IsValid'    => $validated['IsValid']
         ]);
 
         if (!$dept) {
@@ -130,7 +110,7 @@ class DeptController extends Controller
      *     summary="查詢特定部門資訊",
      *     description="查詢特定部門資訊",
      *     operationId="getdept",
-     *     tags={"dept"},
+     *     tags={"Base_Dept"},
      *     @OA\Parameter(
      *         name="DeptNo",
      *         in="path",
@@ -185,7 +165,7 @@ class DeptController extends Controller
      *     summary="查詢所有有效部門資訊",
      *     description="查詢所有有效部門資訊",
      *     operationId="GetAllDept",
-     *     tags={"dept"},
+     *     tags={"Base_Dept"},
      *     @OA\Response(
      *         response=200,
      *         description="成功",
@@ -231,7 +211,7 @@ class DeptController extends Controller
      *     summary="刪除特定部門資訊",
      *     description="刪除特定部門資訊",
      *     operationId="DelteDept",
-     *     tags={"dept"},
+     *     tags={"Base_Dept"},
      *     @OA\Parameter(
      *         name="deptNo",
      *         in="path",
@@ -275,6 +255,7 @@ class DeptController extends Controller
         }
 
         $dept->IsValid = 0;
+        $dept->UpdateUser = 'admin';
         $dept->UpdateTime = now();
         $dept->save();
 

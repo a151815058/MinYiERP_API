@@ -15,7 +15,7 @@ class ProductController extends Controller
      *     summary="新增品號資訊",
      *     description="新增品號資訊",
      *     operationId="createProduct",
-     *     tags={"Product"},
+     *     tags={"Base_Product"},
      *     @OA\Parameter(
      *         name="ProductNO",
      *         in="query",
@@ -142,20 +142,6 @@ class ProductController extends Controller
      *         description="是否有效",
      *         @OA\Schema(type="string", example=1)
      *     ),
-     *     @OA\Parameter(
-     *         name="Createuser",
-     *         in="query",
-     *         required=true,
-     *         description="建立者",
-     *         @OA\Schema(type="string", example="admin")
-     *     ),
-     *     @OA\Parameter(
-     *         name="UpdateUser",
-     *         in="query",
-     *         required=true,
-     *         description="更新者",
-     *         @OA\Schema(type="string", example="admin")
-     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="成功",
@@ -214,9 +200,7 @@ class ProductController extends Controller
              'Safety_stock'      => 'required|integer|max:10000',
              'Expiry_date'       => 'required|date',
              'Description'       => 'nullable|string|max:255',
-             'IsValid'            => 'required|boolean',
-             'Createuser'         => 'required|string|max:255',
-             'UpdateUser'         => 'required|string|max:255',
+             'IsValid'            => 'required|boolean'
          ]);
         
     
@@ -239,11 +223,7 @@ class ProductController extends Controller
             'Safety_stock' => $validated['Safety_stock'],
             'Expiry_date'   => $validated['Expiry_date'],
             'Description'  => $validated['Description']?? null,
-            'IsValid'    => $validated['IsValid'],
-            'Createuser' => $validated['Createuser'],
-            'UpdateUser' => $validated['UpdateUser'],
-            'CreateTime' => now(),
-            'UpdateTime' => now()
+            'IsValid'    => $validated['IsValid']
         ]);
 
         // 回應 JSON
@@ -269,7 +249,7 @@ class ProductController extends Controller
      *     summary="查詢特定品號",
      *     description="查詢特定品號",
      *     operationId="getproduct",
-     *     tags={"Product"},
+     *     tags={"Base_Product"},
      *     @OA\Parameter(
      *         name="ProductNO",
      *         in="path",
@@ -338,7 +318,7 @@ class ProductController extends Controller
      *     summary="查詢所有有效品號",
      *     description="查詢所有有效品號",
      *     operationId="GetAllProduct",
-     *     tags={"Product"},
+     *     tags={"Base_Product"},
      *     @OA\Response(
      *         response=200,
      *         description="成功",
@@ -398,7 +378,7 @@ class ProductController extends Controller
      *     summary="刪除特定品號",
      *     description="刪除特定品號",
      *     operationId="DeleteProduct",
-     *     tags={"Product"},
+     *     tags={"Base_Product"},
      *     @OA\Parameter(
      *         name="ProductNO",
      *         in="path",
@@ -456,6 +436,7 @@ class ProductController extends Controller
         }
 
         $Product->IsValid = 0;
+        $Product->UpdateUser = 'admin';
         $Product->UpdateTime = now();
         $Product->save();
 

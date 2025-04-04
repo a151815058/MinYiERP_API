@@ -55,7 +55,8 @@ Route::patch('/BillInfo/{BillNo}/disable', [BillInfoController::class, 'disable'
 //供應商資料相關  API
 Route::post('/createsupplier', [SupplierController::class, 'store']);// 新增供應商資料
 Route::get('/Supplier/{supplierNo}', [SupplierController::class, 'show']);  // 透過 supplierNo 查詢
-Route::get('/Supplier/valid', [SupplierController::class, 'getValidsuppliers']);  // 查詢所有有效供應商
+Route::get('/Supplier/valid', [SupplierController::class, 'getValidsuppliers']);
+Route::patch('/Supplier/{supplierNo}/disable', [SupplierController::class, 'disable']); // 軟刪除單據資訊
 
 //品號資料相關  API
 Route::post('/createproduct', [ProductController::class, 'store']);// 新增品號資料

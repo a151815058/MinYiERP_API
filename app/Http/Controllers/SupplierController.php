@@ -16,7 +16,7 @@ class SupplierController extends Controller
      *     summary="新增供應商資料",
      *     description="新增供應商資料",
      *     operationId="createSupplier",
-     *     tags={"Supplier"},
+     *     tags={"Base_Supplier"},
      *     @OA\Parameter(
      *         name="supplierNo",
      *         in="query",
@@ -171,20 +171,6 @@ class SupplierController extends Controller
      *         description="是否有效",
      *         @OA\Schema(type="string", example=1)
      *     ),
-     *     @OA\Parameter(
-     *         name="Createuser",
-     *         in="query",
-     *         required=true,
-     *         description="建立者",
-     *         @OA\Schema(type="string", example="admin")
-     *     ),
-     *     @OA\Parameter(
-     *         name="UpdateUser",
-     *         in="query",
-     *         required=true,
-     *         description="更新者",
-     *         @OA\Schema(type="string", example="admin")
-     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="成功",
@@ -251,9 +237,7 @@ class SupplierController extends Controller
              'PaymentTermID'      => 'required|string|max:255',    
              'UserID'             => 'required|string|max:255',     
              'Note'               => 'nullable|string|max:255',
-             'IsValid'            => 'required|boolean',
-             'Createuser'         => 'required|string|max:255',
-             'UpdateUser'         => 'required|string|max:255',
+             'IsValid'            => 'required|boolean'
          ]);
         
     
@@ -280,11 +264,7 @@ class SupplierController extends Controller
             'PaymentTermID'  => $validated['PaymentTermID'],
             'UserID'  => $validated['UserID'],
             'Note'       => $validated['Note'] ?? null,
-            'IsValid'    => $validated['IsValid'],
-            'Createuser' => $validated['Createuser'],
-            'UpdateUser' => $validated['UpdateUser'],
-            'CreateTime' => now(),
-            'UpdateTime' => now()
+            'IsValid'    => $validated['IsValid']
         ]);
 
         // 回應 JSON
@@ -304,26 +284,209 @@ class SupplierController extends Controller
         }
 
     }
-
+    /**
+     * @OA\GET(
+     *     path="/api/Supplier/{supplierNo}",
+     *     summary="查詢特定供應商資料",
+     *     description="查詢特定供應商資料",
+     *     operationId="getSupplier",
+     *     tags={"Base_Supplier"},
+     *     @OA\Parameter(
+     *         name="supplierNo",
+     *         in="path",
+     *         required=true,
+     *         description="供應商代號",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="成功",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
+     *             @OA\Property(property="supplierNo", type="string", example="S003"),
+     *             @OA\Property(property="supplierShortNM", type="string", example="測試供應商1"),
+     *             @OA\Property(property="supplierFullNM", type="string", example="測試供應商1"),
+     *             @OA\Property(property="ZipCode1", type="string", example="12345"),
+     *             @OA\Property(property="Address1", type="string", example="台北市信義區"),
+     *             @OA\Property(property="ZipCode2", type="string", example="54321"),
+     *             @OA\Property(property="Address2", type="string", example="台北市大安區"),
+     *             @OA\Property(property="TaxID", type="string", example="12345678"),
+     *             @OA\Property(property="ResponsiblePerson", type="string", example="王小明"),
+     *             @OA\Property(property="EstablishedDate", type="string", example="2025-03-31"),
+     *             @OA\Property(property="Phone", type="string", example="02-12345678"),
+     *             @OA\Property(property="Fax", type="string", example="02-87654321"),
+     *             @OA\Property(property="ContactPerson", type="string", example="李小華"),
+     *             @OA\Property(property="ContactPhone", type="string", example="0912345678"),
+     *             @OA\Property(property="MobilePhone", type="string", example="0987654321"),
+     *             @OA\Property(property="ContactEmail", type="string", example="a151815058@gmail.com"),
+     *             @OA\Property(property="CurrencyID", type="string", example="TWD"),
+     *             @OA\Property(property="TaxType", type="string", example="T001"),
+     *             @OA\Property(property="PaymentTermID", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
+     *             @OA\Property(property="UserID", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
+     *             @OA\Property(property="Note", type="string", example=""),
+     *             @OA\Property(property="IsValid", type="boolean", example=true),
+     *             @OA\Property(property="Createuser", type="string", example="admin"),
+     *             @OA\Property(property="UpdateUser", type="string", example="admin"),
+     *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="UpdateTime", type="string", example="2025-03-31T08:58:52.001986Z")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="未找到供應商資料"
+     *     )
+     * )
+     */
     // 🔍 查詢供應商
     public function show($supplierNo)
     {
         $supplierNo = Supplier::findBysupplierNo($supplierNo);
         
         if (!$supplierNo) {
-            return response()->json(['message' => '供應商未找到'], 404);
+            return response()->json([
+                'status' => false,
+                'message' => '供應商未找到',
+                'output'    => null
+            ], 404);
         }
 
-        return response()->json($supplierNo);
+        return response()->json([                
+            'status' => true,
+            'message' => 'success',
+            'output'    => $supplierNo
+        ],200);
     }
-
+    /**
+     * @OA\GET(
+     *     path="/api/Supplier/valid",
+     *     summary="查詢所有有效供應商",
+     *     description="查詢所有有效供應商",
+     *     operationId="GetAllSupplier",
+     *     tags={"Base_Supplier"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="成功",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
+     *             @OA\Property(property="supplierNo", type="string", example="S003"),
+     *             @OA\Property(property="supplierShortNM", type="string", example="測試供應商1"),
+     *             @OA\Property(property="supplierFullNM", type="string", example="測試供應商1"),
+     *             @OA\Property(property="ZipCode1", type="string", example="12345"),
+     *             @OA\Property(property="Address1", type="string", example="台北市信義區"),
+     *             @OA\Property(property="ZipCode2", type="string", example="54321"),
+     *             @OA\Property(property="Address2", type="string", example="台北市大安區"),
+     *             @OA\Property(property="TaxID", type="string", example="12345678"),
+     *             @OA\Property(property="ResponsiblePerson", type="string", example="王小明"),
+     *             @OA\Property(property="EstablishedDate", type="string", example="2025-03-31"),
+     *             @OA\Property(property="Phone", type="string", example="02-12345678"),
+     *             @OA\Property(property="Fax", type="string", example="02-87654321"),
+     *             @OA\Property(property="ContactPerson", type="string", example="李小華"),
+     *             @OA\Property(property="ContactPhone", type="string", example="0912345678"),
+     *             @OA\Property(property="MobilePhone", type="string", example="0987654321"),
+     *             @OA\Property(property="ContactEmail", type="string", example="a151815058@gmail.com"),
+     *             @OA\Property(property="CurrencyID", type="string", example="TWD"),
+     *             @OA\Property(property="TaxType", type="string", example="T001"),
+     *             @OA\Property(property="PaymentTermID", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
+     *             @OA\Property(property="UserID", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
+     *             @OA\Property(property="Note", type="string", example=""),
+     *             @OA\Property(property="IsValid", type="boolean", example=true),
+     *             @OA\Property(property="Createuser", type="string", example="admin"),
+     *             @OA\Property(property="UpdateUser", type="string", example="admin"),
+     *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="UpdateTime", type="string", example="2025-03-31T08:58:52.001986Z")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="未找到有效供應商"
+     *     )
+     * )
+     */
     // 🔍 查詢所有有效供應商
     public function getValidsuppliers()
     {
-        if (!Supplier::getValidsuppliers()) {
-            return response()->json(['message' => '供應商未找到123'], 404);
+        try {
+            $Supplier = Supplier::getValidsuppliers();
+            if ($Supplier->isEmpty()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => '未找到有效供應商',
+                    'output'    => null
+                ], 404);
+            }
+            return response()->json([                
+                'status' => true,
+                'message' => 'success',
+                'output'    => $Supplier
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => '資料查詢錯誤',
+                'output' => null
+            ], 500);
+        }
+    }
+    /**
+     * @OA\patch(
+     *     path="/api/Supplier/{supplierNo}/disable",
+     *     summary="刪除特定供應商",
+     *     description="刪除特定供應商",
+     *     operationId="DeleteSupplier",
+     *     tags={"Base_Supplier"},
+     *     @OA\Parameter(
+     *         name="supplierNo",
+     *         in="path",
+     *         required=true,
+     *         description="供應商代號",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="成功",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
+     *             @OA\Property(property="DeptNo", type="string", example="A02"),
+     *             @OA\Property(property="DeptNM", type="string", example="財務處"),
+     *             @OA\Property(property="Note", type="string", example="測試測試"),
+     *             @OA\Property(property="IsValid", type="boolean", example=false),
+     *             @OA\Property(property="Createuser", type="string", example="admin"),
+     *             @OA\Property(property="UpdateUser", type="string", example="admin"),
+     *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="UpdateTime", type="string", example="2025-03-31T08:58:52.001986Z")
+     *         )   
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="未找到供應商"
+     *     )
+     * )
+     */
+    // 🔍 刪除特定供應商
+    public function disable($supplierNo)
+    {
+        $Supplier = Supplier::findBysupplierNo($supplierNo);
+        
+        if (!$Supplier) {
+            return response()->json([
+                'status' => false,
+                'message' => '供應商未找到',
+                'output'    => null
+            ], 404);
         }
 
-        return response()->json(Supplier::getValidsuppliers());
+        $Supplier->IsValid = 0;
+        $Supplier->UpdateUser = 'admin';
+        $Supplier->UpdateTime = now();
+        $Supplier->save();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'success',
+            'output'    => $Supplier
+        ], 200);
     }
 }

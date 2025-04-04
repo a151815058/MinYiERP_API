@@ -16,7 +16,7 @@ class CurrencyController extends Controller
      *     summary="新增貨幣資訊",
      *     description="新增貨幣資訊",
      *     operationId="createCurrency",
-     *     tags={"Currency"},
+     *     tags={"Base_Currency"},
      *     @OA\Parameter(
      *         name="CurrencyNo",
      *         in="query",
@@ -44,20 +44,6 @@ class CurrencyController extends Controller
      *         required=true,
      *         description="是否有效",
      *         @OA\Schema(type="string", example=1)
-     *     ),
-     *     @OA\Parameter(
-     *         name="Createuser",
-     *         in="query",
-     *         required=true,
-     *         description="建立者",
-     *         @OA\Schema(type="string", example="admin")
-     *     ),
-     *     @OA\Parameter(
-     *         name="UpdateUser",
-     *         in="query",
-     *         required=true,
-     *         description="更新者",
-     *         @OA\Schema(type="string", example="admin")
      *     ),
      *     @OA\Response(
      *         response=200,
@@ -89,9 +75,7 @@ class CurrencyController extends Controller
             'CurrencyNo'     => 'required|string|max:255|unique:currencys,CurrencyNo',
             'CurrencyNM'     => 'required|string|max:255',
             'Note'       => 'nullable|string|max:255',
-            'IsValid'    => 'required|boolean',
-            'Createuser' => 'required|string|max:255',
-            'UpdateUser' => 'required|string|max:255',
+            'IsValid'    => 'required|boolean'
         ]);
 
         // 建立幣別資料
@@ -100,11 +84,7 @@ class CurrencyController extends Controller
             'CurrencyNo'     => $validated['CurrencyNo'],
             'CurrencyNM'     => $validated['CurrencyNM'],
             'Note'       => $validated['Note'] ?? null,
-            'IsValid'    => $validated['IsValid'],
-            'Createuser' => $validated['Createuser'],
-            'UpdateUser' => $validated['UpdateUser'],
-            'CreateTime' => now(),  // 設定當前時間
-            'UpdateTime' => now(),
+            'IsValid'    => $validated['IsValid']
         ]);
 
         // 回應 JSON
@@ -129,7 +109,7 @@ class CurrencyController extends Controller
      *     summary="查詢特定貨幣資訊",
      *     description="查詢特定貨幣資訊",
      *     operationId="getCurrency",
-     *     tags={"Currency"},
+     *     tags={"Base_Currency"},
      *     @OA\Parameter(
      *         name="CurrencyNo",
      *         in="path",
@@ -184,7 +164,7 @@ class CurrencyController extends Controller
      *     summary="查詢所有有效貨幣資訊",
      *     description="查詢所有有效貨幣資訊",
      *     operationId="GetAllCurrency",
-     *     tags={"Currency"},
+     *     tags={"Base_Currency"},
      *     @OA\Response(
      *         response=200,
      *         description="成功",
@@ -233,7 +213,7 @@ class CurrencyController extends Controller
      *     summary="讀取匯率",
      *     description="讀取匯率",
      *     operationId="exchangeRate",
-     *     tags={"Currency"},
+     *     tags={"Base_Currency"},
      *     @OA\Parameter(
      *         name="CurrencyNo",
      *         in="path",
@@ -315,7 +295,7 @@ class CurrencyController extends Controller
      *     summary="刪除特定貨幣資訊",
      *     description="刪除特定貨幣資訊",
      *     operationId="DelteCurrency",
-     *     tags={"Currency"},
+     *     tags={"Base_Currency"},
      *     @OA\Parameter(
      *         name="CurrencyNo",
      *         in="path",
@@ -359,6 +339,7 @@ class CurrencyController extends Controller
         }
 
         $Currency->IsValid = 0;
+        $Currency->UpdateUser = 'admin'; // 這裡可以根據實際情況設置更新者
         $Currency->UpdateTime = now();
         $Currency->save();
 

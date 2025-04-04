@@ -31,9 +31,9 @@ return new class extends Migration
             $table->date('Expiry_date')->comment('失效日期');
             $table->string(column: 'Description')->comment('商品描述')->nullable();
             $table->boolean('IsValid')->comment('是否有效')->default(1);
-            $table->string('Createuser')->comment('建立人員');
-            $table->dateTime('CreateTime')->comment('建立時間')->nullable();
-            $table->string('UpdateUser')->comment('異動人員');
+            $table->string('Createuser')->comment('建立人員')->default('admin');
+            $table->dateTime('CreateTime')->comment('建立時間')->default(now());
+            $table->string('UpdateUser')->comment('異動人員')->nullable();
             $table->dateTime('UpdateTime')->comment('異動時間')->nullable();
         });
     }

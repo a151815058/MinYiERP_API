@@ -15,7 +15,7 @@ class PaymentTermController extends Controller
      *     summary="新增付款條件",
      *     description="新增付款條件",
      *     operationId="createPaymentTerm",
-     *     tags={"PaymentTerm"},
+     *     tags={"Base_PaymentTerm"},
      *     @OA\Parameter(
      *         name="TermsNo",
      *         in="query",
@@ -65,20 +65,6 @@ class PaymentTermController extends Controller
      *         description="是否有效",
      *         @OA\Schema(type="string", example=1)
      *     ),
-     *     @OA\Parameter(
-     *         name="Createuser",
-     *         in="query",
-     *         required=true,
-     *         description="建立者",
-     *         @OA\Schema(type="string", example="admin")
-     *     ),
-     *     @OA\Parameter(
-     *         name="UpdateUser",
-     *         in="query",
-     *         required=true,
-     *         description="更新者",
-     *         @OA\Schema(type="string", example="admin")
-     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="成功",
@@ -115,9 +101,7 @@ class PaymentTermController extends Controller
             'PayMode'     => 'required|string|max:255',
             'PayDay'     => 'required|integer|max:31',
             'Note'       => 'nullable|string|max:255',
-            'IsValid'    => 'required|boolean',
-            'Createuser' => 'required|string|max:255',
-            'UpdateUser' => 'required|string|max:255',
+            'IsValid'    => 'required|boolean'
         ]);
 
         // 建立付款條件
@@ -128,11 +112,7 @@ class PaymentTermController extends Controller
             'PayMode'     => $validated['PayMode'],
             'PayDay'     => $validated['PayDay'],
             'Note'       => $validated['Note'] ?? null,
-            'IsValid'    => $validated['IsValid'],
-            'Createuser' => $validated['Createuser'],
-            'UpdateUser' => $validated['UpdateUser'],
-            'CreateTime' => now(),  // 設定當前時間
-            'UpdateTime' => now()
+            'IsValid'    => $validated['IsValid']
         ]);
 
         // 回應 JSON
@@ -157,7 +137,7 @@ class PaymentTermController extends Controller
      *     summary="查詢特定付款條件",
      *     description="查詢特定付款條件",
      *     operationId="getPaymentTerm",
-     *     tags={"PaymentTerm"},
+     *     tags={"Base_PaymentTerm"},
      *     @OA\Parameter(
      *         name="TermNo",
      *         in="path",
@@ -215,7 +195,7 @@ class PaymentTermController extends Controller
      *     summary="查詢所有有效付款條件",
      *     description="查詢所有有效付款條件",
      *     operationId="GetAllPaymentTerm",
-     *     tags={"PaymentTerm"},
+     *     tags={"Base_PaymentTerm"},
      *     @OA\Response(
      *         response=200,
      *         description="成功",
@@ -265,7 +245,7 @@ class PaymentTermController extends Controller
      *     summary="刪除特定付款條件",
      *     description="刪除特定付款條件",
      *     operationId="DeletePaymentTerm",
-     *     tags={"PaymentTerm"},
+     *     tags={"Base_PaymentTerm"},
      *     @OA\Parameter(
      *         name="TermNo",
      *         in="path",
@@ -312,6 +292,7 @@ class PaymentTermController extends Controller
         }
 
         $PaymentTerm->IsValid = 0;
+        $PaymentTerm->UpdateUser = 'admin';
         $PaymentTerm->UpdateTime = now();
         $PaymentTerm->save();
 

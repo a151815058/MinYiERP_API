@@ -16,7 +16,7 @@ class SysuserController extends Controller
      *     summary="新增人員資訊",
      *     description="新增人員資訊",
      *     operationId="createuser",
-     *     tags={"user"},
+     *     tags={"Base_User"},
      *     @OA\Parameter(
      *         name="UsrNo",
      *         in="query",
@@ -44,20 +44,6 @@ class SysuserController extends Controller
      *         required=true,
      *         description="是否有效",
      *         @OA\Schema(type="string", example=1)
-     *     ),
-     *     @OA\Parameter(
-     *         name="Createuser",
-     *         in="query",
-     *         required=true,
-     *         description="建立者",
-     *         @OA\Schema(type="string", example="admin")
-     *     ),
-     *     @OA\Parameter(
-     *         name="UpdateUser",
-     *         in="query",
-     *         required=true,
-     *         description="更新者",
-     *         @OA\Schema(type="string", example="admin")
      *     ),
      *     @OA\Response(
      *         response=200,
@@ -89,9 +75,7 @@ class SysuserController extends Controller
             'UsrNo'     => 'required|string|max:255|unique:sysusers,UsrNo',
             'UsrNM'     => 'required|string|max:255',
             'Note'       => 'nullable|string|max:255',
-            'IsValid'    => 'required|boolean',
-            'Createuser' => 'required|string|max:255',
-            'UpdateUser' => 'required|string|max:255',
+            'IsValid'    => 'required|boolean'
         ]);
 
         // 建立部門資料
@@ -100,11 +84,7 @@ class SysuserController extends Controller
             'UsrNo'     => $validated['UsrNo'],
             'UsrNM'     => $validated['UsrNM'],
             'Note'       => $validated['Note'] ?? null,
-            'IsValid'    => $validated['IsValid'],
-            'Createuser' => $validated['Createuser'],
-            'UpdateUser' => $validated['UpdateUser'],
-            'CreateTime' => now(),  // 設定當前時間
-            'UpdateTime' => now(),
+            'IsValid'    => $validated['IsValid']
         ]);
 
         // 回應 JSON
@@ -129,7 +109,7 @@ class SysuserController extends Controller
      *     summary="查詢特定人員資訊",
      *     description="查詢特定人員資訊",
      *     operationId="getuser",
-     *     tags={"user"},
+     *     tags={"Base_User"},
      *     @OA\Parameter(
      *         name="UsrNo",
      *         in="path",
@@ -186,7 +166,7 @@ class SysuserController extends Controller
      *     summary="查詢所有有效人員資訊",
      *     description="查詢所有有效人員資訊",
      *     operationId="GetAllUser",
-     *     tags={"user"},
+     *     tags={"Base_User"},
      *     @OA\Response(
      *         response=200,
      *         description="成功",
@@ -236,7 +216,7 @@ class SysuserController extends Controller
      *     summary="刪除特定人員資訊",
      *     description="刪除特定人員資訊",
      *     operationId="DelteUser",
-     *     tags={"user"},
+     *     tags={"Base_User"},
      *     @OA\Parameter(
      *         name="UsrNo",
      *         in="path",
@@ -280,6 +260,7 @@ class SysuserController extends Controller
         }
 
         $user->IsValid = 0;
+        $user->UpdateUser = 'admin';
         $user->UpdateTime = now();
         $user->save();
 

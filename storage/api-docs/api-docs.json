@@ -12,7 +12,7 @@
         "/api/createBillInfo": {
             "post": {
                 "tags": [
-                    "BillInfo"
+                    "Base_BillInfo"
                 ],
                 "summary": "新增單據資料",
                 "description": "新增單據資料",
@@ -108,26 +108,6 @@
                             "type": "string",
                             "example": 1
                         }
-                    },
-                    {
-                        "name": "Createuser",
-                        "in": "query",
-                        "description": "建立者",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "example": "admin"
-                        }
-                    },
-                    {
-                        "name": "UpdateUser",
-                        "in": "query",
-                        "description": "更新者",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "example": "admin"
-                        }
                     }
                 ],
                 "responses": {
@@ -212,7 +192,7 @@
         "/api/BillInfo/{BillNo}": {
             "get": {
                 "tags": [
-                    "BillInfo"
+                    "Base_BillInfo"
                 ],
                 "summary": "查詢特定單據資訊",
                 "description": "查詢特定單據資訊",
@@ -310,7 +290,7 @@
         "/api/BillInfos/valid": {
             "get": {
                 "tags": [
-                    "BillInfo"
+                    "Base_BillInfo"
                 ],
                 "summary": "查詢所有有效單據資訊",
                 "description": "查詢所有有效單據資訊",
@@ -397,7 +377,7 @@
         "/api/BillInfo/{BillNo}/disable": {
             "patch": {
                 "tags": [
-                    "BillInfo"
+                    "Base_BillInfo"
                 ],
                 "summary": "刪除特定部門資訊",
                 "description": "刪除特定部門資訊",
@@ -495,7 +475,7 @@
         "/api/createCurrency": {
             "post": {
                 "tags": [
-                    "Currency"
+                    "Base_Currency"
                 ],
                 "summary": "新增貨幣資訊",
                 "description": "新增貨幣資訊",
@@ -536,26 +516,6 @@
                         "schema": {
                             "type": "string",
                             "example": 1
-                        }
-                    },
-                    {
-                        "name": "Createuser",
-                        "in": "query",
-                        "description": "建立者",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "example": "admin"
-                        }
-                    },
-                    {
-                        "name": "UpdateUser",
-                        "in": "query",
-                        "description": "更新者",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "example": "admin"
                         }
                     }
                 ],
@@ -617,7 +577,7 @@
         "/api/Currency/{CurrencyNo}": {
             "get": {
                 "tags": [
-                    "Currency"
+                    "Base_Currency"
                 ],
                 "summary": "查詢特定貨幣資訊",
                 "description": "查詢特定貨幣資訊",
@@ -691,7 +651,7 @@
         "/api/Currencys/valid": {
             "get": {
                 "tags": [
-                    "Currency"
+                    "Base_Currency"
                 ],
                 "summary": "查詢所有有效貨幣資訊",
                 "description": "查詢所有有效貨幣資訊",
@@ -754,7 +714,7 @@
         "/api/exchange-rate/{CurrencyNo}": {
             "get": {
                 "tags": [
-                    "Currency"
+                    "Base_Currency"
                 ],
                 "summary": "讀取匯率",
                 "description": "讀取匯率",
@@ -828,7 +788,7 @@
         "/api/Currencys/{CurrencyNo}/disable": {
             "patch": {
                 "tags": [
-                    "Currency"
+                    "Base_Currency"
                 ],
                 "summary": "刪除特定貨幣資訊",
                 "description": "刪除特定貨幣資訊",
@@ -902,7 +862,7 @@
         "/api/createdept": {
             "post": {
                 "tags": [
-                    "dept"
+                    "Base_Dept"
                 ],
                 "summary": "新增部門資訊",
                 "description": "新增部門資訊",
@@ -943,26 +903,6 @@
                         "schema": {
                             "type": "string",
                             "example": 1
-                        }
-                    },
-                    {
-                        "name": "Createuser",
-                        "in": "query",
-                        "description": "建立者",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "example": "admin"
-                        }
-                    },
-                    {
-                        "name": "UpdateUser",
-                        "in": "query",
-                        "description": "更新者",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "example": "admin"
                         }
                     }
                 ],
@@ -1024,7 +964,7 @@
         "/api/dept/{DeptNo}": {
             "get": {
                 "tags": [
-                    "dept"
+                    "Base_Dept"
                 ],
                 "summary": "查詢特定部門資訊",
                 "description": "查詢特定部門資訊",
@@ -1098,7 +1038,7 @@
         "/api/depts/valid": {
             "get": {
                 "tags": [
-                    "dept"
+                    "Base_Dept"
                 ],
                 "summary": "查詢所有有效部門資訊",
                 "description": "查詢所有有效部門資訊",
@@ -1161,7 +1101,7 @@
         "/api/dept/{deptNo}/disable": {
             "patch": {
                 "tags": [
-                    "dept"
+                    "Base_Dept"
                 ],
                 "summary": "刪除特定部門資訊",
                 "description": "刪除特定部門資訊",
@@ -1235,7 +1175,7 @@
         "/api/assign-userdept": {
             "post": {
                 "tags": [
-                    "AssignUserDept"
+                    "Base_AssignUserDept"
                 ],
                 "summary": "新增人員部門關聯",
                 "description": "新增人員部門關聯",
@@ -1277,26 +1217,6 @@
                             "type": "string",
                             "example": 1
                         }
-                    },
-                    {
-                        "name": "Createuser",
-                        "in": "query",
-                        "description": "建立者",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "example": "admin"
-                        }
-                    },
-                    {
-                        "name": "UpdateUser",
-                        "in": "query",
-                        "description": "更新者",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "example": "admin"
-                        }
                     }
                 ],
                 "responses": {
@@ -1317,6 +1237,26 @@
                                         "DeptNo": {
                                             "type": "string",
                                             "example": "A001"
+                                        },
+                                        "IsValid": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "Createuser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "UpdateUser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "CreateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "UpdateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
                                         }
                                     },
                                     "type": "object"
@@ -1333,7 +1273,7 @@
         "/api/dept-users/{deptId}": {
             "get": {
                 "tags": [
-                    "AssignUserDept"
+                    "Base_AssignUserDept"
                 ],
                 "summary": "讀取部門成員",
                 "description": "讀取部門成員",
@@ -1417,7 +1357,7 @@
         "/api/user-depts/{userId}": {
             "get": {
                 "tags": [
-                    "AssignUserDept"
+                    "Base_AssignUserDept"
                 ],
                 "summary": "讀取使用者部門",
                 "description": "讀取使用者部門",
@@ -1501,7 +1441,7 @@
         "/api/createInventory": {
             "post": {
                 "tags": [
-                    "Inventory"
+                    "Base_Inventory"
                 ],
                 "summary": "新增庫別資訊",
                 "description": "新增庫別資訊",
@@ -1569,26 +1509,6 @@
                         "schema": {
                             "type": "string",
                             "example": 1
-                        }
-                    },
-                    {
-                        "name": "Createuser",
-                        "in": "query",
-                        "description": "建立者",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "example": "admin"
-                        }
-                    },
-                    {
-                        "name": "UpdateUser",
-                        "in": "query",
-                        "description": "更新者",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "example": "admin"
                         }
                     }
                 ],
@@ -1662,7 +1582,7 @@
         "/api/Inventory/{InventoryNO}": {
             "get": {
                 "tags": [
-                    "Inventory"
+                    "Base_Inventory"
                 ],
                 "summary": "查詢特定庫別資訊",
                 "description": "查詢特定庫別資訊",
@@ -1748,7 +1668,7 @@
         "/api/Inventory/Valid": {
             "get": {
                 "tags": [
-                    "Inventory"
+                    "Base_Inventory"
                 ],
                 "summary": "查詢所有有效庫別資訊",
                 "description": "查詢所有有效庫別資訊",
@@ -1823,7 +1743,7 @@
         "/api/Inventory/{InventoryNO}/disable": {
             "patch": {
                 "tags": [
-                    "Inventory"
+                    "Base_Inventory"
                 ],
                 "summary": "刪除特定庫別資訊",
                 "description": "刪除特定庫別資訊",
@@ -1909,7 +1829,7 @@
         "/api/createPaymentTerm": {
             "post": {
                 "tags": [
-                    "PaymentTerm"
+                    "Base_PaymentTerm"
                 ],
                 "summary": "新增付款條件",
                 "description": "新增付款條件",
@@ -1977,26 +1897,6 @@
                         "schema": {
                             "type": "string",
                             "example": 1
-                        }
-                    },
-                    {
-                        "name": "Createuser",
-                        "in": "query",
-                        "description": "建立者",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "example": "admin"
-                        }
-                    },
-                    {
-                        "name": "UpdateUser",
-                        "in": "query",
-                        "description": "更新者",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "example": "admin"
                         }
                     }
                 ],
@@ -2070,7 +1970,7 @@
         "/api/PaymentTerm/{TermNo}": {
             "get": {
                 "tags": [
-                    "PaymentTerm"
+                    "Base_PaymentTerm"
                 ],
                 "summary": "查詢特定付款條件",
                 "description": "查詢特定付款條件",
@@ -2156,7 +2056,7 @@
         "/api/PaymentTerms/valid": {
             "get": {
                 "tags": [
-                    "PaymentTerm"
+                    "Base_PaymentTerm"
                 ],
                 "summary": "查詢所有有效付款條件",
                 "description": "查詢所有有效付款條件",
@@ -2231,7 +2131,7 @@
         "/api/PaymentTerm/{TermNo}/disable": {
             "patch": {
                 "tags": [
-                    "PaymentTerm"
+                    "Base_PaymentTerm"
                 ],
                 "summary": "刪除特定付款條件",
                 "description": "刪除特定付款條件",
@@ -2317,7 +2217,7 @@
         "/api/createproduct": {
             "post": {
                 "tags": [
-                    "Product"
+                    "Base_Product"
                 ],
                 "summary": "新增品號資訊",
                 "description": "新增品號資訊",
@@ -2485,26 +2385,6 @@
                             "type": "string",
                             "example": 1
                         }
-                    },
-                    {
-                        "name": "Createuser",
-                        "in": "query",
-                        "description": "建立者",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "example": "admin"
-                        }
-                    },
-                    {
-                        "name": "UpdateUser",
-                        "in": "query",
-                        "description": "更新者",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "example": "admin"
-                        }
                     }
                 ],
                 "responses": {
@@ -2621,7 +2501,7 @@
         "/api/product/{ProductNO}": {
             "get": {
                 "tags": [
-                    "Product"
+                    "Base_Product"
                 ],
                 "summary": "查詢特定品號",
                 "description": "查詢特定品號",
@@ -2751,7 +2631,7 @@
         "/api/product/valid": {
             "get": {
                 "tags": [
-                    "Product"
+                    "Base_Product"
                 ],
                 "summary": "查詢所有有效品號",
                 "description": "查詢所有有效品號",
@@ -2870,7 +2750,7 @@
         "/api/product/{ProductNO}/disable": {
             "patch": {
                 "tags": [
-                    "Product"
+                    "Base_Product"
                 ],
                 "summary": "刪除特定品號",
                 "description": "刪除特定品號",
@@ -3000,7 +2880,7 @@
         "/api/createsupplier": {
             "post": {
                 "tags": [
-                    "Supplier"
+                    "Base_Supplier"
                 ],
                 "summary": "新增供應商資料",
                 "description": "新增供應商資料",
@@ -3204,26 +3084,6 @@
                             "type": "string",
                             "example": 1
                         }
-                    },
-                    {
-                        "name": "Createuser",
-                        "in": "query",
-                        "description": "建立者",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "example": "admin"
-                        }
-                    },
-                    {
-                        "name": "UpdateUser",
-                        "in": "query",
-                        "description": "更新者",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "example": "admin"
-                        }
                     }
                 ],
                 "responses": {
@@ -3353,10 +3213,365 @@
                 }
             }
         },
+        "/api/Supplier/{supplierNo}": {
+            "get": {
+                "tags": [
+                    "Base_Supplier"
+                ],
+                "summary": "查詢特定供應商資料",
+                "description": "查詢特定供應商資料",
+                "operationId": "getSupplier",
+                "parameters": [
+                    {
+                        "name": "supplierNo",
+                        "in": "path",
+                        "description": "供應商代號",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "supplierNo": {
+                                            "type": "string",
+                                            "example": "S003"
+                                        },
+                                        "supplierShortNM": {
+                                            "type": "string",
+                                            "example": "測試供應商1"
+                                        },
+                                        "supplierFullNM": {
+                                            "type": "string",
+                                            "example": "測試供應商1"
+                                        },
+                                        "ZipCode1": {
+                                            "type": "string",
+                                            "example": "12345"
+                                        },
+                                        "Address1": {
+                                            "type": "string",
+                                            "example": "台北市信義區"
+                                        },
+                                        "ZipCode2": {
+                                            "type": "string",
+                                            "example": "54321"
+                                        },
+                                        "Address2": {
+                                            "type": "string",
+                                            "example": "台北市大安區"
+                                        },
+                                        "TaxID": {
+                                            "type": "string",
+                                            "example": "12345678"
+                                        },
+                                        "ResponsiblePerson": {
+                                            "type": "string",
+                                            "example": "王小明"
+                                        },
+                                        "EstablishedDate": {
+                                            "type": "string",
+                                            "example": "2025-03-31"
+                                        },
+                                        "Phone": {
+                                            "type": "string",
+                                            "example": "02-12345678"
+                                        },
+                                        "Fax": {
+                                            "type": "string",
+                                            "example": "02-87654321"
+                                        },
+                                        "ContactPerson": {
+                                            "type": "string",
+                                            "example": "李小華"
+                                        },
+                                        "ContactPhone": {
+                                            "type": "string",
+                                            "example": "0912345678"
+                                        },
+                                        "MobilePhone": {
+                                            "type": "string",
+                                            "example": "0987654321"
+                                        },
+                                        "ContactEmail": {
+                                            "type": "string",
+                                            "example": "a151815058@gmail.com"
+                                        },
+                                        "CurrencyID": {
+                                            "type": "string",
+                                            "example": "TWD"
+                                        },
+                                        "TaxType": {
+                                            "type": "string",
+                                            "example": "T001"
+                                        },
+                                        "PaymentTermID": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "UserID": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "Note": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "IsValid": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "Createuser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "UpdateUser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "CreateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "UpdateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "未找到供應商資料"
+                    }
+                }
+            }
+        },
+        "/api/Supplier/valid": {
+            "get": {
+                "tags": [
+                    "Base_Supplier"
+                ],
+                "summary": "查詢所有有效供應商",
+                "description": "查詢所有有效供應商",
+                "operationId": "GetAllSupplier",
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "supplierNo": {
+                                            "type": "string",
+                                            "example": "S003"
+                                        },
+                                        "supplierShortNM": {
+                                            "type": "string",
+                                            "example": "測試供應商1"
+                                        },
+                                        "supplierFullNM": {
+                                            "type": "string",
+                                            "example": "測試供應商1"
+                                        },
+                                        "ZipCode1": {
+                                            "type": "string",
+                                            "example": "12345"
+                                        },
+                                        "Address1": {
+                                            "type": "string",
+                                            "example": "台北市信義區"
+                                        },
+                                        "ZipCode2": {
+                                            "type": "string",
+                                            "example": "54321"
+                                        },
+                                        "Address2": {
+                                            "type": "string",
+                                            "example": "台北市大安區"
+                                        },
+                                        "TaxID": {
+                                            "type": "string",
+                                            "example": "12345678"
+                                        },
+                                        "ResponsiblePerson": {
+                                            "type": "string",
+                                            "example": "王小明"
+                                        },
+                                        "EstablishedDate": {
+                                            "type": "string",
+                                            "example": "2025-03-31"
+                                        },
+                                        "Phone": {
+                                            "type": "string",
+                                            "example": "02-12345678"
+                                        },
+                                        "Fax": {
+                                            "type": "string",
+                                            "example": "02-87654321"
+                                        },
+                                        "ContactPerson": {
+                                            "type": "string",
+                                            "example": "李小華"
+                                        },
+                                        "ContactPhone": {
+                                            "type": "string",
+                                            "example": "0912345678"
+                                        },
+                                        "MobilePhone": {
+                                            "type": "string",
+                                            "example": "0987654321"
+                                        },
+                                        "ContactEmail": {
+                                            "type": "string",
+                                            "example": "a151815058@gmail.com"
+                                        },
+                                        "CurrencyID": {
+                                            "type": "string",
+                                            "example": "TWD"
+                                        },
+                                        "TaxType": {
+                                            "type": "string",
+                                            "example": "T001"
+                                        },
+                                        "PaymentTermID": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "UserID": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "Note": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "IsValid": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "Createuser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "UpdateUser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "CreateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "UpdateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "未找到有效供應商"
+                    }
+                }
+            }
+        },
+        "/api/Supplier/{supplierNo}/disable": {
+            "patch": {
+                "tags": [
+                    "Base_Supplier"
+                ],
+                "summary": "刪除特定供應商",
+                "description": "刪除特定供應商",
+                "operationId": "DeleteSupplier",
+                "parameters": [
+                    {
+                        "name": "supplierNo",
+                        "in": "path",
+                        "description": "供應商代號",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "DeptNo": {
+                                            "type": "string",
+                                            "example": "A02"
+                                        },
+                                        "DeptNM": {
+                                            "type": "string",
+                                            "example": "財務處"
+                                        },
+                                        "Note": {
+                                            "type": "string",
+                                            "example": "測試測試"
+                                        },
+                                        "IsValid": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "Createuser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "UpdateUser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "CreateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "UpdateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "未找到供應商"
+                    }
+                }
+            }
+        },
         "/api/createuser": {
             "post": {
                 "tags": [
-                    "user"
+                    "Base_User"
                 ],
                 "summary": "新增人員資訊",
                 "description": "新增人員資訊",
@@ -3397,26 +3612,6 @@
                         "schema": {
                             "type": "string",
                             "example": 1
-                        }
-                    },
-                    {
-                        "name": "Createuser",
-                        "in": "query",
-                        "description": "建立者",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "example": "admin"
-                        }
-                    },
-                    {
-                        "name": "UpdateUser",
-                        "in": "query",
-                        "description": "更新者",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "example": "admin"
                         }
                     }
                 ],
@@ -3478,7 +3673,7 @@
         "/api/user/{UsrNo}": {
             "get": {
                 "tags": [
-                    "user"
+                    "Base_User"
                 ],
                 "summary": "查詢特定人員資訊",
                 "description": "查詢特定人員資訊",
@@ -3552,7 +3747,7 @@
         "/api/users/valid": {
             "get": {
                 "tags": [
-                    "user"
+                    "Base_User"
                 ],
                 "summary": "查詢所有有效人員資訊",
                 "description": "查詢所有有效人員資訊",
@@ -3615,7 +3810,7 @@
         "/api/user/{UsrNo}/disable": {
             "patch": {
                 "tags": [
-                    "user"
+                    "Base_User"
                 ],
                 "summary": "刪除特定人員資訊",
                 "description": "刪除特定人員資訊",
@@ -3689,40 +3884,40 @@
     },
     "tags": [
         {
-            "name": "BillInfo",
-            "description": "BillInfo"
+            "name": "Base_BillInfo",
+            "description": "Base_BillInfo"
         },
         {
-            "name": "Currency",
-            "description": "Currency"
+            "name": "Base_Currency",
+            "description": "Base_Currency"
         },
         {
-            "name": "dept",
-            "description": "dept"
+            "name": "Base_Dept",
+            "description": "Base_Dept"
         },
         {
-            "name": "AssignUserDept",
-            "description": "AssignUserDept"
+            "name": "Base_AssignUserDept",
+            "description": "Base_AssignUserDept"
         },
         {
-            "name": "Inventory",
-            "description": "Inventory"
+            "name": "Base_Inventory",
+            "description": "Base_Inventory"
         },
         {
-            "name": "PaymentTerm",
-            "description": "PaymentTerm"
+            "name": "Base_PaymentTerm",
+            "description": "Base_PaymentTerm"
         },
         {
-            "name": "Product",
-            "description": "Product"
+            "name": "Base_Product",
+            "description": "Base_Product"
         },
         {
-            "name": "Supplier",
-            "description": "Supplier"
+            "name": "Base_Supplier",
+            "description": "Base_Supplier"
         },
         {
-            "name": "user",
-            "description": "user"
+            "name": "Base_User",
+            "description": "Base_User"
         }
     ]
 }

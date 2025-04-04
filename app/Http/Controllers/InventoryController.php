@@ -15,7 +15,7 @@ class InventoryController extends Controller
      *     summary="新增庫別資訊",
      *     description="新增庫別資訊",
      *     operationId="createInventory",
-     *     tags={"Inventory"},
+     *     tags={"Base_Inventory"},
      *     @OA\Parameter(
      *         name="InventoryNO",
      *         in="query",
@@ -65,20 +65,6 @@ class InventoryController extends Controller
      *         description="是否有效",
      *         @OA\Schema(type="string", example=1)
      *     ),
-     *     @OA\Parameter(
-     *         name="Createuser",
-     *         in="query",
-     *         required=true,
-     *         description="建立者",
-     *         @OA\Schema(type="string", example="admin")
-     *     ),
-     *     @OA\Parameter(
-     *         name="UpdateUser",
-     *         in="query",
-     *         required=true,
-     *         description="更新者",
-     *         @OA\Schema(type="string", example="admin")
-     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="成功",
@@ -115,9 +101,7 @@ class InventoryController extends Controller
              'LotNum'     => 'nullable|string|max:255',
              'Safety_stock'     => 'required|integer|max:10000000',
              'LastStockReceiptDate'     => 'nullable|string',
-             'IsValid'    => 'required|boolean',
-             'Createuser' => 'required|string|max:255',
-             'UpdateUser' => 'required|string|max:255',
+             'IsValid'    => 'required|boolean'
          ]);
 
         // 建立庫別資料
@@ -129,11 +113,7 @@ class InventoryController extends Controller
             'LotNum'                  => $validated['LotNum'],
             'Safety_stock'            => $validated['Safety_stock'],
             'LastStockReceiptDate'    => $validated['LastStockReceiptDate'] ?? null,
-            'IsValid'                 => $validated['IsValid'],
-            'Createuser'              => $validated['Createuser'],
-            'UpdateUser'              => $validated['UpdateUser'],
-            'CreateTime'              => now(),  // 設定當前時間
-            'UpdateTime'              => now(),
+            'IsValid'                 => $validated['IsValid']
         ]);
 
         // 回應 JSON
@@ -158,7 +138,7 @@ class InventoryController extends Controller
      *     summary="查詢特定庫別資訊",
      *     description="查詢特定庫別資訊",
      *     operationId="getInventory",
-     *     tags={"Inventory"},
+     *     tags={"Base_Inventory"},
      *     @OA\Parameter(
      *         name="InventoryNO",
      *         in="path",
@@ -216,7 +196,7 @@ class InventoryController extends Controller
      *     summary="查詢所有有效庫別資訊",
      *     description="查詢所有有效庫別資訊",
      *     operationId="GetAllInventory",
-     *     tags={"Inventory"},
+     *     tags={"Base_Inventory"},
      *     @OA\Response(
      *         response=200,
      *         description="成功",
@@ -266,7 +246,7 @@ class InventoryController extends Controller
      *     summary="刪除特定庫別資訊",
      *     description="刪除特定庫別資訊",
      *     operationId="DeleteInventory",
-     *     tags={"Inventory"},
+     *     tags={"Base_Inventory"},
      *     @OA\Parameter(
      *         name="InventoryNO",
      *         in="path",
@@ -313,6 +293,7 @@ class InventoryController extends Controller
         }
 
         $Inventory->IsValid = 0;
+        $Inventory->UpdateUser = 'admin';
         $Inventory->UpdateTime = now();
         $Inventory->save();
 
