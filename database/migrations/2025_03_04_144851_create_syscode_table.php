@@ -12,10 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('syscode', function (Blueprint $table) {
-            $table->uuid('uuid')->primary();
-            $table->string('Puuid')->nullable();
-            $table->string('Paramcode');
-            $table->string('Param');
+            $table->uuid('uuid')->comment(comment: 'Key')->primary();
+            $table->string('Puuid')->comment(comment: '父Key')->nullable();
+            $table->string('ParaSN')->comment('參數代碼');
+            $table->string('Paramcode')->comment('參數名稱');
+            $table->string('ParaNM')->comment('參數值');
             $table->string('Note')->nullable();
             $table->boolean('IsValid')->default(1);
             $table->string('Createuser')->comment('建立人員')->default('admin');
