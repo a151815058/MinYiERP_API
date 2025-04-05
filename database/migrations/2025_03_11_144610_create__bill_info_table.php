@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('gen_order')->comment('自動產生銷貨單');
             $table->integer('order_type')->comment('銷貨單別');
             $table->string('note')->comment('備註')->nullable();
-            $table->boolean('is_valid')->comment('是否有效')->default(1);
+            $table->string('is_valid')->comment('是否有效')->default(1);
             $table->string('create_user')->comment('建立人員')->default('admin');
             $table->dateTime('create_time')->comment('建立時間')->default(now());
             $table->string('update_user')->comment('異動人員')->nullable();
