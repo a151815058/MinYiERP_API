@@ -12,15 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('sysusers', function (Blueprint $table) {
-            $table->uuid('uuid')->comment('KEY')->primary();
-            $table->string('UsrNo')->comment('人員代號')->unique();
-            $table->string('UsrNM')->comment('人員名稱');
-            $table->string('Note')->comment('備註')->nullable();
-            $table->boolean('IsValid')->comment('是否有效')->default(1);
-            $table->string('Createuser')->comment('建立人員')->default('admin');
-            $table->dateTime('CreateTime')->comment('建立時間')->default(now());
-            $table->string('UpdateUser')->comment('異動人員')->nullable();
-            $table->dateTime('UpdateTime')->comment('異動時間')->nullable();
+            $table->uuid('uuid')->comment('KEY')->primary()->unique();
+            $table->string('user_no')->comment('人員代號')->unique();
+            $table->string('user_nm')->comment('人員名稱');
+            $table->string('note')->comment('備註')->nullable();
+            $table->boolean('is_valid')->comment('是否有效')->default(1);
+            $table->string('create_user')->comment('建立人員')->default('admin');
+            $table->dateTime('create_time')->comment('建立時間')->default(now());
+            $table->string('update_user')->comment('異動人員')->nullable();
+            $table->dateTime('update_time')->comment('異動時間')->nullable();
         });
     }
 

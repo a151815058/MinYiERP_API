@@ -11,19 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('Inventory', function (Blueprint $table) {
-            $table->uuid('Uuid')->comment('KEY')->primary();
-            $table->string('InventoryNO')->comment('庫別代號')->unique();
-            $table->string('InventoryNM')->comment('庫別名稱');
-            $table->decimal('InventoryQty')->comment('庫存數量')->default(0);
-            $table->string('LotNum')->comment('批號')->nullable();
-            $table->decimal('Safety_stock')->comment('安全庫存')->default(0);
-            $table->date('LastStockReceiptDate')->comment('最近一次進貨日')->nullable();
-            $table->boolean('IsValid')->comment('是否有效')->default(1);
-            $table->string('Createuser')->comment('建立人員')->default('admin');
-            $table->dateTime('CreateTime')->comment('建立時間')->default(now());
-            $table->string('UpdateUser')->comment('異動人員')->nullable();
-            $table->dateTime('UpdateTime')->comment('異動時間')->nullable();
+        Schema::create('inventory', function (Blueprint $table) {
+            $table->uuid('uuid')->comment('KEY')->primary()->unique();
+            $table->string('inventory_no')->comment('庫別代號')->unique();
+            $table->string('inventory_nm')->comment('庫別名稱');
+            $table->decimal('inventory_qty')->comment('庫存數量')->default(0);
+            $table->string('lot_num')->comment('批號')->nullable();
+            $table->decimal('safety_stock')->comment('安全庫存')->default(0);
+            $table->date('lastStock_receiptdate')->comment('最近一次進貨日')->nullable();
+            $table->boolean('is_valid')->comment('是否有效')->default(1);
+            $table->string('create_user')->comment('建立人員')->default('admin');
+            $table->dateTime('create_time')->comment('建立時間')->default(now());
+            $table->string('update_user')->comment('異動人員')->nullable();
+            $table->dateTime('update_time')->comment('異動時間')->nullable();
         });
     }
 

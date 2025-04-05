@@ -6,6 +6,7 @@ use App\Models\BillInfo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use OpenApi\Annotations as OA;
+use Illuminate\Support\Facades\Log;
 
 class BillInfoController extends Controller
 {
@@ -117,50 +118,66 @@ class BillInfoController extends Controller
     // 儲存付款條件
     public function store(Request $request)
     {
-        // 驗證請求
-        $validated = $request->validate([
-            'BillNo'     => 'required|string|max:255|unique:billinfo,BillNo',
-            'BillNM'     => 'required|string|max:255',
-            'BillType'   => 'required|string|max:10',
-            'BillEncode' => 'required|string|max:10',
-            'BillCalc'   => 'required|integer|max:10',
-            'AutoReview' => 'required|integer|max:10',
-            'GenOrder'   => 'required|string|max:10', 
-            'OrderType'  => 'required|integer|max:10',           
-            'Note'       => 'nullable|string|max:255',
-            'IsValid'    => 'required|boolean'
-        ]);
-
+        try {
+            // 驗證請求
+            $validated = $request->validate([
+                'BillNo'     => 'required|string|max:255|unique:billinfo,BillNo',
+                'BillNM'     => 'required|string|max:255',
+                'BillType'   => 'required|string|max:10',
+                'BillEncode' => 'required|string|max:10',
+                'BillCalc'   => 'required|integer|max:10',
+                'AutoReview' => 'required|integer|max:10',
+                'GenOrder'   => 'required|string|max:10',
+                'OrderType'  => 'required|integer|max:10',
+                'Note'       => 'nullable|string|max:255',
+                'IsValid'    => 'required|boolean'
+            ]);
     
-        // 建立單據資料
-        $BillInfo = BillInfo::create([
-            'BillNo'     => $validated['BillNo'],
-            'BillNM'     => $validated['BillNM'],
-            'BillType'   => $validated['BillType'],
-            'BillEncode' => $validated['BillEncode'],
-            'BillCalc'   => $validated['BillCalc'],
-            'AutoReview' => $validated['AutoReview'],
-            'GenOrder'   => $validated['GenOrder'],
-            'OrderType'  => $validated['OrderType'],
-            'Note'       => $validated['Note'] ?? null,
-            'IsValid'    => $validated['IsValid']
-        ]);
-
+            // 建立單據資料
+            $BillInfo = BillInfo::create([
+                'BillNo'     => $validated['BillNo'],
+                'BillNM'     => $validated['BillNM'],
+                'BillType'   => $validated['BillType'],
+                'BillEncode' => $validated['BillEncode'],
+                'BillCalc'   => $validated['BillCalc'],
+                'AutoReview' => $validated['AutoReview'],
+                'GenOrder'   => $validated['GenOrder'],
+                'OrderType'  => $validated['OrderType'],
+                'Note'       => $validated['Note'] ?? null,
+                'IsValid'    => $validated['IsValid']
+            ]);
     
-        // 回應 JSON
-        if (!$BillInfo) {
-            return response()->json([
-                'status' => false,
-                'message' => '單據資料失敗',
-                'output'    => null
-            ], status: 404);
-        }else {
-            // 回應 JSON
+            if (!$BillInfo) {
+                return response()->json([
+                    'status' => false,
+                    'message' => '單據資料建立失敗',
+                    'output' => null
+                ], 404);
+            }
+    
             return response()->json([
                 'status' => true,
                 'message' => 'success',
-                'output'    => $BillInfo
+                'output' => $BillInfo
             ], 200);
+    
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 捕捉驗證失敗
+            return response()->json([
+                'status' => false,
+                'message' => '驗證錯誤',
+                'errors' => $e->errors()
+            ], 422);
+    
+        } catch (\Exception $e) {
+            // 其他例外處理
+            Log::error('建立單據資料錯誤：' . $e->getMessage());
+    
+            return response()->json([
+                'status' => false,
+                'message' => '伺服器發生錯誤，請稍後再試',
+                'error' => $e->getMessage() // 上線環境建議拿掉
+            ], 500);
         }
     }
     /**
@@ -208,21 +225,40 @@ class BillInfoController extends Controller
     // 🔍 查詢單一付款條件
     public function show($BillNo)
     {
-        $BillNo = BillInfo::findByBillNo($BillNo);
-        
-        if (!$BillNo) {
+        try {
+            $BillNo = BillInfo::findByBillNo($BillNo);
+            
+            if (!$BillNo) {
+                return response()->json([
+                    'status' => false,
+                    'message' => '單據未找到',
+                    'output'    => null
+                ], 404);
+            }
+
+            return response()->json([                
+                'status' => true,
+                'message' => 'success',
+                'output'    => $BillNo
+            ],200);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 捕捉驗證失敗
             return response()->json([
                 'status' => false,
-                'message' => '付款條件未找到',
-                'output'    => null
-            ], 404);
+                'message' => '驗證錯誤',
+                'errors' => $e->errors()
+            ], 422);
+    
+        } catch (\Exception $e) {
+            // 其他例外處理
+            Log::error('單據資料錯誤：' . $e->getMessage());
+    
+            return response()->json([
+                'status' => false,
+                'message' => '伺服器發生錯誤，請稍後再試',
+                'error' => $e->getMessage() // 上線環境建議拿掉
+            ], 500);
         }
-
-        return response()->json([                
-            'status' => true,
-            'message' => 'success',
-            'output'    => $BillNo
-        ],200);
     }
     /**
      * @OA\GET(
@@ -262,19 +298,38 @@ class BillInfoController extends Controller
     // 🔍 查詢所有有效部門
     public function getValidBillNos()
     {
-        $BillInfo = BillInfo::getValidBillNos();
-        if (!$BillInfo) {
+        try {
+            $BillInfo = BillInfo::getValidBillNos();
+            if (!$BillInfo) {
+                return response()->json([
+                    'status' => false,
+                    'message' => '有效單據資訊未找到',
+                    'output'    => null
+                ], 404);
+            }
+            return response()->json([                
+                'status' => true,
+                'message' => 'success',
+                'output'    => $BillInfo
+            ],200);       
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 捕捉驗證失敗
             return response()->json([
                 'status' => false,
-                'message' => '有效單據資訊未找到',
-                'output'    => null
-            ], 404);
-        }
-        return response()->json([                
-            'status' => true,
-            'message' => 'success',
-            'output'    => $BillInfo
-        ],200);        
+                'message' => '驗證錯誤',
+                'errors' => $e->errors()
+            ], 422);
+    
+        } catch (\Exception $e) {
+            // 其他例外處理
+            Log::error('單據資料錯誤：' . $e->getMessage());
+    
+            return response()->json([
+                'status' => false,
+                'message' => '伺服器發生錯誤，請稍後再試',
+                'error' => $e->getMessage() // 上線環境建議拿掉
+            ], 500);
+        } 
     }
     /**
      * @OA\patch(
@@ -321,25 +376,44 @@ class BillInfoController extends Controller
         // 🔍 刪除特定部門
     public function disable($BillNo)
     {
-        $BillNo = BillInfo::findByBillNo($BillNo);
-        
-        if (!$BillNo) {
+        try {
+            $BillNo = BillInfo::findByBillNo($BillNo);
+            
+            if (!$BillNo) {
+                return response()->json([
+                    'status' => false,
+                    'message' => '單據未找到',
+                    'output'    => null
+                ], 404);
+            }
+
+            $BillNo->IsValid = 0;
+            $BillNo->UpdateUser = 'admin';
+            $BillNo->UpdateTime = now();
+            $BillNo->save();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'success',
+                'output'    => $BillNo
+            ], 200);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 捕捉驗證失敗
             return response()->json([
                 'status' => false,
-                'message' => '單據未找到',
-                'output'    => null
-            ], 404);
-        }
-
-        $BillNo->IsValid = 0;
-        $BillNo->UpdateUser = 'admin';
-        $BillNo->UpdateTime = now();
-        $BillNo->save();
-
-        return response()->json([
-            'status' => true,
-            'message' => 'success',
-            'output'    => $BillNo
-        ], 200);
+                'message' => '驗證錯誤',
+                'errors' => $e->errors()
+            ], 422);
+    
+        } catch (\Exception $e) {
+            // 其他例外處理
+            Log::error('單據資料錯誤：' . $e->getMessage());
+    
+            return response()->json([
+                'status' => false,
+                'message' => '伺服器發生錯誤，請稍後再試',
+                'error' => $e->getMessage() // 上線環境建議拿掉
+            ], 500);
+        } 
     }
 }

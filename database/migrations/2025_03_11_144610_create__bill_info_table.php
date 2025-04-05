@@ -12,21 +12,21 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('billinfo', function (Blueprint $table) {
-            $table->uuid('uuid')->comment('KEY')->primary();
-            $table->string('BillNo')->comment('單據代號')->unique();
-            $table->string('BillNM')->comment('單據名稱');
-            $table->string('BillType')->comment('單據類型');
-            $table->string('BillEncode')->comment('單據編碼方式');
-            $table->integer('BillCalc')->comment('單據計算方式');
-            $table->integer('AutoReview')->comment('是否自動核准');
-            $table->string('GenOrder')->comment('自動產生銷貨單');
-            $table->integer('OrderType')->comment('銷貨單別');
-            $table->string('Note')->comment('備註')->nullable();
-            $table->boolean('IsValid')->comment('是否有效')->default(1);
-            $table->string('Createuser')->comment('建立人員')->default('admin');
-            $table->dateTime('CreateTime')->comment('建立時間')->default(now());
-            $table->string('UpdateUser')->comment('異動人員')->nullable();
-            $table->dateTime('UpdateTime')->comment('異動時間')->nullable();
+            $table->uuid('uuid')->comment('KEY')->primary()->unique();
+            $table->string('bill_no')->comment('單據代號')->unique();
+            $table->string('bill_nm')->comment('單據名稱');
+            $table->string('bill_type')->comment('單據類型');
+            $table->string('bill_encode')->comment('單據編碼方式');
+            $table->integer('bill_calc')->comment('單據計算方式');
+            $table->integer('auto_review')->comment('是否自動核准');
+            $table->string('gen_order')->comment('自動產生銷貨單');
+            $table->integer('order_type')->comment('銷貨單別');
+            $table->string('note')->comment('備註')->nullable();
+            $table->boolean('is_valid')->comment('是否有效')->default(1);
+            $table->string('create_user')->comment('建立人員')->default('admin');
+            $table->dateTime('create_time')->comment('建立時間')->default(now());
+            $table->string('update_user')->comment('異動人員')->nullable();
+            $table->dateTime('update_time')->comment('異動時間')->nullable();
         });
     }
 

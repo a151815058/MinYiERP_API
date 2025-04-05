@@ -10,6 +10,7 @@ use App\Http\Controllers\BillInfoController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\InventoryController;
+use App\Http\Controllers\ClientController;
 
 //部門相關  API
 Route::post('/createdept', [DeptController::class, 'store']); // 新增部門資訊
@@ -55,8 +56,14 @@ Route::patch('/BillInfo/{BillNo}/disable', [BillInfoController::class, 'disable'
 //供應商資料相關  API
 Route::post('/createsupplier', [SupplierController::class, 'store']);// 新增供應商資料
 Route::get('/Supplier/{supplierNo}', [SupplierController::class, 'show']);  // 透過 supplierNo 查詢
-Route::get('/Supplier/valid', [SupplierController::class, 'getValidsuppliers']);
-Route::patch('/Supplier/{supplierNo}/disable', [SupplierController::class, 'disable']); // 軟刪除單據資訊
+Route::get('/Supplier/valid', [SupplierController::class, 'getValidsuppliers']);// 查詢所有有效供應商
+Route::patch('/Supplier/{supplierNo}/disable', [SupplierController::class, 'disable']); // 軟刪除供應商資訊
+
+//客戶資料相關  API
+Route::post('/createclient', [ClientController::class, 'store']);// 新增客戶資料
+Route::get('/Client/{clientNo}', [ClientController::class, 'show']);  // 透過 clientNo 查詢
+Route::get('/Client/valid', [ClientController::class, 'getValidClients']);// 查詢所有有效客戶
+Route::patch('/Client/{clientNo}/disable', [ClientController::class, 'disable']); // 軟刪除客戶
 
 //品號資料相關  API
 Route::post('/createproduct', [ProductController::class, 'store']);// 新增品號資料

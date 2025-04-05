@@ -472,6 +472,769 @@
                 }
             }
         },
+        "/api/createclient": {
+            "post": {
+                "tags": [
+                    "Base_Client"
+                ],
+                "summary": "新增客戶資料",
+                "description": "新增客戶資料",
+                "operationId": "createClient",
+                "parameters": [
+                    {
+                        "name": "clientNo",
+                        "in": "query",
+                        "description": "客戶編號",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "clientShortNM",
+                        "in": "query",
+                        "description": "客戶簡稱",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "clientFullNM",
+                        "in": "query",
+                        "description": "客戶全名",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "ZipCode1",
+                        "in": "query",
+                        "description": "郵遞區號 1",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "Address1",
+                        "in": "query",
+                        "description": "公司地址 1",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "ZipCode2",
+                        "in": "query",
+                        "description": "郵遞區號 2 (選填)",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "Address2",
+                        "in": "query",
+                        "description": "公司地址 2 (選填)",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "TaxID",
+                        "in": "query",
+                        "description": "統一編號 (台灣: 8 碼)",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "ResponsiblePerson",
+                        "in": "query",
+                        "description": "負責人",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "EstablishedDate",
+                        "in": "query",
+                        "description": "成立時間",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "Phone",
+                        "in": "query",
+                        "description": "公司電話",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "Fax",
+                        "in": "query",
+                        "description": "公司傳真 (選填)",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "ContactPerson",
+                        "in": "query",
+                        "description": "聯絡人",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "ContactPhone",
+                        "in": "query",
+                        "description": "聯絡人電話",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "MobilePhone",
+                        "in": "query",
+                        "description": "聯絡人行動電話",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "ContactEmail",
+                        "in": "query",
+                        "description": "聯絡人信箱",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "CurrencyID",
+                        "in": "query",
+                        "description": "幣別 (ISO 3碼: USD, TWD)",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "TaxType",
+                        "in": "query",
+                        "description": "稅別 (應稅內含、應稅外加、免稅、零稅率等)",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "PaymentTermID",
+                        "in": "query",
+                        "description": "付款條件 (付款條件代碼)",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "UserID",
+                        "in": "query",
+                        "description": "負責採購人員",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "Note",
+                        "in": "query",
+                        "description": "備註",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "IsValid",
+                        "in": "query",
+                        "description": "是否有效",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "clientNo": {
+                                            "type": "string",
+                                            "example": "S003"
+                                        },
+                                        "clientShortNM": {
+                                            "type": "string",
+                                            "example": "測試客戶1"
+                                        },
+                                        "clientFullNM": {
+                                            "type": "string",
+                                            "example": "測試客戶1"
+                                        },
+                                        "ZipCode1": {
+                                            "type": "string",
+                                            "example": "12345"
+                                        },
+                                        "Address1": {
+                                            "type": "string",
+                                            "example": "台北市信義區"
+                                        },
+                                        "ZipCode2": {
+                                            "type": "string",
+                                            "example": "54321"
+                                        },
+                                        "Address2": {
+                                            "type": "string",
+                                            "example": "台北市大安區"
+                                        },
+                                        "TaxID": {
+                                            "type": "string",
+                                            "example": "12345678"
+                                        },
+                                        "ResponsiblePerson": {
+                                            "type": "string",
+                                            "example": "王小明"
+                                        },
+                                        "EstablishedDate": {
+                                            "type": "string",
+                                            "example": "2025-03-31"
+                                        },
+                                        "Phone": {
+                                            "type": "string",
+                                            "example": "02-12345678"
+                                        },
+                                        "Fax": {
+                                            "type": "string",
+                                            "example": "02-87654321"
+                                        },
+                                        "ContactPerson": {
+                                            "type": "string",
+                                            "example": "李小華"
+                                        },
+                                        "ContactPhone": {
+                                            "type": "string",
+                                            "example": "0912345678"
+                                        },
+                                        "MobilePhone": {
+                                            "type": "string",
+                                            "example": "0987654321"
+                                        },
+                                        "ContactEmail": {
+                                            "type": "string",
+                                            "example": "a151815058@gmail.com"
+                                        },
+                                        "CurrencyID": {
+                                            "type": "string",
+                                            "example": "TWD"
+                                        },
+                                        "TaxType": {
+                                            "type": "string",
+                                            "example": "T001"
+                                        },
+                                        "PaymentTermID": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "UserID": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "Note": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "IsValid": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "Createuser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "UpdateUser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "CreateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "UpdateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "客戶建立失敗"
+                    }
+                }
+            }
+        },
+        "/api/Client/{clientNo}": {
+            "get": {
+                "tags": [
+                    "Base_Client"
+                ],
+                "summary": "查詢特定客戶資料",
+                "description": "查詢特定客戶資料",
+                "operationId": "getClient",
+                "parameters": [
+                    {
+                        "name": "clientNo",
+                        "in": "path",
+                        "description": "客戶代號",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "clientNo": {
+                                            "type": "string",
+                                            "example": "S003"
+                                        },
+                                        "clientShortNM": {
+                                            "type": "string",
+                                            "example": "測試客戶1"
+                                        },
+                                        "clientFullNM": {
+                                            "type": "string",
+                                            "example": "測試客戶1"
+                                        },
+                                        "ZipCode1": {
+                                            "type": "string",
+                                            "example": "12345"
+                                        },
+                                        "Address1": {
+                                            "type": "string",
+                                            "example": "台北市信義區"
+                                        },
+                                        "ZipCode2": {
+                                            "type": "string",
+                                            "example": "54321"
+                                        },
+                                        "Address2": {
+                                            "type": "string",
+                                            "example": "台北市大安區"
+                                        },
+                                        "TaxID": {
+                                            "type": "string",
+                                            "example": "12345678"
+                                        },
+                                        "ResponsiblePerson": {
+                                            "type": "string",
+                                            "example": "王小明"
+                                        },
+                                        "EstablishedDate": {
+                                            "type": "string",
+                                            "example": "2025-03-31"
+                                        },
+                                        "Phone": {
+                                            "type": "string",
+                                            "example": "02-12345678"
+                                        },
+                                        "Fax": {
+                                            "type": "string",
+                                            "example": "02-87654321"
+                                        },
+                                        "ContactPerson": {
+                                            "type": "string",
+                                            "example": "李小華"
+                                        },
+                                        "ContactPhone": {
+                                            "type": "string",
+                                            "example": "0912345678"
+                                        },
+                                        "MobilePhone": {
+                                            "type": "string",
+                                            "example": "0987654321"
+                                        },
+                                        "ContactEmail": {
+                                            "type": "string",
+                                            "example": "a151815058@gmail.com"
+                                        },
+                                        "CurrencyID": {
+                                            "type": "string",
+                                            "example": "TWD"
+                                        },
+                                        "TaxType": {
+                                            "type": "string",
+                                            "example": "T001"
+                                        },
+                                        "PaymentTermID": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "UserID": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "Note": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "IsValid": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "Createuser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "UpdateUser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "CreateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "UpdateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "未找到客戶資料"
+                    }
+                }
+            }
+        },
+        "/api/Client/valid": {
+            "get": {
+                "tags": [
+                    "Base_Client"
+                ],
+                "summary": "查詢所有有效客戶",
+                "description": "查詢所有有效客戶",
+                "operationId": "GetAllClient",
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "clientNo": {
+                                            "type": "string",
+                                            "example": "S003"
+                                        },
+                                        "clientShortNM": {
+                                            "type": "string",
+                                            "example": "測試客戶1"
+                                        },
+                                        "clientFullNM": {
+                                            "type": "string",
+                                            "example": "測試客戶1"
+                                        },
+                                        "ZipCode1": {
+                                            "type": "string",
+                                            "example": "12345"
+                                        },
+                                        "Address1": {
+                                            "type": "string",
+                                            "example": "台北市信義區"
+                                        },
+                                        "ZipCode2": {
+                                            "type": "string",
+                                            "example": "54321"
+                                        },
+                                        "Address2": {
+                                            "type": "string",
+                                            "example": "台北市大安區"
+                                        },
+                                        "TaxID": {
+                                            "type": "string",
+                                            "example": "12345678"
+                                        },
+                                        "ResponsiblePerson": {
+                                            "type": "string",
+                                            "example": "王小明"
+                                        },
+                                        "EstablishedDate": {
+                                            "type": "string",
+                                            "example": "2025-03-31"
+                                        },
+                                        "Phone": {
+                                            "type": "string",
+                                            "example": "02-12345678"
+                                        },
+                                        "Fax": {
+                                            "type": "string",
+                                            "example": "02-87654321"
+                                        },
+                                        "ContactPerson": {
+                                            "type": "string",
+                                            "example": "李小華"
+                                        },
+                                        "ContactPhone": {
+                                            "type": "string",
+                                            "example": "0912345678"
+                                        },
+                                        "MobilePhone": {
+                                            "type": "string",
+                                            "example": "0987654321"
+                                        },
+                                        "ContactEmail": {
+                                            "type": "string",
+                                            "example": "a151815058@gmail.com"
+                                        },
+                                        "CurrencyID": {
+                                            "type": "string",
+                                            "example": "TWD"
+                                        },
+                                        "TaxType": {
+                                            "type": "string",
+                                            "example": "T001"
+                                        },
+                                        "PaymentTermID": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "UserID": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "Note": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "IsValid": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "Createuser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "UpdateUser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "CreateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "UpdateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "未找到有效客戶"
+                    }
+                }
+            }
+        },
+        "/api/Client/{clientNo}/disable": {
+            "patch": {
+                "tags": [
+                    "Base_Client"
+                ],
+                "summary": "刪除特定客戶",
+                "description": "刪除特定客戶",
+                "operationId": "DeleteClient",
+                "parameters": [
+                    {
+                        "name": "clientNo",
+                        "in": "path",
+                        "description": "客戶代號",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "clientNo": {
+                                            "type": "string",
+                                            "example": "S003"
+                                        },
+                                        "clientShortNM": {
+                                            "type": "string",
+                                            "example": "測試客戶1"
+                                        },
+                                        "clientFullNM": {
+                                            "type": "string",
+                                            "example": "測試客戶1"
+                                        },
+                                        "ZipCode1": {
+                                            "type": "string",
+                                            "example": "12345"
+                                        },
+                                        "Address1": {
+                                            "type": "string",
+                                            "example": "台北市信義區"
+                                        },
+                                        "ZipCode2": {
+                                            "type": "string",
+                                            "example": "54321"
+                                        },
+                                        "Address2": {
+                                            "type": "string",
+                                            "example": "台北市大安區"
+                                        },
+                                        "TaxID": {
+                                            "type": "string",
+                                            "example": "12345678"
+                                        },
+                                        "ResponsiblePerson": {
+                                            "type": "string",
+                                            "example": "王小明"
+                                        },
+                                        "EstablishedDate": {
+                                            "type": "string",
+                                            "example": "2025-03-31"
+                                        },
+                                        "Phone": {
+                                            "type": "string",
+                                            "example": "02-12345678"
+                                        },
+                                        "Fax": {
+                                            "type": "string",
+                                            "example": "02-87654321"
+                                        },
+                                        "ContactPerson": {
+                                            "type": "string",
+                                            "example": "李小華"
+                                        },
+                                        "ContactPhone": {
+                                            "type": "string",
+                                            "example": "0912345678"
+                                        },
+                                        "MobilePhone": {
+                                            "type": "string",
+                                            "example": "0987654321"
+                                        },
+                                        "ContactEmail": {
+                                            "type": "string",
+                                            "example": "a151815058@gmail.com"
+                                        },
+                                        "CurrencyID": {
+                                            "type": "string",
+                                            "example": "TWD"
+                                        },
+                                        "TaxType": {
+                                            "type": "string",
+                                            "example": "T001"
+                                        },
+                                        "PaymentTermID": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "UserID": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "Note": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "IsValid": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "Createuser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "UpdateUser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "CreateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "UpdateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "未找到客戶"
+                    }
+                }
+            }
+        },
         "/api/createCurrency": {
             "post": {
                 "tags": [
@@ -2889,7 +3652,7 @@
                     {
                         "name": "supplierNo",
                         "in": "query",
-                        "description": "客戶編號",
+                        "description": "供應商編號",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -2898,7 +3661,7 @@
                     {
                         "name": "supplierShortNM",
                         "in": "query",
-                        "description": "客戶簡稱",
+                        "description": "供應商簡稱",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -2907,7 +3670,7 @@
                     {
                         "name": "supplierFullNM",
                         "in": "query",
-                        "description": "客戶全名",
+                        "description": "供應商全名",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -3524,21 +4287,93 @@
                                             "type": "string",
                                             "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
                                         },
-                                        "DeptNo": {
+                                        "supplierNo": {
                                             "type": "string",
-                                            "example": "A02"
+                                            "example": "S003"
                                         },
-                                        "DeptNM": {
+                                        "supplierShortNM": {
                                             "type": "string",
-                                            "example": "財務處"
+                                            "example": "測試供應商1"
+                                        },
+                                        "supplierFullNM": {
+                                            "type": "string",
+                                            "example": "測試供應商1"
+                                        },
+                                        "ZipCode1": {
+                                            "type": "string",
+                                            "example": "12345"
+                                        },
+                                        "Address1": {
+                                            "type": "string",
+                                            "example": "台北市信義區"
+                                        },
+                                        "ZipCode2": {
+                                            "type": "string",
+                                            "example": "54321"
+                                        },
+                                        "Address2": {
+                                            "type": "string",
+                                            "example": "台北市大安區"
+                                        },
+                                        "TaxID": {
+                                            "type": "string",
+                                            "example": "12345678"
+                                        },
+                                        "ResponsiblePerson": {
+                                            "type": "string",
+                                            "example": "王小明"
+                                        },
+                                        "EstablishedDate": {
+                                            "type": "string",
+                                            "example": "2025-03-31"
+                                        },
+                                        "Phone": {
+                                            "type": "string",
+                                            "example": "02-12345678"
+                                        },
+                                        "Fax": {
+                                            "type": "string",
+                                            "example": "02-87654321"
+                                        },
+                                        "ContactPerson": {
+                                            "type": "string",
+                                            "example": "李小華"
+                                        },
+                                        "ContactPhone": {
+                                            "type": "string",
+                                            "example": "0912345678"
+                                        },
+                                        "MobilePhone": {
+                                            "type": "string",
+                                            "example": "0987654321"
+                                        },
+                                        "ContactEmail": {
+                                            "type": "string",
+                                            "example": "a151815058@gmail.com"
+                                        },
+                                        "CurrencyID": {
+                                            "type": "string",
+                                            "example": "TWD"
+                                        },
+                                        "TaxType": {
+                                            "type": "string",
+                                            "example": "T001"
+                                        },
+                                        "PaymentTermID": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "UserID": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
                                         },
                                         "Note": {
                                             "type": "string",
-                                            "example": "測試測試"
+                                            "example": ""
                                         },
                                         "IsValid": {
                                             "type": "boolean",
-                                            "example": false
+                                            "example": true
                                         },
                                         "Createuser": {
                                             "type": "string",
@@ -3886,6 +4721,10 @@
         {
             "name": "Base_BillInfo",
             "description": "Base_BillInfo"
+        },
+        {
+            "name": "Base_Client",
+            "description": "Base_Client"
         },
         {
             "name": "Base_Currency",

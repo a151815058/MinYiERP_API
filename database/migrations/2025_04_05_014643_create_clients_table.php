@@ -11,27 +11,27 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('supplier', function (Blueprint $table) {
+        Schema::create('clients', function (Blueprint $table) {
             $table->uuid('uuid')->comment('KEY')->primary()->unique();
-            $table->string('supplier_no')->comment(comment: '供應商編號')->unique();
-            $table->string('supplier_shortnm')->comment(comment: '供應商簡稱');
-            $table->string('supplier_fullnm')->comment(comment: '供應商全名');
-            $table->string('zipcode1')->comment(comment: '郵遞區號 1');
+            $table->string('client_no')->comment(comment: '客戶編號')->unique();
+            $table->string('client_shortnm')->comment(comment: '客戶簡稱');
+            $table->string('client_fullnm')->comment(comment: '客戶全名');
+            $table->string('zip_code1')->comment(comment: '郵遞區號 1');
             $table->string('address1')->comment(comment: '公司地址 1');
-            $table->string('zipcode2')->comment(comment: '郵遞區號 2 (選填)')->nullable();
+            $table->string('zip_code2')->comment(comment: '郵遞區號 2 (選填)')->nullable();
             $table->string('address2')->comment(comment: '公司地址 2 (選填)')->nullable();
             $table->string('taxid')->comment(comment: '統一編號 (台灣: 8 碼)');
             $table->string('responsible_person')->comment(comment: '負責人');
             $table->dateTime('established_date')->comment(comment: '成立時間');
             $table->string('phone')->comment(comment: '公司電話');
-            $table->string('fax')->comment(comment: '公司傳真 (選填)');
+            $table->string('fax')->comment(comment: '公司傳真 (選填)')->nullable();
             $table->string('contact_person')->comment(comment: '聯絡人');
             $table->string('contact_phone')->comment(comment: '聯絡人電話');
             $table->string('mobile_phone')->comment(comment: '聯絡人行動電話');
             $table->string('contact_email')->comment(comment: '聯絡人信箱');
-            $table->string('currencyid')->comment(comment: '幣別 (幣別代號)');
-            $table->string('tax_type')->comment(comment: '稅別 (應稅內含、應稅外加、免稅、零稅率等)');
-            $table->string('payment_termid')->comment(comment: '付款條件 (付款條件代號)');
+            $table->string('currency_id')->comment(comment: '幣別 (幣別代號)');
+            $table->string('taxtype')->comment(comment: '稅別 (應稅內含、應稅外加、免稅、零稅率等)');
+            $table->string('paymentterm_id')->comment(comment: '付款條件 (付款條件代號)');
             $table->string('user_id')->comment(comment: '負責採購人員 (使用者代號)');
             $table->string('note')->comment('備註')->nullable();
             $table->boolean('is_valid')->comment('是否有效')->default(1);
@@ -47,6 +47,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('supplier');
+        Schema::dropIfExists('clients');
     }
 };

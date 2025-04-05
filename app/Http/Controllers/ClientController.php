@@ -2,40 +2,41 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Supplier;
+use App\Models\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use OpenApi\Annotations as OA;
+use Illuminate\Support\Facades\Log;
 
-class SupplierController extends Controller
+class ClientController extends Controller
 {
     /**
      * @OA\POST(
-     *     path="/api/createsupplier",
-     *     summary="新增供應商資料",
-     *     description="新增供應商資料",
-     *     operationId="createSupplier",
-     *     tags={"Base_Supplier"},
+     *     path="/api/createclient",
+     *     summary="新增客戶資料",
+     *     description="新增客戶資料",
+     *     operationId="createClient",
+     *     tags={"Base_Client"},
      *     @OA\Parameter(
-     *         name="supplierNo",
+     *         name="clientNo",
      *         in="query",
      *         required=true,
-     *         description="供應商編號",
+     *         description="客戶編號",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="supplierShortNM",
+     *         name="clientShortNM",
      *         in="query",
      *         required=true,
-     *         description="供應商簡稱",
+     *         description="客戶簡稱",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="supplierFullNM",
+     *         name="clientFullNM",
      *         in="query",
      *         required=true,
-     *         description="供應商全名",
+     *         description="客戶全名",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
@@ -97,7 +98,7 @@ class SupplierController extends Controller
      *     @OA\Parameter(
      *         name="Fax",
      *         in="query",
-     *         required=true,
+     *         required=false,
      *         description="公司傳真 (選填)",
      *         @OA\Schema(type="string")
      *     ),
@@ -177,9 +178,9 @@ class SupplierController extends Controller
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="supplierNo", type="string", example="S003"),
-     *             @OA\Property(property="supplierShortNM", type="string", example="測試供應商1"),
-     *             @OA\Property(property="supplierFullNM", type="string", example="測試供應商1"),
+     *             @OA\Property(property="clientNo", type="string", example="S003"),
+     *             @OA\Property(property="clientShortNM", type="string", example="測試客戶1"),
+     *             @OA\Property(property="clientFullNM", type="string", example="測試客戶1"),
      *             @OA\Property(property="ZipCode1", type="string", example="12345"),
      *             @OA\Property(property="Address1", type="string", example="台北市信義區"),
      *             @OA\Property(property="ZipCode2", type="string", example="54321"),
@@ -207,95 +208,114 @@ class SupplierController extends Controller
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="供應商建立失敗"
+     *         description="客戶建立失敗"
      *     )
      * )
      */
-    // 儲存供應商
+    // 儲存客戶
     public function store(Request $request)
     {
-        // 驗證請求
-         $validated = $request->validate([
-             'supplierNo'         => 'required|string|max:255|unique:supplier,supplierNo',
-             'supplierShortNM'    => 'required|string|max:255',
-             'supplierFullNM'     => 'required|string|max:255',
-             'ZipCode1'           => 'required|string|max:20',
-             'Address1'           => 'required|string|max:255',
-             'ZipCode2'           => 'nullable|string|max:20',
-             'Address2'           => 'nullable|string|max:255',
-             'TaxID'              => 'required|string|max:255', 
-             'ResponsiblePerson'  => 'required|string|max:255',   
-             'EstablishedDate'    => 'required|string|max:20',  
-             'Phone'              => 'required|string|max:20',  
-             'Fax'                => 'required|string|max:10',  
-             'ContactPerson'      => 'required|string|max:255',  
-             'ContactPhone'       => 'required|string|max:255',  
-             'MobilePhone'        => 'required|string|max:255',  
-             'ContactEmail'       => 'required|string|max:255',  
-             'CurrencyID'         => 'required|string|max:255',  
-             'TaxType'            => 'required|string|max:255',  
-             'PaymentTermID'      => 'required|string|max:255',    
-             'UserID'             => 'required|string|max:255',     
-             'Note'               => 'nullable|string|max:255',
-             'IsValid'            => 'required|boolean'
-         ]);
+        try {
+            // 驗證請求
+            $validated = $request->validate([
+                'clientNo'         => 'required|string|max:255|unique:clients,clientNo',
+                'clientShortNM'    => 'required|string|max:255',
+                'clientFullNM'     => 'required|string|max:255',
+                'ZipCode1'           => 'required|string|max:20',
+                'Address1'           => 'required|string|max:255',
+                'ZipCode2'           => 'nullable|string|max:20',
+                'Address2'           => 'nullable|string|max:255',
+                'TaxID'              => 'required|string|max:255', 
+                'ResponsiblePerson'  => 'required|string|max:255',   
+                'EstablishedDate'    => 'required|string|max:20',  
+                'Phone'              => 'required|string|max:20',  
+                'Fax'                => 'nullable|string|max:10',  
+                'ContactPerson'      => 'required|string|max:255',  
+                'ContactPhone'       => 'required|string|max:255',  
+                'MobilePhone'        => 'required|string|max:255',  
+                'ContactEmail'       => 'required|string|max:255',  
+                'CurrencyID'         => 'required|string|max:255',  
+                'TaxType'            => 'required|string|max:255',  
+                'PaymentTermID'      => 'required|string|max:255',    
+                'UserID'             => 'required|string|max:255',     
+                'Note'               => 'nullable|string|max:255',
+                'IsValid'            => 'required|boolean'
+            ]);
+            
         
-    
-        // 建立供應商資料
-        $supplier = Supplier::create([
-            'supplierNo'     => $validated['supplierNo'],
-            'supplierShortNM'     => $validated['supplierShortNM'],
-            'supplierFullNM'   => $validated['supplierFullNM'],
-            'ZipCode1'   => $validated['ZipCode1'],
-            'Address1' => $validated['Address1'],
-            'ZipCode2'   => $validated['ZipCode2']?? null,
-            'Address2' => $validated['Address2']?? null,
-            'TaxID'   => $validated['TaxID'],
-            'ResponsiblePerson'  => $validated['ResponsiblePerson'],
-            'EstablishedDate'   => $validated['EstablishedDate'],
-            'Phone' => $validated['Phone'],
-            'Fax'   => $validated['Fax'],
-            'ContactPerson'  => $validated['ContactPerson'],
-            'ContactPhone'   => $validated['ContactPhone'],
-            'MobilePhone' => $validated['MobilePhone'],
-            'ContactEmail'   => $validated['ContactEmail'],
-            'CurrencyID'  => $validated['CurrencyID'],
-            'TaxType'  => $validated['TaxType'],
-            'PaymentTermID'  => $validated['PaymentTermID'],
-            'UserID'  => $validated['UserID'],
-            'Note'       => $validated['Note'] ?? null,
-            'IsValid'    => $validated['IsValid']
-        ]);
+            // 建立客戶資料
+            $Client = Client::create([
+                'clientNo'     => $validated['clientNo'],
+                'clientShortNM'     => $validated['clientShortNM'],
+                'clientFullNM'   => $validated['clientFullNM'],
+                'ZipCode1'   => $validated['ZipCode1'],
+                'Address1' => $validated['Address1'],
+                'ZipCode2'   => $validated['ZipCode2']?? null,
+                'Address2' => $validated['Address2']?? null,
+                'TaxID'   => $validated['TaxID'],
+                'ResponsiblePerson'  => $validated['ResponsiblePerson'],
+                'EstablishedDate'   => $validated['EstablishedDate'],
+                'Phone' => $validated['Phone'],
+                'Fax'   => $validated['Fax']?? null,
+                'ContactPerson'  => $validated['ContactPerson'],
+                'ContactPhone'   => $validated['ContactPhone'],
+                'MobilePhone' => $validated['MobilePhone'],
+                'ContactEmail'   => $validated['ContactEmail'],
+                'CurrencyID'  => $validated['CurrencyID'],
+                'TaxType'  => $validated['TaxType'],
+                'PaymentTermID'  => $validated['PaymentTermID'],
+                'UserID'  => $validated['UserID'],
+                'Note'       => $validated['Note'] ?? null,
+                'IsValid'    => $validated['IsValid']
+            ]);
 
-        // 回應 JSON
-        if (!$supplier) {
+            // 回應 JSON
+            if (!$Client) {
+                return response()->json([
+                    'status' => false,
+                    'message' => '客戶資料建失敗',
+                    'output'    => null
+                ], status: 404);
+            }else {
+                // 回應 JSON
+                return response()->json([
+                    'status' => true,
+                    'message' => 'success',
+                    'output'    => $Client
+                ], 200);
+            }
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 捕捉驗證失敗
             return response()->json([
                 'status' => false,
-                'message' => '供應商資料建失敗',
-                'output'    => null
-            ], status: 404);
-        }else {
-            // 回應 JSON
+                'message' => '驗證錯誤',
+                'errors' => $e->errors()
+            ], 422);
+    
+        } catch (\Exception $e) {
+            // 其他例外處理
+            Log::error('建立客戶資料錯誤：' . $e->getMessage());
+    
             return response()->json([
-                'status' => true,
-                'message' => 'success',
-                'output'    => $supplier
-            ], 200);
+                'status' => false,
+                'message' => '伺服器發生錯誤，請稍後再試',
+                'error' => $e->getMessage() // 上線環境建議拿掉
+            ], 500);
         }
 
     }
     /**
      * @OA\GET(
-     *     path="/api/Supplier/{supplierNo}",
-     *     summary="查詢特定供應商資料",
-     *     description="查詢特定供應商資料",
-     *     operationId="getSupplier",
-     *     tags={"Base_Supplier"},
+     *     path="/api/Client/{clientNo}",
+     *     summary="查詢特定客戶資料",
+     *     description="查詢特定客戶資料",
+     *     operationId="getClient",
+     *     tags={"Base_Client"},
      *     @OA\Parameter(
-     *         name="supplierNo",
+     *         name="clientNo",
      *         in="path",
      *         required=true,
-     *         description="供應商代號",
+     *         description="客戶代號",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Response(
@@ -304,9 +324,9 @@ class SupplierController extends Controller
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="supplierNo", type="string", example="S003"),
-     *             @OA\Property(property="supplierShortNM", type="string", example="測試供應商1"),
-     *             @OA\Property(property="supplierFullNM", type="string", example="測試供應商1"),
+     *             @OA\Property(property="clientNo", type="string", example="S003"),
+     *             @OA\Property(property="clientShortNM", type="string", example="測試客戶1"),
+     *             @OA\Property(property="clientFullNM", type="string", example="測試客戶1"),
      *             @OA\Property(property="ZipCode1", type="string", example="12345"),
      *             @OA\Property(property="Address1", type="string", example="台北市信義區"),
      *             @OA\Property(property="ZipCode2", type="string", example="54321"),
@@ -334,45 +354,64 @@ class SupplierController extends Controller
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="未找到供應商資料"
+     *         description="未找到客戶資料"
      *     )
      * )
      */
-    // 🔍 查詢供應商
-    public function show($supplierNo)
+    // 🔍 查詢客戶
+    public function show($clientNo)
     {
-        $Supplier = Supplier::findBysupplierNo($supplierNo);
-        
-        if (!$Supplier) {
+        try {
+            $Client = Client::findByclientNo($clientNo);
+            
+            if (!$Client) {
+                return response()->json([
+                    'status' => false,
+                    'message' => '客戶未找到',
+                    'output'    => null
+                ], 404);
+            }
+
+            return response()->json([                
+                'status' => true,
+                'message' => 'success',
+                'output'    => $Client
+            ],200);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 捕捉驗證失敗
             return response()->json([
                 'status' => false,
-                'message' => '供應商未找到',
-                'output'    => null
-            ], 404);
+                'message' => '驗證錯誤',
+                'errors' => $e->errors()
+            ], 422);
+    
+        } catch (\Exception $e) {
+            // 其他例外處理
+            Log::error('客戶資料錯誤：' . $e->getMessage());
+    
+            return response()->json([
+                'status' => false,
+                'message' => '伺服器發生錯誤，請稍後再試',
+                'error' => $e->getMessage() // 上線環境建議拿掉
+            ], 500);
         }
-
-        return response()->json([                
-            'status' => true,
-            'message' => 'success',
-            'output'    => $Supplier
-        ],200);
     }
     /**
      * @OA\GET(
-     *     path="/api/Supplier/valid",
-     *     summary="查詢所有有效供應商",
-     *     description="查詢所有有效供應商",
-     *     operationId="GetAllSupplier",
-     *     tags={"Base_Supplier"},
+     *     path="/api/Client/valid",
+     *     summary="查詢所有有效客戶",
+     *     description="查詢所有有效客戶",
+     *     operationId="GetAllClient",
+     *     tags={"Base_Client"},
      *     @OA\Response(
      *         response=200,
      *         description="成功",
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="supplierNo", type="string", example="S003"),
-     *             @OA\Property(property="supplierShortNM", type="string", example="測試供應商1"),
-     *             @OA\Property(property="supplierFullNM", type="string", example="測試供應商1"),
+     *             @OA\Property(property="clientNo", type="string", example="S003"),
+     *             @OA\Property(property="clientShortNM", type="string", example="測試客戶1"),
+     *             @OA\Property(property="clientFullNM", type="string", example="測試客戶1"),
      *             @OA\Property(property="ZipCode1", type="string", example="12345"),
      *             @OA\Property(property="Address1", type="string", example="台北市信義區"),
      *             @OA\Property(property="ZipCode2", type="string", example="54321"),
@@ -400,47 +439,58 @@ class SupplierController extends Controller
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="未找到有效供應商"
+     *         description="未找到有效客戶"
      *     )
      * )
      */
-    // 🔍 查詢所有有效供應商
-    public function getValidsuppliers()
+    // 🔍 查詢所有有效客戶
+    public function getValidClients()
     {
         try {
-            $Supplier = Supplier::getValidsuppliers();
-            if ($Supplier->isEmpty()) {
+            $Client = Client::getValidClients();
+            if ($Client->isEmpty()) {
                 return response()->json([
                     'status' => false,
-                    'message' => '未找到有效供應商',
+                    'message' => '未找到有效客戶',
                     'output'    => null
                 ], 404);
             }
             return response()->json([                
                 'status' => true,
                 'message' => 'success',
-                'output'    => $Supplier
+                'output'    => $Client
             ], 200);
-        } catch (\Exception $e) {
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 捕捉驗證失敗
             return response()->json([
                 'status' => false,
-                'message' => '資料查詢錯誤',
-                'output' => null
+                'message' => '驗證錯誤',
+                'errors' => $e->errors()
+            ], 422);
+    
+        } catch (\Exception $e) {
+            // 其他例外處理
+            Log::error('客戶資料錯誤：' . $e->getMessage());
+    
+            return response()->json([
+                'status' => false,
+                'message' => '伺服器發生錯誤，請稍後再試',
+                'error' => $e->getMessage() // 上線環境建議拿掉
             ], 500);
-        }
+        } 
     }
     /**
      * @OA\patch(
-     *     path="/api/Supplier/{supplierNo}/disable",
-     *     summary="刪除特定供應商",
-     *     description="刪除特定供應商",
-     *     operationId="DeleteSupplier",
-     *     tags={"Base_Supplier"},
+     *     path="/api/Client/{clientNo}/disable",
+     *     summary="刪除特定客戶",
+     *     description="刪除特定客戶",
+     *     operationId="DeleteClient",
+     *     tags={"Base_Client"},
      *     @OA\Parameter(
-     *         name="supplierNo",
+     *         name="clientNo",
      *         in="path",
      *         required=true,
-     *         description="供應商代號",
+     *         description="客戶代號",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Response(
@@ -449,9 +499,9 @@ class SupplierController extends Controller
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="supplierNo", type="string", example="S003"),
-     *             @OA\Property(property="supplierShortNM", type="string", example="測試供應商1"),
-     *             @OA\Property(property="supplierFullNM", type="string", example="測試供應商1"),
+     *             @OA\Property(property="clientNo", type="string", example="S003"),
+     *             @OA\Property(property="clientShortNM", type="string", example="測試客戶1"),
+     *             @OA\Property(property="clientFullNM", type="string", example="測試客戶1"),
      *             @OA\Property(property="ZipCode1", type="string", example="12345"),
      *             @OA\Property(property="Address1", type="string", example="台北市信義區"),
      *             @OA\Property(property="ZipCode2", type="string", example="54321"),
@@ -479,32 +529,51 @@ class SupplierController extends Controller
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="未找到供應商"
+     *         description="未找到客戶"
      *     )
      * )
      */
-    // 🔍 刪除特定供應商
-    public function disable($supplierNo)
+    // 🔍 刪除特定客戶
+    public function disable($clientNo)
     {
-        $Supplier = Supplier::findBysupplierNo($supplierNo);
-        
-        if (!$Supplier) {
+        try {
+            $Client = Client::findByclientNo($clientNo);
+            
+            if (!$Client) {
+                return response()->json([
+                    'status' => false,
+                    'message' => '客戶未找到',
+                    'output'    => null
+                ], 404);
+            }
+
+            $Client->IsValid = 0;
+            $Client->UpdateUser = 'admin';
+            $Client->UpdateTime = now();
+            $Client->save();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'success',
+                'output'    => $Client
+            ], 200);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 捕捉驗證失敗
             return response()->json([
                 'status' => false,
-                'message' => '供應商未找到',
-                'output'    => null
-            ], 404);
-        }
-
-        $Supplier->IsValid = 0;
-        $Supplier->UpdateUser = 'admin';
-        $Supplier->UpdateTime = now();
-        $Supplier->save();
-
-        return response()->json([
-            'status' => true,
-            'message' => 'success',
-            'output'    => $Supplier
-        ], 200);
+                'message' => '驗證錯誤',
+                'errors' => $e->errors()
+            ], 422);
+    
+        } catch (\Exception $e) {
+            // 其他例外處理
+            Log::error('客戶資料錯誤：' . $e->getMessage());
+    
+            return response()->json([
+                'status' => false,
+                'message' => '伺服器發生錯誤，請稍後再試',
+                'error' => $e->getMessage() // 上線環境建議拿掉
+            ], 500);
+        } 
     }
 }

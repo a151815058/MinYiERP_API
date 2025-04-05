@@ -13,14 +13,15 @@ return new class extends Migration
     {
         Schema::create('currencys', function (Blueprint $table) {
             $table->uuid('uuid')->comment('KEY')->primary();
-            $table->string('CurrencyNo')->comment('貨幣代碼')->unique();
-            $table->string('CurrencyNM')->comment('貨幣名稱');
-            $table->string('Note')->comment('備註')->nullable();
-            $table->boolean('IsValid')->comment('是否有效')->default(1);
-            $table->string('Createuser')->comment('建立人員')->default('admin');
-            $table->dateTime('CreateTime')->comment('建立時間')->default(now());
-            $table->string('UpdateUser')->comment('異動人員')->nullable();
-            $table->dateTime('UpdateTime')->comment('異動時間')->nullable();
+            $table->string('currency_no')->comment('貨幣代碼')->unique();
+            $table->string('currency_nm')->comment('貨幣名稱');
+            $table->string('currency_rate')->comment('現在匯率(以台幣為基準)');
+            $table->string('note')->comment('備註')->nullable();
+            $table->boolean('is_valid')->comment('是否有效')->default(1);
+            $table->string('create_user')->comment('建立人員')->default('admin');
+            $table->dateTime('create_time')->comment('建立時間')->default(now());
+            $table->string('update_user')->comment('異動人員')->nullable();
+            $table->dateTime('update_time')->comment('異動時間')->nullable();
         });
     }
 
