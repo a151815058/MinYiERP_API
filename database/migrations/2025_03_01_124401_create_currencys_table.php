@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('currency_nm')->comment('貨幣名稱');
             $table->string('currency_rate')->comment('現在匯率(以台幣為基準)')->nullable();
             $table->string('note')->comment('備註')->nullable();
-            $table->string('is_valid')->comment('是否有效')->default(1);
+            $table->string('is_valid')->comment('是否有效 0:失效 1:有效')->default(1);
             $table->string('create_user')->comment('建立人員')->default('admin');
             $table->dateTime('create_time')->comment('建立時間')->default(now());
             $table->string('update_user')->comment('異動人員')->nullable();

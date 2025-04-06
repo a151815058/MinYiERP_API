@@ -6,6 +6,7 @@ use App\Models\Client;
 use App\Models\SysCode;
 use App\Models\PaymentTerm;
 use App\Models\Currency;
+use App\Models\SysUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
@@ -138,28 +139,28 @@ class ClientController extends Controller
      *         name="currency_id",
      *         in="query",
      *         required=true,
-     *         description="幣別 (ISO 3碼: USD, TWD)",
+     *         description="幣別id",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
      *         name="taxtype",
      *         in="query",
      *         required=true,
-     *         description="稅別 (應稅內含、應稅外加、免稅、零稅率等)",
+     *         description="稅別(抓參數資料)",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
      *         name="paymentterm_id",
      *         in="query",
      *         required=true,
-     *         description="付款條件 (付款條件代碼)",
+     *         description="付款條件id",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
      *         name="user_id",
      *         in="query",
      *         required=true,
-     *         description="負責採購人員",
+     *         description="負責採購人員id",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
@@ -602,19 +603,21 @@ class ClientController extends Controller
         // 查詢 '所有有效幣別資料' 的資料
         $SysCode = Currency::where('is_valid', '1')->get();
         // 查詢 '所有稅別資料' 的資料
-        $SysCode1 = SysCode::where('param_sn', '10')->get();
+        $SysCode1 = SysCode::where('param_sn', '04')->get();
         // 查詢 '所有有效付款條件' 的資料
         $SysCode2 = PaymentTerm::where('is_valid', '1')->get();
         // 查詢 '所有有效人員' 的資料
+        $SysCode3 = SysUser::with('depts')->where('is_valid', '1')->get();
         try {
             // 檢查是否有結果
             if ($SysCode->isEmpty() ) {
                 return response()->json([
                     'status' => false,
                     'message' => '常用資料未找到',
-                    'output1' => null,
-                    'output2' => null,
-                    'output3' => null
+                    'currencyOption' => null,
+                    'taxtypeOption' => null,
+                    'paymenttermOption' => null,
+                    'sysuserOption' => null
                 ], 404);
             }
     
@@ -622,9 +625,10 @@ class ClientController extends Controller
             return response()->json([
                 'status' => true,
                 'message' => 'success',
-                'output1' => $SysCode,
-                'output2' => $SysCode1,
-                'output3' => $SysCode2
+                'currencyOption' => $SysCode,
+                'taxtypeOption' => $SysCode1,
+                'paymenttermOption' => $SysCode2,
+                'sysuserOption' => $SysCode3
             ], 200);
     
         } catch (\Illuminate\Validation\ValidationException $e) {

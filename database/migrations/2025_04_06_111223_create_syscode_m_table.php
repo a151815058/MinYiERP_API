@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('syscode', function (Blueprint $table) {
+        Schema::create('syscodeM', function (Blueprint $table) {
             $table->uuid('uuid')->comment(comment: 'Key')->primary();
             $table->string('puuid')->comment(comment: '父Key')->nullable();
             $table->string('param_sn')->comment('參數代碼');
-            $table->string('param_code')->comment('參數名稱');
-            $table->string('param_nm')->comment('參數值');
+            $table->string('param_nm')->comment('參數名稱');
             $table->string('note')->comment('備註')->nullable();
             $table->string('is_valid')->comment('是否有效 0:失效 1:有效')->default(1);
             $table->string('create_user')->comment('建立人員')->default('admin');
@@ -31,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('syscode');
+        Schema::dropIfExists('syscodeM');
     }
 };

@@ -29,7 +29,7 @@ return new class extends Migration
             $table->integer('safety_stock')->comment('安全庫存');
             $table->date('expiry_date')->comment('失效日期');
             $table->string(column: 'description')->comment('商品描述')->nullable();
-            $table->string('is_valid')->comment('是否有效')->default(1);
+            $table->string('is_valid')->comment('是否有效 0:失效 1:有效')->default(1);
             $table->string('create_user')->comment('建立人員')->default('admin');
             $table->dateTime('create_time')->comment('建立時間')->default(now());
             $table->string('update_user')->comment('異動人員')->nullable();

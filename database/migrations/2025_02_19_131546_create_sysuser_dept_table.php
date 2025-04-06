@@ -15,7 +15,7 @@ return new class extends Migration
             $table->uuid()->comment('uuid')->unique();;
             $table->string('dept_id')->comment('dept_id');
             $table->string('user_id')->comment('user_id');
-            $table->string('is_valid')->comment('是否有效')->default(1);
+            $table->string('is_valid')->comment('是否有效 0:失效 1:有效')->default(1);
             $table->string('create_user')->comment('建立人員')->default('admin');
             $table->dateTime('create_time')->comment('建立時間')->default(now());
             $table->string('update_user')->comment('異動人員')->nullable();

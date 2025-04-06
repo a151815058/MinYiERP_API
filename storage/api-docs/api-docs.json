@@ -671,7 +671,7 @@
                     {
                         "name": "currency_id",
                         "in": "query",
-                        "description": "幣別 (ISO 3碼: USD, TWD)",
+                        "description": "幣別id",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -680,7 +680,7 @@
                     {
                         "name": "taxtype",
                         "in": "query",
-                        "description": "稅別 (應稅內含、應稅外加、免稅、零稅率等)",
+                        "description": "稅別(抓參數資料)",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -689,7 +689,7 @@
                     {
                         "name": "paymentterm_id",
                         "in": "query",
-                        "description": "付款條件 (付款條件代碼)",
+                        "description": "付款條件id",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -698,7 +698,7 @@
                     {
                         "name": "user_id",
                         "in": "query",
-                        "description": "負責採購人員",
+                        "description": "負責採購人員id",
                         "required": true,
                         "schema": {
                             "type": "string"
