@@ -192,7 +192,7 @@ class InventoryController extends Controller
     }
     /**
      * @OA\GET(
-     *     path="/api/Inventory/Valid",
+     *     path="/api/Inventorys/Valid",
      *     summary="查詢所有有效庫別資訊",
      *     description="查詢所有有效庫別資訊",
      *     operationId="GetAllInventory",
@@ -225,7 +225,7 @@ class InventoryController extends Controller
     // 🔍 查詢所有有效庫別
     public function getVaildInventory()
     {
-        $Inventory = Inventory::where('IsValid', '1')->get();
+        $Inventory = Inventory::where('is_valid', '1')->get();
         //$Inventory = Inventory::getValidInventory();
         if ($Inventory->isEmpty()) {
             return response()->json([
