@@ -397,7 +397,7 @@ class CurrencyController extends Controller
                 return response()->json([
                     'status' => false,
                     'message' => '常用資料未找到',
-                    'currency_no(option)' => null
+                    'currencyoption' => null
                 ], 404);
             }
     
@@ -405,7 +405,7 @@ class CurrencyController extends Controller
             return response()->json([
                 'status' => true,
                 'message' => 'success',
-                'currency_no(option)' => $SysCode
+                'currencyoption' => $SysCode
             ], 200);
     
         } catch (\Illuminate\Validation\ValidationException $e) {

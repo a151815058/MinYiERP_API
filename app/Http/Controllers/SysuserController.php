@@ -341,7 +341,7 @@ class SysuserController extends Controller
                 return response()->json([
                     'status' => false,
                     'message' => '常用資料未找到',
-                    'dept_no(option)' => null
+                    'deptoption' => null
                 ], 404);
             }
     
@@ -349,7 +349,7 @@ class SysuserController extends Controller
             return response()->json([
                 'status' => true,
                 'message' => 'success',
-                'dept_no(option)' => $SysCode
+                'deptoption' => $SysCode
             ], 200);
     
         } catch (\Illuminate\Validation\ValidationException $e) {

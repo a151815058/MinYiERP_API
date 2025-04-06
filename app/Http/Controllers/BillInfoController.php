@@ -459,8 +459,8 @@ class BillInfoController extends Controller
                 return response()->json([
                     'status' => false,
                     'message' => '常用資料未找到',
-                    'bill_type(option)' => null,
-                    'bill_type81(option)' => null
+                    'bill_typeoption' => null,
+                    'bill_type81option' => null
                 ], 404);
             }
     
@@ -468,8 +468,8 @@ class BillInfoController extends Controller
             return response()->json([
                 'status' => true,
                 'message' => 'success',
-                'bill_type(option)' => $SysCode,
-                'bill_type81(option)' => $BillType81
+                'bill_typeoption' => $SysCode,
+                'bill_type81option' => $BillType81
             ], 200);
     
         } catch (\Illuminate\Validation\ValidationException $e) {

@@ -331,7 +331,7 @@ class PaymentTermController extends Controller
                 return response()->json([
                     'status' => false,
                     'message' => '常用資料未找到',
-                    'paymentterms(option)' => null
+                    'paymenttermoption' => null
                 ], 404);
             }
     
@@ -339,7 +339,7 @@ class PaymentTermController extends Controller
             return response()->json([
                 'status' => true,
                 'message' => 'success',
-                'paymentterms(option)' => $SysCode
+                'paymenttermoption' => $SysCode
             ], 200);
     
         } catch (\Illuminate\Validation\ValidationException $e) {
