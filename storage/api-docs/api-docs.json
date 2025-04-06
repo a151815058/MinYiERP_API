@@ -2520,7 +2520,7 @@
                 }
             }
         },
-        "/api/Inventory/Valid": {
+        "/api/Inventorys/Valid": {
             "get": {
                 "tags": [
                     "Base_Inventory"
