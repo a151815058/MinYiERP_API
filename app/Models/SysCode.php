@@ -16,10 +16,21 @@ class SysCode extends Model
     public $incrementing = false;
     protected $keyType = 'string';
     public $timestamps = false; // 因為我們手動使用 CreateTime 和 UpdateTime
-
     protected $fillable = [
-        'Uuid', 'Puuid', 'Paramcode', 'ParamNM', 'Param','Note', 'Createuser', 'UpdateUser', 'CreateTime', 'UpdateTime'
+        'uuid',
+        'puuid',
+        'param_sn',
+        'param_code',
+        'param_nm',
+        'note',
+        'is_valid',
+        'create_user',
+        'create_time',
+        'update_user',
+        'update_time'
     ];
+
+
 
     // 自動生成 UUID
     protected static function boot()

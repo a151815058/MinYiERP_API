@@ -17,7 +17,7 @@ class Currency extends Model
     protected $keyType = 'string';
     public $timestamps = false; // 因為我們手動使用 CreateTime 和 UpdateTime
     protected $fillable = [
-        'uuid','CurrencyNo' ,'CurrencyNM',  'Note', 'IsValid', 'Createuser', 'UpdateUser', 'CreateTime', 'UpdateTime'
+        'uuid','currency_no' ,'currency_nm','currency_rate',  'note', 'is_valid', 'create_user', 'create_time', 'update_user', 'update_time'
     ];
 
     // 自動生成 UUID
@@ -34,13 +34,13 @@ class Currency extends Model
     // 🔍 透過 DeptNo 查詢    // 🔍 透過 DeptNo 查詢部門
     public static function findByCurrencyNo($CurrencyNo)
     {
-        return self::where('CurrencyNo', $CurrencyNo)->first();
+        return self::where('currency_no', $CurrencyNo)->first();
     }
 
      // 🔍 查詢所有有效部門
     public static function getValidCurrencys()
     {
-        return self::where('IsValid', '1')->get();
+        return self::where('is_valid', '1')->get();
     }
 
 }

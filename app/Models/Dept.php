@@ -18,7 +18,7 @@ class Dept extends Model
     public $timestamps = false; // 因為我們手動使用 CreateTime 和 UpdateTime
 
     protected $fillable = [
-        'uuid', 'DeptNo', 'DeptNM', 'Note', 'IsValid', 'Createuser', 'UpdateUser', 'CreateTime', 'UpdateTime'
+        'uuid', 'dept_no', 'dept_nm', 'note', 'is_valid', 'create_user', 'create_time', 'update_user', 'update_time'
     ];
 
     // 自動生成 UUID
@@ -35,20 +35,20 @@ class Dept extends Model
     // 🔍 透過 DeptNo 查詢    // 🔍 透過 DeptNo 查詢部門
     public static function findByDeptNo($deptNo)
     {
-        return self::where('DeptNo', $deptNo)->first();
+        return self::where('dept_no', $deptNo)->first();
     }
 
      // 🔍 查詢所有有效部門
     public static function getValidDepts()
     {
-        return self::where('IsValid', '1')->get();
+        return self::where('is_valid', '1')->get();
     }
 
     // 🔹 多對多關係：一個部門可以有多個使用者
     public function sysusers()
     {
-        return $this->belongsToMany(SysUser::class, 'sysuser_depts', 'Dept_id', 'User_id')
-                ->withPivot('IsValid','Createuser', 'CreateTime','UpdateUser', 'UpdateTime'); // 取出附加欄位;
+        return $this->belongsToMany(SysUser::class, 'sysuser_depts', 'dept_id', 'user_id')
+                ->withPivot('is_valid', 'create_user', 'create_time', 'update_user', 'update_time'); // 取出附加欄位;
     }
 
 

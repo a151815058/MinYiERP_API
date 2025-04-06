@@ -17,19 +17,27 @@ class Sysuser extends Model
     public $timestamps = false; // 因為我們手動使用 CreateTime 和 UpdateTime
 
     protected $fillable = [
-        'uuid', 'UsrNo', 'UsrNM', 'Note', 'IsValid', 'Createuser', 'UpdateUser', 'CreateTime', 'UpdateTime'
-    ];
+        'uuid',
+        'user_no',
+        'user_nm',
+        'note',
+        'is_valid',
+        'create_user',
+        'create_time',
+        'update_user',
+        'update_time'
+    ];    
 
     // 🔹 多對多關係：一個使用者可以屬於多個部門
     public function depts()
     {
-        return $this->belongsToMany(Dept::class, 'sysuser_depts', 'User_id', 'Dept_id')
-                ->withPivot('IsValid','Createuser', 'CreateTime','UpdateUser', 'UpdateTime'); // 取出附加欄位;
+        return $this->belongsToMany(Dept::class, 'sysuser_depts', 'user_id', 'dept_id')
+                ->withPivot('is_valid','create_user', 'create_time','update_user', 'update_time'); // 取出附加欄位;
     }
 
     public static function getValidusers()
     {
-        return self::where('IsValid', operator: '1')->get();
+        return self::where('is_valid', operator: '1')->get();
     }
 
 }

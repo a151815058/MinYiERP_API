@@ -18,7 +18,7 @@ class Inventory extends Model
     public $timestamps = false; // 因為我們手動使用 CreateTime 和 UpdateTime
 
     protected $fillable = [
-        'uuid', 'InventoryNO', 'InventoryNM', 'InventoryQty','Safety_stock','LastStockReceiptDate', 'IsValid', 'Createuser', 'UpdateUser', 'CreateTime', 'UpdateTime'
+        'uuid', 'inventory_no', 'inventory_nm', 'inventory_qty','lot_num','safety_stock','lastStock_receiptdate', 'is_valid', 'create_user', 'create_time', 'update_user', 'update_time'
     ];
 
     // 自動生成 UUID
@@ -35,12 +35,12 @@ class Inventory extends Model
     // 🔍 透過 InventoryNO 查詢    // 🔍 透過 InventoryNO 查詢部門
     public static function findByInventoryNO($InventoryNO)
     {
-        return self::where('InventoryNO', $InventoryNO)->first();
+        return self::where('inventory_no', $InventoryNO)->first();
     }
 
      // 🔍 查詢所有有效庫別
     public static function getValidInventory()
     {
-        return static::where('IsValid', '1')->get();
+        return static::where('is_valid', '1')->get();
     }
 }

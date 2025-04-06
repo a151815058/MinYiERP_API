@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BillInfo;
+use App\Models\SysCode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use OpenApi\Annotations as OA;
@@ -18,70 +19,77 @@ class BillInfoController extends Controller
      *     operationId="createBillInfo",
      *     tags={"Base_BillInfo"},
      *     @OA\Parameter(
-     *         name="BillNo",
+     *         name="bill_no",
      *         in="query",
      *         required=true,
      *         description="單據代號",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="BillNM",
+     *         name="bill_nm",
      *         in="query",
      *         required=true,
      *         description="單據名稱",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="BillType",
+     *         name="bill_type",
      *         in="query",
      *         required=true,
      *         description="單據類型",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="BillEncode",
+     *         name="bill_encode",
      *         in="query",
      *         required=true,
      *         description="單據編碼方式",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="BillCalc",
+     *         name="bill_calc",
      *         in="query",
      *         required=true,
      *         description="單據計算方式",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="AutoReview",
+     *         name="auto_review",
      *         in="query",
      *         required=true,
      *         description="是否自動核准",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="GenOrder",
+     *         name="gen_order",
      *         in="query",
-     *         required=true,
-     *         description="自動產生銷貨單",
+     *         required=false,
+     *         description="自動產生單據",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="OrderType",
+     *         name="gen_bill_type",
      *         in="query",
-     *         required=true,
+     *         required=false,
+     *         description="產生單據類型",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="order_type",
+     *         in="query",
+     *         required=false,
      *         description="銷貨單別",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="Note",
+     *         name="note",
      *         in="query",
      *         required=false,
      *         description="備註",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="IsValid",
+     *         name="is_valid",
      *         in="query",
      *         required=true,
      *         description="是否有效",
@@ -93,20 +101,21 @@ class BillInfoController extends Controller
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="BillNo", type="string", example="T001"),
-     *             @OA\Property(property="BillNM", type="string", example="客戶訂單"),
-     *             @OA\Property(property="BillType", type="string", example="61"),
-     *             @OA\Property(property="BillEncode", type="string", example="1"),
-     *             @OA\Property(property="BillCalc", type="string", example="1"),
-     *             @OA\Property(property="AutoReview", type="string", example="1"),
-     *             @OA\Property(property="GenOrder", type="string", example="1"),
-     *             @OA\Property(property="OrderType", type="string", example="1"),
-     *             @OA\Property(property="Note", type="string", example=""),
-     *             @OA\Property(property="IsValid", type="boolean", example=true),
-     *             @OA\Property(property="Createuser", type="string", example="admin"),
-     *             @OA\Property(property="UpdateUser", type="string", example="admin"),
-     *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="UpdateTime", type="string", example="2025-03-31T08:58:52.001986Z")
+     *             @OA\Property(property="bill_no", type="string", example="T001"),
+     *             @OA\Property(property="bill_nm", type="string", example="客戶訂單"),
+     *             @OA\Property(property="bill_type", type="string", example="61"),
+     *             @OA\Property(property="bill_encode", type="string", example="1"),    
+     *             @OA\Property(property="bill_calc", type="string", example="1"),
+     *             @OA\Property(property="auto_review", type="string", example="1"),
+     *             @OA\Property(property="gen_order", type="string", example="1"),
+     *             @OA\Property(property="gen_bill_type", type="string", example="1"),
+     *             @OA\Property(property="order_type", type="string", example="1"),
+     *             @OA\Property(property="note", type="string", example=""),
+     *             @OA\Property(property="is_valid", type="string", example="1"),
+     *             @OA\Property(property="create_user", type="string", example="admin"),
+     *             @OA\Property(property="update_user", type="string", example="admin"),
+     *             @OA\Property(property="create_time", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
      *         )
      *     ),
      *     @OA\Response(
@@ -121,30 +130,32 @@ class BillInfoController extends Controller
         try {
             // 驗證請求
             $validated = $request->validate([
-                'BillNo'     => 'required|string|max:255|unique:billinfo,BillNo',
-                'BillNM'     => 'required|string|max:255',
-                'BillType'   => 'required|string|max:10',
-                'BillEncode' => 'required|string|max:10',
-                'BillCalc'   => 'required|integer|max:10',
-                'AutoReview' => 'required|integer|max:10',
-                'GenOrder'   => 'required|string|max:10',
-                'OrderType'  => 'required|integer|max:10',
-                'Note'       => 'nullable|string|max:255',
-                'IsValid'    => 'required|boolean'
+                'bill_no'     => 'required|string|max:255|unique:billinfo,bill_no',
+                'bill_nm'     => 'required|string|max:255',
+                'bill_type'   => 'required|string|max:10',
+                'bill_encode' => 'required|string|max:10',
+                'bill_calc'   => 'required|integer|max:10',
+                'auto_review' => 'required|integer|max:10',
+                'gen_order'   => 'nullable|string|max:10',
+                'gen_bill_type'   => 'nullable|string|max:10',
+                'order_type'  => 'nullable|integer|max:10',
+                'note'       => 'nullable|string|max:255',
+                'is_valid'    => 'required|string'
             ]);
     
             // 建立單據資料
             $BillInfo = BillInfo::create([
-                'BillNo'     => $validated['BillNo'],
-                'BillNM'     => $validated['BillNM'],
-                'BillType'   => $validated['BillType'],
-                'BillEncode' => $validated['BillEncode'],
-                'BillCalc'   => $validated['BillCalc'],
-                'AutoReview' => $validated['AutoReview'],
-                'GenOrder'   => $validated['GenOrder'],
-                'OrderType'  => $validated['OrderType'],
-                'Note'       => $validated['Note'] ?? null,
-                'IsValid'    => $validated['IsValid']
+                'bill_no'     => $validated['bill_no'],
+                'bill_nm'     => $validated['bill_nm'],
+                'bill_type'   => $validated['bill_type'],
+                'bill_encode' => $validated['bill_encode'],
+                'bill_calc'   => $validated['bill_calc'],
+                'auto_review' => $validated['auto_review'],
+                'gen_order'   => $validated['gen_order']?? null,
+                'gen_bill_type'   => $validated['GenBillType']?? null,
+                'order_type'  => $validated['order_type']?? null,
+                'note'       => $validated['note'] ?? null,
+                'is_valid'    => $validated['is_valid']
             ]);
     
             if (!$BillInfo) {
@@ -200,20 +211,21 @@ class BillInfoController extends Controller
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="BillNo", type="string", example="T001"),
-     *             @OA\Property(property="BillNM", type="string", example="客戶訂單"),
-     *             @OA\Property(property="BillType", type="string", example="61"),
-     *             @OA\Property(property="BillEncode", type="string", example="1"),
-     *             @OA\Property(property="BillCalc", type="string", example="1"),
-     *             @OA\Property(property="AutoReview", type="string", example="1"),
-     *             @OA\Property(property="GenOrder", type="string", example="1"),
-     *             @OA\Property(property="OrderType", type="string", example="1"),
-     *             @OA\Property(property="Note", type="string", example=""),
-     *             @OA\Property(property="IsValid", type="boolean", example=true),
-     *             @OA\Property(property="Createuser", type="string", example="admin"),
-     *             @OA\Property(property="UpdateUser", type="string", example="admin"),
-     *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="UpdateTime", type="string", example="2025-03-31T08:58:52.001986Z")
+     *             @OA\Property(property="bill_no", type="string", example="T001"),
+     *             @OA\Property(property="bill_nm", type="string", example="客戶訂單"),
+     *             @OA\Property(property="bill_type", type="string", example="61"),
+     *             @OA\Property(property="bill_encode", type="string", example="1"),    
+     *             @OA\Property(property="bill_calc", type="string", example="1"),
+     *             @OA\Property(property="auto_review", type="string", example="1"),
+     *             @OA\Property(property="gen_order", type="string", example="1"),
+     *             @OA\Property(property="gen_bill_type", type="string", example="1"),
+     *             @OA\Property(property="order_type", type="string", example="1"),
+     *             @OA\Property(property="note", type="string", example=""),
+     *             @OA\Property(property="is_valid", type="string", example="1"),
+     *             @OA\Property(property="create_user", type="string", example="admin"),
+     *             @OA\Property(property="update_user", type="string", example="admin"),
+     *             @OA\Property(property="create_time", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
      *         )
      *     ),
      *     @OA\Response(
@@ -273,20 +285,21 @@ class BillInfoController extends Controller
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="BillNo", type="string", example="T001"),
-     *             @OA\Property(property="BillNM", type="string", example="客戶訂單"),
-     *             @OA\Property(property="BillType", type="string", example="61"),
-     *             @OA\Property(property="BillEncode", type="string", example="1"),
-     *             @OA\Property(property="BillCalc", type="string", example="1"),
-     *             @OA\Property(property="AutoReview", type="string", example="1"),
-     *             @OA\Property(property="GenOrder", type="string", example="1"),
-     *             @OA\Property(property="OrderType", type="string", example="1"),
-     *             @OA\Property(property="Note", type="string", example=""),
-     *             @OA\Property(property="IsValid", type="boolean", example=true),
-     *             @OA\Property(property="Createuser", type="string", example="admin"),
-     *             @OA\Property(property="UpdateUser", type="string", example="admin"),
-     *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="UpdateTime", type="string", example="2025-03-31T08:58:52.001986Z")
+     *             @OA\Property(property="bill_no", type="string", example="T001"),
+     *             @OA\Property(property="bill_nm", type="string", example="客戶訂單"),
+     *             @OA\Property(property="bill_type", type="string", example="61"),
+     *             @OA\Property(property="bill_encode", type="string", example="1"),    
+     *             @OA\Property(property="bill_calc", type="string", example="1"),
+     *             @OA\Property(property="auto_review", type="string", example="1"),
+     *             @OA\Property(property="gen_order", type="string", example="1"),
+     *             @OA\Property(property="gen_bill_type", type="string", example="1"),
+     *             @OA\Property(property="order_type", type="string", example="1"),
+     *             @OA\Property(property="note", type="string", example=""),
+     *             @OA\Property(property="is_valid", type="string", example="1"),
+     *             @OA\Property(property="create_user", type="string", example="admin"),
+     *             @OA\Property(property="update_user", type="string", example="admin"),
+     *             @OA\Property(property="create_time", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
      *         )
      *     ),
      *     @OA\Response(
@@ -351,20 +364,21 @@ class BillInfoController extends Controller
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="BillNo", type="string", example="T001"),
-     *             @OA\Property(property="BillNM", type="string", example="客戶訂單"),
-     *             @OA\Property(property="BillType", type="string", example="61"),
-     *             @OA\Property(property="BillEncode", type="string", example="1"),
-     *             @OA\Property(property="BillCalc", type="string", example="1"),
-     *             @OA\Property(property="AutoReview", type="string", example="1"),
-     *             @OA\Property(property="GenOrder", type="string", example="1"),
-     *             @OA\Property(property="OrderType", type="string", example="1"),
-     *             @OA\Property(property="Note", type="string", example=""),
-     *             @OA\Property(property="IsValid", type="boolean", example=true),
-     *             @OA\Property(property="Createuser", type="string", example="admin"),
-     *             @OA\Property(property="UpdateUser", type="string", example="admin"),
-     *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="UpdateTime", type="string", example="2025-03-31T08:58:52.001986Z")
+     *             @OA\Property(property="bill_no", type="string", example="T001"),
+     *             @OA\Property(property="bill_nm", type="string", example="客戶訂單"),
+     *             @OA\Property(property="bill_type", type="string", example="61"),
+     *             @OA\Property(property="bill_encode", type="string", example="1"),    
+     *             @OA\Property(property="bill_calc", type="string", example="1"),
+     *             @OA\Property(property="auto_review", type="string", example="1"),
+     *             @OA\Property(property="gen_order", type="string", example="1"),
+     *             @OA\Property(property="gen_bill_type", type="string", example="1"),
+     *             @OA\Property(property="order_type", type="string", example="1"),
+     *             @OA\Property(property="note", type="string", example=""),
+     *             @OA\Property(property="is_valid", type="string", example="1"),
+     *             @OA\Property(property="create_user", type="string", example="admin"),
+     *             @OA\Property(property="update_user", type="string", example="admin"),
+     *             @OA\Property(property="create_time", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
      *         )   
      *     ),
      *     @OA\Response(
@@ -415,5 +429,69 @@ class BillInfoController extends Controller
                 'error' => $e->getMessage() // 上線環境建議拿掉
             ], 500);
         } 
+    }
+    /**
+     * @OA\get(
+     *     path="/api/BillInfos/showConst",
+     *     summary="列出所有單據需要的常用(下拉、彈窗)",
+     *     description="列出所有單據需要的常用(下拉、彈窗)",
+     *     operationId="Show_Bill_ALL_Const",
+     *     tags={"Base_BillInfo"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="成功"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="有效單據類型未找到"
+     *     )
+     * )
+     */
+    // 列出所有單據需要的常用(下拉、彈窗)
+    public function showConst($constant='all'){
+        // 查詢 '單據管理' 的資料
+        $SysCode = SysCode::where('note', '單據管理')->get();
+        // 查詢 '單據類型=81' 的單據資料
+        $BillType81 = BillInfo::where('bill_type', '81')->get();
+        try {
+            // 檢查是否有結果
+            if ($SysCode->isEmpty() && $BillType81->isEmpty()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => '常用資料未找到',
+                    'bill_type(option)' => null,
+                    'bill_type81(option)' => null
+                ], 404);
+            }
+    
+            // 返回查詢結果
+            return response()->json([
+                'status' => true,
+                'message' => 'success',
+                'bill_type(option)' => $SysCode,
+                'bill_type81(option)' => $BillType81
+            ], 200);
+    
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 捕捉驗證失敗，並返回錯誤訊息
+            return response()->json([
+                'status' => false,
+                'message' => '驗證錯誤',
+                'errors' => $e->errors()
+            ], 422);
+    
+        } catch (\Exception $e) {
+            // 其他例外處理，並紀錄錯誤訊息
+            Log::error('資料錯誤：' . $e->getMessage(), [
+                'exception' => $e,
+                'stack' => $e->getTraceAsString() // 可選，根據需要可增加更多上下文信息
+            ]);
+    
+            return response()->json([
+                'status' => false,
+                'message' => '伺服器發生錯誤，請稍後再試',
+                'error' => env('APP_DEBUG') ? $e->getMessage() : '請稍後再試'
+            ], 500);
+        }
     }
 }

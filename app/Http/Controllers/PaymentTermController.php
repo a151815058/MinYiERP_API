@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\PaymentTerm;
+use App\Models\SysCode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use OpenApi\Annotations as OA;
+use Illuminate\Support\Facades\Log;
 
 class PaymentTermController extends Controller
 {
@@ -17,49 +19,49 @@ class PaymentTermController extends Controller
      *     operationId="createPaymentTerm",
      *     tags={"Base_PaymentTerm"},
      *     @OA\Parameter(
-     *         name="TermsNo",
+     *         name="terms_no",
      *         in="query",
      *         required=true,
      *         description="付款條件代碼",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="TermsNM",
+     *         name="terms_nm",
      *         in="query",
      *         required=true,
      *         description="付款條件名稱",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="TermsDays",
+     *         name="terms_days",
      *         in="query",
      *         required=true,
      *         description="付款條件月結天數",
      *         @OA\Schema(type="integer")
      *     ),
      *     @OA\Parameter(
-     *         name="PayMode",
+     *         name="pay_mode",
      *         in="query",
      *         required=true,
      *         description="付款條件 當月/隔月",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="PayDay",
+     *         name="pay_day",
      *         in="query",
      *         required=true,
      *         description="付款時間",
      *         @OA\Schema(type="integer")
      *     ),
      *     @OA\Parameter(
-     *         name="Note",
+     *         name="note",
      *         in="query",
      *         required=false,
      *         description="備註",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="IsValid",
+     *         name="is_valid",
      *         in="query",
      *         required=true,
      *         description="是否有效",
@@ -71,17 +73,17 @@ class PaymentTermController extends Controller
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="TermsNo", type="string", example="T001"),
-     *             @OA\Property(property="TermsNM", type="string", example="月結30天"),
-     *             @OA\Property(property="TermsDays", type="integer", example="30"),
-     *             @OA\Property(property="PayMode", type="string", example="M001"),
-     *             @OA\Property(property="PayDay", type="integer", example="30"),
-     *             @OA\Property(property="Note", type="string", example="測試測試"),
-     *             @OA\Property(property="IsValid", type="boolean", example=true),
-     *             @OA\Property(property="Createuser", type="string", example="admin"),
-     *             @OA\Property(property="UpdateUser", type="string", example="admin"),
-     *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="UpdateTime", type="string", example="2025-03-31T08:58:52.001986Z")
+     *             @OA\Property(property="terms_no", type="string", example="T001"),
+     *             @OA\Property(property="terms_nm", type="string", example="月結30天"),
+     *             @OA\Property(property="terms_days", type="integer", example="30"),
+     *             @OA\Property(property="pay_mode", type="string", example="M001"),
+     *             @OA\Property(property="pay_day", type="integer", example="30"),
+     *             @OA\Property(property="note", type="string", example="測試測試"),
+     *             @OA\Property(property="is_valid", type="boolean", example=true),
+     *             @OA\Property(property="create_user", type="string", example="admin"),
+     *             @OA\Property(property="create_time", type="string", example="admin"),
+     *             @OA\Property(property="update_user", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
      *         )
      *     ),
      *     @OA\Response(
@@ -95,24 +97,24 @@ class PaymentTermController extends Controller
     {
         // 驗證請求
         $validated = $request->validate([
-            'TermsNo'     => 'required|string|max:255|unique:paymentterms,TermsNo',
-            'TermsNM'     => 'required|string|max:255',
-            'TermsDays'     => 'required|integer|max:31',
-            'PayMode'     => 'required|string|max:255',
-            'PayDay'     => 'required|integer|max:31',
-            'Note'       => 'nullable|string|max:255',
-            'IsValid'    => 'required|boolean'
+            'terms_no'     => 'required|string|max:255|unique:paymentterms,terms_no',
+            'terms_nm'     => 'required|string|max:255',
+            'terms_days'     => 'required|integer|max:31',
+            'pay_mode'     => 'required|string|max:255',
+            'pay_day'     => 'required|integer|max:31',
+            'note'       => 'nullable|string|max:255',
+            'is_valid'    => 'required|boolean'
         ]);
 
         // 建立付款條件
         $PaymentTerm = PaymentTerm::create([
-            'TermsNo'     => $validated['TermsNo'],
-            'TermsNM'     => $validated['TermsNM'],
-            'TermsDays'     => $validated['TermsDays'],
-            'PayMode'     => $validated['PayMode'],
-            'PayDay'     => $validated['PayDay'],
-            'Note'       => $validated['Note'] ?? null,
-            'IsValid'    => $validated['IsValid']
+            'terms_no'     => $validated['terms_no'],
+            'terms_nm'     => $validated['terms_nm'],
+            'terms_days'     => $validated['terms_days'],
+            'pay_mode'     => $validated['pay_mode'],
+            'pay_day'     => $validated['pay_day'],
+            'note'       => $validated['note'] ?? null,
+            'is_valid'    => $validated['is_valid']
         ]);
 
         // 回應 JSON
@@ -139,7 +141,7 @@ class PaymentTermController extends Controller
      *     operationId="getPaymentTerm",
      *     tags={"Base_PaymentTerm"},
      *     @OA\Parameter(
-     *         name="TermNo",
+     *         name="terms_no",
      *         in="path",
      *         required=true,
      *         description="付款條件代號",
@@ -151,17 +153,17 @@ class PaymentTermController extends Controller
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="TermsNo", type="string", example="T001"),
-     *             @OA\Property(property="TermsNM", type="string", example="月結30天"),
-     *             @OA\Property(property="TermsDays", type="integer", example="30"),
-     *             @OA\Property(property="PayMode", type="string", example="M001"),
-     *             @OA\Property(property="PayDay", type="integer", example="30"),
-     *             @OA\Property(property="Note", type="string", example="測試測試"),
-     *             @OA\Property(property="IsValid", type="boolean", example=true),
-     *             @OA\Property(property="Createuser", type="string", example="admin"),
-     *             @OA\Property(property="UpdateUser", type="string", example="admin"),
-     *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="UpdateTime", type="string", example="2025-03-31T08:58:52.001986Z")
+     *             @OA\Property(property="terms_no", type="string", example="T001"),
+     *             @OA\Property(property="terms_nm", type="string", example="月結30天"),
+     *             @OA\Property(property="terms_days", type="integer", example="30"),
+     *             @OA\Property(property="pay_mode", type="string", example="M001"),
+     *             @OA\Property(property="pay_day", type="integer", example="30"),
+     *             @OA\Property(property="note", type="string", example="測試測試"),
+     *             @OA\Property(property="is_valid", type="boolean", example=true),
+     *             @OA\Property(property="create_user", type="string", example="admin"),
+     *             @OA\Property(property="create_time", type="string", example="admin"),
+     *             @OA\Property(property="update_user", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
      *         )
      *     ),
      *     @OA\Response(
@@ -202,17 +204,17 @@ class PaymentTermController extends Controller
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="TermsNo", type="string", example="T001"),
-     *             @OA\Property(property="TermsNM", type="string", example="月結30天"),
-     *             @OA\Property(property="TermsDays", type="integer", example="30"),
-     *             @OA\Property(property="PayMode", type="string", example="M001"),
-     *             @OA\Property(property="PayDay", type="integer", example="30"),
-     *             @OA\Property(property="Note", type="string", example="測試測試"),
-     *             @OA\Property(property="IsValid", type="boolean", example=true),
-     *             @OA\Property(property="Createuser", type="string", example="admin"),
-     *             @OA\Property(property="UpdateUser", type="string", example="admin"),
-     *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="UpdateTime", type="string", example="2025-03-31T08:58:52.001986Z")
+     *             @OA\Property(property="terms_no", type="string", example="T001"),
+     *             @OA\Property(property="terms_nm", type="string", example="月結30天"),
+     *             @OA\Property(property="terms_days", type="integer", example="30"),
+     *             @OA\Property(property="pay_mode", type="string", example="M001"),
+     *             @OA\Property(property="pay_day", type="integer", example="30"),
+     *             @OA\Property(property="note", type="string", example="測試測試"),
+     *             @OA\Property(property="is_valid", type="boolean", example=true),
+     *             @OA\Property(property="create_user", type="string", example="admin"),
+     *             @OA\Property(property="create_time", type="string", example="admin"),
+     *             @OA\Property(property="update_user", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
      *         )
      *     ),
      *     @OA\Response(
@@ -259,17 +261,17 @@ class PaymentTermController extends Controller
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="TermsNo", type="string", example="T001"),
-     *             @OA\Property(property="TermsNM", type="string", example="月結30天"),
-     *             @OA\Property(property="TermsDays", type="integer", example="30"),
-     *             @OA\Property(property="PayMode", type="string", example="M001"),
-     *             @OA\Property(property="PayDay", type="integer", example="30"),
-     *             @OA\Property(property="Note", type="string", example="測試測試"),
-     *             @OA\Property(property="IsValid", type="boolean", example=true),
-     *             @OA\Property(property="Createuser", type="string", example="admin"),
-     *             @OA\Property(property="UpdateUser", type="string", example="admin"),
-     *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="UpdateTime", type="string", example="2025-03-31T08:58:52.001986Z")
+     *             @OA\Property(property="terms_no", type="string", example="T001"),
+     *             @OA\Property(property="terms_nm", type="string", example="月結30天"),
+     *             @OA\Property(property="terms_days", type="integer", example="30"),
+     *             @OA\Property(property="pay_mode", type="string", example="M001"),
+     *             @OA\Property(property="pay_day", type="integer", example="30"),
+     *             @OA\Property(property="note", type="string", example="測試測試"),
+     *             @OA\Property(property="is_valid", type="boolean", example=true),
+     *             @OA\Property(property="create_user", type="string", example="admin"),
+     *             @OA\Property(property="create_time", type="string", example="admin"),
+     *             @OA\Property(property="update_user", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
      *         )   
      *     ),
      *     @OA\Response(
@@ -301,5 +303,65 @@ class PaymentTermController extends Controller
             'message' => 'success',
             'output'    => $PaymentTerm
         ], 200);
+    }
+    /**
+     * @OA\get(
+     *     path="/api/PaymentTerms/showConst",
+     *     summary="列出所有付款條件需要的常用(下拉、彈窗)",
+     *     description="列出所有付款條件需要的常用(下拉、彈窗)",
+     *     operationId="Show_PaymentTerm_ALL_Const",
+     *     tags={"Base_PaymentTerm"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="成功"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="有效付款條件未找到"
+     *     )
+     * )
+     */
+    // 列出所有付款條件需要的常用(下拉、彈窗)
+    public function showConst($constant='all'){
+        // 查詢 '所有付款條件' 的資料
+        $SysCode = SysCode::where('param_sn', '02')->get();
+        try {
+            // 檢查是否有結果
+            if ($SysCode->isEmpty() ) {
+                return response()->json([
+                    'status' => false,
+                    'message' => '常用資料未找到',
+                    'paymentterms(option)' => null
+                ], 404);
+            }
+    
+            // 返回查詢結果
+            return response()->json([
+                'status' => true,
+                'message' => 'success',
+                'paymentterms(option)' => $SysCode
+            ], 200);
+    
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 捕捉驗證失敗，並返回錯誤訊息
+            return response()->json([
+                'status' => false,
+                'message' => '驗證錯誤',
+                'errors' => $e->errors()
+            ], 422);
+    
+        } catch (\Exception $e) {
+            // 其他例外處理，並紀錄錯誤訊息
+            Log::error('資料錯誤：' . $e->getMessage(), [
+                'exception' => $e,
+                'stack' => $e->getTraceAsString() // 可選，根據需要可增加更多上下文信息
+            ]);
+    
+            return response()->json([
+                'status' => false,
+                'message' => '伺服器發生錯誤，請稍後再試',
+                'error' => env('APP_DEBUG') ? $e->getMessage() : '請稍後再試'
+            ], 500);
+        }
     }
 }

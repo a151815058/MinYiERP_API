@@ -16,9 +16,34 @@ class Client extends Model
     public $incrementing = false;
     protected $keyType = 'string';
     public $timestamps = false; // 因為我們手動使用 CreateTime 和 UpdateTime
-
     protected $fillable = [
-        'Uuid', 'clientNo', 'clientShortNM', 'clientFullNM','ZipCode1', 'Address1','ZipCode2','Address2','TaxID','ResponsiblePerson','EstablishedDate','Phone','Fax','ContactPerson','ContactPhone','MobilePhone','ContactEmail','CurrencyID','TaxType','PaymentTermID','UserID','Note', 'Createuser', 'UpdateUser', 'CreateTime', 'UpdateTime'
+        'uuid',
+        'client_no',
+        'client_shortnm',
+        'client_fullnm',
+        'zip_code1',
+        'address1',
+        'zip_code2',
+        'address2',
+        'taxid',
+        'responsible_person',
+        'established_date',
+        'phone',
+        'fax',
+        'contact_person',
+        'contact_phone',
+        'mobile_phone',
+        'contact_email',
+        'currency_id',
+        'taxtype',
+        'paymentterm_id',
+        'user_id',
+        'note',
+        'is_valid',
+        'create_user',
+        'create_time',
+        'update_user',
+        'update_time'
     ];
     
 
@@ -36,13 +61,13 @@ class Client extends Model
     // 🔍 透過 clientNo 查詢    // 🔍 透過 clientNo 查詢付款條件
     public static function findByclientNo($clientNo)
     {
-        return static::where('clientNo', $clientNo)->first();
+        return static::where('client_no', $clientNo)->first();
     }
 
      // 🔍 查詢所有有效客戶資料
     public static function getValidClients()
     {
-        return static::where('IsValid', operator: '1')->get();
+        return static::where('is_valid', operator: '1')->get();
     }
 
 }

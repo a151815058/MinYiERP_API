@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Currency;
+use App\Models\SysCode;
 use Illuminate\Support\Str;
 use \Illuminate\Support\Facades\Http;
 use OpenApi\Annotations as OA;
+use Illuminate\Support\Facades\Log;
 
 class CurrencyController extends Controller
 {
@@ -18,17 +20,24 @@ class CurrencyController extends Controller
      *     operationId="createCurrency",
      *     tags={"Base_Currency"},
      *     @OA\Parameter(
-     *         name="CurrencyNo",
+     *         name="currency_no",
      *         in="query",
      *         required=true,
      *         description="貨幣代號",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="CurrencyNM",
+     *         name="currency_nm",
      *         in="query",
      *         required=true,
      *         description="貨幣名稱",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="currency_rate",
+     *         in="query",
+     *         required=false,
+     *         description="現在匯率(以台幣為基準)",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
@@ -39,7 +48,7 @@ class CurrencyController extends Controller
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="IsValid",
+     *         name="is_valid",
      *         in="query",
      *         required=true,
      *         description="是否有效",
@@ -51,14 +60,15 @@ class CurrencyController extends Controller
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="CurrencyNo", type="string", example="C001"),
-     *             @OA\Property(property="CurrencyNM", type="string", example="台幣"),
-     *             @OA\Property(property="Note", type="string", example="測試測試"),
-     *             @OA\Property(property="IsValid", type="boolean", example=true),
-     *             @OA\Property(property="Createuser", type="string", example="admin"),
-     *             @OA\Property(property="UpdateUser", type="string", example="admin"),
-     *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="UpdateTime", type="string", example="2025-03-31T08:58:52.001986Z")
+     *             @OA\Property(property="currency_no", type="string", example="C001"),
+     *             @OA\Property(property="currency_nm", type="string", example="台幣"),
+     *             @OA\Property(property="currency_rate", type="string", example="取得當下匯率"),
+     *             @OA\Property(property="note", type="string", example="測試測試"),
+     *             @OA\Property(property="is_valid", type="boolean", example=true),
+     *             @OA\Property(property="create_user", type="string", example="admin"),
+     *             @OA\Property(property="update_user", type="string", example="admin"),
+     *             @OA\Property(property="create_time", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
      *         )
      *     ),
      *     @OA\Response(
@@ -72,26 +82,38 @@ class CurrencyController extends Controller
     {
         // 驗證請求
         $validated = $request->validate([
-            'CurrencyNo'     => 'required|string|max:255|unique:currencys,CurrencyNo',
-            'CurrencyNM'     => 'required|string|max:255',
-            'Note'       => 'nullable|string|max:255',
-            'IsValid'    => 'required|boolean'
+            'currency_no'     => 'required|string|max:255|unique:currencys,currency_no',
+            'currency_nm'     => 'required|string|max:255',
+            'currency_rate'     => 'nullable|string|max:255',
+            'note'       => 'nullable|string|max:255',
+            'is_valid'    => 'required|string'
         ]);
+
+        // 取得建立當下匯率存入資料表(以台幣為基準)
+        $curr_Rate = CurrencyController::getExchangeRate('TWD');
+        foreach ($curr_Rate['conversion_rates'] as $currency => $rate) {
+            if ($currency == $validated['currency_no']) {
+                $validated['currency_rate'] = $rate;
+                break;
+            }
+        }
+
 
         // 建立幣別資料
         $currency = Currency::create([
             'uuid'       => Str::uuid(),  // 自動生成 UUID
-            'CurrencyNo'     => $validated['CurrencyNo'],
-            'CurrencyNM'     => $validated['CurrencyNM'],
-            'Note'       => $validated['Note'] ?? null,
-            'IsValid'    => $validated['IsValid']
+            'currency_no'     => $validated['currency_no'],
+            'currency_nm'     => $validated['currency_nm'],
+            'currency_rate'     => $validated['currency_rate']?? null,
+            'note'       => $validated['note'] ?? null,
+            'is_valid'    => $validated['is_valid']
         ]);
 
         // 回應 JSON
         if (!$currency) {
             return response()->json([
                 'status' => false,
-                'message' => '部門建立失敗',
+                'message' => '幣別建立失敗',
                 'output'    => null
             ], status: 404);
         }else {
@@ -211,7 +233,7 @@ class CurrencyController extends Controller
      * @OA\GET(
      *     path="/api/exchange-rate/{CurrencyNo}",
      *     summary="讀取匯率",
-     *     description="讀取匯率",
+     *     description="讀取匯率(不對外)",
      *     operationId="exchangeRate",
      *     tags={"Base_Currency"},
      *     @OA\Parameter(
@@ -246,8 +268,7 @@ class CurrencyController extends Controller
     public function getExchangeRate($baseCurrency)
     {
         // 驗證貨幣代號
-        $currency = Currency::findByCurrencyNo($baseCurrency);
-        if (!$currency) {
+        if (!$baseCurrency) {
             return response()->json([
                 'status' => false,
                 'message' => '無效的貨幣代號',
@@ -281,13 +302,13 @@ class CurrencyController extends Controller
 
         // 解析 API 回應
         $data = $response->json();
-
-        return response()->json([
-            'status' => true,
-            'message' => 'success',
-            'base_currency' => $data['base_code'],
-            'exchange_rates' => $data['conversion_rates'],
-        ]);
+        return $data;
+        //return response()->json([
+        //    'status' => true,
+        //    'message' => 'success',
+        //    'base_currency' => $data['base_code'],
+        //    'exchange_rates' => $data['conversion_rates'],
+        //]);
     }
     /**
      * @OA\patch(
@@ -321,11 +342,11 @@ class CurrencyController extends Controller
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="未找到部門"
+     *         description="未找到幣別"
      *     )
      * )
      */
-    // 🔍 刪除特定部門
+    // 🔍 刪除特定幣別
     public function disable($CurrencyNo)
     {
         $Currency = Currency::findByCurrencyNo($CurrencyNo);
@@ -348,5 +369,65 @@ class CurrencyController extends Controller
             'message' => 'success',
             'output'    => $Currency
         ], 200);
+    }
+    /**
+     * @OA\get(
+     *     path="/api/Currencys/showConst",
+     *     summary="列出所有幣別需要的常用(下拉、彈窗)",
+     *     description="列出所有幣別需要的常用(下拉、彈窗)",
+     *     operationId="Show_Currency_ALL_Const",
+     *     tags={"Base_Currency"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="成功"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="有效單據類型未找到"
+     *     )
+     * )
+     */
+    // 列出所有幣別需要的常用(下拉、彈窗)
+    public function showConst($constant='all'){
+        // 查詢 '所有幣別資料' 的資料
+        $SysCode = SysCode::where('note', '幣別資料')->get();
+        try {
+            // 檢查是否有結果
+            if ($SysCode->isEmpty() ) {
+                return response()->json([
+                    'status' => false,
+                    'message' => '常用資料未找到',
+                    'currency_no(option)' => null
+                ], 404);
+            }
+    
+            // 返回查詢結果
+            return response()->json([
+                'status' => true,
+                'message' => 'success',
+                'currency_no(option)' => $SysCode
+            ], 200);
+    
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 捕捉驗證失敗，並返回錯誤訊息
+            return response()->json([
+                'status' => false,
+                'message' => '驗證錯誤',
+                'errors' => $e->errors()
+            ], 422);
+    
+        } catch (\Exception $e) {
+            // 其他例外處理，並紀錄錯誤訊息
+            Log::error('資料錯誤：' . $e->getMessage(), [
+                'exception' => $e,
+                'stack' => $e->getTraceAsString() // 可選，根據需要可增加更多上下文信息
+            ]);
+    
+            return response()->json([
+                'status' => false,
+                'message' => '伺服器發生錯誤，請稍後再試',
+                'error' => env('APP_DEBUG') ? $e->getMessage() : '請稍後再試'
+            ], 500);
+        }
     }
 }

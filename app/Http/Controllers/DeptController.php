@@ -19,28 +19,28 @@ class DeptController extends Controller
      *     operationId="createdept",
      *     tags={"Base_Dept"},
      *     @OA\Parameter(
-     *         name="DeptNo",
+     *         name="dept_no",
      *         in="query",
      *         required=true,
      *         description="部門代號",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="DeptNM",
+     *         name="dept_nm",
      *         in="query",
      *         required=true,
      *         description="部門名稱",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="Note",
+     *         name="note",
      *         in="query",
      *         required=false,
      *         description="備註",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="IsValid",
+     *         name="is_valid",
      *         in="query",
      *         required=true,
      *         description="是否有效",
@@ -52,14 +52,14 @@ class DeptController extends Controller
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="DeptNo", type="string", example="A02"),
-     *             @OA\Property(property="DeptNM", type="string", example="財務處"),
-     *             @OA\Property(property="Note", type="string", example="測試測試"),
-     *             @OA\Property(property="IsValid", type="boolean", example=true),
-     *             @OA\Property(property="Createuser", type="string", example="admin"),
-     *             @OA\Property(property="UpdateUser", type="string", example="admin"),
-     *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="UpdateTime", type="string", example="2025-03-31T08:58:52.001986Z")
+     *             @OA\Property(property="dept_no", type="string", example="A02"),
+     *             @OA\Property(property="dept_nm", type="string", example="財務處"),
+     *             @OA\Property(property="note", type="string", example="測試測試"),
+     *             @OA\Property(property="is_valid", type="string", example="1"),
+     *             @OA\Property(property="create_user", type="string", example="admin"),
+     *             @OA\Property(property="create_time", type="string", example="admin"),
+     *             @OA\Property(property="update_user", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
      *         )
      *     ),
      *     @OA\Response(
@@ -73,19 +73,19 @@ class DeptController extends Controller
     {
         // 驗證請求
         $validated = $request->validate([
-            'DeptNo'     => 'required|string|max:255|unique:depts,DeptNo',
-            'DeptNM'     => 'required|string|max:255',
-            'Note'       => 'nullable|string|max:255',
-            'IsValid'    => 'required|boolean'
+            'dept_no'     => 'required|string|max:255|unique:depts,dept_no',
+            'dept_nm'     => 'required|string|max:255',
+            'note'       => 'nullable|string|max:255',
+            'is_valid'    => 'required|boolean'
         ]);
 
         // 建立部門資料
         $dept = Dept::create([
             'uuid'       => Str::uuid(),  // 自動生成 UUID
-            'DeptNo'     => $validated['DeptNo'],
-            'DeptNM'     => $validated['DeptNM'],
-            'Note'       => $validated['Note'] ?? null,
-            'IsValid'    => $validated['IsValid']
+            'dept_no'     => $validated['dept_no'],
+            'dept_nm'     => $validated['dept_nm'],
+            'note'       => $validated['note'] ?? null,
+            'is_valid'    => $validated['is_valid']
         ]);
 
         if (!$dept) {
@@ -124,14 +124,14 @@ class DeptController extends Controller
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="DeptNo", type="string", example="A02"),
-     *             @OA\Property(property="DeptNM", type="string", example="財務處"),
-     *             @OA\Property(property="Note", type="string", example="測試測試"),
-     *             @OA\Property(property="IsValid", type="boolean", example=true),
-     *             @OA\Property(property="Createuser", type="string", example="admin"),
-     *             @OA\Property(property="UpdateUser", type="string", example="admin"),
-     *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="UpdateTime", type="string", example="2025-03-31T08:58:52.001986Z")
+     *             @OA\Property(property="dept_no", type="string", example="A02"),
+     *             @OA\Property(property="dept_nm", type="string", example="財務處"),
+     *             @OA\Property(property="note", type="string", example="測試測試"),
+     *             @OA\Property(property="is_valid", type="string", example="1"),
+     *             @OA\Property(property="create_user", type="string", example="admin"),
+     *             @OA\Property(property="create_time", type="string", example="admin"),
+     *             @OA\Property(property="update_user", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
      *         )
      *     ),
      *     @OA\Response(
@@ -172,14 +172,14 @@ class DeptController extends Controller
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="DeptNo", type="string", example="A02"),
-     *             @OA\Property(property="DeptNM", type="string", example="財務處"),
-     *             @OA\Property(property="Note", type="string", example="測試測試"),
-     *             @OA\Property(property="IsValid", type="boolean", example=true),
-     *             @OA\Property(property="Createuser", type="string", example="admin"),
-     *             @OA\Property(property="UpdateUser", type="string", example="admin"),
-     *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="UpdateTime", type="string", example="2025-03-31T08:58:52.001986Z")
+     *             @OA\Property(property="dept_no", type="string", example="A02"),
+     *             @OA\Property(property="dept_nm", type="string", example="財務處"),
+     *             @OA\Property(property="note", type="string", example="測試測試"),
+     *             @OA\Property(property="is_valid", type="string", example="1"),
+     *             @OA\Property(property="create_user", type="string", example="admin"),
+     *             @OA\Property(property="create_time", type="string", example="admin"),
+     *             @OA\Property(property="update_user", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
      *         )
      *     ),
      *     @OA\Response(
@@ -225,14 +225,14 @@ class DeptController extends Controller
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="DeptNo", type="string", example="A02"),
-     *             @OA\Property(property="DeptNM", type="string", example="財務處"),
-     *             @OA\Property(property="Note", type="string", example="測試測試"),
-     *             @OA\Property(property="IsValid", type="boolean", example=false),
-     *             @OA\Property(property="Createuser", type="string", example="admin"),
-     *             @OA\Property(property="UpdateUser", type="string", example="admin"),
-     *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="UpdateTime", type="string", example="2025-03-31T08:58:52.001986Z")
+     *             @OA\Property(property="dept_no", type="string", example="A02"),
+     *             @OA\Property(property="dept_nm", type="string", example="財務處"),
+     *             @OA\Property(property="note", type="string", example="測試測試"),
+     *             @OA\Property(property="is_valid", type="string", example="0"),
+     *             @OA\Property(property="create_user", type="string", example="admin"),
+     *             @OA\Property(property="create_time", type="string", example="admin"),
+     *             @OA\Property(property="update_user", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
      *         )   
      *     ),
      *     @OA\Response(

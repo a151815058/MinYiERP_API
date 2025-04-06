@@ -18,7 +18,18 @@ class PaymentTerm extends Model
     public $timestamps = false; // 因為我們手動使用 CreateTime 和 UpdateTime
 
     protected $fillable = [
-        'Uuid', 'Puuid', 'TermsNo', 'TermsNM', 'TermsDays','PayMode','PayDay','Note', 'Createuser', 'UpdateUser', 'CreateTime', 'UpdateTime'
+        'uuid',
+        'terms_no',
+        'terms_nm',
+        'terms_days',
+        'pay_mode',
+        'pay_day',
+        'note',
+        'is_valid',
+        'create_user',
+        'create_time',
+        'update_user',
+        'update_time'
     ];
 
 
@@ -36,12 +47,12 @@ class PaymentTerm extends Model
     // 🔍 透過 TermsNo 查詢    // 🔍 透過 TermsNo 查詢付款條件
     public static function findByTermsNo($TermsNo)
     {
-        return self::where('TermsNo', $TermsNo)->first();
+        return self::where('terms_no', $TermsNo)->first();
     }
 
      // 🔍 查詢所有有效付款條件
     public static function getValidTerms()
     {
-        return self::where('IsValid', '1')->get();
+        return self::where('is_valid', '1')->get();
     }
 }

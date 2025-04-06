@@ -16,10 +16,20 @@ class BillInfo extends Model
     public $incrementing = false;
     protected $keyType = 'string';
     public $timestamps = false; // 因為我們手動使用 CreateTime 和 UpdateTime
-
     protected $fillable = [
-        'uuid', 'BillNo', 'BillNM', 'BillType', 'BillEncode','BillCalc','AutoReview','GenOrder','OrderType','Note', 'Createuser', 'UpdateUser', 'CreateTime', 'UpdateTime'
+        'bill_no',
+        'bill_nm',
+        'bill_type',
+        'bill_encode',
+        'bill_calc',
+        'auto_review',
+        'gen_order',
+        'gen_bill_type',
+        'order_type',
+        'note',
+        'is_valid'
     ];
+
 
     // 自動生成 UUID
     protected static function boot()
@@ -35,13 +45,13 @@ class BillInfo extends Model
     // 🔍 透過 TermsNo 查詢    // 🔍 透過 TermsNo 查詢付款條件
     public static function findByBillNo($BillNo)
     {
-        return self::where('BillNo', $BillNo)->first();
+        return self::where('bill_no', $BillNo)->first();
     }
 
      // 🔍 查詢所有有效付款條件
     public static function getValidBillNos()
     {
-        return self::where('IsValid', '1')->get();
+        return self::where('is_valid', '1')->get();
     }
 
 }

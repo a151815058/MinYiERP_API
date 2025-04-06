@@ -10,13 +10,13 @@ use OpenApi\Annotations as OA;
 class DeptSysUserController extends Controller
 {
      /**
-     * 新增部門與使用者關聯 (包含 'IsValid','Createuser', 'CreateTime','UpdateUser', 'UpdateTime')
+     * 新增部門與使用者關聯
      */
     /**
      * @OA\POST(
      *     path="/api/assign-userdept",
-     *     summary="新增人員部門關聯",
-     *     description="新增人員部門關聯",
+     *     summary="新增人員部門關聯(不對外)",
+     *     description="新增人員部門關聯(不對外)",
      *     operationId="assign-userdept",
      *     tags={"Base_AssignUserDept"},
      *     @OA\Parameter(
@@ -72,14 +72,14 @@ class DeptSysUserController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'DeptNo'   => 'required|exists:depts,DeptNo',
-            'UsrNo'   => 'required|exists:sysusers,UsrNo',
-            'IsValid'    => 'required|boolean'
+            'dept_no'   => 'required|exists:depts,dept_no',
+            'user_no'   => 'required|exists:sysusers,user_no',
+            'is_valid'    => 'required|string'
         ]);
 
         // 取得使用者與部門ID
-        $user = SysUser::where('UsrNo', $validated['UsrNo'])->first(); // 使用 `first()` 獲取模型
-        $dept = Dept::where('DeptNo', $validated['DeptNo'])->first(); // 使用 `first()` 獲取模型
+        $user = SysUser::where('user_no', $validated['user_no'])->first(); // 使用 `first()` 獲取模型
+        $dept = Dept::where('dept_no', $validated['dept_no'])->first(); // 使用 `first()` 獲取模型
 
         if (!$dept || !$user) {
             return response()->json([
@@ -92,7 +92,7 @@ class DeptSysUserController extends Controller
 
         // 新增關聯
         $dept->sysusers()->attach($user->uuid, [
-            'IsValid'    => $validated['IsValid']
+            'is_valid'    => $validated['is_valid']
         ]);
 
 
@@ -107,8 +107,8 @@ class DeptSysUserController extends Controller
     /**
      * @OA\GET(
      *     path="/api/dept-users/{deptId}",
-     *     summary="讀取部門成員",
-     *     description="讀取部門成員",
+     *     summary="讀取部門成員(不對外)",
+     *     description="讀取部門成員(不對外)",
      *     operationId="dept-users",
      *     tags={"Base_AssignUserDept"},
      *     @OA\Parameter(
@@ -145,7 +145,7 @@ class DeptSysUserController extends Controller
     // 讀取某個部門的所有使用者
     public function getUsersByDept($deptNo)
     {
-        $dept = Dept::with('sysusers')->where('DeptNo', $deptNo)->first();
+        $dept = Dept::with('sysusers')->where('dept_no', $deptNo)->first();
 
         if (!$dept) {
             return response()->json([
@@ -162,9 +162,9 @@ class DeptSysUserController extends Controller
                 'output' => $dept->sysusers->map(function ($user) {
                     return [
                         'id' => $user->uuid,
-                        'userNo' => $user->UsrNo,
-                        'username' => $user->UsrNM,
-                        'IsValid' => $user->IsValid,
+                        'user_no' => $user->UsrNo,
+                        'user_nm' => $user->UsrNM,
+                        'is_valid' => $user->IsValid,
                         'Createuser' => $user->pivot->Createuser,
                         'CreateTime' => $user->pivot->CreateTime,
                         'UpdateUser' => $user->pivot->UpdateUser,
@@ -179,8 +179,8 @@ class DeptSysUserController extends Controller
     /**
      * @OA\GET(
      *     path="/api/user-depts/{userId}",
-     *     summary="讀取使用者部門",
-     *     description="讀取使用者部門",
+     *     summary="讀取使用者部門(不對外)",
+     *     description="讀取使用者部門(不對外)",
      *     operationId="user-depts",
      *     tags={"Base_AssignUserDept"},
      *     @OA\Parameter(

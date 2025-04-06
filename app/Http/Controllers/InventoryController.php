@@ -17,49 +17,49 @@ class InventoryController extends Controller
      *     operationId="createInventory",
      *     tags={"Base_Inventory"},
      *     @OA\Parameter(
-     *         name="InventoryNO",
+     *         name="inventory_no",
      *         in="query",
      *         required=true,
      *         description="庫別代號",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="InventoryNM",
+     *         name="inventory_nm",
      *         in="query",
      *         required=true,
      *         description="庫別名稱",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="InventoryQty",
+     *         name="inventory_qty",
      *         in="query",
      *         required=true,
      *         description="庫存數量",
      *         @OA\Schema(type="integer")
      *     ),
      *     @OA\Parameter(
-     *         name="LotNum",
+     *         name="lot_num",
      *         in="query",
-     *         required=true,
+     *         required=false,
      *         description="批號",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="Safety_stock",
+     *         name="safety_stock",
      *         in="query",
      *         required=true,
      *         description="安全庫存",
      *         @OA\Schema(type="integer")
      *     ),
      *     @OA\Parameter(
-     *         name="LastStockReceiptDate",
+     *         name="lastStock_receiptdate",
      *         in="query",
      *         required=true,
      *         description="最近一次進貨日",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="IsValid",
+     *         name="is_valid",
      *         in="query",
      *         required=true,
      *         description="是否有效",
@@ -71,17 +71,17 @@ class InventoryController extends Controller
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="InventoryNO", type="string", example="INV001"),
-     *             @OA\Property(property="InventoryNM", type="string", example="庫別1"),
-     *             @OA\Property(property="InventoryQty", type="integer", example="1000"),
-     *             @OA\Property(property="Safety_stock", type="integer", example="500"),
-     *             @OA\Property(property="LotNum", type="string", example="LOT123"),
-     *             @OA\Property(property="LastStockReceiptDate", type="string", example="2025-03-31"),
-     *             @OA\Property(property="IsValid", type="boolean", example=true),
-     *             @OA\Property(property="Createuser", type="string", example="admin"),
-     *             @OA\Property(property="UpdateUser", type="string", example="admin"),
-     *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="UpdateTime", type="string", example="2025-03-31T08:58:52.001986Z")
+     *             @OA\Property(property="inventory_no", type="string", example="INV001"),
+     *             @OA\Property(property="inventory_nm", type="string", example="庫別1"),
+     *             @OA\Property(property="inventory_qty", type="integer", example="1000"),
+     *             @OA\Property(property="lot_num", type="string", example="LOT123"),
+     *             @OA\Property(property="safety_stock", type="integer", example="500"),
+     *             @OA\Property(property="lastStock_receiptdate", type="string", example="2025-03-31"),
+     *             @OA\Property(property="is_valid", type="string", example="1"),
+     *             @OA\Property(property="create_user", type="string", example="admin"),
+     *             @OA\Property(property="create_time", type="string", example="admin"),
+     *             @OA\Property(property="update_user", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
      *         )
      *     ),
      *     @OA\Response(
@@ -95,25 +95,25 @@ class InventoryController extends Controller
     {
         // 驗證請求
          $validated = $request->validate([
-             'InventoryNO'     => 'required|string|max:255|unique:inventory,InventoryNO',
-             'InventoryNM'     => 'required|string|max:255',
-             'InventoryQty'     => 'required|integer|max:10000000',
-             'LotNum'     => 'nullable|string|max:255',
-             'Safety_stock'     => 'required|integer|max:10000000',
-             'LastStockReceiptDate'     => 'nullable|string',
-             'IsValid'    => 'required|boolean'
+             'inventory_no'     => 'required|string|max:255|unique:inventory,inventory_no',
+             'inventory_nm'     => 'required|string|max:255',
+             'inventory_qty'     => 'required|integer|max:10000000',
+             'lot_num'     => 'nullable|string|max:255',
+             'safety_stock'     => 'required|integer|max:10000000',
+             'lastStock_receiptdate'     => 'nullable|string',
+             'is_valid'    => 'required|boolean'
          ]);
 
         // 建立庫別資料
         $Inventory = Inventory::create([
             'uuid'                    => Str::uuid(),  // 自動生成 UUID
-            'InventoryNO'             => $validated['InventoryNO'],
-            'InventoryNM'             => $validated['InventoryNM'],
-            'InventoryQty'            => $validated['InventoryQty'],
-            'LotNum'                  => $validated['LotNum'],
-            'Safety_stock'            => $validated['Safety_stock'],
-            'LastStockReceiptDate'    => $validated['LastStockReceiptDate'] ?? null,
-            'IsValid'                 => $validated['IsValid']
+            'inventory_no'             => $validated['inventory_no'],
+            'inventory_nm'             => $validated['inventory_nm'],
+            'inventory_qty'            => $validated['inventory_qty'],
+            'lot_num'                  => $validated['lot_num']?? null,
+            'safety_stock'            => $validated['safety_stock'],
+            'lastStock_receiptdate'    => $validated['lastStock_receiptdate'] ?? null,
+            'is_valid'                 => $validated['is_valid']
         ]);
 
         // 回應 JSON
@@ -152,17 +152,17 @@ class InventoryController extends Controller
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="InventoryNO", type="string", example="INV001"),
-     *             @OA\Property(property="InventoryNM", type="string", example="庫別1"),
-     *             @OA\Property(property="InventoryQty", type="integer", example="1000"),
-     *             @OA\Property(property="Safety_stock", type="integer", example="500"),
-     *             @OA\Property(property="LotNum", type="string", example="LOT123"),
-     *             @OA\Property(property="LastStockReceiptDate", type="string", example="2025-03-31"),
-     *             @OA\Property(property="IsValid", type="boolean", example=true),
-     *             @OA\Property(property="Createuser", type="string", example="admin"),
-     *             @OA\Property(property="UpdateUser", type="string", example="admin"),
-     *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="UpdateTime", type="string", example="2025-03-31T08:58:52.001986Z")
+     *             @OA\Property(property="inventory_no", type="string", example="INV001"),
+     *             @OA\Property(property="inventory_nm", type="string", example="庫別1"),
+     *             @OA\Property(property="inventory_qty", type="integer", example="1000"),
+     *             @OA\Property(property="lot_num", type="string", example="LOT123"),
+     *             @OA\Property(property="safety_stock", type="integer", example="500"),
+     *             @OA\Property(property="lastStock_receiptdate", type="string", example="2025-03-31"),
+     *             @OA\Property(property="is_valid", type="string", example="1"),
+     *             @OA\Property(property="create_user", type="string", example="admin"),
+     *             @OA\Property(property="create_time", type="string", example="admin"),
+     *             @OA\Property(property="update_user", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
      *         )
      *     ),
      *     @OA\Response(
@@ -203,17 +203,17 @@ class InventoryController extends Controller
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="InventoryNO", type="string", example="INV001"),
-     *             @OA\Property(property="InventoryNM", type="string", example="庫別1"),
-     *             @OA\Property(property="InventoryQty", type="integer", example="1000"),
-     *             @OA\Property(property="Safety_stock", type="integer", example="500"),
-     *             @OA\Property(property="LotNum", type="string", example="LOT123"),
-     *             @OA\Property(property="LastStockReceiptDate", type="string", example="2025-03-31"),
-     *             @OA\Property(property="IsValid", type="boolean", example=true),
-     *             @OA\Property(property="Createuser", type="string", example="admin"),
-     *             @OA\Property(property="UpdateUser", type="string", example="admin"),
-     *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="UpdateTime", type="string", example="2025-03-31T08:58:52.001986Z")
+     *             @OA\Property(property="inventory_no", type="string", example="INV001"),
+     *             @OA\Property(property="inventory_nm", type="string", example="庫別1"),
+     *             @OA\Property(property="inventory_qty", type="integer", example="1000"),
+     *             @OA\Property(property="lot_num", type="string", example="LOT123"),
+     *             @OA\Property(property="safety_stock", type="integer", example="500"),
+     *             @OA\Property(property="lastStock_receiptdate", type="string", example="2025-03-31"),
+     *             @OA\Property(property="is_valid", type="string", example="1"),
+     *             @OA\Property(property="create_user", type="string", example="admin"),
+     *             @OA\Property(property="create_time", type="string", example="admin"),
+     *             @OA\Property(property="update_user", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
      *         )
      *     ),
      *     @OA\Response(
@@ -260,17 +260,17 @@ class InventoryController extends Controller
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="InventoryNO", type="string", example="INV001"),
-     *             @OA\Property(property="InventoryNM", type="string", example="庫別1"),
-     *             @OA\Property(property="InventoryQty", type="integer", example="1000"),
-     *             @OA\Property(property="Safety_stock", type="integer", example="500"),
-     *             @OA\Property(property="LotNum", type="string", example="LOT123"),
-     *             @OA\Property(property="LastStockReceiptDate", type="string", example="2025-03-31"),
-     *             @OA\Property(property="IsValid", type="boolean", example=true),
-     *             @OA\Property(property="Createuser", type="string", example="admin"),
-     *             @OA\Property(property="UpdateUser", type="string", example="admin"),
-     *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="UpdateTime", type="string", example="2025-03-31T08:58:52.001986Z")
+     *             @OA\Property(property="inventory_no", type="string", example="INV001"),
+     *             @OA\Property(property="inventory_nm", type="string", example="庫別1"),
+     *             @OA\Property(property="inventory_qty", type="integer", example="1000"),
+     *             @OA\Property(property="lot_num", type="string", example="LOT123"),
+     *             @OA\Property(property="safety_stock", type="integer", example="500"),
+     *             @OA\Property(property="lastStock_receiptdate", type="string", example="2025-03-31"),
+     *             @OA\Property(property="is_valid", type="string", example="0"),
+     *             @OA\Property(property="create_user", type="string", example="admin"),
+     *             @OA\Property(property="create_time", type="string", example="admin"),
+     *             @OA\Property(property="update_user", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
      *         )   
      *     ),
      *     @OA\Response(
