@@ -90,13 +90,13 @@ class CurrencyController extends Controller
         ]);
 
         // 取得建立當下匯率存入資料表(以台幣為基準)
-        $curr_Rate = CurrencyController::getExchangeRate('TWD');
-        foreach ($curr_Rate['conversion_rates'] as $currency => $rate) {
-            if ($currency == $validated['currency_no']) {
-                $validated['currency_rate'] = $rate;
-                break;
-            }
-        }
+        //$curr_Rate = CurrencyController::getExchangeRate('TWD');
+        //foreach ($curr_Rate['conversion_rates'] as $currency => $rate) {
+        //    if ($currency == $validated['currency_no']) {
+        //        $validated['currency_rate'] = $rate;
+        //        break;
+        //    }
+        //}
 
 
         // 建立幣別資料
