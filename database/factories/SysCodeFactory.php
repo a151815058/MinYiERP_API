@@ -27,9 +27,9 @@ class SysCodeFactory extends Factory
             'Param' => $this->faker->word,
             'Note' => '',
             'Createuser' => 'admin',
-            'UpdateUser' => 'admin',
+            'update_user' => 'admin',
             'CreateTime' => now(),
-            'UpdateTime' => now(),            
+            'update_time' => now(),            
         ];
     }
 

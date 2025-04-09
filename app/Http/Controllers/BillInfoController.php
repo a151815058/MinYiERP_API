@@ -78,7 +78,7 @@ class BillInfoController extends Controller
      *         name="order_type",
      *         in="query",
      *         required=false,
-     *         description="銷貨單別",
+     *         description="依照gen_bill_type動態產生欄位名稱",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
@@ -142,6 +142,18 @@ class BillInfoController extends Controller
                 'note'       => 'nullable|string|max:255',
                 'is_valid'    => 'required|string'
             ]);
+
+            //判斷order_type
+            //單據類別=客戶訂單=>自動產生"銷貨單"，所以gen_bill_type需存"71"
+            //單據類別=銷貨單=>自動產生"結帳單"，所以gen_bill_type需存"81"
+            //單據類別=採購單=>自動產生"進貨單"，所以gen_bill_type需存"51" 
+            if ($validated['bill_type'] == '客戶訂單') {
+                $validated['gen_bill_type'] = '71';
+            } elseif ($validated['bill_type'] == '銷貨單') {
+                $validated['gen_bill_type'] = '81';
+            } elseif ($validated['bill_type'] == '採購單') {
+                $validated['gen_bill_type'] = '51';
+            }
     
             // 建立單據資料
             $BillInfo = BillInfo::create([
@@ -401,9 +413,9 @@ class BillInfoController extends Controller
                 ], 404);
             }
 
-            $BillNo->IsValid = 0;
-            $BillNo->UpdateUser = 'admin';
-            $BillNo->UpdateTime = now();
+            $BillNo->is_valid = 0;
+            $BillNo->update_user = 'admin';
+            $BillNo->update_time = now();
             $BillNo->save();
 
             return response()->json([

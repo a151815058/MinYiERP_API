@@ -254,9 +254,9 @@ class DeptController extends Controller
             ], 404);
         }
 
-        $dept->IsValid = 0;
-        $dept->UpdateUser = 'admin';
-        $dept->UpdateTime = now();
+        $dept->is_valid = 0;
+        $dept->update_user = 'admin';
+        $dept->update_time = now();
         $dept->save();
 
         return response()->json([

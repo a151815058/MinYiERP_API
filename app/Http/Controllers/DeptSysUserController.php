@@ -41,7 +41,7 @@ class DeptSysUserController extends Controller
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="IsValid",
+     *         name="is_valid",
      *         in="query",
      *         required=true,
      *         description="是否有效",
@@ -55,11 +55,11 @@ class DeptSysUserController extends Controller
      *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
      *             @OA\Property(property="UsrNo", type="string", example="U001"),
      *             @OA\Property(property="DeptNo", type="string", example="A001"),
-     *             @OA\Property(property="IsValid", type="boolean", example=true),
+     *             @OA\Property(property="is_valid", type="boolean", example=true),
      *             @OA\Property(property="Createuser", type="string", example="admin"),
-     *             @OA\Property(property="UpdateUser", type="string", example="admin"),
+     *             @OA\Property(property="update_user", type="string", example="admin"),
      *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="UpdateTime", type="string", example="2025-03-31T08:58:52.001986Z")
+     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
      *         )
      *     ),
      *     @OA\Response(
@@ -129,11 +129,11 @@ class DeptSysUserController extends Controller
      *             @OA\Property(property="userId", type="string", example="cd7edb27-a1e2-4df1-aa1a-2f0346935cb2"),
      *             @OA\Property(property="userNo", type="string", example="U001"),
      *             @OA\Property(property="username", type="string", example="姚佩彤"),
-     *             @OA\Property(property="IsValid", type="boolean", example=true),   
+     *             @OA\Property(property="is_valid", type="boolean", example=true),   
      *             @OA\Property(property="Createuser", type="string", example="admin"),
      *             @OA\Property(property="CreateTime", type="string", format="date-time", example="2023-10-01T12:00:00Z"),
-     *             @OA\Property(property="UpdateUser", type="string", example="admin"),
-     *             @OA\Property(property="UpdateTime", type="string", format="date-time", example="2023-10-01T12:00:00Z")
+     *             @OA\Property(property="update_user", type="string", example="admin"),
+     *             @OA\Property(property="update_time", type="string", format="date-time", example="2023-10-01T12:00:00Z")
      *         )
      *     ),
      *     @OA\Response(
@@ -164,11 +164,11 @@ class DeptSysUserController extends Controller
                         'id' => $user->uuid,
                         'user_no' => $user->UsrNo,
                         'user_nm' => $user->UsrNM,
-                        'is_valid' => $user->IsValid,
+                        'is_valid' => $user->is_valid,
                         'Createuser' => $user->pivot->Createuser,
                         'CreateTime' => $user->pivot->CreateTime,
-                        'UpdateUser' => $user->pivot->UpdateUser,
-                        'UpdateTime' => $user->pivot->UpdateTime
+                        'update_user' => $user->pivot->update_user,
+                        'update_time' => $user->pivot->update_time
                     ];
                 }),
             ]);
@@ -201,11 +201,11 @@ class DeptSysUserController extends Controller
      *             @OA\Property(property="Deptid", type="string", example="cd7edb27-a1e2-4df1-aa1a-2f0346935cb2"),
      *             @OA\Property(property="DeptNo", type="string", example="A002"),
      *             @OA\Property(property="DeptNM", type="string", example="財務部"),
-     *             @OA\Property(property="IsValid", type="boolean", example=true),   
+     *             @OA\Property(property="is_valid", type="boolean", example=true),   
      *             @OA\Property(property="Createuser", type="string", example="admin"),
      *             @OA\Property(property="CreateTime", type="string", format="date-time", example="2023-10-01T12:00:00Z"),
-     *             @OA\Property(property="UpdateUser", type="string", example="admin"),
-     *             @OA\Property(property="UpdateTime", type="string", format="date-time", example="2023-10-01T12:00:00Z")
+     *             @OA\Property(property="update_user", type="string", example="admin"),
+     *             @OA\Property(property="update_time", type="string", format="date-time", example="2023-10-01T12:00:00Z")
      *         )
      *     ),
      *     @OA\Response(
@@ -236,11 +236,11 @@ class DeptSysUserController extends Controller
                     'Deptid' => $dept->uuid,
                     'DeptNo' => $dept->DeptNo,
                     'DeptNM' => $dept->DeptNM,
-                    'IsValid' => $dept->pivot->IsValid,
+                    'is_valid' => $dept->pivot->is_valid,
                     'Createuser' => $dept->pivot->Createuser,
                     'CreateTime' => $dept->pivot->CreateTime,
-                    'UpdateUser' => $dept->pivot->UpdateUser,
-                    'UpdateTime' => $dept->pivot->UpdateTime
+                    'update_user' => $dept->pivot->update_user,
+                    'update_time' => $dept->pivot->update_time
                 ];
             }),
         ]);

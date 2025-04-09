@@ -293,9 +293,9 @@ class PaymentTermController extends Controller
             ], 404);
         }
 
-        $PaymentTerm->IsValid = 0;
-        $PaymentTerm->UpdateUser = 'admin';
-        $PaymentTerm->UpdateTime = now();
+        $PaymentTerm->is_valid = 0;
+        $PaymentTerm->update_user = 'admin';
+        $PaymentTerm->update_time = now();
         $PaymentTerm->save();
 
         return response()->json([

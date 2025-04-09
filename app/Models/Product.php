@@ -15,11 +15,14 @@ class Product extends Model
     protected $primaryKey = 'uuid';
     public $incrementing = false;
     protected $keyType = 'string';
-    public $timestamps = false; // 因為我們手動使用 CreateTime 和 UpdateTime
+    public $timestamps = false; // 因為我們手動使用 CreateTime 和 update_time
 
     protected $fillable = [
-        'Uuid', 'ProductNO', 'ProductNM', 'Specification','Barcode', 'Price_1','Price_2','Price_3','Cost_1','Cost_2','Cost_3','Batch_control','Valid_days','Effective_date','Stock_control','Safety_stock','Expiry_date','Description','IsValid', 'Createuser', 'UpdateUser', 'CreateTime', 'UpdateTime'
-    ];
+        'uuid', 'product_no', 'product_nm', 'specification', 'price_1', 'price_2', 'price_3',
+        'cost_1', 'cost_2', 'cost_3', 'batch_control', 'valid_days', 'effective_date',
+        'stock_control', 'safety_stock', 'expiry_date', 'description', 'is_valid',
+        'create_user', 'create_time', 'update_user', 'update_time'
+    ]; 
 	    
     // 自動生成 UUID
     protected static function boot()
@@ -35,12 +38,12 @@ class Product extends Model
     // 🔍 透過 ProductNO 查詢    // 🔍 透過 ProductNO 查詢品號
     public static function findByProductNO($ProductNO)
     {
-        return self::where('ProductNO', $ProductNO)->first();
+        return self::where('product_no', $ProductNO)->first();
     }
 
      // 🔍 查詢所有有效品號
     public static function getValidProducts()
     {
-        return self::where('IsValid', 1)->get();
+        return self::where('is_valid', 1)->get();
     }
 }

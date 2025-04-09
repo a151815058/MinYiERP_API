@@ -28,9 +28,9 @@ class DatabaseSeeder extends Seeder
             'Param' => '當月',
             'Note' => null,
             'Createuser' => 'admin',
-            'UpdateUser' => 'admin',
+            'update_user' => 'admin',
             'CreateTime' => now(),
-            'UpdateTime' => now(),
+            'update_time' => now(),
         ]);
 
         SysCode::create([
@@ -39,9 +39,9 @@ class DatabaseSeeder extends Seeder
             'Param' => '隔月',
             'Note' => null,
             'Createuser' => 'admin',
-            'UpdateUser' => 'admin',
+            'update_user' => 'admin',
             'CreateTime' => now(),
-            'UpdateTime' => now(),
+            'update_time' => now(),
         ]);
     }
 }

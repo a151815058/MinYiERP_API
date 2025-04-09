@@ -148,11 +148,11 @@ class CurrencyController extends Controller
      *             @OA\Property(property="CurrencyNo", type="string", example="C001"),
      *             @OA\Property(property="CurrencyNM", type="string", example="台幣"),
      *             @OA\Property(property="Note", type="string", example="測試測試"),
-     *             @OA\Property(property="IsValid", type="boolean", example=true),
+     *             @OA\Property(property="is_valid", type="boolean", example=true),
      *             @OA\Property(property="Createuser", type="string", example="admin"),
-     *             @OA\Property(property="UpdateUser", type="string", example="admin"),
+     *             @OA\Property(property="update_user", type="string", example="admin"),
      *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="UpdateTime", type="string", example="2025-03-31T08:58:52.001986Z")
+     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
      *         )
      *     ),
      *     @OA\Response(
@@ -196,11 +196,11 @@ class CurrencyController extends Controller
      *             @OA\Property(property="CurrencyNo", type="string", example="C001"),
      *             @OA\Property(property="CurrencyNM", type="string", example="台幣"),
      *             @OA\Property(property="Note", type="string", example="測試測試"),
-     *             @OA\Property(property="IsValid", type="boolean", example=true),
+     *             @OA\Property(property="is_valid", type="boolean", example=true),
      *             @OA\Property(property="Createuser", type="string", example="admin"),
-     *             @OA\Property(property="UpdateUser", type="string", example="admin"),
+     *             @OA\Property(property="update_user", type="string", example="admin"),
      *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="UpdateTime", type="string", example="2025-03-31T08:58:52.001986Z")
+     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
      *         )
      *     ),
      *     @OA\Response(
@@ -252,11 +252,11 @@ class CurrencyController extends Controller
      *             @OA\Property(property="CurrencyNo", type="string", example="C001"),
      *             @OA\Property(property="CurrencyNM", type="string", example="台幣"),
      *             @OA\Property(property="Note", type="string", example="測試測試"),
-     *             @OA\Property(property="IsValid", type="boolean", example=true),
+     *             @OA\Property(property="is_valid", type="boolean", example=true),
      *             @OA\Property(property="Createuser", type="string", example="admin"),
-     *             @OA\Property(property="UpdateUser", type="string", example="admin"),
+     *             @OA\Property(property="update_user", type="string", example="admin"),
      *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="UpdateTime", type="string", example="2025-03-31T08:58:52.001986Z")
+     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
      *         )
      *     ),
      *     @OA\Response(
@@ -333,11 +333,11 @@ class CurrencyController extends Controller
      *             @OA\Property(property="CurrencyNo", type="string", example="C001"),
      *             @OA\Property(property="CurrencyNM", type="string", example="台幣"),
      *             @OA\Property(property="Note", type="string", example="測試測試"),
-     *             @OA\Property(property="IsValid", type="boolean", example=false),
+     *             @OA\Property(property="is_valid", type="boolean", example=false),
      *             @OA\Property(property="Createuser", type="string", example="admin"),
-     *             @OA\Property(property="UpdateUser", type="string", example="admin"),
+     *             @OA\Property(property="update_user", type="string", example="admin"),
      *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="UpdateTime", type="string", example="2025-03-31T08:58:52.001986Z")
+     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
      *         )   
      *     ),
      *     @OA\Response(
@@ -359,9 +359,9 @@ class CurrencyController extends Controller
             ], 404);
         }
 
-        $Currency->IsValid = 0;
-        $Currency->UpdateUser = 'admin'; // 這裡可以根據實際情況設置更新者
-        $Currency->UpdateTime = now();
+        $Currency->is_valid = 0;
+        $Currency->update_user = 'admin'; // 這裡可以根據實際情況設置更新者
+        $Currency->update_time = now();
         $Currency->save();
 
         return response()->json([

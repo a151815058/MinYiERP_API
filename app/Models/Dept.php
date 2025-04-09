@@ -15,7 +15,7 @@ class Dept extends Model
     protected $primaryKey = 'uuid';
     public $incrementing = false;
     protected $keyType = 'string';
-    public $timestamps = false; // 因為我們手動使用 CreateTime 和 UpdateTime
+    public $timestamps = false; // 因為我們手動使用 CreateTime 和 update_time
 
     protected $fillable = [
         'uuid', 'dept_no', 'dept_nm', 'note', 'is_valid', 'create_user', 'create_time', 'update_user', 'update_time'

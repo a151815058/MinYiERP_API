@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\SysCode;
 use Illuminate\Support\Str;
 use OpenApi\Annotations as OA;
+use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
@@ -17,126 +19,119 @@ class ProductController extends Controller
      *     operationId="createProduct",
      *     tags={"Base_Product"},
      *     @OA\Parameter(
-     *         name="ProductNO",
+     *         name="product_no",
      *         in="query",
      *         required=true,
      *         description="品號",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="ProductNM",
+     *         name="product_nm",
      *         in="query",
      *         required=true,
      *         description="品名",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="Specification",
+     *         name="specification",
      *         in="query",
      *         required=true,
      *         description="規格",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="Barcode",
-     *         in="query",
-     *         required=false,
-     *         description="條碼",
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Parameter(
-     *         name="Price_1",
+     *         name="price_1",
      *         in="query",
      *         required=true,
      *         description="售價一",
      *         @OA\Schema(type="integer")
      *     ),
      *     @OA\Parameter(
-     *         name="Price_2",
+     *         name="price_2",
      *         in="query",
      *         required=false,
      *         description="售價二",
      *         @OA\Schema(type="integer")
      *     ),
      *     @OA\Parameter(
-     *         name="Price_3",
+     *         name="price_3",
      *         in="query",
      *         required=false,
      *         description="售價三",
      *         @OA\Schema(type="integer")
      *     ),
      *     @OA\Parameter(
-     *         name="Cost_1",
+     *         name="cost_1",
      *         in="query",
      *         required=true,
      *         description="進價一",
      *         @OA\Schema(type="integer")
      *     ),
      *     @OA\Parameter(
-     *         name="Cost_2",
+     *         name="cost_2",
      *         in="query",
      *         required=false,
      *         description="進價二",
      *         @OA\Schema(type="integer")
      *     ),
      *     @OA\Parameter(
-     *         name="Cost_3",
+     *         name="cost_3",
      *         in="query",
      *         required=false,
      *         description="進價三",
      *         @OA\Schema(type="integer")
      *     ),
      *     @OA\Parameter(
-     *         name="Batch_control",
+     *         name="batch_control",
      *         in="query",
      *         required=true,
-     *         description="批號管理",
+     *         description="批號管理(下拉選單 01-需要-先進先出 02-需要 03-不需要)",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="Valid_days",
+     *         name="valid_days",
      *         in="query",
      *         required=true,
      *         description="有效天數",
      *         @OA\Schema(type="integer")
      *     ),
      *     @OA\Parameter(
-     *         name="Effective_date",
+     *         name="effective_date",
      *         in="query",
      *         required=true,
      *         description="生效日期",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="Stock_control",
+     *         name="stock_control",
      *         in="query",
      *         required=true,
      *         description="是否庫存管理",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="Safety_stock",
+     *         name="safety_stock",
      *         in="query",
      *         required=true,
      *         description="安全庫存",
      *         @OA\Schema(type="integer")
      *     ),
      *     @OA\Parameter(
-     *         name="Expiry_date",
+     *         name="expiry_date",
      *         in="query",
      *         required=true,
      *         description="失效日期",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="Description",
+     *         name="description",
      *         in="query",
      *         required=false,
      *         description="商品描述",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="IsValid",
+     *         name="is_valid",
      *         in="query",
      *         required=true,
      *         description="是否有效",
@@ -148,28 +143,27 @@ class ProductController extends Controller
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="ProductNO", type="string", example="P001"),
-     *             @OA\Property(property="ProductNM", type="string", example="螺絲起子"),
-     *             @OA\Property(property="Specification", type="string", example="SP001"),
-     *             @OA\Property(property="Barcode", type="string", example=""),
-     *             @OA\Property(property="Price_1", type="integer", example=100),
-     *             @OA\Property(property="Price_2", type="integer", example=0),
-     *             @OA\Property(property="Price_3", type="integer", example=0),
-     *             @OA\Property(property="Cost_1", type="decimal", example=60),
-     *             @OA\Property(property="Cost_2", type="integer", example=0),
-     *             @OA\Property(property="Cost_3", type="integer", example=0),
-     *             @OA\Property(property="Batch_control", type="integer", example=true),
-     *             @OA\Property(property="Valid_days", type="integer", example=0),
-     *             @OA\Property(property="Effective_date", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="Stock_control", type="integer", example=true),
-     *             @OA\Property(property="Safety_stock", type="integer", example=0),
-     *             @OA\Property(property="Expiry_date", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="Description", type="string", example=""),
-     *             @OA\Property(property="IsValid", type="boolean", example=true),
+     *             @OA\Property(property="product_no", type="string", example="P001"),
+     *             @OA\Property(property="product_nm", type="string", example="螺絲起子"),
+     *             @OA\Property(property="specification", type="string", example="SP001"),
+     *             @OA\Property(property="price_1", type="integer", example=100),
+     *             @OA\Property(property="price_2", type="integer", example=0),
+     *             @OA\Property(property="price_3", type="integer", example=0),
+     *             @OA\Property(property="cost_1", type="decimal", example=60),
+     *             @OA\Property(property="cost_2", type="integer", example=0),
+     *             @OA\Property(property="cost_3", type="integer", example=0),
+     *             @OA\Property(property="batch_control", type="integer", example=true),
+     *             @OA\Property(property="valid_days", type="integer", example=0),
+     *             @OA\Property(property="effective_date", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="stock_control", type="integer", example=true),
+     *             @OA\Property(property="safety_stock", type="integer", example=0),
+     *             @OA\Property(property="expiry_date", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="description", type="string", example=""),
+     *             @OA\Property(property="is_valid", type="boolean", example=true),
      *             @OA\Property(property="Createuser", type="string", example="admin"),
-     *             @OA\Property(property="UpdateUser", type="string", example="admin"),
+     *             @OA\Property(property="update_user", type="string", example="admin"),
      *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="UpdateTime", type="string", example="2025-03-31T08:58:52.001986Z")
+     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
      *         )
      *     ),
      *     @OA\Response(
@@ -183,47 +177,45 @@ class ProductController extends Controller
     {
         // 驗證請求
          $validated = $request->validate([
-             'ProductNO'         => 'required|string|max:255|unique:product,ProductNO',
-             'ProductNM'         => 'required|string|max:255',
-             'Specification'     => 'required|string|max:255',
-             'Barcode'            => 'nullable|string|max:255',
-             'Price_1'            => 'required|integer|max:10000',
-             'Price_2'            => 'nullable|integer|max:10000',
-             'Price_3'            => 'nullable|integer|max:10000',
-             'Cost_1'            => 'required|integer|max:10000',
-             'Cost_2'            => 'nullable|integer|max:10000',
-             'Cost_3'            => 'nullable|integer|max:10000',
-             'Batch_control'     => 'required|boolean',
-             'Valid_days'        => 'required|integer|max:10000',
-             'Effective_date'    => 'required|date',
-             'Stock_control'     => 'required|boolean',
-             'Safety_stock'      => 'required|integer|max:10000',
-             'Expiry_date'       => 'required|date',
-             'Description'       => 'nullable|string|max:255',
-             'IsValid'            => 'required|boolean'
+             'product_no'         => 'required|string|max:255|unique:product,product_no',
+             'product_nm'         => 'required|string|max:255',
+             'specification'     => 'required|string|max:255',
+             'price_1'            => 'required|integer|max:10000',
+             'price_2'            => 'nullable|integer|max:10000',
+             'price_3'            => 'nullable|integer|max:10000',
+             'cost_1'            => 'required|integer|max:10000',
+             'cost_2'            => 'nullable|integer|max:10000',
+             'cost_3'            => 'nullable|integer|max:10000',
+             'batch_control'     => 'required|boolean',
+             'valid_days'        => 'required|integer|max:10000',
+             'effective_date'    => 'required|date',
+             'stock_control'     => 'required|boolean',
+             'safety_stock'      => 'required|integer|max:10000',
+             'expiry_date'       => 'required|date',
+             'description'       => 'nullable|string|max:255',
+             'is_valid'            => 'required|boolean'
          ]);
         
     
         // 建立品號資料
         $Product = Product::create([
-            'ProductNO'     => $validated['ProductNO'],
-            'ProductNM'     => $validated['ProductNM'],
-            'Specification'   => $validated['Specification'],
-            'Barcode'   => $validated['Barcode']?? null,
-            'Price_1' => $validated['Price_1'],
-            'Price_2'   => $validated['Price_2']?? null,
-            'Price_3' => $validated['Price_3']?? null,
-            'Cost_1'   => $validated['Cost_1'],
-            'Cost_2'  => $validated['Cost_2']?? null,
-            'Cost_3'   => $validated['Cost_3']?? null,
-            'Batch_control' => $validated['Batch_control'],
-            'Valid_days'   => $validated['Valid_days'],
-            'Effective_date'  => $validated['Effective_date'],
-            'Stock_control'   => $validated['Stock_control'],
-            'Safety_stock' => $validated['Safety_stock'],
-            'Expiry_date'   => $validated['Expiry_date'],
-            'Description'  => $validated['Description']?? null,
-            'IsValid'    => $validated['IsValid']
+            'product_no'     => $validated['product_no'],
+            'product_nm'     => $validated['product_nm'],
+            'specification'   => $validated['specification'],
+            'price_1' => $validated['price_1'],
+            'price_2'   => $validated['price_2']?? null,
+            'price_3' => $validated['price_3']?? null,
+            'cost_1'   => $validated['cost_1'],
+            'cost_2'  => $validated['cost_2']?? null,
+            'cost_3'   => $validated['cost_3']?? null,
+            'batch_control' => $validated['batch_control'],
+            'valid_days'   => $validated['valid_days'],
+            'effective_date'  => $validated['effective_date'],
+            'stock_control'   => $validated['stock_control'],
+            'safety_stock' => $validated['safety_stock'],
+            'expiry_date'   => $validated['expiry_date'],
+            'description'  => $validated['description']?? null,
+            'is_valid'    => $validated['is_valid']
         ]);
 
         // 回應 JSON
@@ -263,28 +255,27 @@ class ProductController extends Controller
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="ProductNO", type="string", example="P001"),
-     *             @OA\Property(property="ProductNM", type="string", example="螺絲起子"),
-     *             @OA\Property(property="Specification", type="string", example="SP001"),
-     *             @OA\Property(property="Barcode", type="string", example=""),
-     *             @OA\Property(property="Price_1", type="integer", example=100),
-     *             @OA\Property(property="Price_2", type="integer", example=0),
-     *             @OA\Property(property="Price_3", type="integer", example=0),
-     *             @OA\Property(property="Cost_1", type="decimal", example=60),
-     *             @OA\Property(property="Cost_2", type="integer", example=0),
-     *             @OA\Property(property="Cost_3", type="integer", example=0),
-     *             @OA\Property(property="Batch_control", type="integer", example=true),
-     *             @OA\Property(property="Valid_days", type="integer", example=0),
-     *             @OA\Property(property="Effective_date", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="Stock_control", type="integer", example=true),
-     *             @OA\Property(property="Safety_stock", type="integer", example=0),
-     *             @OA\Property(property="Expiry_date", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="Description", type="string", example=""),
-     *             @OA\Property(property="IsValid", type="boolean", example=true),
+     *             @OA\Property(property="product_no", type="string", example="P001"),
+     *             @OA\Property(property="product_nm", type="string", example="螺絲起子"),
+     *             @OA\Property(property="specification", type="string", example="SP001"),
+     *             @OA\Property(property="price_1", type="integer", example=100),
+     *             @OA\Property(property="price_2", type="integer", example=0),
+     *             @OA\Property(property="price_3", type="integer", example=0),
+     *             @OA\Property(property="cost_1", type="decimal", example=60),
+     *             @OA\Property(property="cost_2", type="integer", example=0),
+     *             @OA\Property(property="cost_3", type="integer", example=0),
+     *             @OA\Property(property="batch_control", type="integer", example=true),
+     *             @OA\Property(property="valid_days", type="integer", example=0),
+     *             @OA\Property(property="effective_date", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="stock_control", type="integer", example=true),
+     *             @OA\Property(property="safety_stock", type="integer", example=0),
+     *             @OA\Property(property="expiry_date", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="description", type="string", example=""),
+     *             @OA\Property(property="is_valid", type="boolean", example=true),
      *             @OA\Property(property="Createuser", type="string", example="admin"),
-     *             @OA\Property(property="UpdateUser", type="string", example="admin"),
+     *             @OA\Property(property="update_user", type="string", example="admin"),
      *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="UpdateTime", type="string", example="2025-03-31T08:58:52.001986Z")
+     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
      *         )
      *     ),
      *     @OA\Response(
@@ -325,28 +316,27 @@ class ProductController extends Controller
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="ProductNO", type="string", example="P001"),
-     *             @OA\Property(property="ProductNM", type="string", example="螺絲起子"),
-     *             @OA\Property(property="Specification", type="string", example="SP001"),
-     *             @OA\Property(property="Barcode", type="string", example=""),
-     *             @OA\Property(property="Price_1", type="integer", example=100),
-     *             @OA\Property(property="Price_2", type="integer", example=0),
-     *             @OA\Property(property="Price_3", type="integer", example=0),
-     *             @OA\Property(property="Cost_1", type="decimal", example=60),
-     *             @OA\Property(property="Cost_2", type="integer", example=0),
-     *             @OA\Property(property="Cost_3", type="integer", example=0),
-     *             @OA\Property(property="Batch_control", type="integer", example=true),
-     *             @OA\Property(property="Valid_days", type="integer", example=0),
-     *             @OA\Property(property="Effective_date", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="Stock_control", type="integer", example=true),
-     *             @OA\Property(property="Safety_stock", type="integer", example=0),
-     *             @OA\Property(property="Expiry_date", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="Description", type="string", example=""),
-     *             @OA\Property(property="IsValid", type="boolean", example=true),
+     *             @OA\Property(property="product_no", type="string", example="P001"),
+     *             @OA\Property(property="product_nm", type="string", example="螺絲起子"),
+     *             @OA\Property(property="specification", type="string", example="SP001"),
+     *             @OA\Property(property="price_1", type="integer", example=100),
+     *             @OA\Property(property="price_2", type="integer", example=0),
+     *             @OA\Property(property="price_3", type="integer", example=0),
+     *             @OA\Property(property="cost_1", type="decimal", example=60),
+     *             @OA\Property(property="cost_2", type="integer", example=0),
+     *             @OA\Property(property="cost_3", type="integer", example=0),
+     *             @OA\Property(property="batch_control", type="integer", example=true),
+     *             @OA\Property(property="valid_days", type="integer", example=0),
+     *             @OA\Property(property="effective_date", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="stock_control", type="integer", example=true),
+     *             @OA\Property(property="safety_stock", type="integer", example=0),
+     *             @OA\Property(property="expiry_date", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="description", type="string", example=""),
+     *             @OA\Property(property="is_valid", type="boolean", example=true),
      *             @OA\Property(property="Createuser", type="string", example="admin"),
-     *             @OA\Property(property="UpdateUser", type="string", example="admin"),
+     *             @OA\Property(property="update_user", type="string", example="admin"),
      *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="UpdateTime", type="string", example="2025-03-31T08:58:52.001986Z")
+     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
      *         )
      *     ),
      *     @OA\Response(
@@ -358,7 +348,7 @@ class ProductController extends Controller
     // 🔍 查詢所有有效品號
     public function getValidProduct()
     {
-        $Product = Product::where('IsValid', '1')->get();
+        $Product = Product::where('is_valid', '1')->get();
         if ($Product->isEmpty()) {
             return response()->json([
                 'status' => false,
@@ -392,28 +382,27 @@ class ProductController extends Controller
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="ProductNO", type="string", example="P001"),
-     *             @OA\Property(property="ProductNM", type="string", example="螺絲起子"),
-     *             @OA\Property(property="Specification", type="string", example="SP001"),
-     *             @OA\Property(property="Barcode", type="string", example=""),
-     *             @OA\Property(property="Price_1", type="integer", example=100),
-     *             @OA\Property(property="Price_2", type="integer", example=0),
-     *             @OA\Property(property="Price_3", type="integer", example=0),
-     *             @OA\Property(property="Cost_1", type="decimal", example=60),
-     *             @OA\Property(property="Cost_2", type="integer", example=0),
-     *             @OA\Property(property="Cost_3", type="integer", example=0),
-     *             @OA\Property(property="Batch_control", type="integer", example=true),
-     *             @OA\Property(property="Valid_days", type="integer", example=0),
-     *             @OA\Property(property="Effective_date", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="Stock_control", type="integer", example=true),
-     *             @OA\Property(property="Safety_stock", type="integer", example=0),
-     *             @OA\Property(property="Expiry_date", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="Description", type="string", example=""),
-     *             @OA\Property(property="IsValid", type="boolean", example=true),
+     *             @OA\Property(property="product_no", type="string", example="P001"),
+     *             @OA\Property(property="product_nm", type="string", example="螺絲起子"),
+     *             @OA\Property(property="specification", type="string", example="SP001"),
+     *             @OA\Property(property="price_1", type="integer", example=100),
+     *             @OA\Property(property="price_2", type="integer", example=0),
+     *             @OA\Property(property="price_3", type="integer", example=0),
+     *             @OA\Property(property="cost_1", type="decimal", example=60),
+     *             @OA\Property(property="cost_2", type="integer", example=0),
+     *             @OA\Property(property="cost_3", type="integer", example=0),
+     *             @OA\Property(property="batch_control", type="integer", example=true),
+     *             @OA\Property(property="valid_days", type="integer", example=0),
+     *             @OA\Property(property="effective_date", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="stock_control", type="integer", example=true),
+     *             @OA\Property(property="safety_stock", type="integer", example=0),
+     *             @OA\Property(property="expiry_date", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="description", type="string", example=""),
+     *             @OA\Property(property="is_valid", type="boolean", example=true),
      *             @OA\Property(property="Createuser", type="string", example="admin"),
-     *             @OA\Property(property="UpdateUser", type="string", example="admin"),
+     *             @OA\Property(property="update_user", type="string", example="admin"),
      *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="UpdateTime", type="string", example="2025-03-31T08:58:52.001986Z")
+     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
      *         )   
      *     ),
      *     @OA\Response(
@@ -435,9 +424,9 @@ class ProductController extends Controller
             ], 404);
         }
 
-        $Product->IsValid = 0;
-        $Product->UpdateUser = 'admin';
-        $Product->UpdateTime = now();
+        $Product->is_valid = 0;
+        $Product->update_user = 'admin';
+        $Product->update_time = now();
         $Product->save();
 
         return response()->json([
@@ -445,5 +434,65 @@ class ProductController extends Controller
             'message' => 'success',
             'output'    => $Product
         ], 200);
+    }
+    /**
+     * @OA\get(
+     *     path="/api/products/showConst",
+     *     summary="列出所有品號需要的常用(下拉、彈窗)",
+     *     description="列出所有品號需要的常用(下拉、彈窗)",
+     *     operationId="Show_Product_ALL_Const",
+     *     tags={"Base_Product"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="成功"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="有效品號類型未找到"
+     *     )
+     * )
+     */
+    // 列出所有品號需要的常用(下拉、彈窗)
+    public function showConst($constant='all'){
+        // 查詢 '批號管理' 的資料
+        $SysCode = SysCode::where('param_sn', '03')->get();
+        try {
+            // 檢查是否有結果
+            if ($SysCode->isEmpty() ) {
+                return response()->json([
+                    'status' => false,
+                    'message' => '常用資料未找到',
+                    'batch_controloption' => null,
+                ], 404);
+            }
+    
+            // 返回查詢結果
+            return response()->json([
+                'status' => true,
+                'message' => 'success',
+                'batch_controloption' => $SysCode
+            ], 200);
+    
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 捕捉驗證失敗，並返回錯誤訊息
+            return response()->json([
+                'status' => false,
+                'message' => '驗證錯誤',
+                'errors' => $e->errors()
+            ], 422);
+    
+        } catch (\Exception $e) {
+            // 其他例外處理，並紀錄錯誤訊息
+            Log::error('資料錯誤：' . $e->getMessage(), [
+                'exception' => $e,
+                'stack' => $e->getTraceAsString() // 可選，根據需要可增加更多上下文信息
+            ]);
+    
+            return response()->json([
+                'status' => false,
+                'message' => '伺服器發生錯誤，請稍後再試',
+                'error' => env('APP_DEBUG') ? $e->getMessage() : '請稍後再試'
+            ], 500);
+        }
     }
 }

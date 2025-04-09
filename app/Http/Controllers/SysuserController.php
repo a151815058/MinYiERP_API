@@ -220,11 +220,11 @@ class SysuserController extends Controller
      *             @OA\Property(property="UsrNo", type="string", example="U001"),
      *             @OA\Property(property="UsrNM", type="string", example="姚佩彤"),
      *             @OA\Property(property="Note", type="string", example=""),
-     *             @OA\Property(property="IsValid", type="boolean", example=true),
+     *             @OA\Property(property="is_valid", type="boolean", example=true),
      *             @OA\Property(property="Createuser", type="string", example="admin"),
-     *             @OA\Property(property="UpdateUser", type="string", example="admin"),
+     *             @OA\Property(property="update_user", type="string", example="admin"),
      *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="UpdateTime", type="string", example="2025-03-31T08:58:52.001986Z")
+     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
      *         )
      *     ),
      *     @OA\Response(
@@ -277,11 +277,11 @@ class SysuserController extends Controller
      *             @OA\Property(property="UsrNo", type="string", example="U001"),
      *             @OA\Property(property="UsrNM", type="string", example="姚佩彤"),
      *             @OA\Property(property="Note", type="string", example="測試測試"),
-     *             @OA\Property(property="IsValid", type="boolean", example=false),
+     *             @OA\Property(property="is_valid", type="boolean", example=false),
      *             @OA\Property(property="Createuser", type="string", example="admin"),
-     *             @OA\Property(property="UpdateUser", type="string", example="admin"),
+     *             @OA\Property(property="update_user", type="string", example="admin"),
      *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="UpdateTime", type="string", example="2025-03-31T08:58:52.001986Z")
+     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
      *         )   
      *     ),
      *     @OA\Response(
@@ -303,9 +303,9 @@ class SysuserController extends Controller
             ], 404);
         }
 
-        $user->IsValid = 0;
-        $user->UpdateUser = 'admin';
-        $user->UpdateTime = now();
+        $user->is_valid = 0;
+        $user->update_user = 'admin';
+        $user->update_time = now();
         $user->save();
 
         return response()->json([

@@ -552,9 +552,9 @@ class ClientController extends Controller
                 ], 404);
             }
 
-            $Client->IsValid = 0;
-            $Client->UpdateUser = 'admin';
-            $Client->UpdateTime = now();
+            $Client->is_valid = 0;
+            $Client->update_user = 'admin';
+            $Client->update_time = now();
             $Client->save();
 
             return response()->json([

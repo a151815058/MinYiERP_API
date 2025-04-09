@@ -292,9 +292,9 @@ class InventoryController extends Controller
             ], 404);
         }
 
-        $Inventory->IsValid = 0;
-        $Inventory->UpdateUser = 'admin';
-        $Inventory->UpdateTime = now();
+        $Inventory->is_valid = 0;
+        $Inventory->update_user = 'admin';
+        $Inventory->update_time = now();
         $Inventory->save();
 
         return response()->json([

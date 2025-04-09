@@ -15,7 +15,7 @@ class SysCode extends Model
     protected $primaryKey = 'uuid';
     public $incrementing = false;
     protected $keyType = 'string';
-    public $timestamps = false; // 因為我們手動使用 CreateTime 和 UpdateTime
+    public $timestamps = false; // 因為我們手動使用 CreateTime 和 update_time
     protected $fillable = [
         'uuid',
         'puuid',

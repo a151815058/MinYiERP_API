@@ -93,7 +93,7 @@
                     {
                         "name": "order_type",
                         "in": "query",
-                        "description": "銷貨單別",
+                        "description": "依照gen_bill_type動態產生欄位名稱",
                         "required": false,
                         "schema": {
                             "type": "string"
@@ -1453,7 +1453,7 @@
                                             "type": "string",
                                             "example": "測試測試"
                                         },
-                                        "IsValid": {
+                                        "is_valid": {
                                             "type": "boolean",
                                             "example": true
                                         },
@@ -1461,7 +1461,7 @@
                                             "type": "string",
                                             "example": "admin"
                                         },
-                                        "UpdateUser": {
+                                        "update_user": {
                                             "type": "string",
                                             "example": "admin"
                                         },
@@ -1469,7 +1469,7 @@
                                             "type": "string",
                                             "example": "2025-03-31T08:58:52.001975Z"
                                         },
-                                        "UpdateTime": {
+                                        "update_time": {
                                             "type": "string",
                                             "example": "2025-03-31T08:58:52.001986Z"
                                         }
@@ -1516,7 +1516,7 @@
                                             "type": "string",
                                             "example": "測試測試"
                                         },
-                                        "IsValid": {
+                                        "is_valid": {
                                             "type": "boolean",
                                             "example": true
                                         },
@@ -1524,7 +1524,7 @@
                                             "type": "string",
                                             "example": "admin"
                                         },
-                                        "UpdateUser": {
+                                        "update_user": {
                                             "type": "string",
                                             "example": "admin"
                                         },
@@ -1532,7 +1532,7 @@
                                             "type": "string",
                                             "example": "2025-03-31T08:58:52.001975Z"
                                         },
-                                        "UpdateTime": {
+                                        "update_time": {
                                             "type": "string",
                                             "example": "2025-03-31T08:58:52.001986Z"
                                         }
@@ -1590,7 +1590,7 @@
                                             "type": "string",
                                             "example": "測試測試"
                                         },
-                                        "IsValid": {
+                                        "is_valid": {
                                             "type": "boolean",
                                             "example": true
                                         },
@@ -1598,7 +1598,7 @@
                                             "type": "string",
                                             "example": "admin"
                                         },
-                                        "UpdateUser": {
+                                        "update_user": {
                                             "type": "string",
                                             "example": "admin"
                                         },
@@ -1606,7 +1606,7 @@
                                             "type": "string",
                                             "example": "2025-03-31T08:58:52.001975Z"
                                         },
-                                        "UpdateTime": {
+                                        "update_time": {
                                             "type": "string",
                                             "example": "2025-03-31T08:58:52.001986Z"
                                         }
@@ -1664,7 +1664,7 @@
                                             "type": "string",
                                             "example": "測試測試"
                                         },
-                                        "IsValid": {
+                                        "is_valid": {
                                             "type": "boolean",
                                             "example": false
                                         },
@@ -1672,7 +1672,7 @@
                                             "type": "string",
                                             "example": "admin"
                                         },
-                                        "UpdateUser": {
+                                        "update_user": {
                                             "type": "string",
                                             "example": "admin"
                                         },
@@ -1680,7 +1680,7 @@
                                             "type": "string",
                                             "example": "2025-03-31T08:58:52.001975Z"
                                         },
-                                        "UpdateTime": {
+                                        "update_time": {
                                             "type": "string",
                                             "example": "2025-03-31T08:58:52.001986Z"
                                         }
@@ -2064,7 +2064,7 @@
                         }
                     },
                     {
-                        "name": "IsValid",
+                        "name": "is_valid",
                         "in": "query",
                         "description": "是否有效",
                         "required": true,
@@ -2093,7 +2093,7 @@
                                             "type": "string",
                                             "example": "A001"
                                         },
-                                        "IsValid": {
+                                        "is_valid": {
                                             "type": "boolean",
                                             "example": true
                                         },
@@ -2101,7 +2101,7 @@
                                             "type": "string",
                                             "example": "admin"
                                         },
-                                        "UpdateUser": {
+                                        "update_user": {
                                             "type": "string",
                                             "example": "admin"
                                         },
@@ -2109,7 +2109,7 @@
                                             "type": "string",
                                             "example": "2025-03-31T08:58:52.001975Z"
                                         },
-                                        "UpdateTime": {
+                                        "update_time": {
                                             "type": "string",
                                             "example": "2025-03-31T08:58:52.001986Z"
                                         }
@@ -2175,7 +2175,7 @@
                                             "type": "string",
                                             "example": "姚佩彤"
                                         },
-                                        "IsValid": {
+                                        "is_valid": {
                                             "type": "boolean",
                                             "example": true
                                         },
@@ -2188,11 +2188,11 @@
                                             "format": "date-time",
                                             "example": "2023-10-01T12:00:00Z"
                                         },
-                                        "UpdateUser": {
+                                        "update_user": {
                                             "type": "string",
                                             "example": "admin"
                                         },
-                                        "UpdateTime": {
+                                        "update_time": {
                                             "type": "string",
                                             "format": "date-time",
                                             "example": "2023-10-01T12:00:00Z"
@@ -2259,7 +2259,7 @@
                                             "type": "string",
                                             "example": "財務部"
                                         },
-                                        "IsValid": {
+                                        "is_valid": {
                                             "type": "boolean",
                                             "example": true
                                         },
@@ -2272,11 +2272,11 @@
                                             "format": "date-time",
                                             "example": "2023-10-01T12:00:00Z"
                                         },
-                                        "UpdateUser": {
+                                        "update_user": {
                                             "type": "string",
                                             "example": "admin"
                                         },
-                                        "UpdateTime": {
+                                        "update_time": {
                                             "type": "string",
                                             "format": "date-time",
                                             "example": "2023-10-01T12:00:00Z"
@@ -3097,7 +3097,7 @@
                 "operationId": "createProduct",
                 "parameters": [
                     {
-                        "name": "ProductNO",
+                        "name": "product_no",
                         "in": "query",
                         "description": "品號",
                         "required": true,
@@ -3106,7 +3106,7 @@
                         }
                     },
                     {
-                        "name": "ProductNM",
+                        "name": "product_nm",
                         "in": "query",
                         "description": "品名",
                         "required": true,
@@ -3115,7 +3115,7 @@
                         }
                     },
                     {
-                        "name": "Specification",
+                        "name": "specification",
                         "in": "query",
                         "description": "規格",
                         "required": true,
@@ -3124,16 +3124,7 @@
                         }
                     },
                     {
-                        "name": "Barcode",
-                        "in": "query",
-                        "description": "條碼",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "Price_1",
+                        "name": "price_1",
                         "in": "query",
                         "description": "售價一",
                         "required": true,
@@ -3142,7 +3133,7 @@
                         }
                     },
                     {
-                        "name": "Price_2",
+                        "name": "price_2",
                         "in": "query",
                         "description": "售價二",
                         "required": false,
@@ -3151,7 +3142,7 @@
                         }
                     },
                     {
-                        "name": "Price_3",
+                        "name": "price_3",
                         "in": "query",
                         "description": "售價三",
                         "required": false,
@@ -3160,7 +3151,7 @@
                         }
                     },
                     {
-                        "name": "Cost_1",
+                        "name": "cost_1",
                         "in": "query",
                         "description": "進價一",
                         "required": true,
@@ -3169,7 +3160,7 @@
                         }
                     },
                     {
-                        "name": "Cost_2",
+                        "name": "cost_2",
                         "in": "query",
                         "description": "進價二",
                         "required": false,
@@ -3178,7 +3169,7 @@
                         }
                     },
                     {
-                        "name": "Cost_3",
+                        "name": "cost_3",
                         "in": "query",
                         "description": "進價三",
                         "required": false,
@@ -3187,16 +3178,16 @@
                         }
                     },
                     {
-                        "name": "Batch_control",
+                        "name": "batch_control",
                         "in": "query",
-                        "description": "批號管理",
+                        "description": "批號管理(下拉選單 01-需要-先進先出 02-需要 03-不需要)",
                         "required": true,
                         "schema": {
                             "type": "string"
                         }
                     },
                     {
-                        "name": "Valid_days",
+                        "name": "valid_days",
                         "in": "query",
                         "description": "有效天數",
                         "required": true,
@@ -3205,7 +3196,7 @@
                         }
                     },
                     {
-                        "name": "Effective_date",
+                        "name": "effective_date",
                         "in": "query",
                         "description": "生效日期",
                         "required": true,
@@ -3214,7 +3205,7 @@
                         }
                     },
                     {
-                        "name": "Stock_control",
+                        "name": "stock_control",
                         "in": "query",
                         "description": "是否庫存管理",
                         "required": true,
@@ -3223,7 +3214,7 @@
                         }
                     },
                     {
-                        "name": "Safety_stock",
+                        "name": "safety_stock",
                         "in": "query",
                         "description": "安全庫存",
                         "required": true,
@@ -3232,7 +3223,7 @@
                         }
                     },
                     {
-                        "name": "Expiry_date",
+                        "name": "expiry_date",
                         "in": "query",
                         "description": "失效日期",
                         "required": true,
@@ -3241,7 +3232,7 @@
                         }
                     },
                     {
-                        "name": "Description",
+                        "name": "description",
                         "in": "query",
                         "description": "商品描述",
                         "required": false,
@@ -3250,7 +3241,7 @@
                         }
                     },
                     {
-                        "name": "IsValid",
+                        "name": "is_valid",
                         "in": "query",
                         "description": "是否有效",
                         "required": true,
@@ -3271,75 +3262,71 @@
                                             "type": "string",
                                             "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
                                         },
-                                        "ProductNO": {
+                                        "product_no": {
                                             "type": "string",
                                             "example": "P001"
                                         },
-                                        "ProductNM": {
+                                        "product_nm": {
                                             "type": "string",
                                             "example": "螺絲起子"
                                         },
-                                        "Specification": {
+                                        "specification": {
                                             "type": "string",
                                             "example": "SP001"
                                         },
-                                        "Barcode": {
-                                            "type": "string",
-                                            "example": ""
-                                        },
-                                        "Price_1": {
+                                        "price_1": {
                                             "type": "integer",
                                             "example": 100
                                         },
-                                        "Price_2": {
+                                        "price_2": {
                                             "type": "integer",
                                             "example": 0
                                         },
-                                        "Price_3": {
+                                        "price_3": {
                                             "type": "integer",
                                             "example": 0
                                         },
-                                        "Cost_1": {
+                                        "cost_1": {
                                             "type": "decimal",
                                             "example": 60
                                         },
-                                        "Cost_2": {
+                                        "cost_2": {
                                             "type": "integer",
                                             "example": 0
                                         },
-                                        "Cost_3": {
+                                        "cost_3": {
                                             "type": "integer",
                                             "example": 0
                                         },
-                                        "Batch_control": {
+                                        "batch_control": {
                                             "type": "integer",
                                             "example": true
                                         },
-                                        "Valid_days": {
+                                        "valid_days": {
                                             "type": "integer",
                                             "example": 0
                                         },
-                                        "Effective_date": {
+                                        "effective_date": {
                                             "type": "string",
                                             "example": "2025-03-31T08:58:52.001975Z"
                                         },
-                                        "Stock_control": {
+                                        "stock_control": {
                                             "type": "integer",
                                             "example": true
                                         },
-                                        "Safety_stock": {
+                                        "safety_stock": {
                                             "type": "integer",
                                             "example": 0
                                         },
-                                        "Expiry_date": {
+                                        "expiry_date": {
                                             "type": "string",
                                             "example": "2025-03-31T08:58:52.001975Z"
                                         },
-                                        "Description": {
+                                        "description": {
                                             "type": "string",
                                             "example": ""
                                         },
-                                        "IsValid": {
+                                        "is_valid": {
                                             "type": "boolean",
                                             "example": true
                                         },
@@ -3347,7 +3334,7 @@
                                             "type": "string",
                                             "example": "admin"
                                         },
-                                        "UpdateUser": {
+                                        "update_user": {
                                             "type": "string",
                                             "example": "admin"
                                         },
@@ -3355,7 +3342,7 @@
                                             "type": "string",
                                             "example": "2025-03-31T08:58:52.001975Z"
                                         },
-                                        "UpdateTime": {
+                                        "update_time": {
                                             "type": "string",
                                             "example": "2025-03-31T08:58:52.001986Z"
                                         }
@@ -3401,75 +3388,71 @@
                                             "type": "string",
                                             "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
                                         },
-                                        "ProductNO": {
+                                        "product_no": {
                                             "type": "string",
                                             "example": "P001"
                                         },
-                                        "ProductNM": {
+                                        "product_nm": {
                                             "type": "string",
                                             "example": "螺絲起子"
                                         },
-                                        "Specification": {
+                                        "specification": {
                                             "type": "string",
                                             "example": "SP001"
                                         },
-                                        "Barcode": {
-                                            "type": "string",
-                                            "example": ""
-                                        },
-                                        "Price_1": {
+                                        "price_1": {
                                             "type": "integer",
                                             "example": 100
                                         },
-                                        "Price_2": {
+                                        "price_2": {
                                             "type": "integer",
                                             "example": 0
                                         },
-                                        "Price_3": {
+                                        "price_3": {
                                             "type": "integer",
                                             "example": 0
                                         },
-                                        "Cost_1": {
+                                        "cost_1": {
                                             "type": "decimal",
                                             "example": 60
                                         },
-                                        "Cost_2": {
+                                        "cost_2": {
                                             "type": "integer",
                                             "example": 0
                                         },
-                                        "Cost_3": {
+                                        "cost_3": {
                                             "type": "integer",
                                             "example": 0
                                         },
-                                        "Batch_control": {
+                                        "batch_control": {
                                             "type": "integer",
                                             "example": true
                                         },
-                                        "Valid_days": {
+                                        "valid_days": {
                                             "type": "integer",
                                             "example": 0
                                         },
-                                        "Effective_date": {
+                                        "effective_date": {
                                             "type": "string",
                                             "example": "2025-03-31T08:58:52.001975Z"
                                         },
-                                        "Stock_control": {
+                                        "stock_control": {
                                             "type": "integer",
                                             "example": true
                                         },
-                                        "Safety_stock": {
+                                        "safety_stock": {
                                             "type": "integer",
                                             "example": 0
                                         },
-                                        "Expiry_date": {
+                                        "expiry_date": {
                                             "type": "string",
                                             "example": "2025-03-31T08:58:52.001975Z"
                                         },
-                                        "Description": {
+                                        "description": {
                                             "type": "string",
                                             "example": ""
                                         },
-                                        "IsValid": {
+                                        "is_valid": {
                                             "type": "boolean",
                                             "example": true
                                         },
@@ -3477,7 +3460,7 @@
                                             "type": "string",
                                             "example": "admin"
                                         },
-                                        "UpdateUser": {
+                                        "update_user": {
                                             "type": "string",
                                             "example": "admin"
                                         },
@@ -3485,7 +3468,7 @@
                                             "type": "string",
                                             "example": "2025-03-31T08:58:52.001975Z"
                                         },
-                                        "UpdateTime": {
+                                        "update_time": {
                                             "type": "string",
                                             "example": "2025-03-31T08:58:52.001986Z"
                                         }
@@ -3520,75 +3503,71 @@
                                             "type": "string",
                                             "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
                                         },
-                                        "ProductNO": {
+                                        "product_no": {
                                             "type": "string",
                                             "example": "P001"
                                         },
-                                        "ProductNM": {
+                                        "product_nm": {
                                             "type": "string",
                                             "example": "螺絲起子"
                                         },
-                                        "Specification": {
+                                        "specification": {
                                             "type": "string",
                                             "example": "SP001"
                                         },
-                                        "Barcode": {
-                                            "type": "string",
-                                            "example": ""
-                                        },
-                                        "Price_1": {
+                                        "price_1": {
                                             "type": "integer",
                                             "example": 100
                                         },
-                                        "Price_2": {
+                                        "price_2": {
                                             "type": "integer",
                                             "example": 0
                                         },
-                                        "Price_3": {
+                                        "price_3": {
                                             "type": "integer",
                                             "example": 0
                                         },
-                                        "Cost_1": {
+                                        "cost_1": {
                                             "type": "decimal",
                                             "example": 60
                                         },
-                                        "Cost_2": {
+                                        "cost_2": {
                                             "type": "integer",
                                             "example": 0
                                         },
-                                        "Cost_3": {
+                                        "cost_3": {
                                             "type": "integer",
                                             "example": 0
                                         },
-                                        "Batch_control": {
+                                        "batch_control": {
                                             "type": "integer",
                                             "example": true
                                         },
-                                        "Valid_days": {
+                                        "valid_days": {
                                             "type": "integer",
                                             "example": 0
                                         },
-                                        "Effective_date": {
+                                        "effective_date": {
                                             "type": "string",
                                             "example": "2025-03-31T08:58:52.001975Z"
                                         },
-                                        "Stock_control": {
+                                        "stock_control": {
                                             "type": "integer",
                                             "example": true
                                         },
-                                        "Safety_stock": {
+                                        "safety_stock": {
                                             "type": "integer",
                                             "example": 0
                                         },
-                                        "Expiry_date": {
+                                        "expiry_date": {
                                             "type": "string",
                                             "example": "2025-03-31T08:58:52.001975Z"
                                         },
-                                        "Description": {
+                                        "description": {
                                             "type": "string",
                                             "example": ""
                                         },
-                                        "IsValid": {
+                                        "is_valid": {
                                             "type": "boolean",
                                             "example": true
                                         },
@@ -3596,7 +3575,7 @@
                                             "type": "string",
                                             "example": "admin"
                                         },
-                                        "UpdateUser": {
+                                        "update_user": {
                                             "type": "string",
                                             "example": "admin"
                                         },
@@ -3604,7 +3583,7 @@
                                             "type": "string",
                                             "example": "2025-03-31T08:58:52.001975Z"
                                         },
-                                        "UpdateTime": {
+                                        "update_time": {
                                             "type": "string",
                                             "example": "2025-03-31T08:58:52.001986Z"
                                         }
@@ -3650,75 +3629,71 @@
                                             "type": "string",
                                             "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
                                         },
-                                        "ProductNO": {
+                                        "product_no": {
                                             "type": "string",
                                             "example": "P001"
                                         },
-                                        "ProductNM": {
+                                        "product_nm": {
                                             "type": "string",
                                             "example": "螺絲起子"
                                         },
-                                        "Specification": {
+                                        "specification": {
                                             "type": "string",
                                             "example": "SP001"
                                         },
-                                        "Barcode": {
-                                            "type": "string",
-                                            "example": ""
-                                        },
-                                        "Price_1": {
+                                        "price_1": {
                                             "type": "integer",
                                             "example": 100
                                         },
-                                        "Price_2": {
+                                        "price_2": {
                                             "type": "integer",
                                             "example": 0
                                         },
-                                        "Price_3": {
+                                        "price_3": {
                                             "type": "integer",
                                             "example": 0
                                         },
-                                        "Cost_1": {
+                                        "cost_1": {
                                             "type": "decimal",
                                             "example": 60
                                         },
-                                        "Cost_2": {
+                                        "cost_2": {
                                             "type": "integer",
                                             "example": 0
                                         },
-                                        "Cost_3": {
+                                        "cost_3": {
                                             "type": "integer",
                                             "example": 0
                                         },
-                                        "Batch_control": {
+                                        "batch_control": {
                                             "type": "integer",
                                             "example": true
                                         },
-                                        "Valid_days": {
+                                        "valid_days": {
                                             "type": "integer",
                                             "example": 0
                                         },
-                                        "Effective_date": {
+                                        "effective_date": {
                                             "type": "string",
                                             "example": "2025-03-31T08:58:52.001975Z"
                                         },
-                                        "Stock_control": {
+                                        "stock_control": {
                                             "type": "integer",
                                             "example": true
                                         },
-                                        "Safety_stock": {
+                                        "safety_stock": {
                                             "type": "integer",
                                             "example": 0
                                         },
-                                        "Expiry_date": {
+                                        "expiry_date": {
                                             "type": "string",
                                             "example": "2025-03-31T08:58:52.001975Z"
                                         },
-                                        "Description": {
+                                        "description": {
                                             "type": "string",
                                             "example": ""
                                         },
-                                        "IsValid": {
+                                        "is_valid": {
                                             "type": "boolean",
                                             "example": true
                                         },
@@ -3726,7 +3701,7 @@
                                             "type": "string",
                                             "example": "admin"
                                         },
-                                        "UpdateUser": {
+                                        "update_user": {
                                             "type": "string",
                                             "example": "admin"
                                         },
@@ -3734,7 +3709,7 @@
                                             "type": "string",
                                             "example": "2025-03-31T08:58:52.001975Z"
                                         },
-                                        "UpdateTime": {
+                                        "update_time": {
                                             "type": "string",
                                             "example": "2025-03-31T08:58:52.001986Z"
                                         }
@@ -3746,6 +3721,24 @@
                     },
                     "404": {
                         "description": "未找到品號"
+                    }
+                }
+            }
+        },
+        "/api/products/showConst": {
+            "get": {
+                "tags": [
+                    "Base_Product"
+                ],
+                "summary": "列出所有品號需要的常用(下拉、彈窗)",
+                "description": "列出所有品號需要的常用(下拉、彈窗)",
+                "operationId": "Show_Product_ALL_Const",
+                "responses": {
+                    "200": {
+                        "description": "成功"
+                    },
+                    "404": {
+                        "description": "有效品號類型未找到"
                     }
                 }
             }
@@ -3949,7 +3942,7 @@
                         }
                     },
                     {
-                        "name": "IsValid",
+                        "name": "is_valid",
                         "in": "query",
                         "description": "是否有效",
                         "required": true,
@@ -4054,7 +4047,7 @@
                                             "type": "string",
                                             "example": ""
                                         },
-                                        "IsValid": {
+                                        "is_valid": {
                                             "type": "boolean",
                                             "example": true
                                         },
@@ -4062,7 +4055,7 @@
                                             "type": "string",
                                             "example": "admin"
                                         },
-                                        "UpdateUser": {
+                                        "update_user": {
                                             "type": "string",
                                             "example": "admin"
                                         },
@@ -4070,7 +4063,7 @@
                                             "type": "string",
                                             "example": "2025-03-31T08:58:52.001975Z"
                                         },
-                                        "UpdateTime": {
+                                        "update_time": {
                                             "type": "string",
                                             "example": "2025-03-31T08:58:52.001986Z"
                                         }
@@ -4200,7 +4193,7 @@
                                             "type": "string",
                                             "example": ""
                                         },
-                                        "IsValid": {
+                                        "is_valid": {
                                             "type": "boolean",
                                             "example": true
                                         },
@@ -4208,7 +4201,7 @@
                                             "type": "string",
                                             "example": "admin"
                                         },
-                                        "UpdateUser": {
+                                        "update_user": {
                                             "type": "string",
                                             "example": "admin"
                                         },
@@ -4216,7 +4209,7 @@
                                             "type": "string",
                                             "example": "2025-03-31T08:58:52.001975Z"
                                         },
-                                        "UpdateTime": {
+                                        "update_time": {
                                             "type": "string",
                                             "example": "2025-03-31T08:58:52.001986Z"
                                         }
@@ -4335,7 +4328,7 @@
                                             "type": "string",
                                             "example": ""
                                         },
-                                        "IsValid": {
+                                        "is_valid": {
                                             "type": "boolean",
                                             "example": true
                                         },
@@ -4343,7 +4336,7 @@
                                             "type": "string",
                                             "example": "admin"
                                         },
-                                        "UpdateUser": {
+                                        "update_user": {
                                             "type": "string",
                                             "example": "admin"
                                         },
@@ -4351,7 +4344,7 @@
                                             "type": "string",
                                             "example": "2025-03-31T08:58:52.001975Z"
                                         },
-                                        "UpdateTime": {
+                                        "update_time": {
                                             "type": "string",
                                             "example": "2025-03-31T08:58:52.001986Z"
                                         }
@@ -4481,7 +4474,7 @@
                                             "type": "string",
                                             "example": ""
                                         },
-                                        "IsValid": {
+                                        "is_valid": {
                                             "type": "boolean",
                                             "example": true
                                         },
@@ -4489,7 +4482,7 @@
                                             "type": "string",
                                             "example": "admin"
                                         },
-                                        "UpdateUser": {
+                                        "update_user": {
                                             "type": "string",
                                             "example": "admin"
                                         },
@@ -4497,7 +4490,7 @@
                                             "type": "string",
                                             "example": "2025-03-31T08:58:52.001975Z"
                                         },
-                                        "UpdateTime": {
+                                        "update_time": {
                                             "type": "string",
                                             "example": "2025-03-31T08:58:52.001986Z"
                                         }
@@ -4733,7 +4726,7 @@
                                             "type": "string",
                                             "example": ""
                                         },
-                                        "IsValid": {
+                                        "is_valid": {
                                             "type": "boolean",
                                             "example": true
                                         },
@@ -4741,7 +4734,7 @@
                                             "type": "string",
                                             "example": "admin"
                                         },
-                                        "UpdateUser": {
+                                        "update_user": {
                                             "type": "string",
                                             "example": "admin"
                                         },
@@ -4749,7 +4742,7 @@
                                             "type": "string",
                                             "example": "2025-03-31T08:58:52.001975Z"
                                         },
-                                        "UpdateTime": {
+                                        "update_time": {
                                             "type": "string",
                                             "example": "2025-03-31T08:58:52.001986Z"
                                         }
@@ -4807,7 +4800,7 @@
                                             "type": "string",
                                             "example": "測試測試"
                                         },
-                                        "IsValid": {
+                                        "is_valid": {
                                             "type": "boolean",
                                             "example": false
                                         },
@@ -4815,7 +4808,7 @@
                                             "type": "string",
                                             "example": "admin"
                                         },
-                                        "UpdateUser": {
+                                        "update_user": {
                                             "type": "string",
                                             "example": "admin"
                                         },
@@ -4823,7 +4816,7 @@
                                             "type": "string",
                                             "example": "2025-03-31T08:58:52.001975Z"
                                         },
-                                        "UpdateTime": {
+                                        "update_time": {
                                             "type": "string",
                                             "example": "2025-03-31T08:58:52.001986Z"
                                         }

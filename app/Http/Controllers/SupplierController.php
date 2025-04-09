@@ -165,7 +165,7 @@ class SupplierController extends Controller
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="IsValid",
+     *         name="is_valid",
      *         in="query",
      *         required=true,
      *         description="是否有效",
@@ -198,11 +198,11 @@ class SupplierController extends Controller
      *             @OA\Property(property="PaymentTermID", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
      *             @OA\Property(property="UserID", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
      *             @OA\Property(property="Note", type="string", example=""),
-     *             @OA\Property(property="IsValid", type="boolean", example=true),
+     *             @OA\Property(property="is_valid", type="boolean", example=true),
      *             @OA\Property(property="Createuser", type="string", example="admin"),
-     *             @OA\Property(property="UpdateUser", type="string", example="admin"),
+     *             @OA\Property(property="update_user", type="string", example="admin"),
      *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="UpdateTime", type="string", example="2025-03-31T08:58:52.001986Z")
+     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
      *         )
      *     ),
      *     @OA\Response(
@@ -237,7 +237,7 @@ class SupplierController extends Controller
              'PaymentTermID'      => 'required|string|max:255',    
              'UserID'             => 'required|string|max:255',     
              'Note'               => 'nullable|string|max:255',
-             'IsValid'            => 'required|boolean'
+             'is_valid'            => 'required|boolean'
          ]);
         
     
@@ -264,7 +264,7 @@ class SupplierController extends Controller
             'PaymentTermID'  => $validated['PaymentTermID'],
             'UserID'  => $validated['UserID'],
             'Note'       => $validated['Note'] ?? null,
-            'IsValid'    => $validated['IsValid']
+            'is_valid'    => $validated['is_valid']
         ]);
 
         // 回應 JSON
@@ -325,11 +325,11 @@ class SupplierController extends Controller
      *             @OA\Property(property="PaymentTermID", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
      *             @OA\Property(property="UserID", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
      *             @OA\Property(property="Note", type="string", example=""),
-     *             @OA\Property(property="IsValid", type="boolean", example=true),
+     *             @OA\Property(property="is_valid", type="boolean", example=true),
      *             @OA\Property(property="Createuser", type="string", example="admin"),
-     *             @OA\Property(property="UpdateUser", type="string", example="admin"),
+     *             @OA\Property(property="update_user", type="string", example="admin"),
      *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="UpdateTime", type="string", example="2025-03-31T08:58:52.001986Z")
+     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
      *         )
      *     ),
      *     @OA\Response(
@@ -391,11 +391,11 @@ class SupplierController extends Controller
      *             @OA\Property(property="PaymentTermID", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
      *             @OA\Property(property="UserID", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
      *             @OA\Property(property="Note", type="string", example=""),
-     *             @OA\Property(property="IsValid", type="boolean", example=true),
+     *             @OA\Property(property="is_valid", type="boolean", example=true),
      *             @OA\Property(property="Createuser", type="string", example="admin"),
-     *             @OA\Property(property="UpdateUser", type="string", example="admin"),
+     *             @OA\Property(property="update_user", type="string", example="admin"),
      *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="UpdateTime", type="string", example="2025-03-31T08:58:52.001986Z")
+     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
      *         )
      *     ),
      *     @OA\Response(
@@ -470,11 +470,11 @@ class SupplierController extends Controller
      *             @OA\Property(property="PaymentTermID", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
      *             @OA\Property(property="UserID", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
      *             @OA\Property(property="Note", type="string", example=""),
-     *             @OA\Property(property="IsValid", type="boolean", example=true),
+     *             @OA\Property(property="is_valid", type="boolean", example=true),
      *             @OA\Property(property="Createuser", type="string", example="admin"),
-     *             @OA\Property(property="UpdateUser", type="string", example="admin"),
+     *             @OA\Property(property="update_user", type="string", example="admin"),
      *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="UpdateTime", type="string", example="2025-03-31T08:58:52.001986Z")
+     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
      *         )   
      *     ),
      *     @OA\Response(
@@ -496,9 +496,9 @@ class SupplierController extends Controller
             ], 404);
         }
 
-        $Supplier->IsValid = 0;
-        $Supplier->UpdateUser = 'admin';
-        $Supplier->UpdateTime = now();
+        $Supplier->is_valid = 0;
+        $Supplier->update_user = 'admin';
+        $Supplier->update_time = now();
         $Supplier->save();
 
         return response()->json([
