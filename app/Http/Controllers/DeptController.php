@@ -237,7 +237,7 @@ class DeptController extends Controller
      *     path="/api/dept/{deptNo}/disable",
      *     summary="刪除特定部門資訊",
      *     description="刪除特定部門資訊",
-     *     operationId="DelteDept",
+     *     operationId="DeleteDept",
      *     tags={"Base_Dept"},
      *     @OA\Parameter(
      *         name="deptNo",

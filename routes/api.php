@@ -11,6 +11,7 @@ use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\InvoiceInfoController;
 
 //部門相關  API
 Route::post('/createdept', [DeptController::class, 'store']); // 新增部門資訊
@@ -85,6 +86,12 @@ Route::get('/Inventory/{InventoryNO}', action: [InventoryController::class, 'sho
 Route::get('/Inventorys/Valid', [InventoryController::class, 'getVaildInventory']);  // 查詢所有有效庫別
 Route::patch('/Inventory/{InventoryNO}/disable', [InventoryController::class, 'disable']); // 軟刪除庫別資訊
 
+
+//發票資料相關  API
+Route::post('/createInvoiceInfo', [InvoiceInfoController::class, 'store']);// 新增發票資料
+Route::get('/InvoiceInfo/{period}', action: [InvoiceInfoController::class, 'show']);  // 透過期別查詢
+Route::get('/InvoiceInfos/Valid', [InvoiceInfoController::class, 'getVaildInvoiceInfo']);  // 查詢所有有效期別
+Route::patch('/InvoiceInfo/{uuid}/disable', [InvoiceInfoController::class, 'disable']); // 軟刪除期別資訊
 
 
 Route::post('/', function () {

@@ -260,7 +260,7 @@ class SysuserController extends Controller
      *     path="/api/user/{UsrNo}/disable",
      *     summary="刪除特定人員資訊",
      *     description="刪除特定人員資訊",
-     *     operationId="DelteUser",
+     *     operationId="DeleteUser",
      *     tags={"Base_User"},
      *     @OA\Parameter(
      *         name="UsrNo",

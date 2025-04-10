@@ -369,7 +369,7 @@ class BillInfoController extends Controller
      *     path="/api/BillInfo/{BillNo}/disable",
      *     summary="刪除特定部門資訊",
      *     description="刪除特定部門資訊",
-     *     operationId="DelteBill",
+     *     operationId="DeleteBillInfo",
      *     tags={"Base_BillInfo"},
      *     @OA\Parameter(
      *         name="BillNo",

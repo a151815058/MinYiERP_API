@@ -402,7 +402,7 @@
                 ],
                 "summary": "刪除特定部門資訊",
                 "description": "刪除特定部門資訊",
-                "operationId": "DelteBill",
+                "operationId": "DeleteBillInfo",
                 "parameters": [
                     {
                         "name": "BillNo",
@@ -2681,6 +2681,427 @@
                 }
             }
         },
+        "/api/createInvoiceInfo": {
+            "post": {
+                "tags": [
+                    "Base_InvoiceInfo"
+                ],
+                "summary": "新增發票資料",
+                "description": "新增發票資料",
+                "operationId": "createInvoiceInfo",
+                "parameters": [
+                    {
+                        "name": "period_start",
+                        "in": "query",
+                        "description": "期別_起",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "period_end",
+                        "in": "query",
+                        "description": "期別_迄",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "track_code",
+                        "in": "query",
+                        "description": "字軌代碼",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "start_number",
+                        "in": "query",
+                        "description": "發票起始號碼",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "end_number",
+                        "in": "query",
+                        "description": "發票截止號碼",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "effective_startdate",
+                        "in": "query",
+                        "description": "適用起始日期",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "effective_enddate",
+                        "in": "query",
+                        "description": "適用截止日期",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "is_valid",
+                        "in": "query",
+                        "description": "是否有效",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "period_start": {
+                                            "type": "string",
+                                            "example": "2025-01"
+                                        },
+                                        "period_end": {
+                                            "type": "string",
+                                            "example": "2025-02"
+                                        },
+                                        "track_code": {
+                                            "type": "string",
+                                            "example": "AQ"
+                                        },
+                                        "start_number": {
+                                            "type": "string",
+                                            "example": "0000000001"
+                                        },
+                                        "end_number": {
+                                            "type": "string",
+                                            "example": "0000000050"
+                                        },
+                                        "effective_startdate": {
+                                            "type": "string",
+                                            "format": "date",
+                                            "example": "2025/01/01"
+                                        },
+                                        "effective_enddate": {
+                                            "type": "string",
+                                            "format": "date",
+                                            "example": "2025/02/28"
+                                        },
+                                        "is_valid": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "create_user": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "update_user": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "create_time": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "update_time": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "單據發票失敗"
+                    }
+                }
+            }
+        },
+        "/api/InvoiceInfo/{period}": {
+            "get": {
+                "tags": [
+                    "Base_InvoiceInfo"
+                ],
+                "summary": "查詢特定發票資訊",
+                "description": "查詢特定發票資訊",
+                "operationId": "getInvoiceInfo",
+                "parameters": [
+                    {
+                        "name": "period",
+                        "in": "path",
+                        "description": "期別",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "period_start": {
+                                            "type": "string",
+                                            "example": "2025-01"
+                                        },
+                                        "period_end": {
+                                            "type": "string",
+                                            "example": "2025-02"
+                                        },
+                                        "track_code": {
+                                            "type": "string",
+                                            "example": "AQ"
+                                        },
+                                        "start_number": {
+                                            "type": "string",
+                                            "example": "0000000001"
+                                        },
+                                        "end_number": {
+                                            "type": "string",
+                                            "example": "0000000050"
+                                        },
+                                        "effective_startdate": {
+                                            "type": "string",
+                                            "format": "date",
+                                            "example": "2025/01/01"
+                                        },
+                                        "effective_enddate": {
+                                            "type": "string",
+                                            "format": "date",
+                                            "example": "2025/02/28"
+                                        },
+                                        "is_valid": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "create_user": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "update_user": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "create_time": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "update_time": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "未找到發票資訊"
+                    }
+                }
+            }
+        },
+        "/api/InvoiceInfos/Valid": {
+            "get": {
+                "tags": [
+                    "Base_InvoiceInfo"
+                ],
+                "summary": "查詢所有有效發票資訊",
+                "description": "查詢所有有效發票資訊",
+                "operationId": "GetAllInvoiceInfos",
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "period_start": {
+                                            "type": "string",
+                                            "example": "2025-01"
+                                        },
+                                        "period_end": {
+                                            "type": "string",
+                                            "example": "2025-02"
+                                        },
+                                        "track_code": {
+                                            "type": "string",
+                                            "example": "AQ"
+                                        },
+                                        "start_number": {
+                                            "type": "string",
+                                            "example": "0000000001"
+                                        },
+                                        "end_number": {
+                                            "type": "string",
+                                            "example": "0000000050"
+                                        },
+                                        "effective_startdate": {
+                                            "type": "string",
+                                            "format": "date",
+                                            "example": "2025/01/01"
+                                        },
+                                        "effective_enddate": {
+                                            "type": "string",
+                                            "format": "date",
+                                            "example": "2025/02/28"
+                                        },
+                                        "is_valid": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "create_user": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "update_user": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "create_time": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "update_time": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "未找到有效發票資訊"
+                    }
+                }
+            }
+        },
+        "/api/InvoiceInfo/{uuid}/disable": {
+            "patch": {
+                "tags": [
+                    "Base_InvoiceInfo"
+                ],
+                "summary": "刪除特定發票字軌資訊",
+                "description": "刪除特定發票字軌資訊",
+                "operationId": "DeleteInvoiceInfo",
+                "parameters": [
+                    {
+                        "name": "uuid",
+                        "in": "path",
+                        "description": "發票字軌uuid",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "period_start": {
+                                            "type": "string",
+                                            "example": "2025-01"
+                                        },
+                                        "period_end": {
+                                            "type": "string",
+                                            "example": "2025-02"
+                                        },
+                                        "track_code": {
+                                            "type": "string",
+                                            "example": "AQ"
+                                        },
+                                        "start_number": {
+                                            "type": "string",
+                                            "example": "0000000001"
+                                        },
+                                        "end_number": {
+                                            "type": "string",
+                                            "example": "0000000050"
+                                        },
+                                        "effective_startdate": {
+                                            "type": "string",
+                                            "format": "date",
+                                            "example": "2025/01/01"
+                                        },
+                                        "effective_enddate": {
+                                            "type": "string",
+                                            "format": "date",
+                                            "example": "2025/02/28"
+                                        },
+                                        "is_valid": {
+                                            "type": "string",
+                                            "example": "0"
+                                        },
+                                        "create_user": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "update_user": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "create_time": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "update_time": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "未找到發票"
+                    }
+                }
+            }
+        },
         "/api/createPaymentTerm": {
             "post": {
                 "tags": [
@@ -4765,7 +5186,7 @@
                 ],
                 "summary": "刪除特定人員資訊",
                 "description": "刪除特定人員資訊",
-                "operationId": "DelteUser",
+                "operationId": "DeleteUser",
                 "parameters": [
                     {
                         "name": "UsrNo",
@@ -4875,6 +5296,10 @@
         {
             "name": "Base_Inventory",
             "description": "Base_Inventory"
+        },
+        {
+            "name": "Base_InvoiceInfo",
+            "description": "Base_InvoiceInfo"
         },
         {
             "name": "Base_PaymentTerm",

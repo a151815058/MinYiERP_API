@@ -324,7 +324,7 @@ class CurrencyController extends Controller
      *     path="/api/Currencys/{CurrencyNo}/disable",
      *     summary="刪除特定貨幣資訊",
      *     description="刪除特定貨幣資訊",
-     *     operationId="DelteCurrency",
+     *     operationId="DeleteCurrency",
      *     tags={"Base_Currency"},
      *     @OA\Parameter(
      *         name="CurrencyNo",
