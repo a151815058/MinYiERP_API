@@ -12,6 +12,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use OpenApi\Annotations as OA;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 
 class ClientController extends Controller
@@ -222,7 +223,7 @@ class ClientController extends Controller
     {
         try {
             // 驗證請求
-            $validated = $request->validate([
+            $validator = Validator::make($request->all(),[
                 'client_no'         => 'required|string|max:255|unique:clients,client_no',
                 'client_shortnm'    => 'required|string|max:255',
                 'client_fullnm'     => 'required|string|max:255',
@@ -246,32 +247,40 @@ class ClientController extends Controller
                 'note'               => 'nullable|string|max:255',
                 'is_valid'            => 'required|string'
             ]);
+
+            if($validator->fails()){
+                return response()->json([
+                    'status' => false,
+                    'message' => '資料驗證失敗',
+                    'errors' => $validator->errors()
+                ], 200);
+            }
             
         
             // 建立客戶資料
             $Client = Client::create([
-                'client_no'     => $validated['client_no'],
-                'client_shortnm'     => $validated['client_shortnm'],
-                'client_fullnm'   => $validated['client_fullnm'],
-                'zip_code1'   => $validated['zip_code1'],
-                'address1' => $validated['address1'],
-                'zip_code2'   => $validated['zip_code2']?? null,
-                'address2' => $validated['address2']?? null,
-                'taxid'   => $validated['taxid'],
-                'responsible_person'  => $validated['responsible_person'],
-                'established_date'   => $validated['established_date'],
-                'phone' => $validated['phone'],
-                'fax'   => $validated['fax']?? null,
-                'contact_person'  => $validated['contact_person'],
-                'contact_phone'   => $validated['contact_phone'],
-                'mobile_phone' => $validated['mobile_phone'],
-                'contact_email'   => $validated['contact_email'],
-                'currency_id'  => $validated['currency_id'],
-                'taxtype'  => $validated['taxtype'],
-                'paymentterm_id'  => $validated['paymentterm_id'],
-                'user_id'  => $validated['user_id'],
-                'note'       => $validated['note'] ?? null,
-                'is_valid'    => $validated['is_valid']
+                'client_no'     => $request['client_no'],
+                'client_shortnm'     => $request['client_shortnm'],
+                'client_fullnm'   => $request['client_fullnm'],
+                'zip_code1'   => $request['zip_code1'],
+                'address1' => $request['address1'],
+                'zip_code2'   => $request['zip_code2']?? null,
+                'address2' => $request['address2']?? null,
+                'taxid'   => $request['taxid'],
+                'responsible_person'  => $request['responsible_person'],
+                'established_date'   => $request['established_date'],
+                'phone' => $request['phone'],
+                'fax'   => $request['fax']?? null,
+                'contact_person'  => $request['contact_person'],
+                'contact_phone'   => $request['contact_phone'],
+                'mobile_phone' => $request['mobile_phone'],
+                'contact_email'   => $request['contact_email'],
+                'currency_id'  => $request['currency_id'],
+                'taxtype'  => $request['taxtype'],
+                'paymentterm_id'  => $request['paymentterm_id'],
+                'user_id'  => $request['user_id'],
+                'note'       => $request['note'] ?? null,
+                'is_valid'    => $request['is_valid']
             ]);
 
             // 回應 JSON

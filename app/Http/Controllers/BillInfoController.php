@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use OpenApi\Annotations as OA;
 use Illuminate\Support\Facades\Log;
-
+use Illuminate\Support\Facades\Validator;
 class BillInfoController extends Controller
 {
     /**
@@ -129,7 +129,7 @@ class BillInfoController extends Controller
     {
         try {
             // 驗證請求
-            $validated = $request->validate([
+            $validator = Validator::make($request->all(),[
                 'bill_no'     => 'required|string|max:255|unique:billinfo,bill_no',
                 'bill_nm'     => 'required|string|max:255',
                 'bill_type'   => 'required|string|max:10',
@@ -143,31 +143,39 @@ class BillInfoController extends Controller
                 'is_valid'    => 'required|string'
             ]);
 
+            if($validator->fails()){
+                return response()->json([
+                    'status' => false,
+                    'message' => '資料驗證失敗',
+                    'errors' => $validator->errors()
+                ], 200);
+            }
+
             //判斷order_type
             //單據類別=客戶訂單=>自動產生"銷貨單"，所以gen_bill_type需存"71"
             //單據類別=銷貨單=>自動產生"結帳單"，所以gen_bill_type需存"81"
             //單據類別=採購單=>自動產生"進貨單"，所以gen_bill_type需存"51" 
-            if ($validated['bill_type'] == '客戶訂單') {
-                $validated['gen_bill_type'] = '71';
-            } elseif ($validated['bill_type'] == '銷貨單') {
-                $validated['gen_bill_type'] = '81';
-            } elseif ($validated['bill_type'] == '採購單') {
-                $validated['gen_bill_type'] = '51';
+            if ($request['bill_type'] == '客戶訂單') {
+                $request['gen_bill_type'] = '71';
+            } elseif ($request['bill_type'] == '銷貨單') {
+                $request['gen_bill_type'] = '81';
+            } elseif ($request['bill_type'] == '採購單') {
+                $request['gen_bill_type'] = '51';
             }
     
             // 建立單據資料
             $BillInfo = BillInfo::create([
-                'bill_no'     => $validated['bill_no'],
-                'bill_nm'     => $validated['bill_nm'],
-                'bill_type'   => $validated['bill_type'],
-                'bill_encode' => $validated['bill_encode'],
-                'bill_calc'   => $validated['bill_calc'],
-                'auto_review' => $validated['auto_review'],
-                'gen_order'   => $validated['gen_order']?? null,
-                'gen_bill_type'   => $validated['GenBillType']?? null,
-                'order_type'  => $validated['order_type']?? null,
-                'note'       => $validated['note'] ?? null,
-                'is_valid'    => $validated['is_valid']
+                'bill_no'     => $request['bill_no'],
+                'bill_nm'     => $request['bill_nm'],
+                'bill_type'   => $request['bill_type'],
+                'bill_encode' => $request['bill_encode'],
+                'bill_calc'   => $request['bill_calc'],
+                'auto_review' => $request['auto_review'],
+                'gen_order'   => $request['gen_order']?? null,
+                'gen_bill_type'   => $request['GenBillType']?? null,
+                'order_type'  => $request['order_type']?? null,
+                'note'       => $request['note'] ?? null,
+                'is_valid'    => $request['is_valid']
             ]);
     
             if (!$BillInfo) {

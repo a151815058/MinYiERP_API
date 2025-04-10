@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use OpenApi\Annotations as OA;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class SysuserController extends Controller
 {
@@ -82,7 +83,7 @@ class SysuserController extends Controller
     public function store(Request $request)
     {
         // 驗證輸入
-        $validated = $request->validate([
+        $validator = Validator::make($request->all(),[
             'user_no'   => 'required|string|max:255|unique:sysusers,user_no',
             'user_nm'   => 'required|string|max:255',
             'user_dept' => 'nullable|string|max:255', // 可為多部門，逗號分隔
@@ -96,10 +97,10 @@ class SysuserController extends Controller
             // 建立使用者
             $user = Sysuser::create([
                 'uuid'     => Str::uuid(),
-                'user_no'  => $validated['user_no'],
-                'user_nm'  => $validated['user_nm'],
-                'note'     => $validated['note'] ?? null,
-                'is_valid' => $validated['is_valid']
+                'user_no'  => $request['user_no'],
+                'user_nm'  => $request['user_nm'],
+                'note'     => $request['note'] ?? null,
+                'is_valid' => $request['is_valid']
             ]);
 
             DB::commit(); // 成功則提交
@@ -107,8 +108,8 @@ class SysuserController extends Controller
             $attachedDepts = [];
     
             // 建立部門關聯
-            if (!empty($validated['user_dept'])) {
-                $deptNos = explode(',', $validated['user_dept']);
+            if (!empty($request['user_dept'])) {
+                $deptNos = explode(',', $request['user_dept']);
                 foreach ($deptNos as $deptNo) {
                     $dept = Dept::where('uuid', trim($deptNo))->first();
                     if ($dept) {
@@ -222,9 +223,9 @@ class SysuserController extends Controller
      *             @OA\Property(property="Note", type="string", example=""),
      *             @OA\Property(property="is_valid", type="boolean", example=true),
      *             @OA\Property(property="Createuser", type="string", example="admin"),
-     *             @OA\Property(property="update_user", type="string", example="admin"),
+     *             @OA\Property(property="UpdateUser", type="string", example="admin"),
      *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
+     *             @OA\Property(property="UpdateTime", type="string", example="2025-03-31T08:58:52.001986Z")
      *         )
      *     ),
      *     @OA\Response(
@@ -279,9 +280,9 @@ class SysuserController extends Controller
      *             @OA\Property(property="Note", type="string", example="測試測試"),
      *             @OA\Property(property="is_valid", type="boolean", example=false),
      *             @OA\Property(property="Createuser", type="string", example="admin"),
-     *             @OA\Property(property="update_user", type="string", example="admin"),
+     *             @OA\Property(property="UpdateUser", type="string", example="admin"),
      *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
+     *             @OA\Property(property="UpdateTime", type="string", example="2025-03-31T08:58:52.001986Z")
      *         )   
      *     ),
      *     @OA\Response(
@@ -304,8 +305,8 @@ class SysuserController extends Controller
         }
 
         $user->is_valid = 0;
-        $user->update_user = 'admin';
-        $user->update_time = now();
+        $user->UpdateUser = 'admin';
+        $user->UpdateTime = now();
         $user->save();
 
         return response()->json([

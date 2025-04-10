@@ -19,7 +19,33 @@ class Supplier extends Model
     public $timestamps = false; // 因為我們手動使用 CreateTime 和 update_time
 
     protected $fillable = [
-        'Uuid', 'supplierNo', 'supplierShortNM', 'supplierFullNM','ZipCode1', 'Address1','ZipCode2','Address2','TaxID','ResponsiblePerson','EstablishedDate','Phone','Fax','ContactPerson','ContactPhone','MobilePhone','ContactEmail','CurrencyID','TaxType','PaymentTermID','UserID','Note', 'Createuser', 'update_user', 'CreateTime', 'update_time'
+        'uuid', 
+        'supplier_no', 
+        'supplier_shortnm', 
+        'supplier_fullnm',
+        'zipcode1', 
+        'address1',
+        'zipcode2',
+        'address2',
+        'taxid',
+        'responsible_person',
+        'established_date',
+        'phone',
+        'fax',
+        'contact_person',
+        'contact_phone',
+        'mobile_phone',
+        'contact_email',
+        'currencyid',
+        'tax_type',
+        'payment_termid',
+        'user_id',
+        'note', 
+        'is_valid',
+        'create_user', 
+        'update_user', 
+        'create_time',
+        'update_time'
     ];
     
 
@@ -37,7 +63,7 @@ class Supplier extends Model
     // 🔍 透過 supplierNo 查詢    // 🔍 透過 supplierNo 查詢付款條件
     public static function findBysupplierNo($supplierNo)
     {
-        return static::where('supplierNo', $supplierNo)->first();
+        return static::where('supplier_no', $supplierNo)->first();
     }
 
      // 🔍 查詢所有有效供應商資料

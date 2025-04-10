@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use OpenApi\Annotations as OA;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class PaymentTermController extends Controller
 {
@@ -95,43 +96,71 @@ class PaymentTermController extends Controller
     // 儲存付款條件
     public function store(Request $request)
     {
-        // 驗證請求
-        $validated = $request->validate([
-            'terms_no'     => 'required|string|max:255|unique:paymentterms,terms_no',
-            'terms_nm'     => 'required|string|max:255',
-            'terms_days'     => 'required|integer|max:31',
-            'pay_mode'     => 'required|string|max:255',
-            'pay_day'     => 'required|integer|max:31',
-            'note'       => 'nullable|string|max:255',
-            'is_valid'    => 'required|boolean'
-        ]);
+        try {
+                // 驗證請求
+                $validator = Validator::make($request->all(),[
+                    'terms_no'     => 'required|string|max:255|unique:paymentterms,terms_no',
+                    'terms_nm'     => 'required|string|max:255',
+                    'terms_days'     => 'required|integer|max:31',
+                    'pay_mode'     => 'required|string|max:255',
+                    'pay_day'     => 'required|integer|max:31',
+                    'note'       => 'nullable|string|max:255',
+                    'is_valid'    => 'required|boolean'
+                ]);
 
-        // 建立付款條件
-        $PaymentTerm = PaymentTerm::create([
-            'terms_no'     => $validated['terms_no'],
-            'terms_nm'     => $validated['terms_nm'],
-            'terms_days'     => $validated['terms_days'],
-            'pay_mode'     => $validated['pay_mode'],
-            'pay_day'     => $validated['pay_day'],
-            'note'       => $validated['note'] ?? null,
-            'is_valid'    => $validated['is_valid']
-        ]);
+                if($validator->fails()){
+                    return response()->json([
+                        'status' => false,
+                        'message' => '資料驗證失敗',
+                        'errors' => $validator->errors()
+                    ], 200);
+                }
 
-        // 回應 JSON
-        if (!$PaymentTerm) {
+                // 建立付款條件
+                $PaymentTerm = PaymentTerm::create([
+                    'terms_no'     => $request['terms_no'],
+                    'terms_nm'     => $request['terms_nm'],
+                    'terms_days'     => $request['terms_days'],
+                    'pay_mode'     => $request['pay_mode'],
+                    'pay_day'     => $request['pay_day'],
+                    'note'       => $request['note'] ?? null,
+                    'is_valid'    => $request['is_valid']
+                ]);
+
+                // 回應 JSON
+                if (!$PaymentTerm) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => '付款條件建立失敗',
+                        'output'    => null
+                    ], status: 404);
+                }else {
+                    // 回應 JSON
+                    return response()->json([
+                        'status' => true,
+                        'message' => 'success',
+                        'output'   => $PaymentTerm
+                    ], 200);
+                }
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 捕捉驗證失敗
             return response()->json([
                 'status' => false,
-                'message' => '付款條件建立失敗',
-                'output'    => null
-            ], status: 404);
-        }else {
-            // 回應 JSON
+                'message' => '驗證錯誤',
+                'errors' => $e->errors()
+            ], 422);
+    
+        } catch (\Exception $e) {
+            // 其他例外處理
+            Log::error('建立單據資料錯誤：' . $e->getMessage());
+    
             return response()->json([
-                'status' => true,
-                'message' => 'success',
-                'output'   => $PaymentTerm
-            ], 200);
+                'status' => false,
+                'message' => '伺服器發生錯誤，請稍後再試',
+                'error' => $e->getMessage() // 上線環境建議拿掉
+            ], 500);
         }
+
     }
     /**
      * @OA\GET(

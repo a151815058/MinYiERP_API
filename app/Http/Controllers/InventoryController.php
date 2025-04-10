@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Inventory;
 use Illuminate\Support\Str;
 use OpenApi\Annotations as OA;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class InventoryController extends Controller
 {
@@ -93,44 +95,72 @@ class InventoryController extends Controller
     // 儲存庫別資料
     public function store(Request $request)
     {
-        // 驗證請求
-         $validated = $request->validate([
-             'inventory_no'     => 'required|string|max:255|unique:inventory,inventory_no',
-             'inventory_nm'     => 'required|string|max:255',
-             'inventory_qty'     => 'required|integer|max:10000000',
-             'lot_num'     => 'nullable|string|max:255',
-             'safety_stock'     => 'required|integer|max:10000000',
-             'lastStock_receiptdate'     => 'nullable|string',
-             'is_valid'    => 'required|boolean'
-         ]);
+        try {
+            // 驗證請求
+            $validator = Validator::make($request->all(),[
+                'inventory_no'     => 'required|string|max:255|unique:inventory,inventory_no',
+                'inventory_nm'     => 'required|string|max:255',
+                'inventory_qty'     => 'required|integer|max:10000000',
+                'lot_num'     => 'nullable|string|max:255',
+                'safety_stock'     => 'required|integer|max:10000000',
+                'lastStock_receiptdate'     => 'nullable|string',
+                'is_valid'    => 'required|boolean'
+            ]);
 
-        // 建立庫別資料
-        $Inventory = Inventory::create([
-            'uuid'                    => Str::uuid(),  // 自動生成 UUID
-            'inventory_no'             => $validated['inventory_no'],
-            'inventory_nm'             => $validated['inventory_nm'],
-            'inventory_qty'            => $validated['inventory_qty'],
-            'lot_num'                  => $validated['lot_num']?? null,
-            'safety_stock'            => $validated['safety_stock'],
-            'lastStock_receiptdate'    => $validated['lastStock_receiptdate'] ?? null,
-            'is_valid'                 => $validated['is_valid']
-        ]);
+            if($validator->fails()){
+                return response()->json([
+                    'status' => false,
+                    'message' => '資料驗證失敗',
+                    'errors' => $validator->errors()
+                ], 200);
+            }
 
-        // 回應 JSON
-        if (!$Inventory) {
+            // 建立庫別資料
+            $Inventory = Inventory::create([
+                'uuid'                    => Str::uuid(),  // 自動生成 UUID
+                'inventory_no'             => $request['inventory_no'],
+                'inventory_nm'             => $request['inventory_nm'],
+                'inventory_qty'            => $request['inventory_qty'],
+                'lot_num'                  => $request['lot_num']?? null,
+                'safety_stock'            => $request['safety_stock'],
+                'lastStock_receiptdate'    => $request['lastStock_receiptdate'] ?? null,
+                'is_valid'                 => $request['is_valid']
+            ]);
+
+            // 回應 JSON
+            if (!$Inventory) {
+                return response()->json([
+                    'status' => false,
+                    'message' => '庫別建立失敗',
+                    'output'    => null
+                ], status: 404);
+            }else {
+                // 回應 JSON
+                return response()->json([
+                    'status' => true,
+                    'message' => 'success',
+                    'output'    => $Inventory
+                ], 200);
+            }
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 捕捉驗證失敗
             return response()->json([
                 'status' => false,
-                'message' => '庫別建立失敗',
-                'output'    => null
-            ], status: 404);
-        }else {
-            // 回應 JSON
+                'message' => '驗證錯誤',
+                'errors' => $e->errors()
+            ], 422);
+    
+        } catch (\Exception $e) {
+            // 其他例外處理
+            Log::error('建立單據資料錯誤：' . $e->getMessage());
+    
             return response()->json([
-                'status' => true,
-                'message' => 'success',
-                'output'    => $Inventory
-            ], 200);
+                'status' => false,
+                'message' => '伺服器發生錯誤，請稍後再試',
+                'error' => $e->getMessage() // 上線環境建議拿掉
+            ], 500);
         }
+
     }
     /**
      * @OA\GET(

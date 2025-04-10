@@ -6,7 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Dept;
 use Illuminate\Support\Str;
 use OpenApi\Annotations as OA;
-
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 
 
 class DeptController extends Controller
@@ -71,36 +72,62 @@ class DeptController extends Controller
     // 儲存部門資料
     public function store(Request $request)
     {
-        // 驗證請求
-        $validated = $request->validate([
-            'dept_no'     => 'required|string|max:255|unique:depts,dept_no',
-            'dept_nm'     => 'required|string|max:255',
-            'note'       => 'nullable|string|max:255',
-            'is_valid'    => 'required|boolean'
-        ]);
+        try {
+            // 驗證請求
+            $validator = Validator::make($request->all(),[
+                'dept_no'     => 'required|string|max:255|unique:depts,dept_no',
+                'dept_nm'     => 'required|string|max:255',
+                'note'       => 'nullable|string|max:255',
+                'is_valid'    => 'required|boolean'
+            ]);
+            if($validator->fails()){
+                return response()->json([
+                    'status' => false,
+                    'message' => '資料驗證失敗',
+                    'errors' => $validator->errors()
+                ], 200);
+            }
 
-        // 建立部門資料
-        $dept = Dept::create([
-            'uuid'       => Str::uuid(),  // 自動生成 UUID
-            'dept_no'     => $validated['dept_no'],
-            'dept_nm'     => $validated['dept_nm'],
-            'note'       => $validated['note'] ?? null,
-            'is_valid'    => $validated['is_valid']
-        ]);
+            // 建立部門資料
+            $dept = Dept::create([
+                'uuid'       => Str::uuid(),  // 自動生成 UUID
+                'dept_no'     => $request['dept_no'],
+                'dept_nm'     => $request['dept_nm'],
+                'note'       => $request['note'] ?? null,
+                'is_valid'    => $request['is_valid']
+            ]);
 
-        if (!$dept) {
+            if (!$dept) {
+                return response()->json([
+                    'status' => false,
+                    'message' => '部門建立失敗',
+                    'output'    => null
+                ], status: 404);
+            }else {
+                // 回應 JSON
+                return response()->json([
+                    'status' => true,
+                    'message' => 'success',
+                    'output'    => $dept
+                ], 200);
+            }
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 捕捉驗證失敗
             return response()->json([
                 'status' => false,
-                'message' => '部門建立失敗',
-                'output'    => null
-            ], status: 404);
-        }else {
-            // 回應 JSON
+                'message' => '驗證錯誤',
+                'errors' => $e->errors()
+            ], 422);
+    
+        } catch (\Exception $e) {
+            // 其他例外處理
+            Log::error('建立單據資料錯誤：' . $e->getMessage());
+    
             return response()->json([
-                'status' => true,
-                'message' => 'success',
-                'output'    => $dept
-            ], 200);
+                'status' => false,
+                'message' => '伺服器發生錯誤，請稍後再試',
+                'error' => $e->getMessage() // 上線環境建議拿掉
+            ], 500);
         }
 
     }

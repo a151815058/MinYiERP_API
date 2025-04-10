@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use OpenApi\Annotations as OA;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class SupplierController extends Controller
 {
@@ -18,147 +20,147 @@ class SupplierController extends Controller
      *     operationId="createSupplier",
      *     tags={"Base_Supplier"},
      *     @OA\Parameter(
-     *         name="supplierNo",
+     *         name="supplier_no",
      *         in="query",
      *         required=true,
      *         description="供應商編號",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="supplierShortNM",
+     *         name="supplier_shortnm",
      *         in="query",
      *         required=true,
      *         description="供應商簡稱",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="supplierFullNM",
+     *         name="supplier_fullnm",
      *         in="query",
      *         required=true,
      *         description="供應商全名",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="ZipCode1",
+     *         name="zipcode1",
      *         in="query",
      *         required=true,
      *         description="郵遞區號 1",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="Address1",
+     *         name="address1",
      *         in="query",
      *         required=true,
      *         description="公司地址 1",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="ZipCode2",
+     *         name="zipcode2",
      *         in="query",
      *         required=false,
      *         description="郵遞區號 2 (選填)",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="Address2",
+     *         name="address2",
      *         in="query",
      *         required=false,
      *         description="公司地址 2 (選填)",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="TaxID",
+     *         name="taxid",
      *         in="query",
      *         required=true,
      *         description="統一編號 (台灣: 8 碼)",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="ResponsiblePerson",
+     *         name="responsible_person",
      *         in="query",
      *         required=true,
      *         description="負責人",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="EstablishedDate",
+     *         name="established_date",
      *         in="query",
      *         required=true,
      *         description="成立時間",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="Phone",
+     *         name="phone",
      *         in="query",
      *         required=true,
      *         description="公司電話",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="Fax",
+     *         name="fax",
      *         in="query",
      *         required=true,
      *         description="公司傳真 (選填)",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="ContactPerson",
+     *         name="contact_person",
      *         in="query",
      *         required=true,
      *         description="聯絡人",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="ContactPhone",
+     *         name="contact_phone",
      *         in="query",
      *         required=true,
      *         description="聯絡人電話",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="MobilePhone",
+     *         name="mobile_phone",
      *         in="query",
      *         required=true,
      *         description="聯絡人行動電話",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="ContactEmail",
+     *         name="contact_email",
      *         in="query",
      *         required=true,
      *         description="聯絡人信箱",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="CurrencyID",
+     *         name="currencyid",
      *         in="query",
      *         required=true,
      *         description="幣別 (ISO 3碼: USD, TWD)",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="TaxType",
+     *         name="tax_type",
      *         in="query",
      *         required=true,
      *         description="稅別 (應稅內含、應稅外加、免稅、零稅率等)",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="PaymentTermID",
+     *         name="payment_termid",
      *         in="query",
      *         required=true,
      *         description="付款條件 (付款條件代碼)",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="UserID",
+     *         name="user_id",
      *         in="query",
      *         required=true,
      *         description="負責採購人員",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="Note",
+     *         name="note",
      *         in="query",
      *         required=false,
      *         description="備註",
@@ -177,31 +179,31 @@ class SupplierController extends Controller
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="supplierNo", type="string", example="S003"),
-     *             @OA\Property(property="supplierShortNM", type="string", example="測試供應商1"),
-     *             @OA\Property(property="supplierFullNM", type="string", example="測試供應商1"),
-     *             @OA\Property(property="ZipCode1", type="string", example="12345"),
-     *             @OA\Property(property="Address1", type="string", example="台北市信義區"),
-     *             @OA\Property(property="ZipCode2", type="string", example="54321"),
-     *             @OA\Property(property="Address2", type="string", example="台北市大安區"),
-     *             @OA\Property(property="TaxID", type="string", example="12345678"),
-     *             @OA\Property(property="ResponsiblePerson", type="string", example="王小明"),
-     *             @OA\Property(property="EstablishedDate", type="string", example="2025-03-31"),
-     *             @OA\Property(property="Phone", type="string", example="02-12345678"),
-     *             @OA\Property(property="Fax", type="string", example="02-87654321"),
-     *             @OA\Property(property="ContactPerson", type="string", example="李小華"),
-     *             @OA\Property(property="ContactPhone", type="string", example="0912345678"),
-     *             @OA\Property(property="MobilePhone", type="string", example="0987654321"),
-     *             @OA\Property(property="ContactEmail", type="string", example="a151815058@gmail.com"),
-     *             @OA\Property(property="CurrencyID", type="string", example="TWD"),
-     *             @OA\Property(property="TaxType", type="string", example="T001"),
-     *             @OA\Property(property="PaymentTermID", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="UserID", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="Note", type="string", example=""),
+     *             @OA\Property(property="supplier_no", type="string", example="S003"),
+     *             @OA\Property(property="supplier_shortnm", type="string", example="測試供應商1"),
+     *             @OA\Property(property="supplier_fullnm", type="string", example="測試供應商1"),
+     *             @OA\Property(property="zipcode1", type="string", example="12345"),
+     *             @OA\Property(property="address1", type="string", example="台北市信義區"),
+     *             @OA\Property(property="zipcode2", type="string", example="54321"),
+     *             @OA\Property(property="address2", type="string", example="台北市大安區"),
+     *             @OA\Property(property="taxid", type="string", example="12345678"),
+     *             @OA\Property(property="responsible_person", type="string", example="王小明"),
+     *             @OA\Property(property="established_date", type="string", example="2025-03-31"),
+     *             @OA\Property(property="phone", type="string", example="02-12345678"),
+     *             @OA\Property(property="fax", type="string", example="02-87654321"),
+     *             @OA\Property(property="contact_person", type="string", example="李小華"),
+     *             @OA\Property(property="contact_phone", type="string", example="0912345678"),
+     *             @OA\Property(property="mobile_phone", type="string", example="0987654321"),
+     *             @OA\Property(property="contact_email", type="string", example="a151815058@gmail.com"),
+     *             @OA\Property(property="currencyid", type="string", example="TWD"),
+     *             @OA\Property(property="tax_type", type="string", example="T001"),
+     *             @OA\Property(property="payment_termid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
+     *             @OA\Property(property="user_id", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
+     *             @OA\Property(property="note", type="string", example=""),
      *             @OA\Property(property="is_valid", type="boolean", example=true),
-     *             @OA\Property(property="Createuser", type="string", example="admin"),
+     *             @OA\Property(property="create_user", type="string", example="admin"),
      *             @OA\Property(property="update_user", type="string", example="admin"),
-     *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="create_time", type="string", example="2025-03-31T08:58:52.001975Z"),
      *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
      *         )
      *     ),
@@ -214,57 +216,65 @@ class SupplierController extends Controller
     // 儲存供應商
     public function store(Request $request)
     {
-        // 驗證請求
-         $validated = $request->validate([
-             'supplierNo'         => 'required|string|max:255|unique:supplier,supplierNo',
-             'supplierShortNM'    => 'required|string|max:255',
-             'supplierFullNM'     => 'required|string|max:255',
-             'ZipCode1'           => 'required|string|max:20',
-             'Address1'           => 'required|string|max:255',
-             'ZipCode2'           => 'nullable|string|max:20',
-             'Address2'           => 'nullable|string|max:255',
-             'TaxID'              => 'required|string|max:255', 
-             'ResponsiblePerson'  => 'required|string|max:255',   
-             'EstablishedDate'    => 'required|string|max:20',  
-             'Phone'              => 'required|string|max:20',  
-             'Fax'                => 'required|string|max:10',  
-             'ContactPerson'      => 'required|string|max:255',  
-             'ContactPhone'       => 'required|string|max:255',  
-             'MobilePhone'        => 'required|string|max:255',  
-             'ContactEmail'       => 'required|string|max:255',  
-             'CurrencyID'         => 'required|string|max:255',  
-             'TaxType'            => 'required|string|max:255',  
-             'PaymentTermID'      => 'required|string|max:255',    
-             'UserID'             => 'required|string|max:255',     
-             'Note'               => 'nullable|string|max:255',
-             'is_valid'            => 'required|boolean'
-         ]);
-        
+        try {
+            // 驗證請求
+            $validator = Validator::make($request->all(),[
+                'supplier_no'         => 'required|string|max:255|unique:supplier,supplier_no',
+                'supplier_shortnm'    => 'required|string|max:255',
+                'supplier_fullnm'     => 'required|string|max:255',
+                'zipcode1'           => 'required|string|max:20',
+                'address1'           => 'required|string|max:255',
+                'zipcode2'           => 'nullable|string|max:20',
+                'address2'           => 'nullable|string|max:255',
+                'taxid'              => 'required|string|max:255', 
+                'responsible_person'  => 'required|string|max:255',   
+                'established_date'    => 'required|string|max:20',  
+                'phone'              => 'required|string|max:20',  
+                'fax'                => 'required|string|max:10',  
+                'contact_person'      => 'required|string|max:255',  
+                'contact_phone'       => 'required|string|max:255',  
+                'mobile_phone'        => 'required|string|max:255',  
+                'contact_email'       => 'required|string|max:255',  
+                'currencyid'         => 'required|string|max:255',  
+                'tax_type'            => 'required|string|max:255',  
+                'payment_termid'      => 'required|string|max:255',    
+                'user_id'             => 'required|string|max:255',     
+                'note'               => 'nullable|string|max:255',
+                'is_valid'            => 'required|string'
+            ]);
+
+            if($validator->fails()){
+                return response()->json([
+                    'status' => false,
+                    'message' => '資料驗證失敗',
+                    'errors' => $validator->errors()
+                ], 200);
+            }        
     
         // 建立供應商資料
         $supplier = Supplier::create([
-            'supplierNo'     => $validated['supplierNo'],
-            'supplierShortNM'     => $validated['supplierShortNM'],
-            'supplierFullNM'   => $validated['supplierFullNM'],
-            'ZipCode1'   => $validated['ZipCode1'],
-            'Address1' => $validated['Address1'],
-            'ZipCode2'   => $validated['ZipCode2']?? null,
-            'Address2' => $validated['Address2']?? null,
-            'TaxID'   => $validated['TaxID'],
-            'ResponsiblePerson'  => $validated['ResponsiblePerson'],
-            'EstablishedDate'   => $validated['EstablishedDate'],
-            'Phone' => $validated['Phone'],
-            'Fax'   => $validated['Fax'],
-            'ContactPerson'  => $validated['ContactPerson'],
-            'ContactPhone'   => $validated['ContactPhone'],
-            'MobilePhone' => $validated['MobilePhone'],
-            'ContactEmail'   => $validated['ContactEmail'],
-            'CurrencyID'  => $validated['CurrencyID'],
-            'TaxType'  => $validated['TaxType'],
-            'PaymentTermID'  => $validated['PaymentTermID'],
-            'UserID'  => $validated['UserID'],
-            'Note'       => $validated['Note'] ?? null,
-            'is_valid'    => $validated['is_valid']
+            'supplier_no'     => $request['supplier_no'],
+            'supplier_shortnm'     => $request['supplier_shortnm'],
+            'supplier_fullnm'   => $request['supplier_fullnm'],
+            'zipcode1'   => $request['zipcode1'],
+            'address1' => $request['address1'],
+            'zipcode2'   => $request['zipcode2']?? null,
+            'address2' => $request['address2']?? null,
+            'taxid'   => $request['taxid'],
+            'responsible_person'  => $request['responsible_person'],
+            'established_date'   => $request['established_date'],
+            'phone' => $request['phone'],
+            'fax'   => $request['fax'],
+            'contact_person'  => $request['contact_person'],
+            'contact_phone'   => $request['contact_phone'],
+            'mobile_phone' => $request['mobile_phone'],
+            'contact_email'   => $request['contact_email'],
+            'currencyid'  => $request['currencyid'],
+            'tax_type'  => $request['tax_type'],
+            'payment_termid'  => $request['payment_termid'],
+            'user_id'  => $request['user_id'],
+            'note'       => $request['note'] ?? null,
+            'is_valid'    => $request['is_valid']
         ]);
 
         // 回應 JSON
@@ -282,6 +292,25 @@ class SupplierController extends Controller
                 'output'    => $supplier
             ], 200);
         }
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 捕捉驗證失敗
+            return response()->json([
+                'status' => false,
+                'message' => '驗證錯誤',
+                'errors' => $e->errors()
+            ], 422);
+    
+        } catch (\Exception $e) {
+            // 其他例外處理
+            Log::error('建立單據資料錯誤：' . $e->getMessage());
+    
+            return response()->json([
+                'status' => false,
+                'message' => '伺服器發生錯誤，請稍後再試',
+                'error' => $e->getMessage() // 上線環境建議拿掉
+            ], 500);
+        }           
+
 
     }
     /**
@@ -292,7 +321,7 @@ class SupplierController extends Controller
      *     operationId="getSupplier",
      *     tags={"Base_Supplier"},
      *     @OA\Parameter(
-     *         name="supplierNo",
+     *         name="supplier_no",
      *         in="path",
      *         required=true,
      *         description="供應商代號",
@@ -304,31 +333,31 @@ class SupplierController extends Controller
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="supplierNo", type="string", example="S003"),
-     *             @OA\Property(property="supplierShortNM", type="string", example="測試供應商1"),
-     *             @OA\Property(property="supplierFullNM", type="string", example="測試供應商1"),
-     *             @OA\Property(property="ZipCode1", type="string", example="12345"),
-     *             @OA\Property(property="Address1", type="string", example="台北市信義區"),
-     *             @OA\Property(property="ZipCode2", type="string", example="54321"),
-     *             @OA\Property(property="Address2", type="string", example="台北市大安區"),
-     *             @OA\Property(property="TaxID", type="string", example="12345678"),
-     *             @OA\Property(property="ResponsiblePerson", type="string", example="王小明"),
-     *             @OA\Property(property="EstablishedDate", type="string", example="2025-03-31"),
-     *             @OA\Property(property="Phone", type="string", example="02-12345678"),
-     *             @OA\Property(property="Fax", type="string", example="02-87654321"),
-     *             @OA\Property(property="ContactPerson", type="string", example="李小華"),
-     *             @OA\Property(property="ContactPhone", type="string", example="0912345678"),
-     *             @OA\Property(property="MobilePhone", type="string", example="0987654321"),
-     *             @OA\Property(property="ContactEmail", type="string", example="a151815058@gmail.com"),
-     *             @OA\Property(property="CurrencyID", type="string", example="TWD"),
-     *             @OA\Property(property="TaxType", type="string", example="T001"),
-     *             @OA\Property(property="PaymentTermID", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="UserID", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="Note", type="string", example=""),
+     *             @OA\Property(property="supplier_no", type="string", example="S003"),
+     *             @OA\Property(property="supplier_shortnm", type="string", example="測試供應商1"),
+     *             @OA\Property(property="supplier_fullnm", type="string", example="測試供應商1"),
+     *             @OA\Property(property="zipcode1", type="string", example="12345"),
+     *             @OA\Property(property="address1", type="string", example="台北市信義區"),
+     *             @OA\Property(property="zipcode2", type="string", example="54321"),
+     *             @OA\Property(property="address2", type="string", example="台北市大安區"),
+     *             @OA\Property(property="taxid", type="string", example="12345678"),
+     *             @OA\Property(property="responsible_person", type="string", example="王小明"),
+     *             @OA\Property(property="established_date", type="string", example="2025-03-31"),
+     *             @OA\Property(property="phone", type="string", example="02-12345678"),
+     *             @OA\Property(property="fax", type="string", example="02-87654321"),
+     *             @OA\Property(property="contact_person", type="string", example="李小華"),
+     *             @OA\Property(property="contact_phone", type="string", example="0912345678"),
+     *             @OA\Property(property="mobile_phone", type="string", example="0987654321"),
+     *             @OA\Property(property="contact_email", type="string", example="a151815058@gmail.com"),
+     *             @OA\Property(property="currencyid", type="string", example="TWD"),
+     *             @OA\Property(property="tax_type", type="string", example="T001"),
+     *             @OA\Property(property="payment_termid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
+     *             @OA\Property(property="user_id", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
+     *             @OA\Property(property="note", type="string", example=""),
      *             @OA\Property(property="is_valid", type="boolean", example=true),
-     *             @OA\Property(property="Createuser", type="string", example="admin"),
+     *             @OA\Property(property="create_user", type="string", example="admin"),
      *             @OA\Property(property="update_user", type="string", example="admin"),
-     *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="create_time", type="string", example="2025-03-31T08:58:52.001975Z"),
      *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
      *         )
      *     ),
@@ -370,31 +399,31 @@ class SupplierController extends Controller
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="supplierNo", type="string", example="S003"),
-     *             @OA\Property(property="supplierShortNM", type="string", example="測試供應商1"),
-     *             @OA\Property(property="supplierFullNM", type="string", example="測試供應商1"),
-     *             @OA\Property(property="ZipCode1", type="string", example="12345"),
-     *             @OA\Property(property="Address1", type="string", example="台北市信義區"),
-     *             @OA\Property(property="ZipCode2", type="string", example="54321"),
-     *             @OA\Property(property="Address2", type="string", example="台北市大安區"),
-     *             @OA\Property(property="TaxID", type="string", example="12345678"),
-     *             @OA\Property(property="ResponsiblePerson", type="string", example="王小明"),
-     *             @OA\Property(property="EstablishedDate", type="string", example="2025-03-31"),
-     *             @OA\Property(property="Phone", type="string", example="02-12345678"),
-     *             @OA\Property(property="Fax", type="string", example="02-87654321"),
-     *             @OA\Property(property="ContactPerson", type="string", example="李小華"),
-     *             @OA\Property(property="ContactPhone", type="string", example="0912345678"),
-     *             @OA\Property(property="MobilePhone", type="string", example="0987654321"),
-     *             @OA\Property(property="ContactEmail", type="string", example="a151815058@gmail.com"),
-     *             @OA\Property(property="CurrencyID", type="string", example="TWD"),
-     *             @OA\Property(property="TaxType", type="string", example="T001"),
-     *             @OA\Property(property="PaymentTermID", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="UserID", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="Note", type="string", example=""),
+     *             @OA\Property(property="supplier_no", type="string", example="S003"),
+     *             @OA\Property(property="supplier_shortnm", type="string", example="測試供應商1"),
+     *             @OA\Property(property="supplier_fullnm", type="string", example="測試供應商1"),
+     *             @OA\Property(property="zipcode1", type="string", example="12345"),
+     *             @OA\Property(property="address1", type="string", example="台北市信義區"),
+     *             @OA\Property(property="zipcode2", type="string", example="54321"),
+     *             @OA\Property(property="address2", type="string", example="台北市大安區"),
+     *             @OA\Property(property="taxid", type="string", example="12345678"),
+     *             @OA\Property(property="responsible_person", type="string", example="王小明"),
+     *             @OA\Property(property="established_date", type="string", example="2025-03-31"),
+     *             @OA\Property(property="phone", type="string", example="02-12345678"),
+     *             @OA\Property(property="fax", type="string", example="02-87654321"),
+     *             @OA\Property(property="contact_person", type="string", example="李小華"),
+     *             @OA\Property(property="contact_phone", type="string", example="0912345678"),
+     *             @OA\Property(property="mobile_phone", type="string", example="0987654321"),
+     *             @OA\Property(property="contact_email", type="string", example="a151815058@gmail.com"),
+     *             @OA\Property(property="currencyid", type="string", example="TWD"),
+     *             @OA\Property(property="tax_type", type="string", example="T001"),
+     *             @OA\Property(property="payment_termid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
+     *             @OA\Property(property="user_id", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
+     *             @OA\Property(property="note", type="string", example=""),
      *             @OA\Property(property="is_valid", type="boolean", example=true),
-     *             @OA\Property(property="Createuser", type="string", example="admin"),
+     *             @OA\Property(property="create_user", type="string", example="admin"),
      *             @OA\Property(property="update_user", type="string", example="admin"),
-     *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="create_time", type="string", example="2025-03-31T08:58:52.001975Z"),
      *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
      *         )
      *     ),
@@ -437,7 +466,7 @@ class SupplierController extends Controller
      *     operationId="DeleteSupplier",
      *     tags={"Base_Supplier"},
      *     @OA\Parameter(
-     *         name="supplierNo",
+     *         name="supplier_no",
      *         in="path",
      *         required=true,
      *         description="供應商代號",
@@ -449,31 +478,31 @@ class SupplierController extends Controller
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="supplierNo", type="string", example="S003"),
-     *             @OA\Property(property="supplierShortNM", type="string", example="測試供應商1"),
-     *             @OA\Property(property="supplierFullNM", type="string", example="測試供應商1"),
-     *             @OA\Property(property="ZipCode1", type="string", example="12345"),
-     *             @OA\Property(property="Address1", type="string", example="台北市信義區"),
-     *             @OA\Property(property="ZipCode2", type="string", example="54321"),
-     *             @OA\Property(property="Address2", type="string", example="台北市大安區"),
-     *             @OA\Property(property="TaxID", type="string", example="12345678"),
-     *             @OA\Property(property="ResponsiblePerson", type="string", example="王小明"),
-     *             @OA\Property(property="EstablishedDate", type="string", example="2025-03-31"),
-     *             @OA\Property(property="Phone", type="string", example="02-12345678"),
-     *             @OA\Property(property="Fax", type="string", example="02-87654321"),
-     *             @OA\Property(property="ContactPerson", type="string", example="李小華"),
-     *             @OA\Property(property="ContactPhone", type="string", example="0912345678"),
-     *             @OA\Property(property="MobilePhone", type="string", example="0987654321"),
-     *             @OA\Property(property="ContactEmail", type="string", example="a151815058@gmail.com"),
-     *             @OA\Property(property="CurrencyID", type="string", example="TWD"),
-     *             @OA\Property(property="TaxType", type="string", example="T001"),
-     *             @OA\Property(property="PaymentTermID", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="UserID", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="Note", type="string", example=""),
+     *             @OA\Property(property="supplier_no", type="string", example="S003"),
+     *             @OA\Property(property="supplier_shortnm", type="string", example="測試供應商1"),
+     *             @OA\Property(property="supplier_fullnm", type="string", example="測試供應商1"),
+     *             @OA\Property(property="zipcode1", type="string", example="12345"),
+     *             @OA\Property(property="address1", type="string", example="台北市信義區"),
+     *             @OA\Property(property="zipcode2", type="string", example="54321"),
+     *             @OA\Property(property="address2", type="string", example="台北市大安區"),
+     *             @OA\Property(property="taxid", type="string", example="12345678"),
+     *             @OA\Property(property="responsible_person", type="string", example="王小明"),
+     *             @OA\Property(property="established_date", type="string", example="2025-03-31"),
+     *             @OA\Property(property="phone", type="string", example="02-12345678"),
+     *             @OA\Property(property="fax", type="string", example="02-87654321"),
+     *             @OA\Property(property="contact_person", type="string", example="李小華"),
+     *             @OA\Property(property="contact_phone", type="string", example="0912345678"),
+     *             @OA\Property(property="mobile_phone", type="string", example="0987654321"),
+     *             @OA\Property(property="contact_email", type="string", example="a151815058@gmail.com"),
+     *             @OA\Property(property="currencyid", type="string", example="TWD"),
+     *             @OA\Property(property="tax_type", type="string", example="T001"),
+     *             @OA\Property(property="payment_termid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
+     *             @OA\Property(property="user_id", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
+     *             @OA\Property(property="note", type="string", example=""),
      *             @OA\Property(property="is_valid", type="boolean", example=true),
-     *             @OA\Property(property="Createuser", type="string", example="admin"),
+     *             @OA\Property(property="create_user", type="string", example="admin"),
      *             @OA\Property(property="update_user", type="string", example="admin"),
-     *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="create_time", type="string", example="2025-03-31T08:58:52.001975Z"),
      *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
      *         )   
      *     ),

@@ -8,6 +8,7 @@ use App\Models\SysCode;
 use Illuminate\Support\Str;
 use OpenApi\Annotations as OA;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
@@ -175,47 +176,56 @@ class ProductController extends Controller
     // 儲存品號
     public function store(Request $request)
     {
-        // 驗證請求
-         $validated = $request->validate([
-             'product_no'         => 'required|string|max:255|unique:product,product_no',
-             'product_nm'         => 'required|string|max:255',
-             'specification'     => 'required|string|max:255',
-             'price_1'            => 'required|integer|max:10000',
-             'price_2'            => 'nullable|integer|max:10000',
-             'price_3'            => 'nullable|integer|max:10000',
-             'cost_1'            => 'required|integer|max:10000',
-             'cost_2'            => 'nullable|integer|max:10000',
-             'cost_3'            => 'nullable|integer|max:10000',
-             'batch_control'     => 'required|boolean',
-             'valid_days'        => 'required|integer|max:10000',
-             'effective_date'    => 'required|date',
-             'stock_control'     => 'required|boolean',
-             'safety_stock'      => 'required|integer|max:10000',
-             'expiry_date'       => 'required|date',
-             'description'       => 'nullable|string|max:255',
-             'is_valid'            => 'required|boolean'
-         ]);
+        try {
+            // 驗證請求
+            $validator = Validator::make($request->all(),[
+                'product_no'         => 'required|string|max:255|unique:product,product_no',
+                'product_nm'         => 'required|string|max:255',
+                'specification'     => 'required|string|max:255',
+                'price_1'            => 'required|integer|max:10000',
+                'price_2'            => 'nullable|integer|max:10000',
+                'price_3'            => 'nullable|integer|max:10000',
+                'cost_1'            => 'required|integer|max:10000',
+                'cost_2'            => 'nullable|integer|max:10000',
+                'cost_3'            => 'nullable|integer|max:10000',
+                'batch_control'     => 'required|boolean',
+                'valid_days'        => 'required|integer|max:10000',
+                'effective_date'    => 'required|date',
+                'stock_control'     => 'required|boolean',
+                'safety_stock'      => 'required|integer|max:10000',
+                'expiry_date'       => 'required|date',
+                'description'       => 'nullable|string|max:255',
+                'is_valid'            => 'required|boolean'
+            ]);
+            
+            if($validator->fails()){
+                return response()->json([
+                    'status' => false,
+                    'message' => '資料驗證失敗',
+                    'errors' => $validator->errors()
+                ], 200);
+            }
         
     
         // 建立品號資料
         $Product = Product::create([
-            'product_no'     => $validated['product_no'],
-            'product_nm'     => $validated['product_nm'],
-            'specification'   => $validated['specification'],
-            'price_1' => $validated['price_1'],
-            'price_2'   => $validated['price_2']?? null,
-            'price_3' => $validated['price_3']?? null,
-            'cost_1'   => $validated['cost_1'],
-            'cost_2'  => $validated['cost_2']?? null,
-            'cost_3'   => $validated['cost_3']?? null,
-            'batch_control' => $validated['batch_control'],
-            'valid_days'   => $validated['valid_days'],
-            'effective_date'  => $validated['effective_date'],
-            'stock_control'   => $validated['stock_control'],
-            'safety_stock' => $validated['safety_stock'],
-            'expiry_date'   => $validated['expiry_date'],
-            'description'  => $validated['description']?? null,
-            'is_valid'    => $validated['is_valid']
+            'product_no'     => $request['product_no'],
+            'product_nm'     => $request['product_nm'],
+            'specification'   => $request['specification'],
+            'price_1' => $request['price_1'],
+            'price_2'   => $request['price_2']?? null,
+            'price_3' => $request['price_3']?? null,
+            'cost_1'   => $request['cost_1'],
+            'cost_2'  => $request['cost_2']?? null,
+            'cost_3'   => $request['cost_3']?? null,
+            'batch_control' => $request['batch_control'],
+            'valid_days'   => $request['valid_days'],
+            'effective_date'  => $request['effective_date'],
+            'stock_control'   => $request['stock_control'],
+            'safety_stock' => $request['safety_stock'],
+            'expiry_date'   => $request['expiry_date'],
+            'description'  => $request['description']?? null,
+            'is_valid'    => $request['is_valid']
         ]);
 
         // 回應 JSON
@@ -233,6 +243,25 @@ class ProductController extends Controller
                 'output'    => $Product
             ], 200);
         }
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 捕捉驗證失敗
+            return response()->json([
+                'status' => false,
+                'message' => '驗證錯誤',
+                'errors' => $e->errors()
+            ], 422);
+    
+        } catch (\Exception $e) {
+            // 其他例外處理
+            Log::error('建立單據資料錯誤：' . $e->getMessage());
+    
+            return response()->json([
+                'status' => false,
+                'message' => '伺服器發生錯誤，請稍後再試',
+                'error' => $e->getMessage() // 上線環境建議拿掉
+            ], 500);
+        }
+
 
     }
     /**

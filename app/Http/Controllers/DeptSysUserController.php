@@ -6,6 +6,8 @@ use App\Models\SysUser;
 use Illuminate\Contracts\Cache\Store;
 use Illuminate\Http\Request;
 use OpenApi\Annotations as OA;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class DeptSysUserController extends Controller
 {
@@ -71,37 +73,64 @@ class DeptSysUserController extends Controller
     // 驗證請求
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'dept_no'   => 'required|exists:depts,dept_no',
-            'user_no'   => 'required|exists:sysusers,user_no',
-            'is_valid'    => 'required|string'
-        ]);
+        try {
+            $validator = Validator::make($request->all(),[
+                'dept_no'   => 'required|exists:depts,dept_no',
+                'user_no'   => 'required|exists:sysusers,user_no',
+                'is_valid'    => 'required|string'
+            ]);
 
-        // 取得使用者與部門ID
-        $user = SysUser::where('user_no', $validated['user_no'])->first(); // 使用 `first()` 獲取模型
-        $dept = Dept::where('dept_no', $validated['dept_no'])->first(); // 使用 `first()` 獲取模型
+            if($validator->fails()){
+                return response()->json([
+                    'status' => false,
+                    'message' => '資料驗證失敗',
+                    'errors' => $validator->errors()
+                ], 200);
+            }
 
-        if (!$dept || !$user) {
+            // 取得使用者與部門ID
+            $user = SysUser::where('user_no', $request['user_no'])->first(); // 使用 `first()` 獲取模型
+            $dept = Dept::where('dept_no', $request['dept_no'])->first(); // 使用 `first()` 獲取模型
+
+            if (!$dept || !$user) {
+                return response()->json([
+                    'status' => false,
+                    'message' => '使用者或部門不存在',
+                    'User'    =>  null,
+                    'Dept'    =>  null
+                ], status: 400);
+            }
+
+            // 新增關聯
+            $dept->sysusers()->attach($user->uuid, [
+                'is_valid'    => $request['is_valid']
+            ]);
+
+
             return response()->json([
-                'status' => false,
-                'message' => '使用者或部門不存在',
-                'User'    =>  null,
-                'Dept'    =>  null
-            ], status: 400);
+                    'status' => true,
+                    'message' => 'success',
+                    'user' => $user,
+                    'dept' => $dept,
+                ], 201);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+                // 捕捉驗證失敗
+                return response()->json([
+                    'status' => false,
+                    'message' => '驗證錯誤',
+                    'errors' => $e->errors()
+                ], 422);
+        
+        } catch (\Exception $e) {
+                // 其他例外處理
+                Log::error('建立單據資料錯誤：' . $e->getMessage());
+        
+                return response()->json([
+                    'status' => false,
+                    'message' => '伺服器發生錯誤，請稍後再試',
+                    'error' => $e->getMessage() // 上線環境建議拿掉
+                ], 500);
         }
-
-        // 新增關聯
-        $dept->sysusers()->attach($user->uuid, [
-            'is_valid'    => $validated['is_valid']
-        ]);
-
-
-        return response()->json([
-                'status' => true,
-                'message' => 'success',
-                'user' => $user,
-                'dept' => $dept,
-            ], 201);
     }
 
     /**

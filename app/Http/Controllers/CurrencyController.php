@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use \Illuminate\Support\Facades\Http;
 use OpenApi\Annotations as OA;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class CurrencyController extends Controller
 {
@@ -81,13 +82,21 @@ class CurrencyController extends Controller
     public function store(Request $request)
     {
         // 驗證請求
-        $validated = $request->validate([
+        $validator = Validator::make($request->all(),[
             'currency_no'     => 'required|string|max:255|unique:currencys,currency_no',
             'currency_nm'     => 'required|string|max:255',
             'currency_rate'     => 'nullable|string|max:255',
             'note'       => 'nullable|string|max:255',
             'is_valid'    => 'required|string'
         ]);
+
+        if($validator->fails()){
+            return response()->json([
+                'status' => false,
+                'message' => '資料驗證失敗',
+                'errors' => $validator->errors()
+            ], 200);
+        }
 
         // 取得建立當下匯率存入資料表(以台幣為基準)
         //$curr_Rate = CurrencyController::getExchangeRate('TWD');
@@ -102,11 +111,11 @@ class CurrencyController extends Controller
         // 建立幣別資料
         $currency = Currency::create([
             'uuid'       => Str::uuid(),  // 自動生成 UUID
-            'currency_no'     => $validated['currency_no'],
-            'currency_nm'     => $validated['currency_nm'],
-            'currency_rate'     => $validated['currency_rate']?? null,
-            'note'       => $validated['note'] ?? null,
-            'is_valid'    => $validated['is_valid']
+            'currency_no'     => $request['currency_no'],
+            'currency_nm'     => $request['currency_nm'],
+            'currency_rate'     => $request['currency_rate']?? null,
+            'note'       => $request['note'] ?? null,
+            'is_valid'    => $request['is_valid']
         ]);
 
         // 回應 JSON
