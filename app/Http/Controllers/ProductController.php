@@ -86,7 +86,7 @@ class ProductController extends Controller
      *         name="batch_control",
      *         in="query",
      *         required=true,
-     *         description="批號管理(下拉選單 01-需要-先進先出 02-需要 03-不需要)",
+     *         description="批號管理(param_sn=03)",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
@@ -107,7 +107,7 @@ class ProductController extends Controller
      *         name="stock_control",
      *         in="query",
      *         required=true,
-     *         description="是否庫存管理",
+     *         description="是否庫存管理(1=是,0=否)",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
@@ -153,7 +153,7 @@ class ProductController extends Controller
      *             @OA\Property(property="cost_1", type="decimal", example=60),
      *             @OA\Property(property="cost_2", type="integer", example=0),
      *             @OA\Property(property="cost_3", type="integer", example=0),
-     *             @OA\Property(property="batch_control", type="integer", example=true),
+     *             @OA\Property(property="batch_control", type="string", example=01),
      *             @OA\Property(property="valid_days", type="integer", example=0),
      *             @OA\Property(property="effective_date", type="string", example="2025-03-31T08:58:52.001975Z"),
      *             @OA\Property(property="stock_control", type="integer", example=true),
@@ -188,7 +188,7 @@ class ProductController extends Controller
                 'cost_1'            => 'required|integer|max:10000',
                 'cost_2'            => 'nullable|integer|max:10000',
                 'cost_3'            => 'nullable|integer|max:10000',
-                'batch_control'     => 'required|boolean',
+                'batch_control'     => 'required|string|max:255',
                 'valid_days'        => 'required|integer|max:10000',
                 'effective_date'    => 'required|date',
                 'stock_control'     => 'required|boolean',
@@ -253,7 +253,7 @@ class ProductController extends Controller
     
         } catch (\Exception $e) {
             // 其他例外處理
-            Log::error('建立單據資料錯誤：' . $e->getMessage());
+            Log::error('建立資料錯誤：' . $e->getMessage());
     
             return response()->json([
                 'status' => false,
@@ -316,21 +316,134 @@ class ProductController extends Controller
     // 🔍 查詢單一品號
     public function show($ProductNO)
     {
-        $Product = Product::findByProductNO($ProductNO);
-        // 判斷品號是否存在
-        if (!$Product) {
+        try{
+            $Product = Product::findByProductNO($ProductNO);
+            // 判斷品號是否存在
+            if (!$Product) {
+                return response()->json([
+                    'status' => false,
+                    'message' => '品號未找到',
+                    'output'    => null
+                ], 404);
+            }
+    
+            return response()->json([                
+                'status' => true,
+                'message' => 'success',
+                'output'    => $Product
+            ],200);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 捕捉驗證失敗
             return response()->json([
                 'status' => false,
-                'message' => '品號未找到',
-                'output'    => null
-            ], 404);
+                'message' => '驗證錯誤',
+                'errors' => $e->errors()
+            ], 422);
+    
+        } catch (\Exception $e) {
+            // 其他例外處理
+            Log::error('建立資料錯誤：' . $e->getMessage());
+    
+            return response()->json([
+                'status' => false,
+                'message' => '伺服器發生錯誤，請稍後再試',
+                'error' => $e->getMessage() // 上線環境建議拿掉
+            ], 500);
         }
 
-        return response()->json([                
-            'status' => true,
-            'message' => 'success',
-            'output'    => $Product
-        ],200);
+    }
+    /**
+     * @OA\GET(
+     *     path="/api/product2/{keyword}",
+     *     summary="查詢關鍵字",
+     *     description="查詢關鍵字",
+     *     operationId="getproductkeyword",
+     *     tags={"Base_Product"},
+     *     @OA\Parameter(
+     *         name="keyword",
+     *         in="path",
+     *         required=true,
+     *         description="關鍵字(請輸入品名、規格、商品描述)",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="成功",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
+     *             @OA\Property(property="product_no", type="string", example="P001"),
+     *             @OA\Property(property="product_nm", type="string", example="螺絲起子"),
+     *             @OA\Property(property="specification", type="string", example="SP001"),
+     *             @OA\Property(property="price_1", type="integer", example=100),
+     *             @OA\Property(property="price_2", type="integer", example=0),
+     *             @OA\Property(property="price_3", type="integer", example=0),
+     *             @OA\Property(property="cost_1", type="decimal", example=60),
+     *             @OA\Property(property="cost_2", type="integer", example=0),
+     *             @OA\Property(property="cost_3", type="integer", example=0),
+     *             @OA\Property(property="batch_control", type="integer", example=true),
+     *             @OA\Property(property="valid_days", type="integer", example=0),
+     *             @OA\Property(property="effective_date", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="stock_control", type="integer", example=true),
+     *             @OA\Property(property="safety_stock", type="integer", example=0),
+     *             @OA\Property(property="expiry_date", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="description", type="string", example=""),
+     *             @OA\Property(property="is_valid", type="boolean", example=true),
+     *             @OA\Property(property="Createuser", type="string", example="admin"),
+     *             @OA\Property(property="update_user", type="string", example="admin"),
+     *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="未找到品號"
+     *     )
+     * )
+     */
+    // 🔍 查詢關鍵字
+    public function showNM($keyword)
+    {
+        try{
+            // 使用關鍵字查詢品號
+            $Product = Product::where('product_no', 'like', '%' . $keyword . '%')
+                ->orWhere('product_nm', 'like', '%' . $keyword . '%')
+                ->orWhere('specification', 'like', '%' . $keyword . '%')
+                ->get();
+        
+            // 判斷品號是否存在
+            if ($Product->isEmpty()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => '品號未找到',
+                    'output'    => null
+                ], 404);
+            }
+        
+            return response()->json([                
+                'status' => true,
+                'message' => 'success',
+                'output'    => $Product
+            ],200);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 捕捉驗證失敗
+            return response()->json([
+                'status' => false,
+                'message' => '驗證錯誤',
+                'errors' => $e->errors()
+            ], 422);
+    
+        } catch (\Exception $e) {
+            // 其他例外處理
+            Log::error('建立資料錯誤：' . $e->getMessage());
+    
+            return response()->json([
+                'status' => false,
+                'message' => '伺服器發生錯誤，請稍後再試',
+                'error' => $e->getMessage() // 上線環境建議拿掉
+            ], 500);
+        }
+
     }
     /**
      * @OA\GET(

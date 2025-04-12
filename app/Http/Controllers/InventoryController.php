@@ -202,23 +202,121 @@ class InventoryController extends Controller
      * )
      */
     // 🔍 查詢單一庫別
-    public function show($InventoryNO)
+    public function showNo($InventoryNO)
     {
-        $Inventory = Inventory::findByInventoryNO($InventoryNO);
+        try{
+            $Inventory = Inventory::findByInventoryNO($InventoryNO);
         
-       if (!$Inventory) {
+            if (!$Inventory) {
+                 return response()->json([
+                     'status' => false,
+                     'message' => '庫別未找到',
+                     'output'    => null
+                 ], 404);
+             }
+     
+             return response()->json([                
+                 'status' => true,
+                 'message' => 'success',
+                 'output'    => $Inventory
+             ],200);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 捕捉驗證失敗
             return response()->json([
                 'status' => false,
-                'message' => '庫別未找到',
-                'output'    => null
-            ], 404);
+                'message' => '驗證錯誤',
+                'errors' => $e->errors()
+            ], 422);
+    
+        } catch (\Exception $e) {
+            // 其他例外處理
+            Log::error('建立資料錯誤：' . $e->getMessage());
+    
+            return response()->json([
+                'status' => false,
+                'message' => '伺服器發生錯誤，請稍後再試',
+                'error' => $e->getMessage() // 上線環境建議拿掉
+            ], 500);
         }
 
-        return response()->json([                
-            'status' => true,
-            'message' => 'success',
-            'output'    => $Inventory
-        ],200);
+    }
+    /**
+     * @OA\GET(
+     *     path="/api/Inventory2/{InventoryNM}",
+     *     summary="查詢特定庫別資訊",
+     *     description="查詢特定庫別資訊",
+     *     operationId="getInventoryNM",
+     *     tags={"Base_Inventory"},
+     *     @OA\Parameter(
+     *         name="InventoryNM",
+     *         in="path",
+     *         required=true,
+     *         description="庫別名稱",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="成功",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
+     *             @OA\Property(property="inventory_no", type="string", example="INV001"),
+     *             @OA\Property(property="inventory_nm", type="string", example="庫別1"),
+     *             @OA\Property(property="inventory_qty", type="integer", example="1000"),
+     *             @OA\Property(property="lot_num", type="string", example="LOT123"),
+     *             @OA\Property(property="safety_stock", type="integer", example="500"),
+     *             @OA\Property(property="lastStock_receiptdate", type="string", example="2025-03-31"),
+     *             @OA\Property(property="is_valid", type="string", example="1"),
+     *             @OA\Property(property="create_user", type="string", example="admin"),
+     *             @OA\Property(property="create_time", type="string", example="admin"),
+     *             @OA\Property(property="update_user", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="未找到庫別"
+     *     )
+     * )
+     */
+    // 🔍 查詢單一庫別
+    public function showNM($InventoryNM)
+    {
+        try{
+            $Inventory = Inventory::where('inventory_nm', $InventoryNM)->first();
+        
+            if (!$Inventory) {
+                 return response()->json([
+                     'status' => false,
+                     'message' => '庫別未找到',
+                     'output'    => null
+                 ], 404);
+             }
+     
+             return response()->json([                
+                 'status' => true,
+                 'message' => 'success',
+                 'output'    => $Inventory
+             ],200);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 捕捉驗證失敗
+            return response()->json([
+                'status' => false,
+                'message' => '驗證錯誤',
+                'errors' => $e->errors()
+            ], 422);
+    
+        } catch (\Exception $e) {
+            // 其他例外處理
+            Log::error('建立資料錯誤：' . $e->getMessage());
+    
+            return response()->json([
+                'status' => false,
+                'message' => '伺服器發生錯誤，請稍後再試',
+                'error' => $e->getMessage() // 上線環境建議拿掉
+            ], 500);
+        }
+
     }
     /**
      * @OA\GET(

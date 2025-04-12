@@ -191,6 +191,81 @@ class CurrencyController extends Controller
     }
     /**
      * @OA\GET(
+     *     path="/api/Currency2/{CurrencyNM}",
+     *     summary="查詢特定貨幣資訊",
+     *     description="查詢特定貨幣資訊",
+     *     operationId="getCurrencyNM",
+     *     tags={"Base_Currency"},
+     *     @OA\Parameter(
+     *         name="CurrencyNM",
+     *         in="path",
+     *         required=true,
+     *         description="貨幣名稱",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="成功",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
+     *             @OA\Property(property="CurrencyNo", type="string", example="C001"),
+     *             @OA\Property(property="CurrencyNM", type="string", example="台幣"),
+     *             @OA\Property(property="Note", type="string", example="測試測試"),
+     *             @OA\Property(property="is_valid", type="boolean", example=true),
+     *             @OA\Property(property="Createuser", type="string", example="admin"),
+     *             @OA\Property(property="update_user", type="string", example="admin"),
+     *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="未找到貨幣資訊"
+     *     )
+     * )
+     */
+        // 🔍 查詢單一幣別
+        public function showNM($CurrencyNM)
+        {
+            try{
+                $Currency = Currency::where('currency_nm', $CurrencyNM)->first();
+
+                if (!$Currency) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => '未找到貨幣資訊',
+                        'output' => null
+                    ], 404);
+                }
+                // 回應 JSON
+                return response()->json([                
+                    'status' => true,
+                    'message' => 'success',
+                    'output'    => $Currency
+                ],200);                
+            } catch (\Illuminate\Validation\ValidationException $e) {
+                // 捕捉驗證失敗
+                return response()->json([
+                    'status' => false,
+                    'message' => '驗證錯誤',
+                    'errors' => $e->errors()
+                ], 422);
+        
+            } catch (\Exception $e) {
+                // 其他例外處理
+                Log::error('建立資料錯誤：' . $e->getMessage());
+        
+                return response()->json([
+                    'status' => false,
+                    'message' => '伺服器發生錯誤，請稍後再試',
+                    'error' => $e->getMessage() // 上線環境建議拿掉
+                ], 500);
+            }
+
+        }
+    /**
+     * @OA\GET(
      *     path="/api/Currencys/valid",
      *     summary="查詢所有有效貨幣資訊",
      *     description="查詢所有有效貨幣資訊",

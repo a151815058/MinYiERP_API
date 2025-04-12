@@ -44,7 +44,7 @@ class PaymentTermController extends Controller
      *         name="pay_mode",
      *         in="query",
      *         required=true,
-     *         description="付款條件 當月/隔月",
+     *         description="付款條件 1:當月/2:隔月",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
@@ -170,7 +170,7 @@ class PaymentTermController extends Controller
      *     operationId="getPaymentTerm",
      *     tags={"Base_PaymentTerm"},
      *     @OA\Parameter(
-     *         name="terms_no",
+     *         name="TermNo",
      *         in="path",
      *         required=true,
      *         description="付款條件代號",
@@ -204,21 +204,119 @@ class PaymentTermController extends Controller
     // 🔍 查詢單一付款條件
     public function show($TermsNo)
     {
-        $PaymentTerm = PaymentTerm::findByTermsNo($TermsNo);
-        // 如果找不到付款條件，回傳錯誤訊息
-        if (!$PaymentTerm) {
+        try{
+            $PaymentTerm = PaymentTerm::findByTermsNo($TermsNo);
+            // 如果找不到付款條件，回傳錯誤訊息
+            if (!$PaymentTerm) {
+                return response()->json([
+                    'status' => false,
+                    'message' => '付款條件未找到',
+                    'output'    => null
+                ], 404);
+            }
+    
+            return response()->json([                
+                'status' => true,
+                'message' => 'success',
+                'output'    => $PaymentTerm
+            ],200);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 捕捉驗證失敗
             return response()->json([
                 'status' => false,
-                'message' => '付款條件未找到',
-                'output'    => null
-            ], 404);
-        }
+                'message' => '驗證錯誤',
+                'errors' => $e->errors()
+            ], 422);
+        
+        } catch (\Exception $e) {
+            // 其他例外處理
+            Log::error('建立資料錯誤：' . $e->getMessage());
+        
+            return response()->json([
+                'status' => false,
+                'message' => '伺服器發生錯誤，請稍後再試',
+                'error' => $e->getMessage() // 上線環境建議拿掉
+            ], 500);
+            }
 
-        return response()->json([                
-            'status' => true,
-            'message' => 'success',
-            'output'    => $PaymentTerm
-        ],200);
+    }
+    /**
+     * @OA\GET(
+     *     path="/api/PaymentTerm2/{TermNM}",
+     *     summary="查詢特定付款條件",
+     *     description="查詢特定付款條件",
+     *     operationId="getPaymentTermNM",
+     *     tags={"Base_PaymentTerm"},
+     *     @OA\Parameter(
+     *         name="TermNM",
+     *         in="path",
+     *         required=true,
+     *         description="付款條件名稱",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="成功",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
+     *             @OA\Property(property="terms_no", type="string", example="T001"),
+     *             @OA\Property(property="terms_nm", type="string", example="月結30天"),
+     *             @OA\Property(property="terms_days", type="integer", example="30"),
+     *             @OA\Property(property="pay_mode", type="string", example="M001"),
+     *             @OA\Property(property="pay_day", type="integer", example="30"),
+     *             @OA\Property(property="note", type="string", example="測試測試"),
+     *             @OA\Property(property="is_valid", type="boolean", example=true),
+     *             @OA\Property(property="create_user", type="string", example="admin"),
+     *             @OA\Property(property="create_time", type="string", example="admin"),
+     *             @OA\Property(property="update_user", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="未找到付款條件"
+     *     )
+     * )
+     */
+    // 🔍 查詢單一付款條件
+    public function showNM($TermsNM)
+    {
+        try{
+            $PaymentTerm = PaymentTerm::where('terms_nm', $TermsNM)->first();
+            // 如果找不到付款條件，回傳錯誤訊息
+            if (!$PaymentTerm) {
+                return response()->json([
+                    'status' => false,
+                    'message' => '付款條件未找到',
+                    'output'    => null
+                ], 404);
+            }
+    
+            return response()->json([                
+                'status' => true,
+                'message' => 'success',
+                'output'    => $PaymentTerm
+            ],200);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 捕捉驗證失敗
+            return response()->json([
+                'status' => false,
+                'message' => '驗證錯誤',
+                'errors' => $e->errors()
+            ], 422);
+        
+        } catch (\Exception $e) {
+            // 其他例外處理
+            Log::error('建立資料錯誤：' . $e->getMessage());
+        
+            return response()->json([
+                'status' => false,
+                'message' => '伺服器發生錯誤，請稍後再試',
+                'error' => $e->getMessage() // 上線環境建議拿掉
+            ], 500);
+            }
+
     }
     /**
      * @OA\GET(

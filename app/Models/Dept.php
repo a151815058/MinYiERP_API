@@ -38,6 +38,11 @@ class Dept extends Model
         return self::where('dept_no', $deptNo)->first();
     }
 
+    // 🔍 透過 DeptNM 查詢    // 🔍 透過 DeptNo 查詢部門
+    public static function findByDeptNM($deptNM)
+    {
+        return self::where('dept_nm', $deptNM)->first();
+    }
      // 🔍 查詢所有有效部門
     public static function getValidDepts()
     {

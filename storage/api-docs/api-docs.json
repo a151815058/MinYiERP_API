@@ -48,7 +48,7 @@
                     {
                         "name": "bill_encode",
                         "in": "query",
-                        "description": "單據編碼方式",
+                        "description": "單據編碼方式(1:年月日+3碼流水碼,2:手動編碼)",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -57,7 +57,7 @@
                     {
                         "name": "bill_calc",
                         "in": "query",
-                        "description": "單據計算方式",
+                        "description": "單據計算方式(1:單身單筆,2:整張計算)",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -66,7 +66,7 @@
                     {
                         "name": "auto_review",
                         "in": "query",
-                        "description": "是否自動核准",
+                        "description": "是否自動核准(1:是,2:否)",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -75,7 +75,7 @@
                     {
                         "name": "gen_order",
                         "in": "query",
-                        "description": "自動產生單據",
+                        "description": "自動產生單據(1:自動,2:手動)",
                         "required": false,
                         "schema": {
                             "type": "string"
@@ -215,6 +215,108 @@
                         "name": "BillNo",
                         "in": "path",
                         "description": "單據代號",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "bill_no": {
+                                            "type": "string",
+                                            "example": "T001"
+                                        },
+                                        "bill_nm": {
+                                            "type": "string",
+                                            "example": "客戶訂單"
+                                        },
+                                        "bill_type": {
+                                            "type": "string",
+                                            "example": "61"
+                                        },
+                                        "bill_encode": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "bill_calc": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "auto_review": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "gen_order": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "gen_bill_type": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "order_type": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "note": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "is_valid": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "create_user": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "update_user": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "create_time": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "update_time": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "未找到單據資訊"
+                    }
+                }
+            }
+        },
+        "/api/BillInfo2/{BillNM}": {
+            "get": {
+                "tags": [
+                    "Base_BillInfo"
+                ],
+                "summary": "查詢特定單據資訊",
+                "description": "查詢特定單據資訊",
+                "operationId": "getBillInfoNM",
+                "parameters": [
+                    {
+                        "name": "BillNM",
+                        "in": "path",
+                        "description": "單據名稱",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -680,7 +782,7 @@
                     {
                         "name": "taxtype",
                         "in": "query",
-                        "description": "稅別(抓參數資料)",
+                        "description": "稅別(抓參數資料param_sn=10)",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -864,6 +966,152 @@
                         "name": "clientNo",
                         "in": "path",
                         "description": "客戶代號",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "client_no": {
+                                            "type": "string",
+                                            "example": "S003"
+                                        },
+                                        "client_shortnm": {
+                                            "type": "string",
+                                            "example": "測試客戶1"
+                                        },
+                                        "client_fullnm": {
+                                            "type": "string",
+                                            "example": "測試客戶1"
+                                        },
+                                        "zip_code1": {
+                                            "type": "string",
+                                            "example": "12345"
+                                        },
+                                        "address1": {
+                                            "type": "string",
+                                            "example": "台北市信義區"
+                                        },
+                                        "zip_code2": {
+                                            "type": "string",
+                                            "example": "54321"
+                                        },
+                                        "address2": {
+                                            "type": "string",
+                                            "example": "台北市大安區"
+                                        },
+                                        "taxid": {
+                                            "type": "string",
+                                            "example": "12345678"
+                                        },
+                                        "responsible_person": {
+                                            "type": "string",
+                                            "example": "王小明"
+                                        },
+                                        "established_date": {
+                                            "type": "string",
+                                            "example": "2025-03-31"
+                                        },
+                                        "phone": {
+                                            "type": "string",
+                                            "example": "02-12345678"
+                                        },
+                                        "fax": {
+                                            "type": "string",
+                                            "example": "02-87654321"
+                                        },
+                                        "contact_person": {
+                                            "type": "string",
+                                            "example": "李小華"
+                                        },
+                                        "contact_phone": {
+                                            "type": "string",
+                                            "example": "0912345678"
+                                        },
+                                        "mobile_phone": {
+                                            "type": "string",
+                                            "example": "0987654321"
+                                        },
+                                        "contact_email": {
+                                            "type": "string",
+                                            "example": "a151815058@gmail.com"
+                                        },
+                                        "currency_id": {
+                                            "type": "string",
+                                            "example": "TWD"
+                                        },
+                                        "taxtype": {
+                                            "type": "string",
+                                            "example": "T001"
+                                        },
+                                        "paymentterm_id": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "user_id": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "note": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "is_valid": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "create_user": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "create_time": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "update_user": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "update_time": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "未找到客戶資料"
+                    }
+                }
+            }
+        },
+        "/api/Client2/{Keyword}": {
+            "get": {
+                "tags": [
+                    "Base_Client"
+                ],
+                "summary": "查詢關鍵字",
+                "description": "查詢關鍵字",
+                "operationId": "getClient2",
+                "parameters": [
+                    {
+                        "name": "Keyword",
+                        "in": "path",
+                        "description": "關鍵字查詢(統一編號、客戶名稱、地址)",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -1485,6 +1733,80 @@
                 }
             }
         },
+        "/api/Currency2/{CurrencyNM}": {
+            "get": {
+                "tags": [
+                    "Base_Currency"
+                ],
+                "summary": "查詢特定貨幣資訊",
+                "description": "查詢特定貨幣資訊",
+                "operationId": "getCurrencyNM",
+                "parameters": [
+                    {
+                        "name": "CurrencyNM",
+                        "in": "path",
+                        "description": "貨幣名稱",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "CurrencyNo": {
+                                            "type": "string",
+                                            "example": "C001"
+                                        },
+                                        "CurrencyNM": {
+                                            "type": "string",
+                                            "example": "台幣"
+                                        },
+                                        "Note": {
+                                            "type": "string",
+                                            "example": "測試測試"
+                                        },
+                                        "is_valid": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "Createuser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "update_user": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "CreateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "update_time": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "未找到貨幣資訊"
+                    }
+                }
+            }
+        },
         "/api/Currencys/valid": {
             "get": {
                 "tags": [
@@ -1629,7 +1951,7 @@
                 ],
                 "summary": "刪除特定貨幣資訊",
                 "description": "刪除特定貨幣資訊",
-                "operationId": "DelteCurrency",
+                "operationId": "DeleteCurrency",
                 "parameters": [
                     {
                         "name": "CurrencyNo",
@@ -1823,12 +2145,86 @@
                 ],
                 "summary": "查詢特定部門資訊",
                 "description": "查詢特定部門資訊",
-                "operationId": "getdept",
+                "operationId": "getdeptNo",
                 "parameters": [
                     {
                         "name": "DeptNo",
                         "in": "path",
                         "description": "部門代號",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "dept_no": {
+                                            "type": "string",
+                                            "example": "A02"
+                                        },
+                                        "dept_nm": {
+                                            "type": "string",
+                                            "example": "財務處"
+                                        },
+                                        "note": {
+                                            "type": "string",
+                                            "example": "測試測試"
+                                        },
+                                        "is_valid": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "create_user": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "create_time": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "update_user": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "update_time": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "未找到部門"
+                    }
+                }
+            }
+        },
+        "/api/dept2/{dept_nm}": {
+            "get": {
+                "tags": [
+                    "Base_Dept"
+                ],
+                "summary": "查詢特定部門資訊",
+                "description": "查詢特定部門資訊",
+                "operationId": "getdeptNM",
+                "parameters": [
+                    {
+                        "name": "dept_nm",
+                        "in": "path",
+                        "description": "部門名稱",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -1960,7 +2356,7 @@
                 ],
                 "summary": "刪除特定部門資訊",
                 "description": "刪除特定部門資訊",
-                "operationId": "DelteDept",
+                "operationId": "DeleteDept",
                 "parameters": [
                     {
                         "name": "deptNo",
@@ -2447,6 +2843,92 @@
                         "name": "InventoryNO",
                         "in": "path",
                         "description": "庫別代號",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "inventory_no": {
+                                            "type": "string",
+                                            "example": "INV001"
+                                        },
+                                        "inventory_nm": {
+                                            "type": "string",
+                                            "example": "庫別1"
+                                        },
+                                        "inventory_qty": {
+                                            "type": "integer",
+                                            "example": "1000"
+                                        },
+                                        "lot_num": {
+                                            "type": "string",
+                                            "example": "LOT123"
+                                        },
+                                        "safety_stock": {
+                                            "type": "integer",
+                                            "example": "500"
+                                        },
+                                        "lastStock_receiptdate": {
+                                            "type": "string",
+                                            "example": "2025-03-31"
+                                        },
+                                        "is_valid": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "create_user": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "create_time": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "update_user": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "update_time": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "未找到庫別"
+                    }
+                }
+            }
+        },
+        "/api/Inventory2/{InventoryNM}": {
+            "get": {
+                "tags": [
+                    "Base_Inventory"
+                ],
+                "summary": "查詢特定庫別資訊",
+                "description": "查詢特定庫別資訊",
+                "operationId": "getInventoryNM",
+                "parameters": [
+                    {
+                        "name": "InventoryNM",
+                        "in": "path",
+                        "description": "庫別名稱",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -3141,7 +3623,7 @@
                     {
                         "name": "pay_mode",
                         "in": "query",
-                        "description": "付款條件 當月/隔月",
+                        "description": "付款條件 1:當月/2:隔月",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -3253,9 +3735,95 @@
                 "operationId": "getPaymentTerm",
                 "parameters": [
                     {
-                        "name": "terms_no",
+                        "name": "TermNo",
                         "in": "path",
                         "description": "付款條件代號",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "terms_no": {
+                                            "type": "string",
+                                            "example": "T001"
+                                        },
+                                        "terms_nm": {
+                                            "type": "string",
+                                            "example": "月結30天"
+                                        },
+                                        "terms_days": {
+                                            "type": "integer",
+                                            "example": "30"
+                                        },
+                                        "pay_mode": {
+                                            "type": "string",
+                                            "example": "M001"
+                                        },
+                                        "pay_day": {
+                                            "type": "integer",
+                                            "example": "30"
+                                        },
+                                        "note": {
+                                            "type": "string",
+                                            "example": "測試測試"
+                                        },
+                                        "is_valid": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "create_user": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "create_time": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "update_user": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "update_time": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "未找到付款條件"
+                    }
+                }
+            }
+        },
+        "/api/PaymentTerm2/{TermNM}": {
+            "get": {
+                "tags": [
+                    "Base_PaymentTerm"
+                ],
+                "summary": "查詢特定付款條件",
+                "description": "查詢特定付款條件",
+                "operationId": "getPaymentTermNM",
+                "parameters": [
+                    {
+                        "name": "TermNM",
+                        "in": "path",
+                        "description": "付款條件名稱",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -3601,7 +4169,7 @@
                     {
                         "name": "batch_control",
                         "in": "query",
-                        "description": "批號管理(下拉選單 01-需要-先進先出 02-需要 03-不需要)",
+                        "description": "批號管理(param_sn=03)",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -3628,7 +4196,7 @@
                     {
                         "name": "stock_control",
                         "in": "query",
-                        "description": "是否庫存管理",
+                        "description": "是否庫存管理(1=是,0=否)",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -3669,6 +4237,132 @@
                         "schema": {
                             "type": "string",
                             "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "product_no": {
+                                            "type": "string",
+                                            "example": "P001"
+                                        },
+                                        "product_nm": {
+                                            "type": "string",
+                                            "example": "螺絲起子"
+                                        },
+                                        "specification": {
+                                            "type": "string",
+                                            "example": "SP001"
+                                        },
+                                        "price_1": {
+                                            "type": "integer",
+                                            "example": 100
+                                        },
+                                        "price_2": {
+                                            "type": "integer",
+                                            "example": 0
+                                        },
+                                        "price_3": {
+                                            "type": "integer",
+                                            "example": 0
+                                        },
+                                        "cost_1": {
+                                            "type": "decimal",
+                                            "example": 60
+                                        },
+                                        "cost_2": {
+                                            "type": "integer",
+                                            "example": 0
+                                        },
+                                        "cost_3": {
+                                            "type": "integer",
+                                            "example": 0
+                                        },
+                                        "batch_control": {
+                                            "type": "string",
+                                            "example": 1
+                                        },
+                                        "valid_days": {
+                                            "type": "integer",
+                                            "example": 0
+                                        },
+                                        "effective_date": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "stock_control": {
+                                            "type": "integer",
+                                            "example": true
+                                        },
+                                        "safety_stock": {
+                                            "type": "integer",
+                                            "example": 0
+                                        },
+                                        "expiry_date": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "is_valid": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "Createuser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "update_user": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "CreateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "update_time": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "建立失敗"
+                    }
+                }
+            }
+        },
+        "/api/product/{ProductNO}": {
+            "get": {
+                "tags": [
+                    "Base_Product"
+                ],
+                "summary": "查詢特定品號",
+                "description": "查詢特定品號",
+                "operationId": "getproduct",
+                "parameters": [
+                    {
+                        "name": "ProductNO",
+                        "in": "path",
+                        "description": "品號代號",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
                         }
                     }
                 ],
@@ -3774,24 +4468,24 @@
                         }
                     },
                     "404": {
-                        "description": "建立失敗"
+                        "description": "未找到品號"
                     }
                 }
             }
         },
-        "/api/product/{ProductNO}": {
+        "/api/product2/{keyword}": {
             "get": {
                 "tags": [
                     "Base_Product"
                 ],
-                "summary": "查詢特定品號",
-                "description": "查詢特定品號",
-                "operationId": "getproduct",
+                "summary": "查詢關鍵字",
+                "description": "查詢關鍵字",
+                "operationId": "getproductkeyword",
                 "parameters": [
                     {
-                        "name": "ProductNO",
+                        "name": "keyword",
                         "in": "path",
-                        "description": "品號代號",
+                        "description": "關鍵字(請輸入品名、規格、商品描述)",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -4276,7 +4970,7 @@
                         "name": "fax",
                         "in": "query",
                         "description": "公司傳真 (選填)",
-                        "required": true,
+                        "required": false,
                         "schema": {
                             "type": "string"
                         }
@@ -4320,7 +5014,7 @@
                     {
                         "name": "currencyid",
                         "in": "query",
-                        "description": "幣別 (ISO 3碼: USD, TWD)",
+                        "description": "幣別id",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -4329,7 +5023,7 @@
                     {
                         "name": "tax_type",
                         "in": "query",
-                        "description": "稅別 (應稅內含、應稅外加、免稅、零稅率等)",
+                        "description": "稅別 (參數代碼param_sn=04)",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -4338,7 +5032,7 @@
                     {
                         "name": "payment_termid",
                         "in": "query",
-                        "description": "付款條件 (付款條件代碼)",
+                        "description": "付款條件id",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -4347,7 +5041,7 @@
                     {
                         "name": "user_id",
                         "in": "query",
-                        "description": "負責採購人員",
+                        "description": "負責採購人員id",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -4510,9 +5204,155 @@
                 "operationId": "getSupplier",
                 "parameters": [
                     {
-                        "name": "supplier_no",
+                        "name": "supplierNo",
                         "in": "path",
                         "description": "供應商代號",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "supplier_no": {
+                                            "type": "string",
+                                            "example": "S003"
+                                        },
+                                        "supplier_shortnm": {
+                                            "type": "string",
+                                            "example": "測試供應商1"
+                                        },
+                                        "supplier_fullnm": {
+                                            "type": "string",
+                                            "example": "測試供應商1"
+                                        },
+                                        "zipcode1": {
+                                            "type": "string",
+                                            "example": "12345"
+                                        },
+                                        "address1": {
+                                            "type": "string",
+                                            "example": "台北市信義區"
+                                        },
+                                        "zipcode2": {
+                                            "type": "string",
+                                            "example": "54321"
+                                        },
+                                        "address2": {
+                                            "type": "string",
+                                            "example": "台北市大安區"
+                                        },
+                                        "taxid": {
+                                            "type": "string",
+                                            "example": "12345678"
+                                        },
+                                        "responsible_person": {
+                                            "type": "string",
+                                            "example": "王小明"
+                                        },
+                                        "established_date": {
+                                            "type": "string",
+                                            "example": "2025-03-31"
+                                        },
+                                        "phone": {
+                                            "type": "string",
+                                            "example": "02-12345678"
+                                        },
+                                        "fax": {
+                                            "type": "string",
+                                            "example": "02-87654321"
+                                        },
+                                        "contact_person": {
+                                            "type": "string",
+                                            "example": "李小華"
+                                        },
+                                        "contact_phone": {
+                                            "type": "string",
+                                            "example": "0912345678"
+                                        },
+                                        "mobile_phone": {
+                                            "type": "string",
+                                            "example": "0987654321"
+                                        },
+                                        "contact_email": {
+                                            "type": "string",
+                                            "example": "a151815058@gmail.com"
+                                        },
+                                        "currencyid": {
+                                            "type": "string",
+                                            "example": "TWD"
+                                        },
+                                        "tax_type": {
+                                            "type": "string",
+                                            "example": "T001"
+                                        },
+                                        "payment_termid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "user_id": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "note": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "is_valid": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "create_user": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "update_user": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "create_time": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "update_time": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "未找到供應商資料"
+                    }
+                }
+            }
+        },
+        "/api/Supplier2/{Keyword}": {
+            "get": {
+                "tags": [
+                    "Base_Supplier"
+                ],
+                "summary": "查詢關鍵字",
+                "description": "查詢關鍵字",
+                "operationId": "getSupplier2",
+                "parameters": [
+                    {
+                        "name": "Keyword",
+                        "in": "path",
+                        "description": "關鍵字查詢(統一編號、廠商名稱、地址)",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -4957,7 +5797,7 @@
                     {
                         "name": "user_dept",
                         "in": "query",
-                        "description": "人員所在部門(user_id，逗號區分)",
+                        "description": "人員所在部門(dept_id，逗號區分)",
                         "required": false,
                         "schema": {
                             "type": "string"
@@ -5055,6 +5895,154 @@
                         "name": "UsrNo",
                         "in": "path",
                         "description": "人員代號",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "user_no": {
+                                            "type": "string",
+                                            "example": "U001"
+                                        },
+                                        "user_nm": {
+                                            "type": "string",
+                                            "example": "姚佩彤"
+                                        },
+                                        "user_dept": {
+                                            "type": "string",
+                                            "example": "D001"
+                                        },
+                                        "note": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "is_valid": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "create_user": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "create_time": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "update_time": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "未找到人員"
+                    }
+                }
+            }
+        },
+        "/api/user2/{user_nm}": {
+            "get": {
+                "tags": [
+                    "Base_User"
+                ],
+                "summary": "查詢特定人員資訊",
+                "description": "查詢特定部門資訊",
+                "operationId": "getuserNM",
+                "parameters": [
+                    {
+                        "name": "user_nm",
+                        "in": "path",
+                        "description": "人員名稱",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "user_no": {
+                                            "type": "string",
+                                            "example": "U001"
+                                        },
+                                        "user_nm": {
+                                            "type": "string",
+                                            "example": "姚佩彤"
+                                        },
+                                        "user_dept": {
+                                            "type": "string",
+                                            "example": "D001"
+                                        },
+                                        "note": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "is_valid": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "create_user": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "create_time": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "update_time": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "未找到人員"
+                    }
+                }
+            }
+        },
+        "/api/user3/{dept_id}": {
+            "get": {
+                "tags": [
+                    "Base_User"
+                ],
+                "summary": "查詢部門下面的人員",
+                "description": "查詢部門下面的人員",
+                "operationId": "getDeptUser",
+                "parameters": [
+                    {
+                        "name": "dept_id",
+                        "in": "path",
+                        "description": "部門id",
                         "required": true,
                         "schema": {
                             "type": "string"
