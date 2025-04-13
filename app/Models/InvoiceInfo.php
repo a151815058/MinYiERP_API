@@ -10,7 +10,7 @@ class InvoiceInfo extends Model
 {
     use HasFactory;
 
-    protected $table = 'invoiceinfo'; // 明確指定資料表名稱
+    protected $table = 'invoice_info'; // 明確指定資料表名稱
 
     protected $primaryKey = 'uuid';
     public $incrementing = false;
@@ -21,6 +21,7 @@ class InvoiceInfo extends Model
         'uuid',
         'period_start',
         'period_end',
+        'invoice_type',
         'track_code',
         'start_number',
         'end_number',

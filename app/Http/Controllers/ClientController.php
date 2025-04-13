@@ -712,8 +712,13 @@ class ClientController extends Controller
         $SysCode1 = SysCode::where('param_sn', '04')->get();
         // 查詢 '所有有效付款條件' 的資料
         $SysCode2 = PaymentTerm::where('is_valid', '1')->get();
+        // 付款條件(當月、次月的常數資料)
+        $SysCode4 = PaymentTerm::where('is_valid', '1')->get();
         // 查詢 '所有有效人員' 的資料
         $SysCode3 = SysUser::with('depts')->where('is_valid', '1')->get();
+        // 付款條件(當月、次月的常數資料)
+        $SysCode4 = PaymentTerm::where('is_valid', '1')->get();
+        
         try {
             // 檢查是否有結果
             if ($SysCode->isEmpty() ) {
@@ -723,7 +728,8 @@ class ClientController extends Controller
                     'currencyOption' => null,
                     'taxtypeOption' => null,
                     'paymenttermOption' => null,
-                    'sysuserOption' => null
+                    'sysuserOption' => null,
+                    'paymentterm2Option' => null
                 ], 404);
             }
     
@@ -734,7 +740,8 @@ class ClientController extends Controller
                 'currencyOption' => $SysCode,
                 'taxtypeOption' => $SysCode1,
                 'paymenttermOption' => $SysCode2,
-                'sysuserOption' => $SysCode3
+                'sysuserOption' => $SysCode3,
+                'paymentterm2Option' => $SysCode4,
             ], 200);
     
         } catch (\Illuminate\Validation\ValidationException $e) {

@@ -110,7 +110,7 @@ class DeptSysUserController extends Controller
             return response()->json([
                     'status' => true,
                     'message' => 'success',
-                    'user' => $user,
+                    '' => $user,
                     'dept' => $dept,
                 ], 201);
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -266,8 +266,8 @@ class DeptSysUserController extends Controller
                     'DeptNo' => $dept->DeptNo,
                     'DeptNM' => $dept->DeptNM,
                     'is_valid' => $dept->pivot->is_valid,
-                    'Createuser' => $dept->pivot->Createuser,
-                    'CreateTime' => $dept->pivot->CreateTime,
+                    'Createuser' => $dept->pivot->create_user,
+                    'CreateTime' => $dept->pivot->create_time,
                     'update_user' => $dept->pivot->update_user,
                     'update_time' => $dept->pivot->update_time
                 ];

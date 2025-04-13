@@ -72,6 +72,7 @@ Route::get('/Supplier/{supplierNo}', [SupplierController::class, 'show']);  // �
 Route::get('/Supplier2/{Keyword}', [SupplierController::class, 'show2']);  // 透過 Keyword 查詢
 Route::get('/Supplier/valid', [SupplierController::class, 'getValidsuppliers']);// 查詢所有有效供應商
 Route::patch('/Supplier/{supplierNo}/disable', [SupplierController::class, 'disable']); // 軟刪除供應商資訊
+Route::get('/Supplier/showConst', [SupplierController::class, 'showConst']);  // 列出所有供應商需要的常用(下拉、彈窗)
 
 //客戶資料相關  API
 Route::post('/createclient', [ClientController::class, 'store']);// 新增客戶資料
@@ -102,6 +103,7 @@ Route::post('/createInvoiceInfo', [InvoiceInfoController::class, 'store']);// �
 Route::get('/InvoiceInfo/{period}', action: [InvoiceInfoController::class, 'show']);  // 透過期別查詢
 Route::get('/InvoiceInfos/Valid', [InvoiceInfoController::class, 'getVaildInvoiceInfo']);  // 查詢所有有效期別
 Route::patch('/InvoiceInfo/{uuid}/disable', [InvoiceInfoController::class, 'disable']); // 軟刪除期別資訊
+Route::get('/InvoiceInfo/showConst', [InvoiceInfoController::class, 'showConst']);  // 列出所有單據需要的常用(下拉、彈窗)
 
 
 Route::post('/', function () {

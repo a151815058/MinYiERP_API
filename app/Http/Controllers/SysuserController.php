@@ -400,14 +400,14 @@ class SysuserController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => '未有效找到人員',
-                'User'    => null
+                'output'    => null
             ], status: 404);
         }else {
         // 回應 JSON
             return response()->json([
                 'status' => true,
                 'message' => 'success',
-                'User'    => $user
+                'output'    => $user
                 ], 200);
         }
     }
@@ -461,8 +461,8 @@ class SysuserController extends Controller
         }
 
         $user->is_valid = 0;
-        $user->UpdateUser = 'admin';
-        $user->UpdateTime = now();
+        $user->update_user = 'admin';
+        $user->update_time = now();
         $user->save();
 
         return response()->json([

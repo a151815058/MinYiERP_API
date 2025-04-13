@@ -3191,6 +3191,15 @@
                         }
                     },
                     {
+                        "name": "invoice_type",
+                        "in": "query",
+                        "description": "發票類型",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
                         "name": "track_code",
                         "in": "query",
                         "description": "字軌代碼",
@@ -3264,6 +3273,10 @@
                                         "period_end": {
                                             "type": "string",
                                             "example": "2025-02"
+                                        },
+                                        "invoice_type": {
+                                            "type": "string",
+                                            "example": "1"
                                         },
                                         "track_code": {
                                             "type": "string",
@@ -3357,6 +3370,10 @@
                                             "type": "string",
                                             "example": "2025-02"
                                         },
+                                        "invoice_type": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
                                         "track_code": {
                                             "type": "string",
                                             "example": "AQ"
@@ -3437,6 +3454,10 @@
                                         "period_end": {
                                             "type": "string",
                                             "example": "2025-02"
+                                        },
+                                        "invoice_type": {
+                                            "type": "string",
+                                            "example": "1"
                                         },
                                         "track_code": {
                                             "type": "string",
@@ -3530,6 +3551,10 @@
                                             "type": "string",
                                             "example": "2025-02"
                                         },
+                                        "invoice_type": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
                                         "track_code": {
                                             "type": "string",
                                             "example": "AQ"
@@ -3580,6 +3605,24 @@
                     },
                     "404": {
                         "description": "未找到發票"
+                    }
+                }
+            }
+        },
+        "/api/InvoiceInfo/showConst": {
+            "get": {
+                "tags": [
+                    "Base_InvoiceInfo"
+                ],
+                "summary": "列出所有發票字軌需要的常用(下拉、彈窗)",
+                "description": "列出所有發票字軌需要的常用(下拉、彈窗)",
+                "operationId": "Show_InvoiceInfo_ALL_Const",
+                "responses": {
+                    "200": {
+                        "description": "成功"
+                    },
+                    "404": {
+                        "description": "發票字軌需要的常用未找到"
                     }
                 }
             }
@@ -5763,6 +5806,24 @@
                     },
                     "404": {
                         "description": "未找到供應商"
+                    }
+                }
+            }
+        },
+        "/api/Suppliers/showConst": {
+            "get": {
+                "tags": [
+                    "Base_Supplier"
+                ],
+                "summary": "列出所有供應商需要的常用(下拉、彈窗)",
+                "description": "列出所有供應商需要的常用(下拉、彈窗)",
+                "operationId": "Show_Supplier_ALL_Const",
+                "responses": {
+                    "200": {
+                        "description": "成功"
+                    },
+                    "404": {
+                        "description": "供應商需要的常用未找到"
                     }
                 }
             }
