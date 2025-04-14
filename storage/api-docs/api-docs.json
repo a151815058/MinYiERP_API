@@ -4883,7 +4883,7 @@
                 }
             }
         },
-        "/api/products/showConst": {
+        "/api/product/showConst": {
             "get": {
                 "tags": [
                     "Base_Product"

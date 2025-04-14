@@ -579,7 +579,7 @@ class ProductController extends Controller
     }
     /**
      * @OA\get(
-     *     path="/api/products/showConst",
+     *     path="/api/product/showConst",
      *     summary="列出所有品號需要的常用(下拉、彈窗)",
      *     description="列出所有品號需要的常用(下拉、彈窗)",
      *     operationId="Show_Product_ALL_Const",

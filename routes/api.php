@@ -89,6 +89,7 @@ Route::get('/product/{ProductNO}', [ProductController::class, 'show']);  // 透�
 Route::get('/product2/{keyword}', [ProductController::class, 'showNM']);  // 透過 ProductNO 查詢
 Route::get('/products/valid', [ProductController::class, 'getValidProduct']);  // 查詢所有有效品號
 Route::patch('/product/{ProductNO}/disable', [ProductController::class, 'disable']); // 軟刪除品號資訊
+Route::get('/product/showConst', [ClientController::class, 'showConst']);  // 列出所有單據需要的常用(下拉、彈窗)
 
 //庫別資料相關  API
 Route::post('/createInventory', [InventoryController::class, 'store']);// 新增庫別資料

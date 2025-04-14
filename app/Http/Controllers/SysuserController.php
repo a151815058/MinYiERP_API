@@ -90,6 +90,15 @@ class SysuserController extends Controller
             'note'      => 'nullable|string|max:255',
             'is_valid'  => 'required|boolean'
         ]);
+
+        // 輸入驗證
+        if($validator->fails()){
+            return response()->json([
+                'status' => false,
+                'message' => '資料驗證失敗',
+                'errors' => $validator->errors()
+            ], 200);
+        }  
     
         DB::beginTransaction(); // 開始交易
     

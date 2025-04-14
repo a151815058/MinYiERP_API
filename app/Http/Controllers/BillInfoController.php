@@ -138,7 +138,7 @@ class BillInfoController extends Controller
                 'auto_review' => 'required|integer|max:10',
                 'gen_order'   => 'nullable|string|max:10',
                 'gen_bill_type'   => 'nullable|string|max:10',
-                'order_type'  => 'nullable|integer|max:10',
+                //'order_type'  => 'nullable|integer|max:10',
                 'note'       => 'nullable|string|max:255',
                 'is_valid'    => 'required|string'
             ]);
@@ -175,7 +175,7 @@ class BillInfoController extends Controller
                 'bill_calc'   => $request['bill_calc'],
                 'auto_review' => $request['auto_review'],
                 'gen_order'   => $request['gen_order']?? null,
-                'gen_bill_type'   => $request['GenBillType']?? null,
+                'gen_bill_type'   => $request['gen_bill_type']?? null,
                 'order_type'  => $request['order_type']?? null,
                 'note'       => $request['note'] ?? null,
                 'is_valid'    => $request['is_valid']
@@ -557,6 +557,10 @@ class BillInfoController extends Controller
         $SysCode = SysCode::where('note', '單據管理')->get();
         // 查詢 '單據類型=81' 的單據資料
         $BillType81 = BillInfo::where('bill_type', '81')->get();
+        // 查詢 '單據類型=71' 的單據資料
+        $BillType71 = BillInfo::where('bill_type', '71')->get();
+        // 查詢 '單據類型=51' 的單據資料
+        $BillType51 = BillInfo::where('bill_type', '51')->get();
         try {
             // 檢查是否有結果
             if ($SysCode->isEmpty() && $BillType81->isEmpty()) {
@@ -564,7 +568,9 @@ class BillInfoController extends Controller
                     'status' => false,
                     'message' => '常用資料未找到',
                     'bill_typeoption' => null,
-                    'bill_type81option' => null
+                    'bill_type81option' => null,
+                    'bill_type71option' => null,
+                    'bill_type51option' => null
                 ], 404);
             }
     
@@ -573,7 +579,9 @@ class BillInfoController extends Controller
                 'status' => true,
                 'message' => 'success',
                 'bill_typeoption' => $SysCode,
-                'bill_type81option' => $BillType81
+                'bill_type81option' => $BillType81,
+                'bill_type71option' => $BillType71,
+                'bill_type51option' => $BillType51
             ], 200);
     
         } catch (\Illuminate\Validation\ValidationException $e) {
