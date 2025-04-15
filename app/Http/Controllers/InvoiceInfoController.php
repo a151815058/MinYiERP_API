@@ -15,11 +15,11 @@ class InvoiceInfoController extends Controller
 {
     /**
      * @OA\POST(
-     *     path="/api/createInvoiceInfo",
+     *     path="/api/createinvoiceinfo",
      *     summary="新增發票資料",
      *     description="新增發票資料",
-     *     operationId="createInvoiceInfo",
-     *     tags={"Base_InvoiceInfo"},
+     *     operationId="createinvoiceinfo",
+     *     tags={"base_invoiceinfo"},
      *     @OA\Parameter(
      *         name="period_start",
      *         in="query",
@@ -127,7 +127,7 @@ class InvoiceInfoController extends Controller
             ]);
             if($validator->fails()){
                 return response()->json([
-                    'status' => false,
+                    'status' => true,
                     'message' => '資料驗證失敗',
                     'errors' => $validator->errors()
                 ], 200);
@@ -191,7 +191,7 @@ class InvoiceInfoController extends Controller
     
             if (!$InvoiceInfo) {
                 return response()->json([
-                    'status' => false,
+                    'status' => true,
                     'message' => '資料建立失敗',
                     'output' => null
                 ], 404);
@@ -225,11 +225,11 @@ class InvoiceInfoController extends Controller
     }
     /**
      * @OA\GET(
-     *     path="/api/InvoiceInfo/{period}",
+     *     path="/api/invoiceInfo2/{period}",
      *     summary="查詢特定發票資訊",
      *     description="查詢特定發票資訊",
-     *     operationId="getInvoiceInfo",
-     *     tags={"Base_InvoiceInfo"},
+     *     operationId="getinvoiceinfo",
+     *     tags={"base_invoiceinfo"},
      *     @OA\Parameter(
      *         name="period",
      *         in="path",
@@ -281,14 +281,14 @@ class InvoiceInfoController extends Controller
             }
             // 查詢特定發票資訊(以期別查詢，只要起迄其中符合即可)
             $sql = "select  *
-                    from invoiceinfo
-                    where invoiceinfo.period_start = ? or invoiceinfo.period_end = ? and is_valid = '1'";
+                    from invoice_info
+                    where invoice_info.period_start = ? or invoice_info.period_end = ? and is_valid = '1'";
 
             $results = DB::select($sql, [$period, $period]);
 
             if (!$results) {
                 return response()->json([
-                    'status' => false,
+                    'status' => true,
                     'message' => '查無資料',
                     'output' => null
                 ], 200);
@@ -312,11 +312,11 @@ class InvoiceInfoController extends Controller
     }
     /**
      * @OA\GET(
-     *     path="/api/InvoiceInfos/Valid",
+     *     path="/api/invoiceInfo1/valid",
      *     summary="查詢所有有效發票資訊",
      *     description="查詢所有有效發票資訊",
-     *     operationId="GetAllInvoiceInfos",
-     *     tags={"Base_InvoiceInfo"},
+     *     operationId="getallinvoiceinfos",
+     *     tags={"base_invoiceinfo"},
      *     @OA\Response(
      *         response=200,
      *         description="成功",
@@ -345,13 +345,13 @@ class InvoiceInfoController extends Controller
      * )
      */
     // 查詢所有有效發票資訊
-    public function getVaildInvoiceInfo()
+    public function getvaildinvoiceinfo()
     {
         try {
-            $InvoiceInfo = InvoiceInfo::getValidInvoiceInfo();
+            $InvoiceInfo = InvoiceInfo::getValidInvoiceInfo()->where('is_valid', '1')->first();
             if (!$InvoiceInfo) {
                 return response()->json([
-                    'status' => false,
+                    'status' => true,
                     'message' => '有效發票資訊未找到',
                     'output'    => null
                 ], 404);
@@ -382,11 +382,11 @@ class InvoiceInfoController extends Controller
     }
     /**
      * @OA\patch(
-     *     path="/api/InvoiceInfo/{uuid}/disable",
+     *     path="/api/invoiceinfo/{uuid}/disable",
      *     summary="刪除特定發票字軌資訊",
      *     description="刪除特定發票字軌資訊",
-     *     operationId="DeleteInvoiceInfo",
-     *     tags={"Base_InvoiceInfo"},
+     *     operationId="deleteinvoiceinfo",
+     *     tags={"base_invoiceinfo"},
      *     @OA\Parameter(
      *         name="uuid",
      *         in="path",
@@ -425,11 +425,11 @@ class InvoiceInfoController extends Controller
     public function disable($uuid)
     {
         try {
-            $InvoiceInfo = InvoiceInfo::where('uuid', $uuid)->first();
+            $InvoiceInfo = InvoiceInfo::where('uuid', $uuid)->where('is_valid','1')->first();
             
             if (!$InvoiceInfo) {
                 return response()->json([
-                    'status' => false,
+                    'status' => true,
                     'message' => '發票未找到',
                     'output'    => null
                 ], 404);
@@ -466,11 +466,11 @@ class InvoiceInfoController extends Controller
     }
     /**
      * @OA\get(
-     *     path="/api/InvoiceInfo/showConst",
+     *     path="/api/invoiceinfo/showconst",
      *     summary="列出所有發票字軌需要的常用(下拉、彈窗)",
      *     description="列出所有發票字軌需要的常用(下拉、彈窗)",
-     *     operationId="Show_InvoiceInfo_ALL_Const",
-     *     tags={"Base_InvoiceInfo"},
+     *     operationId="show_invoiceinfo_aLL_const",
+     *     tags={"base_invoiceinfo"},
      *     @OA\Response(
      *         response=200,
      *         description="成功"
@@ -482,9 +482,9 @@ class InvoiceInfoController extends Controller
      * )
      */
     // 列出所有發票字軌需要的常用(下拉、彈窗)
-    public function showConst($constant='all'){
+    public function showconst($constant='all'){
         // 查詢 '發票類型' 的資料
-        $SysCode = SysCode::where('param_sn', '08')->get();
+        $SysCode = SysCode::where('param_sn', '08')->where('is_valid','1')->get();
         
         try {
             // 檢查是否有結果

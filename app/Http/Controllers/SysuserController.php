@@ -20,7 +20,7 @@ class SysuserController extends Controller
      *     summary="新增人員資訊",
      *     description="新增人員資訊",
      *     operationId="createuser",
-     *     tags={"Base_User"},
+     *     tags={"base_user"},
      *     @OA\Parameter(
      *         name="user_no",
      *         in="query",
@@ -94,7 +94,7 @@ class SysuserController extends Controller
         // 輸入驗證
         if($validator->fails()){
             return response()->json([
-                'status' => false,
+                'status' => true,
                 'message' => '資料驗證失敗',
                 'errors' => $validator->errors()
             ], 200);
@@ -146,26 +146,34 @@ class SysuserController extends Controller
                 'Depts'   => $attachedDepts
             ], 201);
     
-        } catch (\Exception $e) {
-            DB::rollBack(); // 發生錯誤則回滾
-            Log::error("建立使用者失敗：" . $e->getMessage());
-    
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 捕捉驗證失敗
             return response()->json([
-                'status'  => false,
-                'message' => '建立失敗，請稍後再試',
-                'error'   => $e->getMessage()
+                'status' => false,
+                'message' => '驗證錯誤',
+                'errors' => $e->errors()
+            ], 422);
+        
+        } catch (\Exception $e) {
+            // 其他例外處理
+            Log::error('建立資料錯誤：' . $e->getMessage());
+        
+            return response()->json([
+                'status' => false,
+                'message' => '伺服器發生錯誤，請稍後再試',
+                'error' => $e->getMessage() // 上線環境建議拿掉
             ], 500);
         }
     }
     /**
      * @OA\GET(
-     *     path="/api/user/{UsrNo}",
+     *     path="/api/user/{userno}",
      *     summary="查詢特定人員資訊",
      *     description="查詢特定人員資訊",
      *     operationId="getuser",
-     *     tags={"Base_User"},
+     *     tags={"base_user"},
      *     @OA\Parameter(
-     *         name="UsrNo",
+     *         name="userno",
      *         in="path",
      *         required=true,
      *         description="人員代號",
@@ -194,33 +202,53 @@ class SysuserController extends Controller
      * )
      */
     // 🔍 查詢單一人員
-    public function showNo($UsrNo)
+    public function showno($UsrNo)
     {
-        $user = SysUser::with('depts')->where('user_no', $UsrNo)->first();
+        try{
+            $user = SysUser::with('depts')->where('user_no', $UsrNo)->where('is_valid','1')->first();
 
-        // 回應 JSON
-        if (!$user) {
+            // 回應 JSON
+            if (!$user) {
+                return response()->json([
+                    'status' => true,
+                    'message' => '未找到人員',
+                    'User'    => null
+                ], status: 404);
+            }else {
+                // 回應 JSON
+                return response()->json([
+                    'status' => true,
+                    'message' => 'success',
+                    'User'    => $user
+                 ], 200);
+            }
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 捕捉驗證失敗
             return response()->json([
                 'status' => false,
-                'message' => '未找到人員',
-                'User'    => null
-            ], status: 404);
-        }else {
-            // 回應 JSON
+                'message' => '驗證錯誤',
+                'errors' => $e->errors()
+            ], 422);
+        
+        } catch (\Exception $e) {
+            // 其他例外處理
+            Log::error('建立資料錯誤：' . $e->getMessage());
+        
             return response()->json([
-                'status' => true,
-                'message' => 'success',
-                'User'    => $user
-             ], 200);
+                'status' => false,
+                'message' => '伺服器發生錯誤，請稍後再試',
+                'error' => $e->getMessage() // 上線環境建議拿掉
+            ], 500);
         }
+
     }
     /**
      * @OA\GET(
      *     path="/api/user2/{user_nm}",
      *     summary="查詢特定人員資訊",
      *     description="查詢特定部門資訊",
-     *     operationId="getuserNM",
-     *     tags={"Base_User"},
+     *     operationId="getusernm",
+     *     tags={"base_user"},
      *     @OA\Parameter(
      *         name="user_nm",
      *         in="path",
@@ -251,17 +279,17 @@ class SysuserController extends Controller
      * )
      */
     // 🔍 查詢單一人員
-    public function showNM($UsrNM)
+    public function shownm($UsrNM)
     {
         try{
             $decodedName = urldecode($UsrNM);
-            $user = SysUser::with('depts')->where('user_nm', $decodedName)->first();
+            $user = SysUser::with('depts')->where('user_nm', $decodedName)->where('is_valid','1')->first();
             #$dept = Dept::findByDeptNM($decodedName);
             // 查詢特定發票資訊(以期別查詢，只要起迄其中符合即可)
             
             if (!$user) {
                 return response()->json([
-                    'status' => false,
+                    'status' => true,
                     'message' => '人員未找到',
                     'output'    => null
                 ], 404);
@@ -297,8 +325,8 @@ class SysuserController extends Controller
      *     path="/api/user3/{dept_id}",
      *     summary="查詢部門下面的人員",
      *     description="查詢部門下面的人員",
-     *     operationId="getDeptUser",
-     *     tags={"Base_User"},
+     *     operationId="getdeptuser",
+     *     tags={"base_user"},
      *     @OA\Parameter(
      *         name="dept_id",
      *         in="path",
@@ -329,17 +357,17 @@ class SysuserController extends Controller
      * )
      */
     // 🔍 查詢部門下面的人員
-    public function showDeptUser($dept_id)
+    public function showdeptuser($dept_id)
     {
         try{
             $decodedName = urldecode($dept_id);
-            $user = Dept::with('sysusers')->where('uuid', $dept_id)->first();
+            $user = Dept::with('sysusers')->where('uuid', $dept_id)->where('is_valid','1')->first();
             #$dept = Dept::findByDeptNM($decodedName);
             // 查詢特定發票資訊(以期別查詢，只要起迄其中符合即可)
             
             if (!$user) {
                 return response()->json([
-                    'status' => false,
+                    'status' => true,
                     'message' => '人員未找到',
                     'output'    => null
                 ], 404);
@@ -375,8 +403,8 @@ class SysuserController extends Controller
      *     path="/api/users/valid",
      *     summary="查詢所有有效人員資訊",
      *     description="查詢所有有效人員資訊",
-     *     operationId="GetAllUser",
-     *     tags={"Base_User"},
+     *     operationId="getalluser",
+     *     tags={"base_user"},
      *     @OA\Response(
      *         response=200,
      *         description="成功",
@@ -400,35 +428,54 @@ class SysuserController extends Controller
      * )
      */
     // 🔍 查詢所有有效人員
-    public function getValidusers()
+    public function getvalidusers()
     {
-        $user = SysUser::with('depts')->where('is_valid', '1')->get();
-        //return response()->json(SysUser::getValidusers());
-        // 回應 JSON
-        if (!$user) {
+        try{
+            $user = SysUser::with('depts')->where('is_valid', '1')->get();
+            //return response()->json(SysUser::getValidusers());
+            // 回應 JSON
+            if (!$user) {
+                return response()->json([
+                    'status' => true,
+                    'message' => '未有效找到人員',
+                    'output'    => null
+                ], status: 404);
+            }else {
+            // 回應 JSON
+                return response()->json([
+                    'status' => true,
+                    'message' => 'success',
+                    'output'    => $user
+                    ], 200);
+            }
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 捕捉驗證失敗
             return response()->json([
                 'status' => false,
-                'message' => '未有效找到人員',
-                'output'    => null
-            ], status: 404);
-        }else {
-        // 回應 JSON
+                'message' => '驗證錯誤',
+                'errors' => $e->errors()
+            ], 422);
+    
+        } catch (\Exception $e) {
+            // 其他例外處理
+            Log::error('建立資料錯誤：' . $e->getMessage());
+    
             return response()->json([
-                'status' => true,
-                'message' => 'success',
-                'output'    => $user
-                ], 200);
+                'status' => false,
+                'message' => '伺服器發生錯誤，請稍後再試',
+                'error' => $e->getMessage() // 上線環境建議拿掉
+            ], 500);
         }
     }
     /**
      * @OA\patch(
-     *     path="/api/user/{UsrNo}/disable",
+     *     path="/api/user/{userno}/disable",
      *     summary="刪除特定人員資訊",
      *     description="刪除特定人員資訊",
-     *     operationId="DeleteUser",
-     *     tags={"Base_User"},
+     *     operationId="deleteuser",
+     *     tags={"base_user"},
      *     @OA\Parameter(
-     *         name="UsrNo",
+     *         name="userno",
      *         in="path",
      *         required=true,
      *         description="人員代號",
@@ -459,34 +506,54 @@ class SysuserController extends Controller
     // 🔍 刪除特定部門
     public function disable($UsrNo)
     {
-        $user = SysUser::where('user_no', $UsrNo)->first();
+        try{
+            $user = SysUser::where('user_no', $UsrNo)->where('is_valid','1')->first();
         
-        if (!$user) {
+            if (!$user) {
+                return response()->json([
+                    'status' => true,
+                    'message' => '人員未找到',
+                    'Dept'    => null
+                ], 404);
+            }
+    
+            $user->is_valid = 0;
+            $user->update_user = 'admin';
+            $user->update_time = now();
+            $user->save();
+    
+            return response()->json([
+                'status' => true,
+                'message' => 'success',
+                'Dept'    => $user
+            ], 200);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 捕捉驗證失敗
             return response()->json([
                 'status' => false,
-                'message' => '人員未找到',
-                'Dept'    => null
-            ], 404);
+                'message' => '驗證錯誤',
+                'errors' => $e->errors()
+            ], 422);
+    
+        } catch (\Exception $e) {
+            // 其他例外處理
+            Log::error('建立資料錯誤：' . $e->getMessage());
+    
+            return response()->json([
+                'status' => false,
+                'message' => '伺服器發生錯誤，請稍後再試',
+                'error' => $e->getMessage() // 上線環境建議拿掉
+            ], 500);
         }
 
-        $user->is_valid = 0;
-        $user->update_user = 'admin';
-        $user->update_time = now();
-        $user->save();
-
-        return response()->json([
-            'status' => true,
-            'message' => 'success',
-            'Dept'    => $user
-        ], 200);
     }
     /**
      * @OA\get(
-     *     path="/api/users/showConst",
+     *     path="/api/users/showconst",
      *     summary="列出所有人員需要的常用(下拉、彈窗)",
      *     description="列出所有人員需要的常用(下拉、彈窗)",
-     *     operationId="Show_User_ALL_Const",
-     *     tags={"Base_User"},
+     *     operationId="show_user_all_const",
+     *     tags={"base_user"},
      *     @OA\Response(
      *         response=200,
      *         description="成功"
@@ -498,14 +565,14 @@ class SysuserController extends Controller
      * )
      */
     // 列出所有人員需要的常用(下拉、彈窗)
-    public function showConst($constant='all'){
+    public function showconst($constant='all'){
         // 查詢 '所有有效部門資料' 的資料
         $SysCode = Dept::where('is_valid', '1')->get();
         try {
             // 檢查是否有結果
-            if ($SysCode->isEmpty() ) {
+            if (!$SysCode) {
                 return response()->json([
-                    'status' => false,
+                    'status' => true,
                     'message' => '常用資料未找到',
                     'deptoption' => null
                 ], 404);

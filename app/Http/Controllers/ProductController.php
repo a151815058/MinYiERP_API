@@ -17,8 +17,8 @@ class ProductController extends Controller
      *     path="/api/createproduct",
      *     summary="新增品號資訊",
      *     description="新增品號資訊",
-     *     operationId="createProduct",
-     *     tags={"Base_Product"},
+     *     operationId="createproduct",
+     *     tags={"base_product"},
      *     @OA\Parameter(
      *         name="product_no",
      *         in="query",
@@ -200,7 +200,7 @@ class ProductController extends Controller
             
             if($validator->fails()){
                 return response()->json([
-                    'status' => false,
+                    'status' => true,
                     'message' => '資料驗證失敗',
                     'errors' => $validator->errors()
                 ], 200);
@@ -231,7 +231,7 @@ class ProductController extends Controller
         // 回應 JSON
         if (!$Product) {
             return response()->json([
-                'status' => false,
+                'status' => true,
                 'message' => '品號建立失敗',
                 'output'    => null
             ], status: 404);
@@ -266,13 +266,13 @@ class ProductController extends Controller
     }
     /**
      * @OA\GET(
-     *     path="/api/product/{ProductNO}",
+     *     path="/api/product/{productno}",
      *     summary="查詢特定品號",
      *     description="查詢特定品號",
      *     operationId="getproduct",
-     *     tags={"Base_Product"},
+     *     tags={"base_product"},
      *     @OA\Parameter(
-     *         name="ProductNO",
+     *         name="productno",
      *         in="path",
      *         required=true,
      *         description="品號代號",
@@ -317,11 +317,11 @@ class ProductController extends Controller
     public function show($ProductNO)
     {
         try{
-            $Product = Product::findByProductNO($ProductNO);
+            $Product = Product::findByProductNO($ProductNO)->where('is_valid', '1')->first();
             // 判斷品號是否存在
             if (!$Product) {
                 return response()->json([
-                    'status' => false,
+                    'status' => true,
                     'message' => '品號未找到',
                     'output'    => null
                 ], 404);
@@ -358,7 +358,7 @@ class ProductController extends Controller
      *     summary="查詢關鍵字",
      *     description="查詢關鍵字",
      *     operationId="getproductkeyword",
-     *     tags={"Base_Product"},
+     *     tags={"base_product"},
      *     @OA\Parameter(
      *         name="keyword",
      *         in="path",
@@ -402,19 +402,19 @@ class ProductController extends Controller
      * )
      */
     // 🔍 查詢關鍵字
-    public function showNM($keyword)
+    public function shownm($keyword)
     {
         try{
             // 使用關鍵字查詢品號
             $Product = Product::where('product_no', 'like', '%' . $keyword . '%')
                 ->orWhere('product_nm', 'like', '%' . $keyword . '%')
                 ->orWhere('specification', 'like', '%' . $keyword . '%')
-                ->get();
+                ->where('is_valid','1')->get();
         
             // 判斷品號是否存在
-            if ($Product->isEmpty()) {
+            if (!$Product) {
                 return response()->json([
-                    'status' => false,
+                    'status' => true,
                     'message' => '品號未找到',
                     'output'    => null
                 ], 404);
@@ -447,11 +447,11 @@ class ProductController extends Controller
     }
     /**
      * @OA\GET(
-     *     path="/api/product/valid",
+     *     path="/api/product3/valid",
      *     summary="查詢所有有效品號",
      *     description="查詢所有有效品號",
-     *     operationId="GetAllProduct",
-     *     tags={"Base_Product"},
+     *     operationId="getallproduct",
+     *     tags={"base_product"},
      *     @OA\Response(
      *         response=200,
      *         description="成功",
@@ -488,31 +488,51 @@ class ProductController extends Controller
      * )
      */
     // 🔍 查詢所有有效品號
-    public function getValidProduct()
+    public function getvalidproduct()
     {
-        $Product = Product::where('is_valid', '1')->get();
-        if ($Product->isEmpty()) {
+        try{
+            $Product = Product::where('is_valid', '1')->get();
+            if (!$Product) {
+                return response()->json([
+                    'status' => true,
+                    'message' => '未找到有效品號',
+                    'output'    => null
+                ], 404);
+            }
+            return response()->json([                
+                'status' => true,
+                'message' => 'success',
+                'output'    => $Product
+            ],200);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 捕捉驗證失敗
             return response()->json([
                 'status' => false,
-                'message' => '未找到有效品號',
-                'output'    => null
-            ], 404);
+                'message' => '驗證錯誤',
+                'errors' => $e->errors()
+            ], 422);
+    
+        } catch (\Exception $e) {
+            // 其他例外處理
+            Log::error('建立資料錯誤：' . $e->getMessage());
+    
+            return response()->json([
+                'status' => false,
+                'message' => '伺服器發生錯誤，請稍後再試',
+                'error' => $e->getMessage() // 上線環境建議拿掉
+            ], 500);
         }
-        return response()->json([                
-            'status' => true,
-            'message' => 'success',
-            'output'    => $Product
-        ],200);
+
     }
     /**
      * @OA\patch(
-     *     path="/api/product/{ProductNO}/disable",
+     *     path="/api/product/{productno}/disable",
      *     summary="刪除特定品號",
      *     description="刪除特定品號",
-     *     operationId="DeleteProduct",
-     *     tags={"Base_Product"},
+     *     operationId="deleteproduct",
+     *     tags={"base_product"},
      *     @OA\Parameter(
-     *         name="ProductNO",
+     *         name="productno",
      *         in="path",
      *         required=true,
      *         description="品號",
@@ -556,34 +576,53 @@ class ProductController extends Controller
     // 🔍 刪除特定品號
     public function disable($ProductNO)
     {
-        $Product = Product::findByProductNO($ProductNO);
-        
-        if (!$Product) {
+        try{
+            $Product = Product::findByProductNO($ProductNO)->where('is_valid', '1')->first();
+            // 判斷品號是否存在
+            if (!$Product) {
+                return response()->json([
+                    'status' => false,
+                    'message' => '品號未找到',
+                    'output'    => null
+                ], 404);
+            }
+    
+            $Product->is_valid = 0;
+            $Product->update_user = 'admin';
+            $Product->update_time = now();
+            $Product->save();
+    
+            return response()->json([
+                'status' => true,
+                'message' => 'success',
+                'output'    => $Product
+            ], 200);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 捕捉驗證失敗
             return response()->json([
                 'status' => false,
-                'message' => '品號未找到',
-                'output'    => null
-            ], 404);
+                'message' => '驗證錯誤',
+                'errors' => $e->errors()
+            ], 422);
+    
+        } catch (\Exception $e) {
+            // 其他例外處理
+            Log::error('建立資料錯誤：' . $e->getMessage());
+    
+            return response()->json([
+                'status' => false,
+                'message' => '伺服器發生錯誤，請稍後再試',
+                'error' => $e->getMessage() // 上線環境建議拿掉
+            ], 500);
         }
-
-        $Product->is_valid = 0;
-        $Product->update_user = 'admin';
-        $Product->update_time = now();
-        $Product->save();
-
-        return response()->json([
-            'status' => true,
-            'message' => 'success',
-            'output'    => $Product
-        ], 200);
     }
     /**
      * @OA\get(
-     *     path="/api/product/showConst",
+     *     path="/api/product1/showconst",
      *     summary="列出所有品號需要的常用(下拉、彈窗)",
      *     description="列出所有品號需要的常用(下拉、彈窗)",
-     *     operationId="Show_Product_ALL_Const",
-     *     tags={"Base_Product"},
+     *     operationId="show_product_all_const",
+     *     tags={"base_product"},
      *     @OA\Response(
      *         response=200,
      *         description="成功"
@@ -595,14 +634,14 @@ class ProductController extends Controller
      * )
      */
     // 列出所有品號需要的常用(下拉、彈窗)
-    public function showConst($constant='all'){
+    public function showconst($constant='all'){
         // 查詢 '批號管理' 的資料
-        $SysCode = SysCode::where('param_sn', '03')->get();
+        $SysCode = SysCode::where('param_sn', '03')->where('is_valid','1')->get();
         try {
             // 檢查是否有結果
-            if ($SysCode->isEmpty() ) {
+            if (!$SysCode ) {
                 return response()->json([
-                    'status' => false,
+                    'status' => true,
                     'message' => '常用資料未找到',
                     'batch_controloption' => null,
                 ], 404);

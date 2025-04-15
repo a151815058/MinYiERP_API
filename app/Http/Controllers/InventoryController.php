@@ -13,11 +13,11 @@ class InventoryController extends Controller
 {
     /**
      * @OA\POST(
-     *     path="/api/createInventory",
+     *     path="/api/createinventory",
      *     summary="新增庫別資訊",
      *     description="新增庫別資訊",
-     *     operationId="createInventory",
-     *     tags={"Base_Inventory"},
+     *     operationId="createinventory",
+     *     tags={"base_inventory"},
      *     @OA\Parameter(
      *         name="inventory_no",
      *         in="query",
@@ -109,7 +109,7 @@ class InventoryController extends Controller
 
             if($validator->fails()){
                 return response()->json([
-                    'status' => false,
+                    'status' => true,
                     'message' => '資料驗證失敗',
                     'errors' => $validator->errors()
                 ], 200);
@@ -130,7 +130,7 @@ class InventoryController extends Controller
             // 回應 JSON
             if (!$Inventory) {
                 return response()->json([
-                    'status' => false,
+                    'status' => true,
                     'message' => '庫別建立失敗',
                     'output'    => null
                 ], status: 404);
@@ -164,13 +164,13 @@ class InventoryController extends Controller
     }
     /**
      * @OA\GET(
-     *     path="/api/Inventory/{InventoryNO}",
+     *     path="/api/inventory/{inventoryno}",
      *     summary="查詢特定庫別資訊",
      *     description="查詢特定庫別資訊",
-     *     operationId="getInventory",
-     *     tags={"Base_Inventory"},
+     *     operationId="getinventory",
+     *     tags={"base_inventory"},
      *     @OA\Parameter(
-     *         name="InventoryNO",
+     *         name="inventoryno",
      *         in="path",
      *         required=true,
      *         description="庫別代號",
@@ -202,10 +202,10 @@ class InventoryController extends Controller
      * )
      */
     // 🔍 查詢單一庫別
-    public function showNo($InventoryNO)
+    public function showno($InventoryNO)
     {
         try{
-            $Inventory = Inventory::findByInventoryNO($InventoryNO);
+            $Inventory = Inventory::findByInventoryNO($InventoryNO)->where('is_valid', '1')->first();
         
             if (!$Inventory) {
                  return response()->json([
@@ -242,13 +242,13 @@ class InventoryController extends Controller
     }
     /**
      * @OA\GET(
-     *     path="/api/Inventory2/{InventoryNM}",
+     *     path="/api/inventory2/{inventorynm}",
      *     summary="查詢特定庫別資訊",
      *     description="查詢特定庫別資訊",
-     *     operationId="getInventoryNM",
-     *     tags={"Base_Inventory"},
+     *     operationId="getinventorynm",
+     *     tags={"base_inventory"},
      *     @OA\Parameter(
-     *         name="InventoryNM",
+     *         name="inventorynm",
      *         in="path",
      *         required=true,
      *         description="庫別名稱",
@@ -280,14 +280,14 @@ class InventoryController extends Controller
      * )
      */
     // 🔍 查詢單一庫別
-    public function showNM($InventoryNM)
+    public function shownm($InventoryNM)
     {
         try{
-            $Inventory = Inventory::where('inventory_nm', $InventoryNM)->first();
+            $Inventory = Inventory::where('inventory_nm', $InventoryNM)->where('is_valid','1')->first();
         
             if (!$Inventory) {
                  return response()->json([
-                     'status' => false,
+                     'status' => true,
                      'message' => '庫別未找到',
                      'output'    => null
                  ], 404);
@@ -320,11 +320,11 @@ class InventoryController extends Controller
     }
     /**
      * @OA\GET(
-     *     path="/api/Inventorys/Valid",
+     *     path="/api/inventorys/valid",
      *     summary="查詢所有有效庫別資訊",
      *     description="查詢所有有效庫別資訊",
-     *     operationId="GetAllInventory",
-     *     tags={"Base_Inventory"},
+     *     operationId="getallinventory",
+     *     tags={"base_inventory"},
      *     @OA\Response(
      *         response=200,
      *         description="成功",
@@ -351,32 +351,52 @@ class InventoryController extends Controller
      * )
      */
     // 🔍 查詢所有有效庫別
-    public function getVaildInventory()
+    public function getvaildinventory()
     {
-        $Inventory = Inventory::where('is_valid', '1')->get();
-        //$Inventory = Inventory::getValidInventory();
-        if ($Inventory->isEmpty()) {
+        try{
+            $Inventory = Inventory::where('is_valid', '1')->get();
+            //$Inventory = Inventory::getValidInventory();
+            if ($Inventory->isEmpty()) {
+                return response()->json([
+                    'status' => true,
+                    'message' => '未找到有效庫別',
+                    'output'    => null
+                ], 404);
+            }
+            return response()->json([                
+                'status' => true,
+                'message' => 'success',
+                'output'    => $Inventory
+            ],200);    
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 捕捉驗證失敗
             return response()->json([
                 'status' => false,
-                'message' => '未找到有效庫別',
-                'output'    => null
-            ], 404);
+                'message' => '驗證錯誤',
+                'errors' => $e->errors()
+            ], 422);
+    
+        } catch (\Exception $e) {
+            // 其他例外處理
+            Log::error('建立資料錯誤：' . $e->getMessage());
+    
+            return response()->json([
+                'status' => false,
+                'message' => '伺服器發生錯誤，請稍後再試',
+                'error' => $e->getMessage() // 上線環境建議拿掉
+            ], 500);
         }
-        return response()->json([                
-            'status' => true,
-            'message' => 'success',
-            'output'    => $Inventory
-        ],200);        
+    
     }
     /**
      * @OA\patch(
-     *     path="/api/Inventory/{InventoryNO}/disable",
+     *     path="/api/inventory/{inventoryno}/disable",
      *     summary="刪除特定庫別資訊",
      *     description="刪除特定庫別資訊",
-     *     operationId="DeleteInventory",
-     *     tags={"Base_Inventory"},
+     *     operationId="deleteinventory",
+     *     tags={"base_inventory"},
      *     @OA\Parameter(
-     *         name="InventoryNO",
+     *         name="inventoryno",
      *         in="path",
      *         required=true,
      *         description="庫別代號",
@@ -410,25 +430,45 @@ class InventoryController extends Controller
     // 🔍 刪除特定庫別
     public function disable($InventoryNO)
     {
-        $Inventory = Inventory::findByInventoryNO($InventoryNO);
-        
-        if (!$Inventory) {
+        try{
+            $Inventory = Inventory::findByInventoryNO($InventoryNO)->where('is_valid', '1')->first();
+
+            if (!$Inventory) {
+                return response()->json([
+                    'status' => true,
+                    'message' => '庫別未找到',
+                    'output'    => null
+                ], 404);
+            }
+    
+            $Inventory->is_valid = 0;
+            $Inventory->update_user = 'admin';
+            $Inventory->update_time = now();
+            $Inventory->save();
+    
+            return response()->json([
+                'status' => true,
+                'message' => 'success',
+                'output'    => $Inventory
+            ], 200);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 捕捉驗證失敗
             return response()->json([
                 'status' => false,
-                'message' => '庫別未找到',
-                'output'    => null
-            ], 404);
+                'message' => '驗證錯誤',
+                'errors' => $e->errors()
+            ], 422);
+    
+        } catch (\Exception $e) {
+            // 其他例外處理
+            Log::error('建立資料錯誤：' . $e->getMessage());
+    
+            return response()->json([
+                'status' => false,
+                'message' => '伺服器發生錯誤，請稍後再試',
+                'error' => $e->getMessage() // 上線環境建議拿掉
+            ], 500);
         }
 
-        $Inventory->is_valid = 0;
-        $Inventory->update_user = 'admin';
-        $Inventory->update_time = now();
-        $Inventory->save();
-
-        return response()->json([
-            'status' => true,
-            'message' => 'success',
-            'output'    => $Inventory
-        ], 200);
     }
 }

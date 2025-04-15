@@ -20,23 +20,23 @@ class DeptSysUserController extends Controller
      *     summary="新增人員部門關聯(不對外)",
      *     description="新增人員部門關聯(不對外)",
      *     operationId="assign-userdept",
-     *     tags={"Base_AssignUserDept"},
+     *     tags={"base_assignuserdept"},
      *     @OA\Parameter(
-     *         name="UsrNo",
+     *         name="usrno",
      *         in="query",
      *         required=true,
      *         description="人員代號",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="DeptNo",
+     *         name="deptno",
      *         in="query",
      *         required=true,
      *         description="部門代號",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="Note",
+     *         name="note",
      *         in="query",
      *         required=false,
      *         description="備註",
@@ -82,19 +82,19 @@ class DeptSysUserController extends Controller
 
             if($validator->fails()){
                 return response()->json([
-                    'status' => false,
+                    'status' => true,
                     'message' => '資料驗證失敗',
                     'errors' => $validator->errors()
                 ], 200);
             }
 
             // 取得使用者與部門ID
-            $user = SysUser::where('user_no', $request['user_no'])->first(); // 使用 `first()` 獲取模型
-            $dept = Dept::where('dept_no', $request['dept_no'])->first(); // 使用 `first()` 獲取模型
+            $user = SysUser::where('user_no', $request['user_no'])->where('is_valid','1')->first(); // 使用 `first()` 獲取模型
+            $dept = Dept::where('dept_no', $request['dept_no'])->where('is_valid','1')->first(); // 使用 `first()` 獲取模型
 
             if (!$dept || !$user) {
                 return response()->json([
-                    'status' => false,
+                    'status' => true,
                     'message' => '使用者或部門不存在',
                     'User'    =>  null,
                     'Dept'    =>  null
@@ -135,13 +135,13 @@ class DeptSysUserController extends Controller
 
     /**
      * @OA\GET(
-     *     path="/api/dept-users/{deptId}",
+     *     path="/api/dept-users/{deptid}",
      *     summary="讀取部門成員(不對外)",
      *     description="讀取部門成員(不對外)",
      *     operationId="dept-users",
-     *     tags={"Base_AssignUserDept"},
+     *     tags={"base_assignuserdept"},
      *     @OA\Parameter(
-     *         name="deptId",
+     *         name="deptid",
      *         in="path",
      *         required=true,
      *         description="部門代號",
@@ -172,48 +172,68 @@ class DeptSysUserController extends Controller
      * )
      */
     // 讀取某個部門的所有使用者
-    public function getUsersByDept($deptNo)
+    public function getusersbydept($deptNo)
     {
-        $dept = Dept::with('sysusers')->where('dept_no', $deptNo)->first();
+        try{
+            $dept = Dept::with('sysusers')->where('dept_no', $deptNo)->where('is_valid','1')->first();
 
-        if (!$dept) {
-            return response()->json([
-                'status' => false,
-                'message' => '未找到部門',
-                'dept'    => null,
-                'users'   => null
-            ], 404);
-        }else{
-            return response()->json([
-                'status' => true,
-                'message' => 'success',
-                'dept' => $dept->DeptNM,
-                'output' => $dept->sysusers->map(function ($user) {
-                    return [
-                        'id' => $user->uuid,
-                        'user_no' => $user->UsrNo,
-                        'user_nm' => $user->UsrNM,
-                        'is_valid' => $user->is_valid,
-                        'Createuser' => $user->pivot->Createuser,
-                        'CreateTime' => $user->pivot->CreateTime,
-                        'update_user' => $user->pivot->update_user,
-                        'update_time' => $user->pivot->update_time
-                    ];
-                }),
-            ]);
+            if (!$dept) {
+                return response()->json([
+                    'status' => true,
+                    'message' => '未找到部門',
+                    'dept'    => null,
+                    'users'   => null
+                ], 404);
+            }else{
+                return response()->json([
+                    'status' => true,
+                    'message' => 'success',
+                    'dept' => $dept->DeptNM,
+                    'output' => $dept->sysusers->map(function ($user) {
+                        return [
+                            'id' => $user->uuid,
+                            'user_no' => $user->UsrNo,
+                            'user_nm' => $user->UsrNM,
+                            'is_valid' => $user->is_valid,
+                            'Createuser' => $user->pivot->Createuser,
+                            'CreateTime' => $user->pivot->CreateTime,
+                            'update_user' => $user->pivot->update_user,
+                            'update_time' => $user->pivot->update_time
+                        ];
+                    }),
+                ]);
+            }
+        } catch (\Illuminate\Validation\ValidationException $e) {
+                // 捕捉驗證失敗
+                return response()->json([
+                    'status' => false,
+                    'message' => '驗證錯誤',
+                    'errors' => $e->errors()
+                ], 422);
+        
+        } catch (\Exception $e) {
+                // 其他例外處理
+                Log::error('建立單據資料錯誤：' . $e->getMessage());
+        
+                return response()->json([
+                    'status' => false,
+                    'message' => '伺服器發生錯誤，請稍後再試',
+                    'error' => $e->getMessage() // 上線環境建議拿掉
+                ], 500);
         }
+
     }
 
 
     /**
      * @OA\GET(
-     *     path="/api/user-depts/{userId}",
+     *     path="/api/user-depts/{userid}",
      *     summary="讀取使用者部門(不對外)",
      *     description="讀取使用者部門(不對外)",
      *     operationId="user-depts",
-     *     tags={"Base_AssignUserDept"},
+     *     tags={"base_assignuserdept"},
      *     @OA\Parameter(
-     *         name="userId",
+     *         name="userid",
      *         in="path",
      *         required=true,
      *         description="人員代號",
@@ -244,35 +264,55 @@ class DeptSysUserController extends Controller
      * )
      */
     //讀取某個使用者所屬的部門
-    public function getDeptsByUser($userNo)
+    public function getdeptsbyuser($userNo)
     {
-        $user = SysUser::with('depts')->where('UsrNo', $userNo)->first();
+        try{
+            $user = SysUser::with('depts')->where('UsrNo', $userNo)->where('is_valid','1')->first();
 
-        if (!$user) {
-            return response()->json([
-                'status' => false,
-                'message' => '使用者不存在',
-                'user' => $user
-            ], 404);
+            if (!$user) {
+                return response()->json([
+                    'status' => true,
+                    'message' => '使用者不存在',
+                    'user' => $user
+                ], 404);
+            }
+    
+            return response()->json([         
+                'status' => true,
+                'message' => 'success',
+                'user' => $user->UsrNM,
+                'output' => $user->depts->map(function ($dept) {
+                    return [
+                        'Deptid' => $dept->uuid,
+                        'DeptNo' => $dept->DeptNo,
+                        'DeptNM' => $dept->DeptNM,
+                        'is_valid' => $dept->pivot->is_valid,
+                        'Createuser' => $dept->pivot->create_user,
+                        'CreateTime' => $dept->pivot->create_time,
+                        'update_user' => $dept->pivot->update_user,
+                        'update_time' => $dept->pivot->update_time
+                    ];
+                }),
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+                // 捕捉驗證失敗
+                return response()->json([
+                    'status' => false,
+                    'message' => '驗證錯誤',
+                    'errors' => $e->errors()
+                ], 422);
+        
+        } catch (\Exception $e) {
+                // 其他例外處理
+                Log::error('建立單據資料錯誤：' . $e->getMessage());
+        
+                return response()->json([
+                    'status' => false,
+                    'message' => '伺服器發生錯誤，請稍後再試',
+                    'error' => $e->getMessage() // 上線環境建議拿掉
+                ], 500);
         }
 
-        return response()->json([         
-            'status' => true,
-            'message' => 'success',
-            'user' => $user->UsrNM,
-            'output' => $user->depts->map(function ($dept) {
-                return [
-                    'Deptid' => $dept->uuid,
-                    'DeptNo' => $dept->DeptNo,
-                    'DeptNM' => $dept->DeptNM,
-                    'is_valid' => $dept->pivot->is_valid,
-                    'Createuser' => $dept->pivot->create_user,
-                    'CreateTime' => $dept->pivot->create_time,
-                    'update_user' => $dept->pivot->update_user,
-                    'update_time' => $dept->pivot->update_time
-                ];
-            }),
-        ]);
 
     }
 }

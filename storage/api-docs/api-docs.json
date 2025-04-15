@@ -9,14 +9,14 @@
         "version": "1.0"
     },
     "paths": {
-        "/api/createBillInfo": {
+        "/api/createbillinfo": {
             "post": {
                 "tags": [
-                    "Base_BillInfo"
+                    "base_billinfo"
                 ],
                 "summary": "新增單據資料",
                 "description": "新增單據資料",
-                "operationId": "createBillInfo",
+                "operationId": "createbillinfo",
                 "parameters": [
                     {
                         "name": "bill_no",
@@ -202,17 +202,17 @@
                 }
             }
         },
-        "/api/BillInfo/{BillNo}": {
+        "/api/billinfo/{billno}": {
             "get": {
                 "tags": [
-                    "Base_BillInfo"
+                    "base_billinfo"
                 ],
                 "summary": "查詢特定單據資訊",
                 "description": "查詢特定單據資訊",
-                "operationId": "getBillInfo",
+                "operationId": "getbillinfo",
                 "parameters": [
                     {
-                        "name": "BillNo",
+                        "name": "billno",
                         "in": "path",
                         "description": "單據代號",
                         "required": true,
@@ -304,17 +304,17 @@
                 }
             }
         },
-        "/api/BillInfo2/{BillNM}": {
+        "/api/billinfo2/{billnm}": {
             "get": {
                 "tags": [
-                    "Base_BillInfo"
+                    "base_billinfo"
                 ],
                 "summary": "查詢特定單據資訊",
                 "description": "查詢特定單據資訊",
-                "operationId": "getBillInfoNM",
+                "operationId": "getbillinfonm",
                 "parameters": [
                     {
-                        "name": "BillNM",
+                        "name": "billnm",
                         "in": "path",
                         "description": "單據名稱",
                         "required": true,
@@ -406,14 +406,14 @@
                 }
             }
         },
-        "/api/BillInfos/valid": {
+        "/api/billinfo1/valid": {
             "get": {
                 "tags": [
-                    "Base_BillInfo"
+                    "base_billinfo"
                 ],
                 "summary": "查詢所有有效單據資訊",
                 "description": "查詢所有有效單據資訊",
-                "operationId": "GetAllBills",
+                "operationId": "getallbills",
                 "responses": {
                     "200": {
                         "description": "成功",
@@ -497,17 +497,17 @@
                 }
             }
         },
-        "/api/BillInfo/{BillNo}/disable": {
+        "/api/billinfo/{billno}/disable": {
             "patch": {
                 "tags": [
-                    "Base_BillInfo"
+                    "base_billinfo"
                 ],
                 "summary": "刪除特定部門資訊",
                 "description": "刪除特定部門資訊",
-                "operationId": "DeleteBillInfo",
+                "operationId": "deletebillinfo",
                 "parameters": [
                     {
-                        "name": "BillNo",
+                        "name": "billno",
                         "in": "path",
                         "description": "單據代號",
                         "required": true,
@@ -599,14 +599,14 @@
                 }
             }
         },
-        "/api/BillInfos/showConst": {
+        "/api/billinfo3/showconst": {
             "get": {
                 "tags": [
-                    "Base_BillInfo"
+                    "base_billinfo"
                 ],
                 "summary": "列出所有單據需要的常用(下拉、彈窗)",
                 "description": "列出所有單據需要的常用(下拉、彈窗)",
-                "operationId": "Show_Bill_ALL_Const",
+                "operationId": "Show_bill_aLL_const",
                 "responses": {
                     "200": {
                         "description": "成功"
@@ -620,11 +620,11 @@
         "/api/createclient": {
             "post": {
                 "tags": [
-                    "Base_Client"
+                    "base_client"
                 ],
                 "summary": "新增客戶資料",
                 "description": "新增客戶資料",
-                "operationId": "createClient",
+                "operationId": "createclient",
                 "parameters": [
                     {
                         "name": "client_no",
@@ -953,17 +953,17 @@
                 }
             }
         },
-        "/api/Client/{clientNo}": {
+        "/api/cient1/{clientno}": {
             "get": {
                 "tags": [
-                    "Base_Client"
+                    "base_client"
                 ],
                 "summary": "查詢特定客戶資料",
                 "description": "查詢特定客戶資料",
-                "operationId": "getClient",
+                "operationId": "getclient",
                 "parameters": [
                     {
-                        "name": "clientNo",
+                        "name": "clientno",
                         "in": "path",
                         "description": "客戶代號",
                         "required": true,
@@ -1099,14 +1099,14 @@
                 }
             }
         },
-        "/api/Client2/{Keyword}": {
+        "/api/client2/{Keyword}": {
             "get": {
                 "tags": [
-                    "Base_Client"
+                    "base_client"
                 ],
                 "summary": "查詢關鍵字",
                 "description": "查詢關鍵字",
-                "operationId": "getClient2",
+                "operationId": "getclient2",
                 "parameters": [
                     {
                         "name": "Keyword",
@@ -1245,14 +1245,14 @@
                 }
             }
         },
-        "/api/Clients/valid": {
+        "/api/clients/valid": {
             "get": {
                 "tags": [
-                    "Base_Client"
+                    "base_client"
                 ],
                 "summary": "查詢所有有效客戶",
                 "description": "查詢所有有效客戶",
-                "operationId": "GetAllClient",
+                "operationId": "getallclient",
                 "responses": {
                     "200": {
                         "description": "成功",
@@ -1380,17 +1380,17 @@
                 }
             }
         },
-        "/api/Client/{clientNo}/disable": {
+        "/api/client/{clientno}/disable": {
             "patch": {
                 "tags": [
-                    "Base_Client"
+                    "base_client"
                 ],
                 "summary": "刪除特定客戶",
                 "description": "刪除特定客戶",
-                "operationId": "DeleteClient",
+                "operationId": "deleteclient",
                 "parameters": [
                     {
-                        "name": "clientNo",
+                        "name": "clientno",
                         "in": "path",
                         "description": "客戶代號",
                         "required": true,
@@ -1526,14 +1526,14 @@
                 }
             }
         },
-        "/api/Clients/showConst": {
+        "/api/clients/showconst": {
             "get": {
                 "tags": [
-                    "Base_Client"
+                    "base_client"
                 ],
                 "summary": "列出所有客戶需要的常用(下拉、彈窗)",
                 "description": "列出所有客戶需要的常用(下拉、彈窗)",
-                "operationId": "Show_Client_ALL_Const",
+                "operationId": "show_client_aLL_const",
                 "responses": {
                     "200": {
                         "description": "成功"
@@ -1544,14 +1544,14 @@
                 }
             }
         },
-        "/api/createCurrency": {
+        "/api/createcurrency": {
             "post": {
                 "tags": [
-                    "Base_Currency"
+                    "base_currency"
                 ],
                 "summary": "新增貨幣資訊",
                 "description": "新增貨幣資訊",
-                "operationId": "createCurrency",
+                "operationId": "createcurrency",
                 "parameters": [
                     {
                         "name": "currency_no",
@@ -1659,17 +1659,17 @@
                 }
             }
         },
-        "/api/Currency/{CurrencyNo}": {
+        "/api/currency/{currencyno}": {
             "get": {
                 "tags": [
-                    "Base_Currency"
+                    "base_currency"
                 ],
                 "summary": "查詢特定貨幣資訊",
                 "description": "查詢特定貨幣資訊",
-                "operationId": "getCurrency",
+                "operationId": "getcurrency",
                 "parameters": [
                     {
-                        "name": "CurrencyNo",
+                        "name": "currencyno",
                         "in": "path",
                         "description": "貨幣代號",
                         "required": true,
@@ -1733,17 +1733,17 @@
                 }
             }
         },
-        "/api/Currency2/{CurrencyNM}": {
+        "/api/currency2/{currencynm}": {
             "get": {
                 "tags": [
-                    "Base_Currency"
+                    "base_currency"
                 ],
                 "summary": "查詢特定貨幣資訊",
                 "description": "查詢特定貨幣資訊",
-                "operationId": "getCurrencyNM",
+                "operationId": "getcurrencynm",
                 "parameters": [
                     {
-                        "name": "CurrencyNM",
+                        "name": "currencynm",
                         "in": "path",
                         "description": "貨幣名稱",
                         "required": true,
@@ -1807,14 +1807,14 @@
                 }
             }
         },
-        "/api/Currencys/valid": {
+        "/api/currencys/valid": {
             "get": {
                 "tags": [
-                    "Base_Currency"
+                    "base_currency"
                 ],
                 "summary": "查詢所有有效貨幣資訊",
                 "description": "查詢所有有效貨幣資訊",
-                "operationId": "GetAllCurrency",
+                "operationId": "getallcurrency",
                 "responses": {
                     "200": {
                         "description": "成功",
@@ -1870,17 +1870,17 @@
                 }
             }
         },
-        "/api/exchange-rate/{CurrencyNo}": {
+        "/api/exchange-rate/{currencyno}": {
             "get": {
                 "tags": [
-                    "Base_Currency"
+                    "base_currency"
                 ],
                 "summary": "讀取匯率",
                 "description": "讀取匯率(不對外)",
                 "operationId": "exchangeRate",
                 "parameters": [
                     {
-                        "name": "CurrencyNo",
+                        "name": "currencyno",
                         "in": "path",
                         "description": "貨幣代號",
                         "required": true,
@@ -1944,17 +1944,17 @@
                 }
             }
         },
-        "/api/Currencys/{CurrencyNo}/disable": {
+        "/api/currencys/{currencyno}/disable": {
             "patch": {
                 "tags": [
-                    "Base_Currency"
+                    "base_currency"
                 ],
                 "summary": "刪除特定貨幣資訊",
                 "description": "刪除特定貨幣資訊",
-                "operationId": "DeleteCurrency",
+                "operationId": "deletecurrency",
                 "parameters": [
                     {
-                        "name": "CurrencyNo",
+                        "name": "currencyno",
                         "in": "path",
                         "description": "貨幣代號",
                         "required": true,
@@ -2018,14 +2018,14 @@
                 }
             }
         },
-        "/api/Currencys/showConst": {
+        "/api/currencys/showconst": {
             "get": {
                 "tags": [
-                    "Base_Currency"
+                    "base_currency"
                 ],
                 "summary": "列出所有幣別需要的常用(下拉、彈窗)",
                 "description": "列出所有幣別需要的常用(下拉、彈窗)",
-                "operationId": "Show_Currency_ALL_Const",
+                "operationId": "Show_currency_aLL_const",
                 "responses": {
                     "200": {
                         "description": "成功"
@@ -2039,7 +2039,7 @@
         "/api/createdept": {
             "post": {
                 "tags": [
-                    "Base_Dept"
+                    "base_dept"
                 ],
                 "summary": "新增部門資訊",
                 "description": "新增部門資訊",
@@ -2138,17 +2138,17 @@
                 }
             }
         },
-        "/api/dept/{DeptNo}": {
+        "/api/dept/{deptno}": {
             "get": {
                 "tags": [
-                    "Base_Dept"
+                    "base_dept"
                 ],
                 "summary": "查詢特定部門資訊",
                 "description": "查詢特定部門資訊",
-                "operationId": "getdeptNo",
+                "operationId": "getdeptno",
                 "parameters": [
                     {
-                        "name": "DeptNo",
+                        "name": "deptno",
                         "in": "path",
                         "description": "部門代號",
                         "required": true,
@@ -2215,11 +2215,11 @@
         "/api/dept2/{dept_nm}": {
             "get": {
                 "tags": [
-                    "Base_Dept"
+                    "base_dept"
                 ],
                 "summary": "查詢特定部門資訊",
                 "description": "查詢特定部門資訊",
-                "operationId": "getdeptNM",
+                "operationId": "getdeptnm",
                 "parameters": [
                     {
                         "name": "dept_nm",
@@ -2289,11 +2289,11 @@
         "/api/depts/valid": {
             "get": {
                 "tags": [
-                    "Base_Dept"
+                    "base_dept"
                 ],
                 "summary": "查詢所有有效部門資訊",
                 "description": "查詢所有有效部門資訊",
-                "operationId": "GetAllDept",
+                "operationId": "getalldept",
                 "responses": {
                     "200": {
                         "description": "成功",
@@ -2349,17 +2349,17 @@
                 }
             }
         },
-        "/api/dept/{deptNo}/disable": {
+        "/api/dept/{deptno}/disable": {
             "patch": {
                 "tags": [
-                    "Base_Dept"
+                    "base_dept"
                 ],
                 "summary": "刪除特定部門資訊",
                 "description": "刪除特定部門資訊",
-                "operationId": "DeleteDept",
+                "operationId": "deletedept",
                 "parameters": [
                     {
-                        "name": "deptNo",
+                        "name": "deptno",
                         "in": "path",
                         "description": "部門代號",
                         "required": true,
@@ -2426,14 +2426,14 @@
         "/api/assign-userdept": {
             "post": {
                 "tags": [
-                    "Base_AssignUserDept"
+                    "base_assignuserdept"
                 ],
                 "summary": "新增人員部門關聯(不對外)",
                 "description": "新增人員部門關聯(不對外)",
                 "operationId": "assign-userdept",
                 "parameters": [
                     {
-                        "name": "UsrNo",
+                        "name": "usrno",
                         "in": "query",
                         "description": "人員代號",
                         "required": true,
@@ -2442,7 +2442,7 @@
                         }
                     },
                     {
-                        "name": "DeptNo",
+                        "name": "deptno",
                         "in": "query",
                         "description": "部門代號",
                         "required": true,
@@ -2451,7 +2451,7 @@
                         }
                     },
                     {
-                        "name": "Note",
+                        "name": "note",
                         "in": "query",
                         "description": "備註",
                         "required": false,
@@ -2521,17 +2521,17 @@
                 }
             }
         },
-        "/api/dept-users/{deptId}": {
+        "/api/dept-users/{deptid}": {
             "get": {
                 "tags": [
-                    "Base_AssignUserDept"
+                    "base_assignuserdept"
                 ],
                 "summary": "讀取部門成員(不對外)",
                 "description": "讀取部門成員(不對外)",
                 "operationId": "dept-users",
                 "parameters": [
                     {
-                        "name": "deptId",
+                        "name": "deptid",
                         "in": "path",
                         "description": "部門代號",
                         "required": true,
@@ -2605,17 +2605,17 @@
                 }
             }
         },
-        "/api/user-depts/{userId}": {
+        "/api/user-depts/{userid}": {
             "get": {
                 "tags": [
-                    "Base_AssignUserDept"
+                    "base_assignuserdept"
                 ],
                 "summary": "讀取使用者部門(不對外)",
                 "description": "讀取使用者部門(不對外)",
                 "operationId": "user-depts",
                 "parameters": [
                     {
-                        "name": "userId",
+                        "name": "userid",
                         "in": "path",
                         "description": "人員代號",
                         "required": true,
@@ -2689,14 +2689,14 @@
                 }
             }
         },
-        "/api/createInventory": {
+        "/api/createinventory": {
             "post": {
                 "tags": [
-                    "Base_Inventory"
+                    "base_inventory"
                 ],
                 "summary": "新增庫別資訊",
                 "description": "新增庫別資訊",
-                "operationId": "createInventory",
+                "operationId": "createinventory",
                 "parameters": [
                     {
                         "name": "inventory_no",
@@ -2830,17 +2830,17 @@
                 }
             }
         },
-        "/api/Inventory/{InventoryNO}": {
+        "/api/inventory/{inventoryno}": {
             "get": {
                 "tags": [
-                    "Base_Inventory"
+                    "base_inventory"
                 ],
                 "summary": "查詢特定庫別資訊",
                 "description": "查詢特定庫別資訊",
-                "operationId": "getInventory",
+                "operationId": "getinventory",
                 "parameters": [
                     {
-                        "name": "InventoryNO",
+                        "name": "inventoryno",
                         "in": "path",
                         "description": "庫別代號",
                         "required": true,
@@ -2916,17 +2916,17 @@
                 }
             }
         },
-        "/api/Inventory2/{InventoryNM}": {
+        "/api/inventory2/{inventorynm}": {
             "get": {
                 "tags": [
-                    "Base_Inventory"
+                    "base_inventory"
                 ],
                 "summary": "查詢特定庫別資訊",
                 "description": "查詢特定庫別資訊",
-                "operationId": "getInventoryNM",
+                "operationId": "getinventorynm",
                 "parameters": [
                     {
-                        "name": "InventoryNM",
+                        "name": "inventorynm",
                         "in": "path",
                         "description": "庫別名稱",
                         "required": true,
@@ -3002,14 +3002,14 @@
                 }
             }
         },
-        "/api/Inventorys/Valid": {
+        "/api/inventorys/valid": {
             "get": {
                 "tags": [
-                    "Base_Inventory"
+                    "base_inventory"
                 ],
                 "summary": "查詢所有有效庫別資訊",
                 "description": "查詢所有有效庫別資訊",
-                "operationId": "GetAllInventory",
+                "operationId": "getallinventory",
                 "responses": {
                     "200": {
                         "description": "成功",
@@ -3077,17 +3077,17 @@
                 }
             }
         },
-        "/api/Inventory/{InventoryNO}/disable": {
+        "/api/inventory/{inventoryno}/disable": {
             "patch": {
                 "tags": [
-                    "Base_Inventory"
+                    "base_inventory"
                 ],
                 "summary": "刪除特定庫別資訊",
                 "description": "刪除特定庫別資訊",
-                "operationId": "DeleteInventory",
+                "operationId": "deleteinventory",
                 "parameters": [
                     {
-                        "name": "InventoryNO",
+                        "name": "inventoryno",
                         "in": "path",
                         "description": "庫別代號",
                         "required": true,
@@ -3163,14 +3163,14 @@
                 }
             }
         },
-        "/api/createInvoiceInfo": {
+        "/api/createinvoiceinfo": {
             "post": {
                 "tags": [
-                    "Base_InvoiceInfo"
+                    "base_invoiceinfo"
                 ],
                 "summary": "新增發票資料",
                 "description": "新增發票資料",
-                "operationId": "createInvoiceInfo",
+                "operationId": "createinvoiceinfo",
                 "parameters": [
                     {
                         "name": "period_start",
@@ -3332,14 +3332,14 @@
                 }
             }
         },
-        "/api/InvoiceInfo/{period}": {
+        "/api/invoiceInfo2/{period}": {
             "get": {
                 "tags": [
-                    "Base_InvoiceInfo"
+                    "base_invoiceinfo"
                 ],
                 "summary": "查詢特定發票資訊",
                 "description": "查詢特定發票資訊",
-                "operationId": "getInvoiceInfo",
+                "operationId": "getinvoiceinfo",
                 "parameters": [
                     {
                         "name": "period",
@@ -3428,14 +3428,14 @@
                 }
             }
         },
-        "/api/InvoiceInfos/Valid": {
+        "/api/invoiceInfo1/valid": {
             "get": {
                 "tags": [
-                    "Base_InvoiceInfo"
+                    "base_invoiceinfo"
                 ],
                 "summary": "查詢所有有效發票資訊",
                 "description": "查詢所有有效發票資訊",
-                "operationId": "GetAllInvoiceInfos",
+                "operationId": "getallinvoiceinfos",
                 "responses": {
                     "200": {
                         "description": "成功",
@@ -3513,14 +3513,14 @@
                 }
             }
         },
-        "/api/InvoiceInfo/{uuid}/disable": {
+        "/api/invoiceinfo/{uuid}/disable": {
             "patch": {
                 "tags": [
-                    "Base_InvoiceInfo"
+                    "base_invoiceinfo"
                 ],
                 "summary": "刪除特定發票字軌資訊",
                 "description": "刪除特定發票字軌資訊",
-                "operationId": "DeleteInvoiceInfo",
+                "operationId": "deleteinvoiceinfo",
                 "parameters": [
                     {
                         "name": "uuid",
@@ -3609,14 +3609,14 @@
                 }
             }
         },
-        "/api/InvoiceInfo/showConst": {
+        "/api/invoiceinfo/showconst": {
             "get": {
                 "tags": [
-                    "Base_InvoiceInfo"
+                    "base_invoiceinfo"
                 ],
                 "summary": "列出所有發票字軌需要的常用(下拉、彈窗)",
                 "description": "列出所有發票字軌需要的常用(下拉、彈窗)",
-                "operationId": "Show_InvoiceInfo_ALL_Const",
+                "operationId": "show_invoiceinfo_aLL_const",
                 "responses": {
                     "200": {
                         "description": "成功"
@@ -3627,14 +3627,14 @@
                 }
             }
         },
-        "/api/createPaymentTerm": {
+        "/api/createpaymentterm": {
             "post": {
                 "tags": [
-                    "Base_PaymentTerm"
+                    "base_paymentterm"
                 ],
                 "summary": "新增付款條件",
                 "description": "新增付款條件",
-                "operationId": "createPaymentTerm",
+                "operationId": "createpaymentterm",
                 "parameters": [
                     {
                         "name": "terms_no",
@@ -3768,17 +3768,17 @@
                 }
             }
         },
-        "/api/PaymentTerm/{TermNo}": {
+        "/api/paymentterm/{termno}": {
             "get": {
                 "tags": [
-                    "Base_PaymentTerm"
+                    "base_paymentterm"
                 ],
                 "summary": "查詢特定付款條件",
                 "description": "查詢特定付款條件",
-                "operationId": "getPaymentTerm",
+                "operationId": "getpaymentterm",
                 "parameters": [
                     {
-                        "name": "TermNo",
+                        "name": "termno",
                         "in": "path",
                         "description": "付款條件代號",
                         "required": true,
@@ -3854,17 +3854,17 @@
                 }
             }
         },
-        "/api/PaymentTerm2/{TermNM}": {
+        "/api/paymentterm2/{termnm}": {
             "get": {
                 "tags": [
-                    "Base_PaymentTerm"
+                    "base_paymentterm"
                 ],
                 "summary": "查詢特定付款條件",
                 "description": "查詢特定付款條件",
-                "operationId": "getPaymentTermNM",
+                "operationId": "getpaymenttermnm",
                 "parameters": [
                     {
-                        "name": "TermNM",
+                        "name": "termnm",
                         "in": "path",
                         "description": "付款條件名稱",
                         "required": true,
@@ -3940,14 +3940,14 @@
                 }
             }
         },
-        "/api/PaymentTerms/valid": {
+        "/api/paymentterms/valid": {
             "get": {
                 "tags": [
-                    "Base_PaymentTerm"
+                    "base_paymentterm"
                 ],
                 "summary": "查詢所有有效付款條件",
                 "description": "查詢所有有效付款條件",
-                "operationId": "GetAllPaymentTerm",
+                "operationId": "getallpaymentterm",
                 "responses": {
                     "200": {
                         "description": "成功",
@@ -4015,17 +4015,17 @@
                 }
             }
         },
-        "/api/PaymentTerm/{TermNo}/disable": {
+        "/api/paymentterm/{termno}/disable": {
             "patch": {
                 "tags": [
-                    "Base_PaymentTerm"
+                    "base_paymentterm"
                 ],
                 "summary": "刪除特定付款條件",
                 "description": "刪除特定付款條件",
-                "operationId": "DeletePaymentTerm",
+                "operationId": "deletepaymentterm",
                 "parameters": [
                     {
-                        "name": "TermNo",
+                        "name": "termno",
                         "in": "path",
                         "description": "付款條件代號",
                         "required": true,
@@ -4101,14 +4101,14 @@
                 }
             }
         },
-        "/api/PaymentTerms/showConst": {
+        "/api/paymentterms/showconst": {
             "get": {
                 "tags": [
-                    "Base_PaymentTerm"
+                    "base_paymentterm"
                 ],
                 "summary": "列出所有付款條件需要的常用(下拉、彈窗)",
                 "description": "列出所有付款條件需要的常用(下拉、彈窗)",
-                "operationId": "Show_PaymentTerm_ALL_Const",
+                "operationId": "show_paymentterm_all_const",
                 "responses": {
                     "200": {
                         "description": "成功"
@@ -4122,11 +4122,11 @@
         "/api/createproduct": {
             "post": {
                 "tags": [
-                    "Base_Product"
+                    "base_product"
                 ],
                 "summary": "新增品號資訊",
                 "description": "新增品號資訊",
-                "operationId": "createProduct",
+                "operationId": "createproduct",
                 "parameters": [
                     {
                         "name": "product_no",
@@ -4390,17 +4390,17 @@
                 }
             }
         },
-        "/api/product/{ProductNO}": {
+        "/api/product/{productno}": {
             "get": {
                 "tags": [
-                    "Base_Product"
+                    "base_product"
                 ],
                 "summary": "查詢特定品號",
                 "description": "查詢特定品號",
                 "operationId": "getproduct",
                 "parameters": [
                     {
-                        "name": "ProductNO",
+                        "name": "productno",
                         "in": "path",
                         "description": "品號代號",
                         "required": true,
@@ -4519,7 +4519,7 @@
         "/api/product2/{keyword}": {
             "get": {
                 "tags": [
-                    "Base_Product"
+                    "base_product"
                 ],
                 "summary": "查詢關鍵字",
                 "description": "查詢關鍵字",
@@ -4642,14 +4642,14 @@
                 }
             }
         },
-        "/api/product/valid": {
+        "/api/product3/valid": {
             "get": {
                 "tags": [
-                    "Base_Product"
+                    "base_product"
                 ],
                 "summary": "查詢所有有效品號",
                 "description": "查詢所有有效品號",
-                "operationId": "GetAllProduct",
+                "operationId": "getallproduct",
                 "responses": {
                     "200": {
                         "description": "成功",
@@ -4757,17 +4757,17 @@
                 }
             }
         },
-        "/api/product/{ProductNO}/disable": {
+        "/api/product/{productno}/disable": {
             "patch": {
                 "tags": [
-                    "Base_Product"
+                    "base_product"
                 ],
                 "summary": "刪除特定品號",
                 "description": "刪除特定品號",
-                "operationId": "DeleteProduct",
+                "operationId": "deleteproduct",
                 "parameters": [
                     {
-                        "name": "ProductNO",
+                        "name": "productno",
                         "in": "path",
                         "description": "品號",
                         "required": true,
@@ -4883,14 +4883,14 @@
                 }
             }
         },
-        "/api/product/showConst": {
+        "/api/product1/showconst": {
             "get": {
                 "tags": [
-                    "Base_Product"
+                    "base_product"
                 ],
                 "summary": "列出所有品號需要的常用(下拉、彈窗)",
                 "description": "列出所有品號需要的常用(下拉、彈窗)",
-                "operationId": "Show_Product_ALL_Const",
+                "operationId": "show_product_all_const",
                 "responses": {
                     "200": {
                         "description": "成功"
@@ -4904,11 +4904,11 @@
         "/api/createsupplier": {
             "post": {
                 "tags": [
-                    "Base_Supplier"
+                    "base_supplier"
                 ],
                 "summary": "新增供應商資料",
                 "description": "新增供應商資料",
-                "operationId": "createSupplier",
+                "operationId": "createsupplier",
                 "parameters": [
                     {
                         "name": "supplier_no",
@@ -5237,17 +5237,17 @@
                 }
             }
         },
-        "/api/Supplier/{supplierNo}": {
+        "/api/supplier/{supplierno}": {
             "get": {
                 "tags": [
-                    "Base_Supplier"
+                    "base_supplier"
                 ],
                 "summary": "查詢特定供應商資料",
                 "description": "查詢特定供應商資料",
-                "operationId": "getSupplier",
+                "operationId": "getsupplier",
                 "parameters": [
                     {
-                        "name": "supplierNo",
+                        "name": "supplierno",
                         "in": "path",
                         "description": "供應商代號",
                         "required": true,
@@ -5383,14 +5383,14 @@
                 }
             }
         },
-        "/api/Supplier2/{Keyword}": {
+        "/api/supplier2/{Keyword}": {
             "get": {
                 "tags": [
-                    "Base_Supplier"
+                    "base_supplier"
                 ],
                 "summary": "查詢關鍵字",
                 "description": "查詢關鍵字",
-                "operationId": "getSupplier2",
+                "operationId": "getsupplier2",
                 "parameters": [
                     {
                         "name": "Keyword",
@@ -5529,14 +5529,14 @@
                 }
             }
         },
-        "/api/Supplier/valid": {
+        "/api/supplier3/valid": {
             "get": {
                 "tags": [
-                    "Base_Supplier"
+                    "base_supplier"
                 ],
                 "summary": "查詢所有有效供應商",
                 "description": "查詢所有有效供應商",
-                "operationId": "GetAllSupplier",
+                "operationId": "getallsupplier",
                 "responses": {
                     "200": {
                         "description": "成功",
@@ -5664,17 +5664,17 @@
                 }
             }
         },
-        "/api/Supplier/{supplierNo}/disable": {
+        "/api/supplier/{supplierno}/disable": {
             "patch": {
                 "tags": [
-                    "Base_Supplier"
+                    "base_supplier"
                 ],
                 "summary": "刪除特定供應商",
                 "description": "刪除特定供應商",
-                "operationId": "DeleteSupplier",
+                "operationId": "deletesupplier",
                 "parameters": [
                     {
-                        "name": "supplier_no",
+                        "name": "supplierno",
                         "in": "path",
                         "description": "供應商代號",
                         "required": true,
@@ -5810,14 +5810,14 @@
                 }
             }
         },
-        "/api/Suppliers/showConst": {
+        "/api/supplier4/showconst": {
             "get": {
                 "tags": [
-                    "Base_Supplier"
+                    "base_supplier"
                 ],
                 "summary": "列出所有供應商需要的常用(下拉、彈窗)",
                 "description": "列出所有供應商需要的常用(下拉、彈窗)",
-                "operationId": "Show_Supplier_ALL_Const",
+                "operationId": "show_supplier_all_const",
                 "responses": {
                     "200": {
                         "description": "成功"
@@ -5831,7 +5831,7 @@
         "/api/createuser": {
             "post": {
                 "tags": [
-                    "Base_User"
+                    "base_user"
                 ],
                 "summary": "新增人員資訊",
                 "description": "新增人員資訊",
@@ -5943,17 +5943,17 @@
                 }
             }
         },
-        "/api/user/{UsrNo}": {
+        "/api/user/{userno}": {
             "get": {
                 "tags": [
-                    "Base_User"
+                    "base_user"
                 ],
                 "summary": "查詢特定人員資訊",
                 "description": "查詢特定人員資訊",
                 "operationId": "getuser",
                 "parameters": [
                     {
-                        "name": "UsrNo",
+                        "name": "userno",
                         "in": "path",
                         "description": "人員代號",
                         "required": true,
@@ -6020,11 +6020,11 @@
         "/api/user2/{user_nm}": {
             "get": {
                 "tags": [
-                    "Base_User"
+                    "base_user"
                 ],
                 "summary": "查詢特定人員資訊",
                 "description": "查詢特定部門資訊",
-                "operationId": "getuserNM",
+                "operationId": "getusernm",
                 "parameters": [
                     {
                         "name": "user_nm",
@@ -6094,11 +6094,11 @@
         "/api/user3/{dept_id}": {
             "get": {
                 "tags": [
-                    "Base_User"
+                    "base_user"
                 ],
                 "summary": "查詢部門下面的人員",
                 "description": "查詢部門下面的人員",
-                "operationId": "getDeptUser",
+                "operationId": "getdeptuser",
                 "parameters": [
                     {
                         "name": "dept_id",
@@ -6168,11 +6168,11 @@
         "/api/users/valid": {
             "get": {
                 "tags": [
-                    "Base_User"
+                    "base_user"
                 ],
                 "summary": "查詢所有有效人員資訊",
                 "description": "查詢所有有效人員資訊",
-                "operationId": "GetAllUser",
+                "operationId": "getalluser",
                 "responses": {
                     "200": {
                         "description": "成功",
@@ -6228,17 +6228,17 @@
                 }
             }
         },
-        "/api/user/{UsrNo}/disable": {
+        "/api/user/{userno}/disable": {
             "patch": {
                 "tags": [
-                    "Base_User"
+                    "base_user"
                 ],
                 "summary": "刪除特定人員資訊",
                 "description": "刪除特定人員資訊",
-                "operationId": "DeleteUser",
+                "operationId": "deleteuser",
                 "parameters": [
                     {
-                        "name": "UsrNo",
+                        "name": "userno",
                         "in": "path",
                         "description": "人員代號",
                         "required": true,
@@ -6302,14 +6302,14 @@
                 }
             }
         },
-        "/api/users/showConst": {
+        "/api/users/showconst": {
             "get": {
                 "tags": [
-                    "Base_User"
+                    "base_user"
                 ],
                 "summary": "列出所有人員需要的常用(下拉、彈窗)",
                 "description": "列出所有人員需要的常用(下拉、彈窗)",
-                "operationId": "Show_User_ALL_Const",
+                "operationId": "show_user_all_const",
                 "responses": {
                     "200": {
                         "description": "成功"
@@ -6323,48 +6323,48 @@
     },
     "tags": [
         {
-            "name": "Base_BillInfo",
-            "description": "Base_BillInfo"
+            "name": "base_billinfo",
+            "description": "base_billinfo"
         },
         {
-            "name": "Base_Client",
-            "description": "Base_Client"
+            "name": "base_client",
+            "description": "base_client"
         },
         {
-            "name": "Base_Currency",
-            "description": "Base_Currency"
+            "name": "base_currency",
+            "description": "base_currency"
         },
         {
-            "name": "Base_Dept",
-            "description": "Base_Dept"
+            "name": "base_dept",
+            "description": "base_dept"
         },
         {
-            "name": "Base_AssignUserDept",
-            "description": "Base_AssignUserDept"
+            "name": "base_assignuserdept",
+            "description": "base_assignuserdept"
         },
         {
-            "name": "Base_Inventory",
-            "description": "Base_Inventory"
+            "name": "base_inventory",
+            "description": "base_inventory"
         },
         {
-            "name": "Base_InvoiceInfo",
-            "description": "Base_InvoiceInfo"
+            "name": "base_invoiceinfo",
+            "description": "base_invoiceinfo"
         },
         {
-            "name": "Base_PaymentTerm",
-            "description": "Base_PaymentTerm"
+            "name": "base_paymentterm",
+            "description": "base_paymentterm"
         },
         {
-            "name": "Base_Product",
-            "description": "Base_Product"
+            "name": "base_product",
+            "description": "base_product"
         },
         {
-            "name": "Base_Supplier",
-            "description": "Base_Supplier"
+            "name": "base_supplier",
+            "description": "base_supplier"
         },
         {
-            "name": "Base_User",
-            "description": "Base_User"
+            "name": "base_user",
+            "description": "base_user"
         }
     ]
 }

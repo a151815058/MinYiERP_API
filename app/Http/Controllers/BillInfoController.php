@@ -13,11 +13,11 @@ class BillInfoController extends Controller
 {
     /**
      * @OA\POST(
-     *     path="/api/createBillInfo",
+     *     path="/api/createbillinfo",
      *     summary="新增單據資料",
      *     description="新增單據資料",
-     *     operationId="createBillInfo",
-     *     tags={"Base_BillInfo"},
+     *     operationId="createbillinfo",
+     *     tags={"base_billinfo"},
      *     @OA\Parameter(
      *         name="bill_no",
      *         in="query",
@@ -183,7 +183,7 @@ class BillInfoController extends Controller
     
             if (!$BillInfo) {
                 return response()->json([
-                    'status' => false,
+                    'status' => true,
                     'message' => '單據資料建立失敗',
                     'output' => null
                 ], 404);
@@ -216,13 +216,13 @@ class BillInfoController extends Controller
     }
     /**
      * @OA\GET(
-     *     path="/api/BillInfo/{BillNo}",
+     *     path="/api/billinfo/{billno}",
      *     summary="查詢特定單據資訊",
      *     description="查詢特定單據資訊",
-     *     operationId="getBillInfo",
-     *     tags={"Base_BillInfo"},
+     *     operationId="getbillinfo",
+     *     tags={"base_billinfo"},
      *     @OA\Parameter(
-     *         name="BillNo",
+     *         name="billno",
      *         in="path",
      *         required=true,
      *         description="單據代號",
@@ -261,11 +261,11 @@ class BillInfoController extends Controller
     public function show($BillNo)
     {
         try {
-            $BillNo = BillInfo::findByBillNo($BillNo);
+            $BillNo = BillInfo::findByBillNo($BillNo)->where('is_valid','1' )->first();
             
             if (!$BillNo) {
                 return response()->json([
-                    'status' => false,
+                    'status' => true,
                     'message' => '單據未找到',
                     'output'    => null
                 ], 404);
@@ -297,13 +297,13 @@ class BillInfoController extends Controller
     }
     /**
      * @OA\GET(
-     *     path="/api/BillInfo2/{BillNM}",
+     *     path="/api/billinfo2/{billnm}",
      *     summary="查詢特定單據資訊",
      *     description="查詢特定單據資訊",
-     *     operationId="getBillInfoNM",
-     *     tags={"Base_BillInfo"},
+     *     operationId="getbillinfonm",
+     *     tags={"base_billinfo"},
      *     @OA\Parameter(
-     *         name="BillNM",
+     *         name="billnm",
      *         in="path",
      *         required=true,
      *         description="單據名稱",
@@ -339,14 +339,14 @@ class BillInfoController extends Controller
      * )
      */
     // 🔍 查詢單一付款條件
-    public function showNM($BillNM)
+    public function shownm($BillNM)
     {
         try {
-            $BillNM = BillInfo::where('bill_nm', $BillNM)->first();
+            $BillNM = BillInfo::where('bill_nm', $BillNM)->where('is_valid','1')->first();
             
             if (!$BillNM) {
                 return response()->json([
-                    'status' => false,
+                    'status' => true,
                     'message' => '單據未找到',
                     'output'    => null
                 ], 404);
@@ -378,11 +378,11 @@ class BillInfoController extends Controller
     }
     /**
      * @OA\GET(
-     *     path="/api/BillInfos/valid",
+     *     path="/api/billinfo1/valid",
      *     summary="查詢所有有效單據資訊",
      *     description="查詢所有有效單據資訊",
-     *     operationId="GetAllBills",
-     *     tags={"Base_BillInfo"},
+     *     operationId="getallbills",
+     *     tags={"base_billinfo"},
      *     @OA\Response(
      *         response=200,
      *         description="成功",
@@ -413,13 +413,13 @@ class BillInfoController extends Controller
      * )
      */
     // 🔍 查詢所有有效部門
-    public function getValidBillNos()
+    public function getvalidbillnos()
     {
         try {
             $BillInfo = BillInfo::where('is_valid', '1')->get();
             if (!$BillInfo) {
                 return response()->json([
-                    'status' => false,
+                    'status' => true,
                     'message' => '有效單據資訊未找到',
                     'output'    => null
                 ], 404);
@@ -450,13 +450,13 @@ class BillInfoController extends Controller
     }
     /**
      * @OA\patch(
-     *     path="/api/BillInfo/{BillNo}/disable",
+     *     path="/api/billinfo/{billno}/disable",
      *     summary="刪除特定部門資訊",
      *     description="刪除特定部門資訊",
-     *     operationId="DeleteBillInfo",
-     *     tags={"Base_BillInfo"},
+     *     operationId="deletebillinfo",
+     *     tags={"base_billinfo"},
      *     @OA\Parameter(
-     *         name="BillNo",
+     *         name="billno",
      *         in="path",
      *         required=true,
      *         description="單據代號",
@@ -495,11 +495,11 @@ class BillInfoController extends Controller
     public function disable($BillNo)
     {
         try {
-            $BillNo = BillInfo::findByBillNo($BillNo);
+            $BillNo = BillInfo::findByBillNo($BillNo)->where('is_valid','1')->first();
             
             if (!$BillNo) {
                 return response()->json([
-                    'status' => false,
+                    'status' => true,
                     'message' => '單據未找到',
                     'output'    => null
                 ], 404);
@@ -536,11 +536,11 @@ class BillInfoController extends Controller
     }
     /**
      * @OA\get(
-     *     path="/api/BillInfos/showConst",
+     *     path="/api/billinfo3/showconst",
      *     summary="列出所有單據需要的常用(下拉、彈窗)",
      *     description="列出所有單據需要的常用(下拉、彈窗)",
-     *     operationId="Show_Bill_ALL_Const",
-     *     tags={"Base_BillInfo"},
+     *     operationId="Show_bill_aLL_const",
+     *     tags={"base_billinfo"},
      *     @OA\Response(
      *         response=200,
      *         description="成功"
@@ -552,20 +552,20 @@ class BillInfoController extends Controller
      * )
      */
     // 列出所有單據需要的常用(下拉、彈窗)
-    public function showConst($constant='all'){
+    public function showconst($constant='all'){
         // 查詢 '單據管理' 的資料
-        $SysCode = SysCode::where('note', '單據管理')->get();
+        $SysCode = SysCode::where('note', '單據管理')->where('is_valid','1')->get();
         // 查詢 '單據類型=81' 的單據資料
-        $BillType81 = BillInfo::where('bill_type', '81')->get();
+        $BillType81 = BillInfo::where('bill_type', '81')->where('is_valid','1')->get();
         // 查詢 '單據類型=71' 的單據資料
-        $BillType71 = BillInfo::where('bill_type', '71')->get();
+        $BillType71 = BillInfo::where('bill_type', '71')->where('is_valid','1')->get();
         // 查詢 '單據類型=51' 的單據資料
-        $BillType51 = BillInfo::where('bill_type', '51')->get();
+        $BillType51 = BillInfo::where('bill_type', '51')->where('is_valid','1')->get();
         try {
             // 檢查是否有結果
             if ($SysCode->isEmpty() && $BillType81->isEmpty()) {
                 return response()->json([
-                    'status' => false,
+                    'status' => true,
                     'message' => '常用資料未找到',
                     'bill_typeoption' => null,
                     'bill_type81option' => null,

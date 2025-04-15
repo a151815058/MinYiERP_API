@@ -14,11 +14,11 @@ class PaymentTermController extends Controller
 {
         /**
      * @OA\POST(
-     *     path="/api/createPaymentTerm",
+     *     path="/api/createpaymentterm",
      *     summary="新增付款條件",
      *     description="新增付款條件",
-     *     operationId="createPaymentTerm",
-     *     tags={"Base_PaymentTerm"},
+     *     operationId="createpaymentterm",
+     *     tags={"base_paymentterm"},
      *     @OA\Parameter(
      *         name="terms_no",
      *         in="query",
@@ -110,7 +110,7 @@ class PaymentTermController extends Controller
 
                 if($validator->fails()){
                     return response()->json([
-                        'status' => false,
+                        'status' => true,
                         'message' => '資料驗證失敗',
                         'errors' => $validator->errors()
                     ], 200);
@@ -164,13 +164,13 @@ class PaymentTermController extends Controller
     }
     /**
      * @OA\GET(
-     *     path="/api/PaymentTerm/{TermNo}",
+     *     path="/api/paymentterm/{termno}",
      *     summary="查詢特定付款條件",
      *     description="查詢特定付款條件",
-     *     operationId="getPaymentTerm",
-     *     tags={"Base_PaymentTerm"},
+     *     operationId="getpaymentterm",
+     *     tags={"base_paymentterm"},
      *     @OA\Parameter(
-     *         name="TermNo",
+     *         name="termno",
      *         in="path",
      *         required=true,
      *         description="付款條件代號",
@@ -205,11 +205,11 @@ class PaymentTermController extends Controller
     public function show($TermsNo)
     {
         try{
-            $PaymentTerm = PaymentTerm::findByTermsNo($TermsNo);
+            $PaymentTerm = PaymentTerm::findByTermsNo($TermsNo)->where('is_valid', 1)->first();
             // 如果找不到付款條件，回傳錯誤訊息
             if (!$PaymentTerm) {
                 return response()->json([
-                    'status' => false,
+                    'status' => true,
                     'message' => '付款條件未找到',
                     'output'    => null
                 ], 404);
@@ -242,13 +242,13 @@ class PaymentTermController extends Controller
     }
     /**
      * @OA\GET(
-     *     path="/api/PaymentTerm2/{TermNM}",
+     *     path="/api/paymentterm2/{termnm}",
      *     summary="查詢特定付款條件",
      *     description="查詢特定付款條件",
-     *     operationId="getPaymentTermNM",
-     *     tags={"Base_PaymentTerm"},
+     *     operationId="getpaymenttermnm",
+     *     tags={"base_paymentterm"},
      *     @OA\Parameter(
-     *         name="TermNM",
+     *         name="termnm",
      *         in="path",
      *         required=true,
      *         description="付款條件名稱",
@@ -280,14 +280,14 @@ class PaymentTermController extends Controller
      * )
      */
     // 🔍 查詢單一付款條件
-    public function showNM($TermsNM)
+    public function shownm($TermsNM)
     {
         try{
-            $PaymentTerm = PaymentTerm::where('terms_nm', $TermsNM)->first();
+            $PaymentTerm = PaymentTerm::where('terms_nm', $TermsNM)->where('is_valid','1')->first();
             // 如果找不到付款條件，回傳錯誤訊息
             if (!$PaymentTerm) {
                 return response()->json([
-                    'status' => false,
+                    'status' => true,
                     'message' => '付款條件未找到',
                     'output'    => null
                 ], 404);
@@ -315,16 +315,16 @@ class PaymentTermController extends Controller
                 'message' => '伺服器發生錯誤，請稍後再試',
                 'error' => $e->getMessage() // 上線環境建議拿掉
             ], 500);
-            }
+        }
 
     }
     /**
      * @OA\GET(
-     *     path="/api/PaymentTerms/valid",
+     *     path="/api/paymentterms/valid",
      *     summary="查詢所有有效付款條件",
      *     description="查詢所有有效付款條件",
-     *     operationId="GetAllPaymentTerm",
-     *     tags={"Base_PaymentTerm"},
+     *     operationId="getallpaymentterm",
+     *     tags={"base_paymentterm"},
      *     @OA\Response(
      *         response=200,
      *         description="成功",
@@ -351,32 +351,52 @@ class PaymentTermController extends Controller
      * )
      */
     // 🔍 查詢所有有效付款條件
-    public function getValidTerms()
+    public function getvalidterms()
     {
-        $PaymentTerm = PaymentTerm::getValidTerms();
+        try{
+            $PaymentTerm = PaymentTerm::getValidTerms();
         
-        if ($PaymentTerm->isEmpty()) {
+            if ($PaymentTerm->isEmpty()) {
+                return response()->json([
+                    'status' => true,
+                    'message' => '未找到有效付款條件',
+                    'output'    => null
+                ], 404);
+            }
+            return response()->json([                
+                'status' => true,
+                'message' => 'success',
+                'output'    => $PaymentTerm
+            ],200);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 捕捉驗證失敗
             return response()->json([
                 'status' => false,
-                'message' => '未找到有效付款條件',
-                'output'    => null
-            ], 404);
+                'message' => '驗證錯誤',
+                'errors' => $e->errors()
+            ], 422);
+        
+        } catch (\Exception $e) {
+            // 其他例外處理
+            Log::error('建立資料錯誤：' . $e->getMessage());
+        
+            return response()->json([
+                'status' => false,
+                'message' => '伺服器發生錯誤，請稍後再試',
+                'error' => $e->getMessage() // 上線環境建議拿掉
+            ], 500);
         }
-        return response()->json([                
-            'status' => true,
-            'message' => 'success',
-            'output'    => $PaymentTerm
-        ],200);
+
     }
     /**
      * @OA\patch(
-     *     path="/api/PaymentTerm/{TermNo}/disable",
+     *     path="/api/paymentterm/{termno}/disable",
      *     summary="刪除特定付款條件",
      *     description="刪除特定付款條件",
-     *     operationId="DeletePaymentTerm",
-     *     tags={"Base_PaymentTerm"},
+     *     operationId="deletepaymentterm",
+     *     tags={"base_paymentterm"},
      *     @OA\Parameter(
-     *         name="TermNo",
+     *         name="termno",
      *         in="path",
      *         required=true,
      *         description="付款條件代號",
@@ -410,34 +430,53 @@ class PaymentTermController extends Controller
     // 🔍 刪除特定付款條件
     public function disable($TermsNo)
     {
-        $PaymentTerm = PaymentTerm::findByTermsNo($TermsNo);
+        try{
+            $PaymentTerm = PaymentTerm::findByTermsNo($TermsNo)->where('is_valid', 1)->first();
         
-        if (!$PaymentTerm) {
+            if (!$PaymentTerm) {
+                return response()->json([
+                    'status' => false,
+                    'message' => '付款條件未找到',
+                    'output'    => null
+                ], 404);
+            }
+    
+            $PaymentTerm->is_valid = 0;
+            $PaymentTerm->update_user = 'admin';
+            $PaymentTerm->update_time = now();
+            $PaymentTerm->save();
+    
+            return response()->json([
+                'status' => true,
+                'message' => 'success',
+                'output'    => $PaymentTerm
+            ], 200);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 捕捉驗證失敗
             return response()->json([
                 'status' => false,
-                'message' => '付款條件未找到',
-                'output'    => null
-            ], 404);
+                'message' => '驗證錯誤',
+                'errors' => $e->errors()
+            ], 422);
+        
+        } catch (\Exception $e) {
+            // 其他例外處理
+            Log::error('建立資料錯誤：' . $e->getMessage());
+        
+            return response()->json([
+                'status' => false,
+                'message' => '伺服器發生錯誤，請稍後再試',
+                'error' => $e->getMessage() // 上線環境建議拿掉
+            ], 500);
         }
-
-        $PaymentTerm->is_valid = 0;
-        $PaymentTerm->update_user = 'admin';
-        $PaymentTerm->update_time = now();
-        $PaymentTerm->save();
-
-        return response()->json([
-            'status' => true,
-            'message' => 'success',
-            'output'    => $PaymentTerm
-        ], 200);
     }
     /**
      * @OA\get(
-     *     path="/api/PaymentTerms/showConst",
+     *     path="/api/paymentterms/showconst",
      *     summary="列出所有付款條件需要的常用(下拉、彈窗)",
      *     description="列出所有付款條件需要的常用(下拉、彈窗)",
-     *     operationId="Show_PaymentTerm_ALL_Const",
-     *     tags={"Base_PaymentTerm"},
+     *     operationId="show_paymentterm_all_const",
+     *     tags={"base_paymentterm"},
      *     @OA\Response(
      *         response=200,
      *         description="成功"
@@ -449,14 +488,14 @@ class PaymentTermController extends Controller
      * )
      */
     // 列出所有付款條件需要的常用(下拉、彈窗)
-    public function showConst($constant='all'){
+    public function showconst($constant='all'){
         // 查詢 '所有付款條件' 的資料
-        $SysCode = SysCode::where('param_sn', '02')->get();
+        $SysCode = SysCode::where('param_sn', '02')->where('is_valid','1')->get();
         try {
             // 檢查是否有結果
             if ($SysCode->isEmpty() ) {
                 return response()->json([
-                    'status' => false,
+                    'status' => true,
                     'message' => '常用資料未找到',
                     'paymenttermoption' => null
                 ], 404);

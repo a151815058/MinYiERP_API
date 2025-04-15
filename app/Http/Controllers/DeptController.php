@@ -19,7 +19,7 @@ class DeptController extends Controller
      *     summary="新增部門資訊",
      *     description="新增部門資訊",
      *     operationId="createdept",
-     *     tags={"Base_Dept"},
+     *     tags={"base_dept"},
      *     @OA\Parameter(
      *         name="dept_no",
      *         in="query",
@@ -83,7 +83,7 @@ class DeptController extends Controller
             ]);
             if($validator->fails()){
                 return response()->json([
-                    'status' => false,
+                    'status' => true,
                     'message' => '資料驗證失敗',
                     'errors' => $validator->errors()
                 ], 200);
@@ -100,7 +100,7 @@ class DeptController extends Controller
 
             if (!$dept) {
                 return response()->json([
-                    'status' => false,
+                    'status' => true,
                     'message' => '部門建立失敗',
                     'output'    => null
                 ], status: 404);
@@ -134,13 +134,13 @@ class DeptController extends Controller
     }
     /**
      * @OA\GET(
-     *     path="/api/dept/{DeptNo}",
+     *     path="/api/dept/{deptno}",
      *     summary="查詢特定部門資訊",
      *     description="查詢特定部門資訊",
-     *     operationId="getdeptNo",
-     *     tags={"Base_Dept"},
+     *     operationId="getdeptno",
+     *     tags={"base_dept"},
      *     @OA\Parameter(
-     *         name="DeptNo",
+     *         name="deptno",
      *         in="path",
      *         required=true,
      *         description="部門代號",
@@ -169,31 +169,55 @@ class DeptController extends Controller
      * )
      */
     // 🔍 查詢單一部門
-    public function showNo($deptNo)
+    public function showno($deptNo)
     {
-        $dept = Dept::findByDeptNo($deptNo);
-        
-        if (!$dept) {
+        try{
+            $decodedName = urldecode($deptNo);
+            $sql = "select  *
+                    from depts
+                    where depts.dept_no = ? and is_valid = '1'";
+    
+            $dept = DB::select($sql, [$decodedName]);        
+            if (!$dept) {
+                return response()->json([
+                    'status' => false,
+                    'message' => '部門未找到',
+                    'output'    => null
+                ], 404);
+            }
+    
+            return response()->json([                
+                'status' => true,
+                'message' => 'success',
+                'output'    => $dept
+            ],200);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 捕捉驗證失敗
             return response()->json([
                 'status' => false,
-                'message' => '部門未找到',
-                'output'    => null
-            ], 404);
+                'message' => '驗證錯誤',
+                'errors' => $e->errors()
+            ], 422);
+    
+        } catch (\Exception $e) {
+            // 其他例外處理
+            Log::error('建立資料錯誤：' . $e->getMessage());
+    
+            return response()->json([
+                'status' => false,
+                'message' => '伺服器發生錯誤，請稍後再試',
+                'error' => $e->getMessage() // 上線環境建議拿掉
+            ], 500);
         }
 
-        return response()->json([                
-            'status' => true,
-            'message' => 'success',
-            'output'    => $dept
-        ],200);
     }
     /**
      * @OA\GET(
      *     path="/api/dept2/{dept_nm}",
      *     summary="查詢特定部門資訊",
      *     description="查詢特定部門資訊",
-     *     operationId="getdeptNM",
-     *     tags={"Base_Dept"},
+     *     operationId="getdeptnm",
+     *     tags={"base_dept"},
      *     @OA\Parameter(
      *         name="dept_nm",
      *         in="path",
@@ -224,7 +248,7 @@ class DeptController extends Controller
      * )
      */
     // 🔍 查詢單一部門
-    public function showNM($deptNM)
+    public function shownm($deptNM)
     {
         try{
             $decodedName = urldecode($deptNM);
@@ -238,7 +262,7 @@ class DeptController extends Controller
             
             if (!$results) {
                 return response()->json([
-                    'status' => false,
+                    'status' => true,
                     'message' => '部門未找到',
                     'output'    => null
                 ], 404);
@@ -274,8 +298,8 @@ class DeptController extends Controller
      *     path="/api/depts/valid",
      *     summary="查詢所有有效部門資訊",
      *     description="查詢所有有效部門資訊",
-     *     operationId="GetAllDept",
-     *     tags={"Base_Dept"},
+     *     operationId="getalldept",
+     *     tags={"base_dept"},
      *     @OA\Response(
      *         response=200,
      *         description="成功",
@@ -299,31 +323,51 @@ class DeptController extends Controller
      * )
      */
     // 🔍 查詢所有有效部門
-    public function getValidDepts()
+    public function getvaliddepts()
     {
-        $depts = Dept::getValidDepts();
-        if ($depts->isEmpty()) {
+        try{
+            $depts = Dept::getValidDepts()->where('is_valid', '1')->first();;
+            if (!$depts) {
+                return response()->json([
+                    'status' => true,
+                    'message' => '未找到有效部門',
+                    'output'    => null
+                ], 404);
+            }
+            return response()->json([                
+                'status' => true,
+                'message' => 'success',
+                'output'    => $depts
+            ],200);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 捕捉驗證失敗
             return response()->json([
                 'status' => false,
-                'message' => '未找到有效部門',
-                'output'    => null
-            ], 404);
+                'message' => '驗證錯誤',
+                'errors' => $e->errors()
+            ], 422);
+    
+        } catch (\Exception $e) {
+            // 其他例外處理
+            Log::error('資料錯誤：' . $e->getMessage());
+    
+            return response()->json([
+                'status' => false,
+                'message' => '伺服器發生錯誤，請稍後再試',
+                'error' => $e->getMessage() // 上線環境建議拿掉
+            ], 500);
         }
-        return response()->json([                
-            'status' => true,
-            'message' => 'success',
-            'output'    => $depts
-        ],200);
+
     }
     /**
      * @OA\patch(
-     *     path="/api/dept/{deptNo}/disable",
+     *     path="/api/dept/{deptno}/disable",
      *     summary="刪除特定部門資訊",
      *     description="刪除特定部門資訊",
-     *     operationId="DeleteDept",
-     *     tags={"Base_Dept"},
+     *     operationId="deletedept",
+     *     tags={"base_dept"},
      *     @OA\Parameter(
-     *         name="deptNo",
+     *         name="deptno",
      *         in="path",
      *         required=true,
      *         description="部門代號",
@@ -354,26 +398,46 @@ class DeptController extends Controller
     // 🔍 刪除特定部門
     public function disable($deptNo)
     {
-        $dept = Dept::findByDeptNo($deptNo);
+        try{
+            $dept = Dept::findByDeptNo($deptNo)->where('is_valid', '1')->first();
         
-        if (!$dept) {
+            if (!$dept) {
+                return response()->json([
+                    'status' => true,
+                    'message' => '部門未找到',
+                    'output'    => null
+                ], 404);
+            }
+    
+            $dept->is_valid = 0;
+            $dept->update_user = 'admin';
+            $dept->update_time = now();
+            $dept->save();
+    
+            return response()->json([
+                'status' => true,
+                'message' => 'success',
+                'output'    => $dept
+            ], 200);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 捕捉驗證失敗
             return response()->json([
                 'status' => false,
-                'message' => '部門未找到',
-                'output'    => null
-            ], 404);
+                'message' => '驗證錯誤',
+                'errors' => $e->errors()
+            ], 422);
+    
+        } catch (\Exception $e) {
+            // 其他例外處理
+            Log::error('資料錯誤：' . $e->getMessage());
+    
+            return response()->json([
+                'status' => false,
+                'message' => '伺服器發生錯誤，請稍後再試',
+                'error' => $e->getMessage() // 上線環境建議拿掉
+            ], 500);
         }
 
-        $dept->is_valid = 0;
-        $dept->update_user = 'admin';
-        $dept->update_time = now();
-        $dept->save();
-
-        return response()->json([
-            'status' => true,
-            'message' => 'success',
-            'output'    => $dept
-        ], 200);
     }
 }
 

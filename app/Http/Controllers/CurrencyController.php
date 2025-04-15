@@ -15,11 +15,11 @@ class CurrencyController extends Controller
 {
         /**
      * @OA\POST(
-     *     path="/api/createCurrency",
+     *     path="/api/createcurrency",
      *     summary="新增貨幣資訊",
      *     description="新增貨幣資訊",
-     *     operationId="createCurrency",
-     *     tags={"Base_Currency"},
+     *     operationId="createcurrency",
+     *     tags={"base_currency"},
      *     @OA\Parameter(
      *         name="currency_no",
      *         in="query",
@@ -92,7 +92,7 @@ class CurrencyController extends Controller
 
         if($validator->fails()){
             return response()->json([
-                'status' => false,
+                'status' => true,
                 'message' => '資料驗證失敗',
                 'errors' => $validator->errors()
             ], 200);
@@ -136,13 +136,13 @@ class CurrencyController extends Controller
     }
     /**
      * @OA\GET(
-     *     path="/api/Currency/{CurrencyNo}",
+     *     path="/api/currency/{currencyno}",
      *     summary="查詢特定貨幣資訊",
      *     description="查詢特定貨幣資訊",
-     *     operationId="getCurrency",
-     *     tags={"Base_Currency"},
+     *     operationId="getcurrency",
+     *     tags={"base_currency"},
      *     @OA\Parameter(
-     *         name="CurrencyNo",
+     *         name="currencyno",
      *         in="path",
      *         required=true,
      *         description="貨幣代號",
@@ -173,11 +173,11 @@ class CurrencyController extends Controller
         // 🔍 查詢單一幣別
     public function show($CurrencyNo)
     {
-        $Currency = Currency::findByCurrencyNo($CurrencyNo);
+        $Currency = Currency::findByCurrencyNo($CurrencyNo)->where('is_valid','1')->first();
         
         if (!$Currency) {
             return response()->json([
-                'status' => false,
+                'status' => true,
                 'message' => '未找到貨幣資訊',
                 'output' => null
             ], 404);
@@ -191,13 +191,13 @@ class CurrencyController extends Controller
     }
     /**
      * @OA\GET(
-     *     path="/api/Currency2/{CurrencyNM}",
+     *     path="/api/currency2/{currencynm}",
      *     summary="查詢特定貨幣資訊",
      *     description="查詢特定貨幣資訊",
-     *     operationId="getCurrencyNM",
-     *     tags={"Base_Currency"},
+     *     operationId="getcurrencynm",
+     *     tags={"base_currency"},
      *     @OA\Parameter(
-     *         name="CurrencyNM",
+     *         name="currencynm",
      *         in="path",
      *         required=true,
      *         description="貨幣名稱",
@@ -226,14 +226,14 @@ class CurrencyController extends Controller
      * )
      */
         // 🔍 查詢單一幣別
-        public function showNM($CurrencyNM)
+        public function shownm($CurrencyNM)
         {
             try{
-                $Currency = Currency::where('currency_nm', $CurrencyNM)->first();
+                $Currency = Currency::where('currency_nm', $CurrencyNM)->where('is_valid','1')->first();
 
                 if (!$Currency) {
                     return response()->json([
-                        'status' => false,
+                        'status' => true,
                         'message' => '未找到貨幣資訊',
                         'output' => null
                     ], 404);
@@ -266,11 +266,11 @@ class CurrencyController extends Controller
         }
     /**
      * @OA\GET(
-     *     path="/api/Currencys/valid",
+     *     path="/api/currencys/valid",
      *     summary="查詢所有有效貨幣資訊",
      *     description="查詢所有有效貨幣資訊",
-     *     operationId="GetAllCurrency",
-     *     tags={"Base_Currency"},
+     *     operationId="getallcurrency",
+     *     tags={"base_currency"},
      *     @OA\Response(
      *         response=200,
      *         description="成功",
@@ -294,12 +294,12 @@ class CurrencyController extends Controller
      * )
      */
     // 🔍 查詢所有有效幣別
-    public function getValidCurrencys()
+    public function getvalidcurrencys()
     {
-        $currencys = Currency::getValidCurrencys();
-        if ($currencys->isEmpty()) {
+        $currencys = Currency::getValidCurrencys()->where('is_valid','1')->first();
+        if (!$currencys) {
             return response()->json([
-                'status' => false,
+                'status' => true,
                 'message' => '未找到有效貨幣資訊',
                 'output' => null
             ], 404);
@@ -315,13 +315,13 @@ class CurrencyController extends Controller
      */
     /**
      * @OA\GET(
-     *     path="/api/exchange-rate/{CurrencyNo}",
+     *     path="/api/exchange-rate/{currencyno}",
      *     summary="讀取匯率",
      *     description="讀取匯率(不對外)",
      *     operationId="exchangeRate",
-     *     tags={"Base_Currency"},
+     *     tags={"base_currency"},
      *     @OA\Parameter(
-     *         name="CurrencyNo",
+     *         name="currencyno",
      *         in="path",
      *         required=true,
      *         description="貨幣代號",
@@ -349,7 +349,7 @@ class CurrencyController extends Controller
      *     )
      * )
      */
-    public function getExchangeRate($baseCurrency)
+    public function getexchangerate($baseCurrency)
     {
         // 驗證貨幣代號
         if (!$baseCurrency) {
@@ -396,13 +396,13 @@ class CurrencyController extends Controller
     }
     /**
      * @OA\patch(
-     *     path="/api/Currencys/{CurrencyNo}/disable",
+     *     path="/api/currencys/{currencyno}/disable",
      *     summary="刪除特定貨幣資訊",
      *     description="刪除特定貨幣資訊",
-     *     operationId="DeleteCurrency",
-     *     tags={"Base_Currency"},
+     *     operationId="deletecurrency",
+     *     tags={"base_currency"},
      *     @OA\Parameter(
-     *         name="CurrencyNo",
+     *         name="currencyno",
      *         in="path",
      *         required=true,
      *         description="貨幣代號",
@@ -433,11 +433,11 @@ class CurrencyController extends Controller
     // 🔍 刪除特定幣別
     public function disable($CurrencyNo)
     {
-        $Currency = Currency::findByCurrencyNo($CurrencyNo);
+        $Currency = Currency::findByCurrencyNo($CurrencyNo)->where('is_valid','1')->first();
         
         if (!$Currency) {
             return response()->json([
-                'status' => false,
+                'status' => true,
                 'message' => '貨幣未找到',
                 'output'    => null
             ], 404);
@@ -456,11 +456,11 @@ class CurrencyController extends Controller
     }
     /**
      * @OA\get(
-     *     path="/api/Currencys/showConst",
+     *     path="/api/currencys/showconst",
      *     summary="列出所有幣別需要的常用(下拉、彈窗)",
      *     description="列出所有幣別需要的常用(下拉、彈窗)",
-     *     operationId="Show_Currency_ALL_Const",
-     *     tags={"Base_Currency"},
+     *     operationId="Show_currency_aLL_const",
+     *     tags={"base_currency"},
      *     @OA\Response(
      *         response=200,
      *         description="成功"
@@ -472,14 +472,14 @@ class CurrencyController extends Controller
      * )
      */
     // 列出所有幣別需要的常用(下拉、彈窗)
-    public function showConst($constant='all'){
+    public function showconst($constant='all'){
         // 查詢 '所有幣別資料' 的資料
-        $SysCode = SysCode::where('note', '幣別資料')->get();
+        $SysCode = SysCode::where('note', '幣別資料')->where('is_valid','1')->get();
         try {
             // 檢查是否有結果
             if ($SysCode->isEmpty() ) {
                 return response()->json([
-                    'status' => false,
+                    'status' => true,
                     'message' => '常用資料未找到',
                     'currencyoption' => null
                 ], 404);

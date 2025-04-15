@@ -45,7 +45,7 @@ class BillInfo extends Model
     // 🔍 透過 TermsNo 查詢    // 🔍 透過 TermsNo 查詢付款條件
     public static function findByBillNo($BillNo)
     {
-        return self::where('bill_no', $BillNo)->first();
+        return self::where('bill_no', $BillNo);
     }
 
      // 🔍 查詢所有有效付款條件

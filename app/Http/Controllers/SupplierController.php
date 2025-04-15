@@ -21,8 +21,8 @@ class SupplierController extends Controller
      *     path="/api/createsupplier",
      *     summary="新增供應商資料",
      *     description="新增供應商資料",
-     *     operationId="createSupplier",
-     *     tags={"Base_Supplier"},
+     *     operationId="createsupplier",
+     *     tags={"base_supplier"},
      *     @OA\Parameter(
      *         name="supplier_no",
      *         in="query",
@@ -249,7 +249,7 @@ class SupplierController extends Controller
 
             if($validator->fails()){
                 return response()->json([
-                    'status' => false,
+                    'status' => true,
                     'message' => '資料驗證失敗',
                     'errors' => $validator->errors()
                 ], 200);
@@ -284,7 +284,7 @@ class SupplierController extends Controller
         // 回應 JSON
         if (!$supplier) {
             return response()->json([
-                'status' => false,
+                'status' => true,
                 'message' => '供應商資料建失敗',
                 'output'    => null
             ], status: 404);
@@ -319,13 +319,13 @@ class SupplierController extends Controller
     }
     /**
      * @OA\GET(
-     *     path="/api/Supplier/{supplierNo}",
+     *     path="/api/supplier/{supplierno}",
      *     summary="查詢特定供應商資料",
      *     description="查詢特定供應商資料",
-     *     operationId="getSupplier",
-     *     tags={"Base_Supplier"},
+     *     operationId="getsupplier",
+     *     tags={"base_supplier"},
      *     @OA\Parameter(
-     *         name="supplierNo",
+     *         name="supplierno",
      *         in="path",
      *         required=true,
      *         description="供應商代號",
@@ -375,11 +375,11 @@ class SupplierController extends Controller
     public function show($supplierNo)
     {
         try{
-            $Supplier = Supplier::where('supplier_no', $supplierNo)->first();
+            $Supplier = Supplier::where('supplier_no', $supplierNo)->where('is_valid','1')->first();
         
             if (!$Supplier) {
                 return response()->json([
-                    'status' => false,
+                    'status' => true,
                     'message' => '供應商未找到',
                     'output'    => null
                 ], 404);
@@ -412,11 +412,11 @@ class SupplierController extends Controller
     }
     /**
      * @OA\GET(
-     *     path="/api/Supplier2/{Keyword}",
+     *     path="/api/supplier2/{Keyword}",
      *     summary="查詢關鍵字",
      *     description="查詢關鍵字",
-     *     operationId="getSupplier2",
-     *     tags={"Base_Supplier"},
+     *     operationId="getsupplier2",
+     *     tags={"base_supplier"},
      *     @OA\Parameter(
      *         name="Keyword",
      *         in="path",
@@ -474,10 +474,11 @@ class SupplierController extends Controller
                 ->orWhere('supplier_fullnm', 'like', '%' . $Keyword . '%')
                 ->orWhere('address1', 'like', '%' . $Keyword . '%')
                 ->orWhere('address2', 'like', '%' . $Keyword . '%')
+                ->where('is_valid','1')
                 ->get();       
             if (!$Supplier) {
                 return response()->json([
-                    'status' => false,
+                    'status' => true,
                     'message' => '供應商未找到',
                     'output'    => null
                 ], 404);
@@ -510,11 +511,11 @@ class SupplierController extends Controller
     }
     /**
      * @OA\GET(
-     *     path="/api/Supplier/valid",
+     *     path="/api/supplier3/valid",
      *     summary="查詢所有有效供應商",
      *     description="查詢所有有效供應商",
-     *     operationId="GetAllSupplier",
-     *     tags={"Base_Supplier"},
+     *     operationId="getallsupplier",
+     *     tags={"base_supplier"},
      *     @OA\Response(
      *         response=200,
      *         description="成功",
@@ -556,13 +557,13 @@ class SupplierController extends Controller
      * )
      */
     // 🔍 查詢所有有效供應商
-    public function getValidsuppliers()
+    public function getvalidsuppliers()
     {
         try {
             $Supplier = Supplier::getValidsuppliers();
             if ($Supplier->isEmpty()) {
                 return response()->json([
-                    'status' => false,
+                    'status' => true,
                     'message' => '未找到有效供應商',
                     'output'    => null
                 ], 404);
@@ -572,23 +573,34 @@ class SupplierController extends Controller
                 'message' => 'success',
                 'output'    => $Supplier
             ], 200);
-        } catch (\Exception $e) {
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 捕捉驗證失敗
             return response()->json([
                 'status' => false,
-                'message' => '資料查詢錯誤',
-                'output' => null
+                'message' => '驗證錯誤',
+                'errors' => $e->errors()
+            ], 422);
+        
+        } catch (\Exception $e) {
+            // 其他例外處理
+            Log::error('建立資料錯誤：' . $e->getMessage());
+        
+            return response()->json([
+                'status' => false,
+                'message' => '伺服器發生錯誤，請稍後再試',
+                'error' => $e->getMessage() // 上線環境建議拿掉
             ], 500);
         }
     }
     /**
      * @OA\patch(
-     *     path="/api/Supplier/{supplierNo}/disable",
+     *     path="/api/supplier/{supplierno}/disable",
      *     summary="刪除特定供應商",
      *     description="刪除特定供應商",
-     *     operationId="DeleteSupplier",
-     *     tags={"Base_Supplier"},
+     *     operationId="deletesupplier",
+     *     tags={"base_supplier"},
      *     @OA\Parameter(
-     *         name="supplier_no",
+     *         name="supplierno",
      *         in="path",
      *         required=true,
      *         description="供應商代號",
@@ -637,34 +649,54 @@ class SupplierController extends Controller
     // 🔍 刪除特定供應商
     public function disable($supplierNo)
     {
-        $Supplier = Supplier::findBysupplierNo($supplierNo);
+        try{
+            $Supplier = Supplier::findBysupplierNo($supplierNo)->where('is_valid','1')->first();
         
-        if (!$Supplier) {
+            if (!$Supplier) {
+                return response()->json([
+                    'status' => false,
+                    'message' => '供應商未找到',
+                    'output'    => null
+                ], 404);
+            }
+    
+            $Supplier->is_valid = 0;
+            $Supplier->update_user = 'admin';
+            $Supplier->update_time = now();
+            $Supplier->save();
+    
+            return response()->json([
+                'status' => true,
+                'message' => 'success',
+                'output'    => $Supplier
+            ], 200);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 捕捉驗證失敗
             return response()->json([
                 'status' => false,
-                'message' => '供應商未找到',
-                'output'    => null
-            ], 404);
+                'message' => '驗證錯誤',
+                'errors' => $e->errors()
+            ], 422);
+        
+        } catch (\Exception $e) {
+            // 其他例外處理
+            Log::error('建立資料錯誤：' . $e->getMessage());
+        
+            return response()->json([
+                'status' => false,
+                'message' => '伺服器發生錯誤，請稍後再試',
+                'error' => $e->getMessage() // 上線環境建議拿掉
+            ], 500);
         }
 
-        $Supplier->is_valid = 0;
-        $Supplier->update_user = 'admin';
-        $Supplier->update_time = now();
-        $Supplier->save();
-
-        return response()->json([
-            'status' => true,
-            'message' => 'success',
-            'output'    => $Supplier
-        ], 200);
     }
     /**
      * @OA\get(
-     *     path="/api/Suppliers/showConst",
+     *     path="/api/supplier4/showconst",
      *     summary="列出所有供應商需要的常用(下拉、彈窗)",
      *     description="列出所有供應商需要的常用(下拉、彈窗)",
-     *     operationId="Show_Supplier_ALL_Const",
-     *     tags={"Base_Supplier"},
+     *     operationId="show_supplier_all_const",
+     *     tags={"base_supplier"},
      *     @OA\Response(
      *         response=200,
      *         description="成功"
@@ -676,11 +708,11 @@ class SupplierController extends Controller
      * )
      */
     // 列出所有客戶需要的常用(下拉、彈窗)
-    public function showConst($constant='all'){
+    public function showconst($constant='all'){
         // 查詢 '所有有效幣別資料' 的資料
         $SysCode = Currency::where('is_valid', '1')->get();
         // 查詢 '所有稅別資料' 的資料
-        $SysCode1 = SysCode::where('param_sn', '04')->get();
+        $SysCode1 = SysCode::where('param_sn', '04')->where('is_valid','1')->get();
         // 查詢 '所有有效付款條件' 的資料
         $SysCode2 = PaymentTerm::where('is_valid', '1')->get();
         // 付款條件(當月、次月的常數資料)
@@ -692,9 +724,9 @@ class SupplierController extends Controller
         
         try {
             // 檢查是否有結果
-            if ($SysCode->isEmpty() ) {
+            if (!$SysCode) {
                 return response()->json([
-                    'status' => false,
+                    'status' => true,
                     'message' => '常用資料未找到',
                     'currencyOption' => null,
                     'taxtypeOption' => null,

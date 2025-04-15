@@ -22,8 +22,8 @@ class ClientController extends Controller
      *     path="/api/createclient",
      *     summary="新增客戶資料",
      *     description="新增客戶資料",
-     *     operationId="createClient",
-     *     tags={"Base_Client"},
+     *     operationId="createclient",
+     *     tags={"base_client"},
      *     @OA\Parameter(
      *         name="client_no",
      *         in="query",
@@ -286,7 +286,7 @@ class ClientController extends Controller
             // 回應 JSON
             if (!$Client) {
                 return response()->json([
-                    'status' => false,
+                    'status' => true,
                     'message' => '客戶資料建失敗',
                     'output'    => null
                 ], status: 404);
@@ -320,13 +320,13 @@ class ClientController extends Controller
     }
     /**
      * @OA\GET(
-     *     path="/api/Client/{clientNo}",
+     *     path="/api/cient1/{clientno}",
      *     summary="查詢特定客戶資料",
      *     description="查詢特定客戶資料",
-     *     operationId="getClient",
-     *     tags={"Base_Client"},
+     *     operationId="getclient",
+     *     tags={"base_client"},
      *     @OA\Parameter(
-     *         name="clientNo",
+     *         name="clientno",
      *         in="path",
      *         required=true,
      *         description="客戶代號",
@@ -376,11 +376,11 @@ class ClientController extends Controller
     public function show($clientNo)
     {
         try {
-            $Client = Client::findByclientNo($clientNo);
+            $Client = Client::findByclientNo($clientNo)->where('is_valid','1')->first();
             
             if (!$Client) {
                 return response()->json([
-                    'status' => false,
+                    'status' => true,
                     'message' => '客戶未找到',
                     'output'    => null
                 ], 404);
@@ -412,11 +412,11 @@ class ClientController extends Controller
     }
     /**
      * @OA\GET(
-     *     path="/api/Client2/{Keyword}",
+     *     path="/api/client2/{Keyword}",
      *     summary="查詢關鍵字",
      *     description="查詢關鍵字",
-     *     operationId="getClient2",
-     *     tags={"Base_Client"},
+     *     operationId="getclient2",
+     *     tags={"base_client"},
      *     @OA\Parameter(
      *         name="Keyword",
      *         in="path",
@@ -474,10 +474,10 @@ class ClientController extends Controller
                 ->orWhere('client_fullnm', 'like', '%' . $Keyword . '%')
                 ->orWhere('address1', 'like', '%' . $Keyword . '%')
                 ->orWhere('address2', 'like', '%' . $Keyword . '%')
-                ->get();      
+                ->where('is_valid','1')->get();      
             if (!$Client) {
                 return response()->json([
-                    'status' => false,
+                    'status' => true,
                     'message' => '客戶未找到',
                     'output'    => null
                 ], 404);
@@ -509,11 +509,11 @@ class ClientController extends Controller
     }
     /**
      * @OA\GET(
-     *     path="/api/Clients/valid",
+     *     path="/api/clients/valid",
      *     summary="查詢所有有效客戶",
      *     description="查詢所有有效客戶",
-     *     operationId="GetAllClient",
-     *     tags={"Base_Client"},
+     *     operationId="getallclient",
+     *     tags={"base_client"},
      *     @OA\Response(
      *         response=200,
      *         description="成功",
@@ -555,13 +555,13 @@ class ClientController extends Controller
      * )
      */
     // 🔍 查詢所有有效客戶
-    public function getValidClients()
+    public function getValidclients()
     {
         try {
-            $Client = Client::getValidClients();
-            if ($Client->isEmpty()) {
+            $Client = Client::getValidClients()->where('is_valid','1')->first();
+            if (!$Client) {
                 return response()->json([
-                    'status' => false,
+                    'status' => true,
                     'message' => '未找到有效客戶',
                     'output'    => null
                 ], 404);
@@ -592,13 +592,13 @@ class ClientController extends Controller
     }
     /**
      * @OA\patch(
-     *     path="/api/Client/{clientNo}/disable",
+     *     path="/api/client/{clientno}/disable",
      *     summary="刪除特定客戶",
      *     description="刪除特定客戶",
-     *     operationId="DeleteClient",
-     *     tags={"Base_Client"},
+     *     operationId="deleteclient",
+     *     tags={"base_client"},
      *     @OA\Parameter(
-     *         name="clientNo",
+     *         name="clientno",
      *         in="path",
      *         required=true,
      *         description="客戶代號",
@@ -648,11 +648,11 @@ class ClientController extends Controller
     public function disable($clientNo)
     {
         try {
-            $Client = Client::findByclientNo($clientNo);
+            $Client = Client::findByclientNo($clientNo)->where('is_valid','1')->get();
             
             if (!$Client) {
                 return response()->json([
-                    'status' => false,
+                    'status' => true,
                     'message' => '客戶未找到',
                     'output'    => null
                 ], 404);
@@ -689,11 +689,11 @@ class ClientController extends Controller
     }
     /**
      * @OA\get(
-     *     path="/api/Clients/showConst",
+     *     path="/api/clients/showconst",
      *     summary="列出所有客戶需要的常用(下拉、彈窗)",
      *     description="列出所有客戶需要的常用(下拉、彈窗)",
-     *     operationId="Show_Client_ALL_Const",
-     *     tags={"Base_Client"},
+     *     operationId="show_client_aLL_const",
+     *     tags={"base_client"},
      *     @OA\Response(
      *         response=200,
      *         description="成功"
@@ -705,25 +705,25 @@ class ClientController extends Controller
      * )
      */
     // 列出所有客戶需要的常用(下拉、彈窗)
-    public function showConst($constant='all'){
+    public function showconst($constant='all'){
         // 查詢 '所有有效幣別資料' 的資料
-        $SysCode = Currency::where('is_valid', '1')->get();
+        $SysCode = Currency::where('is_valid', '1')->where('is_valid','1')->get();
         // 查詢 '所有稅別資料' 的資料
-        $SysCode1 = SysCode::where('param_sn', '04')->get();
+        $SysCode1 = SysCode::where('param_sn', '04')->where('is_valid','1')->get();
         // 查詢 '所有有效付款條件' 的資料
-        $SysCode2 = PaymentTerm::where('is_valid', '1')->get();
+        $SysCode2 = PaymentTerm::where('is_valid', '1')->where('is_valid','1')->get();
         // 付款條件(當月、次月的常數資料)
-        $SysCode4 = PaymentTerm::where('is_valid', '1')->get();
+        $SysCode4 = PaymentTerm::where('is_valid', '1')->where('is_valid','1')->get();
         // 查詢 '所有有效人員' 的資料
         $SysCode3 = SysUser::with('depts')->where('is_valid', '1')->get();
         // 付款條件(當月、次月的常數資料)
-        $SysCode4 = PaymentTerm::where('is_valid', '1')->get();
+        $SysCode4 = PaymentTerm::where('is_valid', '1')->where('is_valid','1')->get();
         
         try {
             // 檢查是否有結果
             if ($SysCode->isEmpty() ) {
                 return response()->json([
-                    'status' => false,
+                    'status' => true,
                     'message' => '常用資料未找到',
                     'currencyOption' => null,
                     'taxtypeOption' => null,
