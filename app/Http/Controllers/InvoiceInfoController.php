@@ -24,7 +24,7 @@ class InvoiceInfoController extends Controller
      *         name="period_start",
      *         in="query",
      *         required=true,
-     *         description="期別_起",
+     *         description="期別_起", 
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
@@ -32,6 +32,13 @@ class InvoiceInfoController extends Controller
      *         in="query",
      *         required=true,
      *         description="期別_迄",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="series",
+     *         in="query",
+     *         required=true,
+     *         description="序號",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
@@ -91,6 +98,7 @@ class InvoiceInfoController extends Controller
      *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
      *             @OA\Property(property="period_start", type="string", example="2025-01"),
      *             @OA\Property(property="period_end", type="string", example="2025-02"),
+     *             @OA\Property(property="series", type="string", example="001"),
      *             @OA\Property(property="invoice_type", type="string", example="1"),
      *             @OA\Property(property="track_code", type="string", example="AQ"),
      *             @OA\Property(property="start_number", type="string", example="0000000001"),    
@@ -117,6 +125,7 @@ class InvoiceInfoController extends Controller
             $validator = Validator::make($request->all(),[
                 'period_start' => 'required|string|max:7',
                 'period_end' => 'required|string|max:7',
+                'series' => 'required|string|max:3',
                 'invoice_type' => 'required|string|max:2',
                 'track_code' => 'required|string|max:2',
                 'start_number' => 'required|string',
@@ -136,8 +145,53 @@ class InvoiceInfoController extends Controller
             //發票期別起迄不能相同
             if ($request['period_start'] == $request['period_end']) {
                 return response()->json([
-                    'status' => false,
+                    'status' => true,
                     'message' => '發票期別起迄不能相同',
+                    'output' => null
+                ], 200);
+            }
+
+            //期別起需要是民國年月的格式
+            if (!preg_match('/^0?\d{2,3}[\/](0?[1-9]|1[0-2])$/', $request['period_start']) || !preg_match('/^0?\d{2,3}[\/](0?[1-9]|1[0-2])$/', $request['period_end'])) {
+                return response()->json([
+                    'status' => true,
+                    'message' => '期別格式錯誤，請使用民國年月的格式(例如：025-01)',
+                    'output' => null
+                ], 200);
+            }
+
+            //發票號碼需要8碼
+            if (strlen($request['start_number'])-2 != 8 || strlen($request['end_number'])-2 != 8) {
+                return response()->json([
+                    'status' => true,
+                    'message' => '發票號碼必須是8碼',
+                    'output' => null
+                ], 200);
+            }
+
+            //發票號碼數值相減需要等於50
+            if ((intval(substr($request['end_number'],-2)) - intval(substr($request['start_number'],-2)))+1 != 50) {
+                return response()->json([
+                    'status' => true,
+                    'message' => '發票號碼區間必須等於50',
+                    'output' => null
+                ], 200);
+            }
+
+            //發票號碼起需要0結尾
+            if (substr($request['start_number'], -1) != '0') {
+                return response()->json([
+                    'status' => true,
+                    'message' => '發票號碼起需要0結尾',
+                    'output' => null
+                ], 200);
+            }
+
+            //發票號碼迄需要9結尾
+            if (substr($request['end_number'], -1) != '9') {
+                return response()->json([
+                    'status' => true,
+                    'message' => '發票號碼迄需要0結尾',
                     'output' => null
                 ], 200);
             }
@@ -150,31 +204,11 @@ class InvoiceInfoController extends Controller
                 ->first();
             if ($existingInvoiceInfo) {
                 return response()->json([
-                    'status' => false,
+                    'status' => true,
                     'message' => '同一個期別，同一個發票號碼區間只能有一筆資料',
                     'output' => null
                 ], 200);
             }
-
-            //發票號碼需要8碼
-            if (strlen($request['start_number']) != 8 || strlen($request['end_number']) != 8) {
-                return response()->json([
-                    'status' => false,
-                    'message' => '發票號碼必須是8碼',
-                    'output' => null
-                ], 200);
-            }
-
-            //發票號碼區間需要大於0
-            if (intval($request['end_number']) - intval($request['start_number']) <= 0) {
-                return response()->json([
-                    'status' => false,
-                    'message' => '發票號碼區間必須大於0',
-                    'output' => null
-                ], 200);
-            }
-
-
 
             // 建立發票資料
             $InvoiceInfo = InvoiceInfo::create([
@@ -243,8 +277,9 @@ class InvoiceInfoController extends Controller
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="period_start", type="string", example="2025-01"),
+     *             @OA\Property(property="period_start", type="string", example="025-01"),
      *             @OA\Property(property="period_end", type="string", example="2025-02"),
+     *             @OA\Property(property="series", type="string", example="001"),
      *             @OA\Property(property="invoice_type", type="string", example="1"),
      *             @OA\Property(property="track_code", type="string", example="AQ"),
      *             @OA\Property(property="start_number", type="string", example="0000000001"),    
@@ -323,8 +358,9 @@ class InvoiceInfoController extends Controller
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="period_start", type="string", example="2025-01"),
+     *             @OA\Property(property="period_start", type="string", example="025-01"),
      *             @OA\Property(property="period_end", type="string", example="2025-02"),
+     *             @OA\Property(property="series", type="string", example="001"),
      *             @OA\Property(property="invoice_type", type="string", example="1"),
      *             @OA\Property(property="track_code", type="string", example="AQ"),
      *             @OA\Property(property="start_number", type="string", example="0000000001"),    
@@ -348,7 +384,10 @@ class InvoiceInfoController extends Controller
     public function getvaildinvoiceinfo()
     {
         try {
-            $InvoiceInfo = InvoiceInfo::getValidInvoiceInfo()->where('is_valid', '1')->first();
+
+            $InvoiceInfo = InvoiceInfo::where('is_valid', '1')->get();
+
+
             if (!$InvoiceInfo) {
                 return response()->json([
                     'status' => true,
@@ -400,15 +439,16 @@ class InvoiceInfoController extends Controller
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="period_start", type="string", example="2025-01"),
+     *             @OA\Property(property="period_start", type="string", example="025-01"),
      *             @OA\Property(property="period_end", type="string", example="2025-02"),
+     *             @OA\Property(property="series", type="string", example="001"),
      *             @OA\Property(property="invoice_type", type="string", example="1"),
      *             @OA\Property(property="track_code", type="string", example="AQ"),
      *             @OA\Property(property="start_number", type="string", example="0000000001"),    
      *             @OA\Property(property="end_number", type="string", example="0000000050"),
      *             @OA\Property(property="effective_startdate", type="date", example="2025/01/01"),
      *             @OA\Property(property="effective_enddate", type="date", example="2025/02/28"),
-     *             @OA\Property(property="is_valid", type="string", example="0"),
+     *             @OA\Property(property="is_valid", type="string", example="1"),
      *             @OA\Property(property="create_user", type="string", example="admin"),
      *             @OA\Property(property="update_user", type="string", example="admin"),
      *             @OA\Property(property="create_time", type="string", example="2025-03-31T08:58:52.001975Z"),

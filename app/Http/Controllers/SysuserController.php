@@ -244,84 +244,6 @@ class SysuserController extends Controller
     }
     /**
      * @OA\GET(
-     *     path="/api/user2/{user_nm}",
-     *     summary="查詢特定人員資訊",
-     *     description="查詢特定部門資訊",
-     *     operationId="getusernm",
-     *     tags={"base_user"},
-     *     @OA\Parameter(
-     *         name="user_nm",
-     *         in="path",
-     *         required=true,
-     *         description="人員名稱",
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="成功",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="user_no", type="string", example="U001"),
-     *             @OA\Property(property="user_nm", type="string", example="姚佩彤"),
-     *             @OA\Property(property="user_dept", type="string", example="D001"),
-     *             @OA\Property(property="note", type="string", example=""),
-     *             @OA\Property(property="is_valid", type="boolean", example=true),
-     *             @OA\Property(property="create_user", type="string", example="admin"),
-     *             @OA\Property(property="create_time", type="string", example="admin"),
-     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="未找到人員"
-     *     )
-     * )
-     */
-    // 🔍 查詢單一人員
-    public function shownm($UsrNM)
-    {
-        try{
-            $decodedName = urldecode($UsrNM);
-            $user = SysUser::with('depts')->where('user_nm', $decodedName)->where('is_valid','1')->first();
-            #$dept = Dept::findByDeptNM($decodedName);
-            // 查詢特定發票資訊(以期別查詢，只要起迄其中符合即可)
-            
-            if (!$user) {
-                return response()->json([
-                    'status' => true,
-                    'message' => '人員未找到',
-                    'output'    => null
-                ], 404);
-            }
-    
-            return response()->json([                
-                'status' => true,
-                'message' => 'success',
-                'output'    => $user
-            ],200);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            // 捕捉驗證失敗
-            return response()->json([
-                'status' => false,
-                'message' => '驗證錯誤',
-                'errors' => $e->errors()
-            ], 422);
-    
-        } catch (\Exception $e) {
-            // 其他例外處理
-            Log::error('建立資料錯誤：' . $e->getMessage());
-    
-            return response()->json([
-                'status' => false,
-                'message' => '伺服器發生錯誤，請稍後再試',
-                'error' => $e->getMessage() // 上線環境建議拿掉
-            ], 500);
-        }
-
-    }
-    /**
-     * @OA\GET(
      *     path="/api/user3/{dept_id}",
      *     summary="查詢部門下面的人員",
      *     description="查詢部門下面的人員",
@@ -401,10 +323,17 @@ class SysuserController extends Controller
     /**
      * @OA\GET(
      *     path="/api/users/valid",
-     *     summary="查詢所有有效人員資訊",
-     *     description="查詢所有有效人員資訊",
+     *     summary="查詢所有有效人員資訊(含關鍵字查詢)",
+     *     description="查詢所有有效人員資訊(含關鍵字查詢)",
      *     operationId="getalluser",
      *     tags={"base_user"},
+     *     @OA\Parameter(
+     *         name="keyword",
+     *         in="query",
+     *         required=false,
+     *         description="關鍵字查詢",
+     *         @OA\Schema(type="string")
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="成功",
@@ -428,17 +357,32 @@ class SysuserController extends Controller
      * )
      */
     // 🔍 查詢所有有效人員
-    public function getvalidusers()
+    public function getvalidusers(Request $request)
     {
         try{
-            $user = SysUser::with('depts')->where('is_valid', '1')->get();
-            //return response()->json(SysUser::getValidusers());
+            $keyword = $request->query('keyword'); // 可為 null
+
+            // 進行關鍵字查詢
+            if($keyword != null) {
+                $likeKeyword = '%' . $keyword . '%';
+                $user = SysUser::with('depts')
+                ->where('is_valid', '1')
+                ->where(function ($query) use ($likeKeyword) {
+                    $query->where('user_no', 'like', $likeKeyword)
+                          ->orWhere('user_nm', 'like', $likeKeyword);
+                })
+                ->get();
+
+            } else {
+                $user = SysUser::with('depts')->where('is_valid', '1')->get();
+            }
+            
             // 回應 JSON
             if (!$user) {
                 return response()->json([
                     'status' => true,
                     'message' => '未有效找到人員',
-                    'output'    => null
+                    'output'    => $user
                 ], status: 404);
             }else {
             // 回應 JSON

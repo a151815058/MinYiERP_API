@@ -8,6 +8,7 @@ use App\Models\SysCode;
 use Illuminate\Support\Str;
 use OpenApi\Annotations as OA;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
@@ -132,6 +133,13 @@ class ProductController extends Controller
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
+     *         name="product_path",
+     *         in="query",
+     *         required=false,
+     *         description="圖片存放路徑",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
      *         name="is_valid",
      *         in="query",
      *         required=true,
@@ -160,6 +168,7 @@ class ProductController extends Controller
      *             @OA\Property(property="safety_stock", type="integer", example=0),
      *             @OA\Property(property="expiry_date", type="string", example="2025-03-31T08:58:52.001975Z"),
      *             @OA\Property(property="description", type="string", example=""),
+     *             @OA\Property(property="product_path", type="string", example=""),
      *             @OA\Property(property="is_valid", type="boolean", example=true),
      *             @OA\Property(property="Createuser", type="string", example="admin"),
      *             @OA\Property(property="update_user", type="string", example="admin"),
@@ -183,11 +192,7 @@ class ProductController extends Controller
                 'product_nm'         => 'required|string|max:255',
                 'specification'     => 'required|string|max:255',
                 'price_1'            => 'required|integer|max:10000',
-                'price_2'            => 'nullable|integer|max:10000',
-                'price_3'            => 'nullable|integer|max:10000',
                 'cost_1'            => 'required|integer|max:10000',
-                'cost_2'            => 'nullable|integer|max:10000',
-                'cost_3'            => 'nullable|integer|max:10000',
                 'batch_control'     => 'required|string|max:255',
                 'valid_days'        => 'required|integer|max:10000',
                 'effective_date'    => 'required|date',
@@ -195,6 +200,10 @@ class ProductController extends Controller
                 'safety_stock'      => 'required|integer|max:10000',
                 'expiry_date'       => 'required|date',
                 'description'       => 'nullable|string|max:255',
+                'product_path'      => 'nullable|string|max:255',
+                'main_supplier'     => 'nullable|string|max:255',
+                'Accounting'        => 'nullable|string|max:255',
+                'unit'              => 'nullable|string|max:255',
                 'is_valid'            => 'required|boolean'
             ]);
             
@@ -213,11 +222,7 @@ class ProductController extends Controller
             'product_nm'     => $request['product_nm'],
             'specification'   => $request['specification'],
             'price_1' => $request['price_1'],
-            'price_2'   => $request['price_2']?? null,
-            'price_3' => $request['price_3']?? null,
             'cost_1'   => $request['cost_1'],
-            'cost_2'  => $request['cost_2']?? null,
-            'cost_3'   => $request['cost_3']?? null,
             'batch_control' => $request['batch_control'],
             'valid_days'   => $request['valid_days'],
             'effective_date'  => $request['effective_date'],
@@ -225,6 +230,10 @@ class ProductController extends Controller
             'safety_stock' => $request['safety_stock'],
             'expiry_date'   => $request['expiry_date'],
             'description'  => $request['description']?? null,
+            'product_path' => $request['product_path']?? null,
+            'main_supplier' => $request['main_supplier']?? null,
+            'Accounting' => $request['Accounting']?? null,
+            'unit' => $request['unit']?? null,
             'is_valid'    => $request['is_valid']
         ]);
 
@@ -354,104 +363,18 @@ class ProductController extends Controller
     }
     /**
      * @OA\GET(
-     *     path="/api/product2/{keyword}",
-     *     summary="查詢關鍵字",
-     *     description="查詢關鍵字",
-     *     operationId="getproductkeyword",
+     *     path="/api/product3/valid",
+     *     summary="查詢所有有效品號(含關鍵字查詢)",
+     *     description="查詢所有有效品號(含關鍵字查詢)",
+     *     operationId="getallproduct",
      *     tags={"base_product"},
      *     @OA\Parameter(
      *         name="keyword",
-     *         in="path",
-     *         required=true,
-     *         description="關鍵字(請輸入品名、規格、商品描述)",
+     *         in="query",
+     *         required=false,
+     *         description="關鍵字查詢",
      *         @OA\Schema(type="string")
      *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="成功",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="product_no", type="string", example="P001"),
-     *             @OA\Property(property="product_nm", type="string", example="螺絲起子"),
-     *             @OA\Property(property="specification", type="string", example="SP001"),
-     *             @OA\Property(property="price_1", type="integer", example=100),
-     *             @OA\Property(property="price_2", type="integer", example=0),
-     *             @OA\Property(property="price_3", type="integer", example=0),
-     *             @OA\Property(property="cost_1", type="decimal", example=60),
-     *             @OA\Property(property="cost_2", type="integer", example=0),
-     *             @OA\Property(property="cost_3", type="integer", example=0),
-     *             @OA\Property(property="batch_control", type="integer", example=true),
-     *             @OA\Property(property="valid_days", type="integer", example=0),
-     *             @OA\Property(property="effective_date", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="stock_control", type="integer", example=true),
-     *             @OA\Property(property="safety_stock", type="integer", example=0),
-     *             @OA\Property(property="expiry_date", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="description", type="string", example=""),
-     *             @OA\Property(property="is_valid", type="boolean", example=true),
-     *             @OA\Property(property="Createuser", type="string", example="admin"),
-     *             @OA\Property(property="update_user", type="string", example="admin"),
-     *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="未找到品號"
-     *     )
-     * )
-     */
-    // 🔍 查詢關鍵字
-    public function shownm($keyword)
-    {
-        try{
-            // 使用關鍵字查詢品號
-            $Product = Product::where('product_no', 'like', '%' . $keyword . '%')
-                ->orWhere('product_nm', 'like', '%' . $keyword . '%')
-                ->orWhere('specification', 'like', '%' . $keyword . '%')
-                ->where('is_valid','1')->get();
-        
-            // 判斷品號是否存在
-            if (!$Product) {
-                return response()->json([
-                    'status' => true,
-                    'message' => '品號未找到',
-                    'output'    => null
-                ], 404);
-            }
-        
-            return response()->json([                
-                'status' => true,
-                'message' => 'success',
-                'output'    => $Product
-            ],200);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            // 捕捉驗證失敗
-            return response()->json([
-                'status' => false,
-                'message' => '驗證錯誤',
-                'errors' => $e->errors()
-            ], 422);
-    
-        } catch (\Exception $e) {
-            // 其他例外處理
-            Log::error('建立資料錯誤：' . $e->getMessage());
-    
-            return response()->json([
-                'status' => false,
-                'message' => '伺服器發生錯誤，請稍後再試',
-                'error' => $e->getMessage() // 上線環境建議拿掉
-            ], 500);
-        }
-
-    }
-    /**
-     * @OA\GET(
-     *     path="/api/product3/valid",
-     *     summary="查詢所有有效品號",
-     *     description="查詢所有有效品號",
-     *     operationId="getallproduct",
-     *     tags={"base_product"},
      *     @OA\Response(
      *         response=200,
      *         description="成功",
@@ -488,15 +411,35 @@ class ProductController extends Controller
      * )
      */
     // 🔍 查詢所有有效品號
-    public function getvalidproduct()
+    public function getvalidproduct(Request $request)
     {
         try{
-            $Product = Product::where('is_valid', '1')->get();
+
+            $keyword = $request->query('keyword'); // 可為 null
+
+            // 使用 DB::select 進行關鍵字查詢
+            // 關鍵字 品號 品名 規格
+            if($keyword != null) {
+                $likeKeyword = '%' . $keyword . '%';
+                $sql = "select  *
+                        from product
+                        where product.is_valid = '1'  
+                        and ( product.product_no LIKE ? 
+                           OR product.product_nm LIKE ?
+                           OR product.specification LIKE ? )
+                        order by update_time,create_time asc;";
+
+                $Product = DB::select($sql, [$likeKeyword, $likeKeyword, $likeKeyword]);
+
+            } else {
+                $Product = Product::where('is_valid', '1')->get();
+            }
+
             if (!$Product) {
                 return response()->json([
                     'status' => true,
                     'message' => '未找到有效品號',
-                    'output'    => null
+                    'output'    => $Product
                 ], 404);
             }
             return response()->json([                

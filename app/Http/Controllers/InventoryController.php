@@ -7,6 +7,7 @@ use App\Models\Inventory;
 use Illuminate\Support\Str;
 use OpenApi\Annotations as OA;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class InventoryController extends Controller
@@ -242,89 +243,18 @@ class InventoryController extends Controller
     }
     /**
      * @OA\GET(
-     *     path="/api/inventory2/{inventorynm}",
-     *     summary="查詢特定庫別資訊",
-     *     description="查詢特定庫別資訊",
-     *     operationId="getinventorynm",
-     *     tags={"base_inventory"},
-     *     @OA\Parameter(
-     *         name="inventorynm",
-     *         in="path",
-     *         required=true,
-     *         description="庫別名稱",
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="成功",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="inventory_no", type="string", example="INV001"),
-     *             @OA\Property(property="inventory_nm", type="string", example="庫別1"),
-     *             @OA\Property(property="inventory_qty", type="integer", example="1000"),
-     *             @OA\Property(property="lot_num", type="string", example="LOT123"),
-     *             @OA\Property(property="safety_stock", type="integer", example="500"),
-     *             @OA\Property(property="lastStock_receiptdate", type="string", example="2025-03-31"),
-     *             @OA\Property(property="is_valid", type="string", example="1"),
-     *             @OA\Property(property="create_user", type="string", example="admin"),
-     *             @OA\Property(property="create_time", type="string", example="admin"),
-     *             @OA\Property(property="update_user", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="未找到庫別"
-     *     )
-     * )
-     */
-    // 🔍 查詢單一庫別
-    public function shownm($InventoryNM)
-    {
-        try{
-            $Inventory = Inventory::where('inventory_nm', $InventoryNM)->where('is_valid','1')->first();
-        
-            if (!$Inventory) {
-                 return response()->json([
-                     'status' => true,
-                     'message' => '庫別未找到',
-                     'output'    => null
-                 ], 404);
-             }
-     
-             return response()->json([                
-                 'status' => true,
-                 'message' => 'success',
-                 'output'    => $Inventory
-             ],200);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            // 捕捉驗證失敗
-            return response()->json([
-                'status' => false,
-                'message' => '驗證錯誤',
-                'errors' => $e->errors()
-            ], 422);
-    
-        } catch (\Exception $e) {
-            // 其他例外處理
-            Log::error('建立資料錯誤：' . $e->getMessage());
-    
-            return response()->json([
-                'status' => false,
-                'message' => '伺服器發生錯誤，請稍後再試',
-                'error' => $e->getMessage() // 上線環境建議拿掉
-            ], 500);
-        }
-
-    }
-    /**
-     * @OA\GET(
      *     path="/api/inventorys/valid",
-     *     summary="查詢所有有效庫別資訊",
-     *     description="查詢所有有效庫別資訊",
+     *     summary="查詢所有有效庫別資訊(含關鍵字查詢)",
+     *     description="查詢所有有效庫別資訊(含關鍵字查詢)",
      *     operationId="getallinventory",
      *     tags={"base_inventory"},
+     *     @OA\Parameter(
+     *         name="keyword",
+     *         in="query",
+     *         required=false,
+     *         description="關鍵字查詢",
+     *         @OA\Schema(type="string")
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="成功",
@@ -351,16 +281,35 @@ class InventoryController extends Controller
      * )
      */
     // 🔍 查詢所有有效庫別
-    public function getvaildinventory()
+    public function getvaildinventory(Request $request)
     {
         try{
-            $Inventory = Inventory::where('is_valid', '1')->get();
-            //$Inventory = Inventory::getValidInventory();
-            if ($Inventory->isEmpty()) {
+            $keyword = $request->query('keyword'); // 可為 null
+
+            // 使用 DB::select 進行關鍵字查詢
+            if($keyword != null) {
+                //庫別代號、庫別名稱、批號
+                // 這裡使用了 SQL 的 LIKE 語法來進行模糊查詢
+                $likeKeyword = '%' . $keyword . '%';
+                $sql = "select  *
+                        from inventory
+                        where inventory.is_valid = '1'  
+                        and ( inventory.inventory_no LIKE ? 
+                           OR inventory.inventory_nm LIKE ?
+                           OR inventory.lot_num LIKE ? )
+                        order by update_time,create_time asc;";
+
+                $Inventory = DB::select($sql, [$likeKeyword, $likeKeyword, $likeKeyword]);
+
+            } else {
+                $Inventory = Inventory::where('is_valid', '1')->get();
+            }
+
+            if (!$Inventory) {
                 return response()->json([
                     'status' => true,
                     'message' => '未找到有效庫別',
-                    'output'    => null
+                    'output'    => $Inventory
                 ], 404);
             }
             return response()->json([                

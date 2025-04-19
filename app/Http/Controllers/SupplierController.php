@@ -412,110 +412,18 @@ class SupplierController extends Controller
     }
     /**
      * @OA\GET(
-     *     path="/api/supplier2/{Keyword}",
-     *     summary="查詢關鍵字",
-     *     description="查詢關鍵字",
-     *     operationId="getsupplier2",
-     *     tags={"base_supplier"},
-     *     @OA\Parameter(
-     *         name="Keyword",
-     *         in="path",
-     *         required=true,
-     *         description="關鍵字查詢(統一編號、廠商名稱、地址)",
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="成功",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="supplier_no", type="string", example="S003"),
-     *             @OA\Property(property="supplier_shortnm", type="string", example="測試供應商1"),
-     *             @OA\Property(property="supplier_fullnm", type="string", example="測試供應商1"),
-     *             @OA\Property(property="zipcode1", type="string", example="12345"),
-     *             @OA\Property(property="address1", type="string", example="台北市信義區"),
-     *             @OA\Property(property="zipcode2", type="string", example="54321"),
-     *             @OA\Property(property="address2", type="string", example="台北市大安區"),
-     *             @OA\Property(property="taxid", type="string", example="12345678"),
-     *             @OA\Property(property="responsible_person", type="string", example="王小明"),
-     *             @OA\Property(property="established_date", type="string", example="2025-03-31"),
-     *             @OA\Property(property="phone", type="string", example="02-12345678"),
-     *             @OA\Property(property="fax", type="string", example="02-87654321"),
-     *             @OA\Property(property="contact_person", type="string", example="李小華"),
-     *             @OA\Property(property="contact_phone", type="string", example="0912345678"),
-     *             @OA\Property(property="mobile_phone", type="string", example="0987654321"),
-     *             @OA\Property(property="contact_email", type="string", example="a151815058@gmail.com"),
-     *             @OA\Property(property="currencyid", type="string", example="TWD"),
-     *             @OA\Property(property="tax_type", type="string", example="T001"),
-     *             @OA\Property(property="payment_termid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="user_id", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="note", type="string", example=""),
-     *             @OA\Property(property="is_valid", type="boolean", example=true),
-     *             @OA\Property(property="create_user", type="string", example="admin"),
-     *             @OA\Property(property="update_user", type="string", example="admin"),
-     *             @OA\Property(property="create_time", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="未找到供應商資料"
-     *     )
-     * )
-     */
-    // 🔍 查詢供應商
-    public function show2($Keyword)
-    {
-        try{
-            // 使用關鍵字查詢品號
-            $Supplier = Supplier::where('taxid', 'like', '%' . $Keyword . '%')
-                ->orWhere('supplier_shortnm', 'like', '%' . $Keyword . '%')
-                ->orWhere('supplier_fullnm', 'like', '%' . $Keyword . '%')
-                ->orWhere('address1', 'like', '%' . $Keyword . '%')
-                ->orWhere('address2', 'like', '%' . $Keyword . '%')
-                ->where('is_valid','1')
-                ->get();       
-            if (!$Supplier) {
-                return response()->json([
-                    'status' => true,
-                    'message' => '供應商未找到',
-                    'output'    => null
-                ], 404);
-            }
-    
-            return response()->json([                
-                'status' => true,
-                'message' => 'success',
-                'output'    => $Supplier
-            ],200);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            // 捕捉驗證失敗
-            return response()->json([
-                'status' => false,
-                'message' => '驗證錯誤',
-                'errors' => $e->errors()
-            ], 422);
-    
-        } catch (\Exception $e) {
-            // 其他例外處理
-            Log::error('建立資料錯誤：' . $e->getMessage());
-    
-            return response()->json([
-                'status' => false,
-                'message' => '伺服器發生錯誤，請稍後再試',
-                'error' => $e->getMessage() // 上線環境建議拿掉
-            ], 500);
-        }
-
-    }
-    /**
-     * @OA\GET(
      *     path="/api/supplier3/valid",
-     *     summary="查詢所有有效供應商",
-     *     description="查詢所有有效供應商",
+     *     summary="查詢所有有效供應商(含關鍵字查詢)",
+     *     description="查詢所有有效供應商(含關鍵字查詢)",
      *     operationId="getallsupplier",
      *     tags={"base_supplier"},
+     *     @OA\Parameter(
+     *         name="keyword",
+     *         in="query",
+     *         required=false,
+     *         description="關鍵字查詢",
+     *         @OA\Schema(type="string")
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="成功",
@@ -557,15 +465,37 @@ class SupplierController extends Controller
      * )
      */
     // 🔍 查詢所有有效供應商
-    public function getvalidsuppliers()
+    public function getvalidsuppliers(Request $request)
     {
         try {
-            $Supplier = Supplier::getValidsuppliers();
-            if ($Supplier->isEmpty()) {
+
+            $keyword = $request->query('keyword'); // 可為 null
+
+            // 使用 DB::select 進行關鍵字查詢
+            if($keyword != null) {
+                $likeKeyword = '%' . $keyword . '%';
+                $sql = "select  *
+                        from supplier
+                        where supplier.is_valid = '1'  
+                        and ( supplier.supplier_no LIKE ? 
+                          OR supplier.supplier_shortnm LIKE ?
+                          OR supplier.supplier_fullnm LIKE ?
+                          OR supplier.taxid LIKE ?
+                          OR supplier.responsible_person LIKE ?
+                          OR supplier.address1 LIKE ?)
+                        order by update_time,create_time asc;";
+
+                $Supplier = DB::select($sql, [$likeKeyword, $likeKeyword,$likeKeyword, $likeKeyword,$likeKeyword, $likeKeyword]);
+
+            } else {
+                $Supplier = Supplier::where('is_valid', '1')->get();
+            }
+
+            if (!$Supplier) {
                 return response()->json([
                     'status' => true,
                     'message' => '未找到有效供應商',
-                    'output'    => null
+                    'output'    => $Supplier
                 ], 404);
             }
             return response()->json([                

@@ -213,93 +213,18 @@ class DeptController extends Controller
     }
     /**
      * @OA\GET(
-     *     path="/api/dept2/{dept_nm}",
-     *     summary="查詢特定部門資訊",
-     *     description="查詢特定部門資訊",
-     *     operationId="getdeptnm",
-     *     tags={"base_dept"},
-     *     @OA\Parameter(
-     *         name="dept_nm",
-     *         in="path",
-     *         required=true,
-     *         description="部門名稱",
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="成功",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="dept_no", type="string", example="A02"),
-     *             @OA\Property(property="dept_nm", type="string", example="財務處"),
-     *             @OA\Property(property="note", type="string", example="測試測試"),
-     *             @OA\Property(property="is_valid", type="string", example="1"),
-     *             @OA\Property(property="create_user", type="string", example="admin"),
-     *             @OA\Property(property="create_time", type="string", example="admin"),
-     *             @OA\Property(property="update_user", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="未找到部門"
-     *     )
-     * )
-     */
-    // 🔍 查詢單一部門
-    public function shownm($deptNM)
-    {
-        try{
-            $decodedName = urldecode($deptNM);
-            #$dept = Dept::findByDeptNM($decodedName);
-            // 查詢特定發票資訊(以期別查詢，只要起迄其中符合即可)
-            $sql = "select  *
-                    from depts
-                    where  depts.dept_nm = ? and is_valid = '1'";
-    
-            $results = DB::select($sql, [$decodedName]);
-            
-            if (!$results) {
-                return response()->json([
-                    'status' => true,
-                    'message' => '部門未找到',
-                    'output'    => null
-                ], 404);
-            }
-    
-            return response()->json([                
-                'status' => true,
-                'message' => 'success',
-                'output'    => $results
-            ],200);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            // 捕捉驗證失敗
-            return response()->json([
-                'status' => false,
-                'message' => '驗證錯誤',
-                'errors' => $e->errors()
-            ], 422);
-    
-        } catch (\Exception $e) {
-            // 其他例外處理
-            Log::error('建立資料錯誤：' . $e->getMessage());
-    
-            return response()->json([
-                'status' => false,
-                'message' => '伺服器發生錯誤，請稍後再試',
-                'error' => $e->getMessage() // 上線環境建議拿掉
-            ], 500);
-        }
-
-    }
-    /**
-     * @OA\GET(
      *     path="/api/depts/valid",
-     *     summary="查詢所有有效部門資訊",
-     *     description="查詢所有有效部門資訊",
+     *     summary="查詢所有有效部門資訊(含關鍵字查詢)",
+     *     description="查詢所有有效部門資訊(含關鍵字查詢)",
      *     operationId="getalldept",
      *     tags={"base_dept"},
+     *     @OA\Parameter(
+     *         name="keyword",
+     *         in="query",
+     *         required=false,
+     *         description="關鍵字查詢",
+     *         @OA\Schema(type="string")
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="成功",
@@ -323,15 +248,31 @@ class DeptController extends Controller
      * )
      */
     // 🔍 查詢所有有效部門
-    public function getvaliddepts()
+    public function getvaliddepts(Request $request)
     {
         try{
-            $depts = Dept::getValidDepts()->where('is_valid', '1')->first();;
+            $keyword = $request->query('keyword'); // 可為 null
+
+            // 使用 DB::select 進行關鍵字查詢
+            if($keyword != null) {
+                $likeKeyword = '%' . $keyword . '%';
+                $sql = "select  *
+                        from depts
+                        where depts.is_valid = '1'  
+                        and ( depts.dept_no LIKE ? OR depts.dept_nm LIKE ?)
+                        order by update_time,create_time asc;";
+
+                $depts = DB::select($sql, [$likeKeyword, $likeKeyword]);
+
+            } else {
+                $depts = Dept::where('is_valid', '1')->get();
+            }
+
             if (!$depts) {
                 return response()->json([
                     'status' => true,
                     'message' => '未找到有效部門',
-                    'output'    => null
+                    'output'    => $depts
                 ], 404);
             }
             return response()->json([                

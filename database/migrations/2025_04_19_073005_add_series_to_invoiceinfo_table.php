@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('invoiceinfo', function (Blueprint $table) {
-            $table->string('invoice_type')->comment('發票類型');
+        Schema::table('invoice_info', function (Blueprint $table) {
+            $table->string('series')->nullable()->comment('序號'); 
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('invoiceinfo', function (Blueprint $table) {
-            //
+        Schema::table('invoice_info', function (Blueprint $table) {
+            $table->dropColumn('series');
         });
     }
 };

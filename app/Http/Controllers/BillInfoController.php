@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use OpenApi\Annotations as OA;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 class BillInfoController extends Controller
 {
@@ -297,92 +298,18 @@ class BillInfoController extends Controller
     }
     /**
      * @OA\GET(
-     *     path="/api/billinfo2/{billnm}",
-     *     summary="查詢特定單據資訊",
-     *     description="查詢特定單據資訊",
-     *     operationId="getbillinfonm",
-     *     tags={"base_billinfo"},
-     *     @OA\Parameter(
-     *         name="billnm",
-     *         in="path",
-     *         required=true,
-     *         description="單據名稱",
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="成功",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="bill_no", type="string", example="T001"),
-     *             @OA\Property(property="bill_nm", type="string", example="客戶訂單"),
-     *             @OA\Property(property="bill_type", type="string", example="61"),
-     *             @OA\Property(property="bill_encode", type="string", example="1"),    
-     *             @OA\Property(property="bill_calc", type="string", example="1"),
-     *             @OA\Property(property="auto_review", type="string", example="1"),
-     *             @OA\Property(property="gen_order", type="string", example="1"),
-     *             @OA\Property(property="gen_bill_type", type="string", example="1"),
-     *             @OA\Property(property="order_type", type="string", example="1"),
-     *             @OA\Property(property="note", type="string", example=""),
-     *             @OA\Property(property="is_valid", type="string", example="1"),
-     *             @OA\Property(property="create_user", type="string", example="admin"),
-     *             @OA\Property(property="update_user", type="string", example="admin"),
-     *             @OA\Property(property="create_time", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="未找到單據資訊"
-     *     )
-     * )
-     */
-    // 🔍 查詢單一付款條件
-    public function shownm($BillNM)
-    {
-        try {
-            $BillNM = BillInfo::where('bill_nm', $BillNM)->where('is_valid','1')->first();
-            
-            if (!$BillNM) {
-                return response()->json([
-                    'status' => true,
-                    'message' => '單據未找到',
-                    'output'    => null
-                ], 404);
-            }
-
-            return response()->json([                
-                'status' => true,
-                'message' => 'success',
-                'output'    => $BillNM
-            ],200);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            // 捕捉驗證失敗
-            return response()->json([
-                'status' => false,
-                'message' => '驗證錯誤',
-                'errors' => $e->errors()
-            ], 422);
-    
-        } catch (\Exception $e) {
-            // 其他例外處理
-            Log::error('資料錯誤：' . $e->getMessage());
-    
-            return response()->json([
-                'status' => false,
-                'message' => '伺服器發生錯誤，請稍後再試',
-                'error' => $e->getMessage() // 上線環境建議拿掉
-            ], 500);
-        }
-    }
-    /**
-     * @OA\GET(
      *     path="/api/billinfo1/valid",
-     *     summary="查詢所有有效單據資訊",
-     *     description="查詢所有有效單據資訊",
+     *     summary="查詢所有有效單據資訊(含關鍵字查詢)",
+     *     description="查詢所有有效單據資訊(含關鍵字查詢)",
      *     operationId="getallbills",
      *     tags={"base_billinfo"},
+     *     @OA\Parameter(
+     *         name="keyword",
+     *         in="query",
+     *         required=false,
+     *         description="關鍵字查詢",
+     *         @OA\Schema(type="string")
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="成功",
@@ -412,16 +339,32 @@ class BillInfoController extends Controller
      *     )
      * )
      */
-    // 🔍 查詢所有有效部門
-    public function getvalidbillnos()
+    // 🔍 查詢所有有效單據(含關鍵字查詢)
+    public function getvalidbillnos(Request $request)
     {
         try {
-            $BillInfo = BillInfo::where('is_valid', '1')->get();
+
+            $keyword = $request->query('keyword'); // 可為 null
+
+            // 使用 DB::select 進行關鍵字查詢
+            if($keyword != null) {
+                $likeKeyword = '%' . $keyword . '%';
+                $sql = "select  *
+                        from billinfo
+                        where billinfo.is_valid = '1'  
+                        and ( billinfo.bill_no LIKE ? OR billinfo.bill_nm LIKE ?)
+                        order by update_time,create_time asc;";
+
+                $BillInfo = DB::select($sql, [$likeKeyword, $likeKeyword]);
+
+            } else {
+                $BillInfo = BillInfo::where('is_valid', '1')->get();
+            }
             if (!$BillInfo) {
                 return response()->json([
                     'status' => true,
                     'message' => '有效單據資訊未找到',
-                    'output'    => null
+                    'output'    => $BillInfo
                 ], 404);
             }
             return response()->json([                
@@ -501,7 +444,7 @@ class BillInfoController extends Controller
                 return response()->json([
                     'status' => true,
                     'message' => '單據未找到',
-                    'output'    => null
+                    'output'    => $BillNo
                 ], 404);
             }
 
