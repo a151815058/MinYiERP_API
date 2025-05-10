@@ -554,6 +554,15 @@
                         }
                     },
                     {
+                        "name": "client_type",
+                        "in": "query",
+                        "description": "客戶型態",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
                         "name": "client_fullnm",
                         "in": "query",
                         "description": "客戶全名",
@@ -599,15 +608,6 @@
                         }
                     },
                     {
-                        "name": "taxid",
-                        "in": "query",
-                        "description": "統一編號 (台灣: 8 碼)",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
                         "name": "responsible_person",
                         "in": "query",
                         "description": "負責人",
@@ -617,9 +617,18 @@
                         }
                     },
                     {
-                        "name": "established_date",
+                        "name": "contact_person",
                         "in": "query",
-                        "description": "成立時間",
+                        "description": "聯絡人",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "contact_phone",
+                        "in": "query",
+                        "description": "聯絡人電話",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -644,18 +653,9 @@
                         }
                     },
                     {
-                        "name": "contact_person",
+                        "name": "established_date",
                         "in": "query",
-                        "description": "聯絡人",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "contact_phone",
-                        "in": "query",
-                        "description": "聯絡人電話",
+                        "description": "成立時間",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -680,18 +680,18 @@
                         }
                     },
                     {
-                        "name": "currency_id",
+                        "name": "user_id",
                         "in": "query",
-                        "description": "幣別id",
+                        "description": "負責採購人員id",
                         "required": true,
                         "schema": {
                             "type": "string"
                         }
                     },
                     {
-                        "name": "taxtype",
+                        "name": "currency_id",
                         "in": "query",
-                        "description": "稅別(抓參數資料param_sn=10)",
+                        "description": "幣別id",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -707,9 +707,81 @@
                         }
                     },
                     {
-                        "name": "user_id",
+                        "name": "account_category",
                         "in": "query",
-                        "description": "負責採購人員id",
+                        "description": "科目別",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "invoice_title",
+                        "in": "query",
+                        "description": "發票抬頭",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "taxtype",
+                        "in": "query",
+                        "description": "稅別(抓參數資料param_sn=10)",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "taxid",
+                        "in": "query",
+                        "description": "統一編號 (台灣: 8 碼)",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "delivery_method",
+                        "in": "query",
+                        "description": "送貨方式",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "recipient_name",
+                        "in": "query",
+                        "description": "發票收件人",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "recipient_phone",
+                        "in": "query",
+                        "description": "發票收件人電話",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "recipient_email",
+                        "in": "query",
+                        "description": "發票收件人信箱",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "invoice_address",
+                        "in": "query",
+                        "description": "發票地址",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -742,10 +814,6 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "uuid": {
-                                            "type": "string",
-                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
-                                        },
                                         "client_no": {
                                             "type": "string",
                                             "example": "S003"
@@ -753,6 +821,10 @@
                                         "client_shortnm": {
                                             "type": "string",
                                             "example": "測試客戶1"
+                                        },
+                                        "client_type": {
+                                            "type": "string",
+                                            "example": "一般"
                                         },
                                         "client_fullnm": {
                                             "type": "string",
@@ -774,25 +846,9 @@
                                             "type": "string",
                                             "example": "台北市大安區"
                                         },
-                                        "taxid": {
-                                            "type": "string",
-                                            "example": "12345678"
-                                        },
                                         "responsible_person": {
                                             "type": "string",
                                             "example": "王小明"
-                                        },
-                                        "established_date": {
-                                            "type": "string",
-                                            "example": "2025-03-31"
-                                        },
-                                        "phone": {
-                                            "type": "string",
-                                            "example": "02-12345678"
-                                        },
-                                        "fax": {
-                                            "type": "string",
-                                            "example": "02-87654321"
                                         },
                                         "contact_person": {
                                             "type": "string",
@@ -802,6 +858,18 @@
                                             "type": "string",
                                             "example": "0912345678"
                                         },
+                                        "phone": {
+                                            "type": "string",
+                                            "example": "02-12345678"
+                                        },
+                                        "fax": {
+                                            "type": "string",
+                                            "example": "02-87654321"
+                                        },
+                                        "established_date": {
+                                            "type": "string",
+                                            "example": "2025-03-31"
+                                        },
                                         "mobile_phone": {
                                             "type": "string",
                                             "example": "0987654321"
@@ -810,21 +878,53 @@
                                             "type": "string",
                                             "example": "a151815058@gmail.com"
                                         },
+                                        "user_id": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
                                         "currency_id": {
                                             "type": "string",
                                             "example": "TWD"
+                                        },
+                                        "paymentterm_id": {
+                                            "type": "string",
+                                            "example": "NET30"
+                                        },
+                                        "account_category": {
+                                            "type": "string",
+                                            "example": "AC001"
+                                        },
+                                        "invoice_title": {
+                                            "type": "string",
+                                            "example": "宏達電股份有限公司"
                                         },
                                         "taxtype": {
                                             "type": "string",
                                             "example": "T001"
                                         },
-                                        "paymentterm_id": {
+                                        "taxid": {
                                             "type": "string",
-                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                            "example": "12345678"
                                         },
-                                        "user_id": {
+                                        "delivery_method": {
                                             "type": "string",
-                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                            "example": "宅配"
+                                        },
+                                        "recipient_name": {
+                                            "type": "string",
+                                            "example": "王小姐"
+                                        },
+                                        "recipient_phone": {
+                                            "type": "string",
+                                            "example": "02-22334455"
+                                        },
+                                        "recipient_email": {
+                                            "type": "string",
+                                            "example": "invoice@htc.com"
+                                        },
+                                        "invoice_address": {
+                                            "type": "string",
+                                            "example": "新北市板橋區縣民大道二段100號"
                                         },
                                         "note": {
                                             "type": "string",
@@ -840,11 +940,11 @@
                                         },
                                         "create_time": {
                                             "type": "string",
-                                            "example": "admin"
+                                            "example": "2025-03-31T08:58:52.001975Z"
                                         },
                                         "update_user": {
                                             "type": "string",
-                                            "example": "2025-03-31T08:58:52.001975Z"
+                                            "example": "admin"
                                         },
                                         "update_time": {
                                             "type": "string",
@@ -888,10 +988,6 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "uuid": {
-                                            "type": "string",
-                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
-                                        },
                                         "client_no": {
                                             "type": "string",
                                             "example": "S003"
@@ -899,6 +995,10 @@
                                         "client_shortnm": {
                                             "type": "string",
                                             "example": "測試客戶1"
+                                        },
+                                        "client_type": {
+                                            "type": "string",
+                                            "example": "一般"
                                         },
                                         "client_fullnm": {
                                             "type": "string",
@@ -920,25 +1020,9 @@
                                             "type": "string",
                                             "example": "台北市大安區"
                                         },
-                                        "taxid": {
-                                            "type": "string",
-                                            "example": "12345678"
-                                        },
                                         "responsible_person": {
                                             "type": "string",
                                             "example": "王小明"
-                                        },
-                                        "established_date": {
-                                            "type": "string",
-                                            "example": "2025-03-31"
-                                        },
-                                        "phone": {
-                                            "type": "string",
-                                            "example": "02-12345678"
-                                        },
-                                        "fax": {
-                                            "type": "string",
-                                            "example": "02-87654321"
                                         },
                                         "contact_person": {
                                             "type": "string",
@@ -948,6 +1032,18 @@
                                             "type": "string",
                                             "example": "0912345678"
                                         },
+                                        "phone": {
+                                            "type": "string",
+                                            "example": "02-12345678"
+                                        },
+                                        "fax": {
+                                            "type": "string",
+                                            "example": "02-87654321"
+                                        },
+                                        "established_date": {
+                                            "type": "string",
+                                            "example": "2025-03-31"
+                                        },
                                         "mobile_phone": {
                                             "type": "string",
                                             "example": "0987654321"
@@ -956,21 +1052,53 @@
                                             "type": "string",
                                             "example": "a151815058@gmail.com"
                                         },
+                                        "user_id": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
                                         "currency_id": {
                                             "type": "string",
                                             "example": "TWD"
+                                        },
+                                        "paymentterm_id": {
+                                            "type": "string",
+                                            "example": "NET30"
+                                        },
+                                        "account_category": {
+                                            "type": "string",
+                                            "example": "AC001"
+                                        },
+                                        "invoice_title": {
+                                            "type": "string",
+                                            "example": "宏達電股份有限公司"
                                         },
                                         "taxtype": {
                                             "type": "string",
                                             "example": "T001"
                                         },
-                                        "paymentterm_id": {
+                                        "taxid": {
                                             "type": "string",
-                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                            "example": "12345678"
                                         },
-                                        "user_id": {
+                                        "delivery_method": {
                                             "type": "string",
-                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                            "example": "宅配"
+                                        },
+                                        "recipient_name": {
+                                            "type": "string",
+                                            "example": "王小姐"
+                                        },
+                                        "recipient_phone": {
+                                            "type": "string",
+                                            "example": "02-22334455"
+                                        },
+                                        "recipient_email": {
+                                            "type": "string",
+                                            "example": "invoice@htc.com"
+                                        },
+                                        "invoice_address": {
+                                            "type": "string",
+                                            "example": "新北市板橋區縣民大道二段100號"
                                         },
                                         "note": {
                                             "type": "string",
@@ -986,11 +1114,11 @@
                                         },
                                         "create_time": {
                                             "type": "string",
-                                            "example": "admin"
+                                            "example": "2025-03-31T08:58:52.001975Z"
                                         },
                                         "update_user": {
                                             "type": "string",
-                                            "example": "2025-03-31T08:58:52.001975Z"
+                                            "example": "admin"
                                         },
                                         "update_time": {
                                             "type": "string",
@@ -1034,10 +1162,6 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "uuid": {
-                                            "type": "string",
-                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
-                                        },
                                         "client_no": {
                                             "type": "string",
                                             "example": "S003"
@@ -1045,6 +1169,10 @@
                                         "client_shortnm": {
                                             "type": "string",
                                             "example": "測試客戶1"
+                                        },
+                                        "client_type": {
+                                            "type": "string",
+                                            "example": "一般"
                                         },
                                         "client_fullnm": {
                                             "type": "string",
@@ -1066,25 +1194,9 @@
                                             "type": "string",
                                             "example": "台北市大安區"
                                         },
-                                        "taxid": {
-                                            "type": "string",
-                                            "example": "12345678"
-                                        },
                                         "responsible_person": {
                                             "type": "string",
                                             "example": "王小明"
-                                        },
-                                        "established_date": {
-                                            "type": "string",
-                                            "example": "2025-03-31"
-                                        },
-                                        "phone": {
-                                            "type": "string",
-                                            "example": "02-12345678"
-                                        },
-                                        "fax": {
-                                            "type": "string",
-                                            "example": "02-87654321"
                                         },
                                         "contact_person": {
                                             "type": "string",
@@ -1094,6 +1206,18 @@
                                             "type": "string",
                                             "example": "0912345678"
                                         },
+                                        "phone": {
+                                            "type": "string",
+                                            "example": "02-12345678"
+                                        },
+                                        "fax": {
+                                            "type": "string",
+                                            "example": "02-87654321"
+                                        },
+                                        "established_date": {
+                                            "type": "string",
+                                            "example": "2025-03-31"
+                                        },
                                         "mobile_phone": {
                                             "type": "string",
                                             "example": "0987654321"
@@ -1102,21 +1226,53 @@
                                             "type": "string",
                                             "example": "a151815058@gmail.com"
                                         },
+                                        "user_id": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
                                         "currency_id": {
                                             "type": "string",
                                             "example": "TWD"
+                                        },
+                                        "paymentterm_id": {
+                                            "type": "string",
+                                            "example": "NET30"
+                                        },
+                                        "account_category": {
+                                            "type": "string",
+                                            "example": "AC001"
+                                        },
+                                        "invoice_title": {
+                                            "type": "string",
+                                            "example": "宏達電股份有限公司"
                                         },
                                         "taxtype": {
                                             "type": "string",
                                             "example": "T001"
                                         },
-                                        "paymentterm_id": {
+                                        "taxid": {
                                             "type": "string",
-                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                            "example": "12345678"
                                         },
-                                        "user_id": {
+                                        "delivery_method": {
                                             "type": "string",
-                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                            "example": "宅配"
+                                        },
+                                        "recipient_name": {
+                                            "type": "string",
+                                            "example": "王小姐"
+                                        },
+                                        "recipient_phone": {
+                                            "type": "string",
+                                            "example": "02-22334455"
+                                        },
+                                        "recipient_email": {
+                                            "type": "string",
+                                            "example": "invoice@htc.com"
+                                        },
+                                        "invoice_address": {
+                                            "type": "string",
+                                            "example": "新北市板橋區縣民大道二段100號"
                                         },
                                         "note": {
                                             "type": "string",
@@ -1132,11 +1288,11 @@
                                         },
                                         "create_time": {
                                             "type": "string",
-                                            "example": "admin"
+                                            "example": "2025-03-31T08:58:52.001975Z"
                                         },
                                         "update_user": {
                                             "type": "string",
-                                            "example": "2025-03-31T08:58:52.001975Z"
+                                            "example": "admin"
                                         },
                                         "update_time": {
                                             "type": "string",
@@ -1180,10 +1336,6 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "uuid": {
-                                            "type": "string",
-                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
-                                        },
                                         "client_no": {
                                             "type": "string",
                                             "example": "S003"
@@ -1191,6 +1343,10 @@
                                         "client_shortnm": {
                                             "type": "string",
                                             "example": "測試客戶1"
+                                        },
+                                        "client_type": {
+                                            "type": "string",
+                                            "example": "一般"
                                         },
                                         "client_fullnm": {
                                             "type": "string",
@@ -1212,25 +1368,9 @@
                                             "type": "string",
                                             "example": "台北市大安區"
                                         },
-                                        "taxid": {
-                                            "type": "string",
-                                            "example": "12345678"
-                                        },
                                         "responsible_person": {
                                             "type": "string",
                                             "example": "王小明"
-                                        },
-                                        "established_date": {
-                                            "type": "string",
-                                            "example": "2025-03-31"
-                                        },
-                                        "phone": {
-                                            "type": "string",
-                                            "example": "02-12345678"
-                                        },
-                                        "fax": {
-                                            "type": "string",
-                                            "example": "02-87654321"
                                         },
                                         "contact_person": {
                                             "type": "string",
@@ -1240,6 +1380,18 @@
                                             "type": "string",
                                             "example": "0912345678"
                                         },
+                                        "phone": {
+                                            "type": "string",
+                                            "example": "02-12345678"
+                                        },
+                                        "fax": {
+                                            "type": "string",
+                                            "example": "02-87654321"
+                                        },
+                                        "established_date": {
+                                            "type": "string",
+                                            "example": "2025-03-31"
+                                        },
                                         "mobile_phone": {
                                             "type": "string",
                                             "example": "0987654321"
@@ -1248,21 +1400,53 @@
                                             "type": "string",
                                             "example": "a151815058@gmail.com"
                                         },
+                                        "user_id": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
                                         "currency_id": {
                                             "type": "string",
                                             "example": "TWD"
+                                        },
+                                        "paymentterm_id": {
+                                            "type": "string",
+                                            "example": "NET30"
+                                        },
+                                        "account_category": {
+                                            "type": "string",
+                                            "example": "AC001"
+                                        },
+                                        "invoice_title": {
+                                            "type": "string",
+                                            "example": "宏達電股份有限公司"
                                         },
                                         "taxtype": {
                                             "type": "string",
                                             "example": "T001"
                                         },
-                                        "paymentterm_id": {
+                                        "taxid": {
                                             "type": "string",
-                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                            "example": "12345678"
                                         },
-                                        "user_id": {
+                                        "delivery_method": {
                                             "type": "string",
-                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                            "example": "宅配"
+                                        },
+                                        "recipient_name": {
+                                            "type": "string",
+                                            "example": "王小姐"
+                                        },
+                                        "recipient_phone": {
+                                            "type": "string",
+                                            "example": "02-22334455"
+                                        },
+                                        "recipient_email": {
+                                            "type": "string",
+                                            "example": "invoice@htc.com"
+                                        },
+                                        "invoice_address": {
+                                            "type": "string",
+                                            "example": "新北市板橋區縣民大道二段100號"
                                         },
                                         "note": {
                                             "type": "string",
@@ -1270,7 +1454,7 @@
                                         },
                                         "is_valid": {
                                             "type": "string",
-                                            "example": "0"
+                                            "example": "1"
                                         },
                                         "create_user": {
                                             "type": "string",
@@ -1278,11 +1462,11 @@
                                         },
                                         "create_time": {
                                             "type": "string",
-                                            "example": "admin"
+                                            "example": "2025-03-31T08:58:52.001975Z"
                                         },
                                         "update_user": {
                                             "type": "string",
-                                            "example": "2025-03-31T08:58:52.001975Z"
+                                            "example": "admin"
                                         },
                                         "update_time": {
                                             "type": "string",

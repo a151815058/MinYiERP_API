@@ -34,34 +34,6 @@ class InventoryController extends Controller
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="inventory_qty",
-     *         in="query",
-     *         required=true,
-     *         description="庫存數量",
-     *         @OA\Schema(type="integer")
-     *     ),
-     *     @OA\Parameter(
-     *         name="lot_num",
-     *         in="query",
-     *         required=false,
-     *         description="批號",
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Parameter(
-     *         name="safety_stock",
-     *         in="query",
-     *         required=true,
-     *         description="安全庫存",
-     *         @OA\Schema(type="integer")
-     *     ),
-     *     @OA\Parameter(
-     *         name="lastStock_receiptdate",
-     *         in="query",
-     *         required=true,
-     *         description="最近一次進貨日",
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Parameter(
      *         name="is_valid",
      *         in="query",
      *         required=true,
@@ -76,10 +48,6 @@ class InventoryController extends Controller
      *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
      *             @OA\Property(property="inventory_no", type="string", example="INV001"),
      *             @OA\Property(property="inventory_nm", type="string", example="庫別1"),
-     *             @OA\Property(property="inventory_qty", type="integer", example="1000"),
-     *             @OA\Property(property="lot_num", type="string", example="LOT123"),
-     *             @OA\Property(property="safety_stock", type="integer", example="500"),
-     *             @OA\Property(property="lastStock_receiptdate", type="string", example="2025-03-31"),
      *             @OA\Property(property="is_valid", type="string", example="1"),
      *             @OA\Property(property="create_user", type="string", example="admin"),
      *             @OA\Property(property="create_time", type="string", example="admin"),
@@ -101,10 +69,10 @@ class InventoryController extends Controller
             $validator = Validator::make($request->all(),[
                 'inventory_no'     => 'required|string|max:255|unique:inventory,inventory_no',
                 'inventory_nm'     => 'required|string|max:255',
-                'inventory_qty'     => 'required|integer|max:10000000',
-                'lot_num'     => 'nullable|string|max:255',
-                'safety_stock'     => 'required|integer|max:10000000',
-                'lastStock_receiptdate'     => 'nullable|string',
+                //'inventory_qty'     => 'required|integer|max:10000000',
+                //'lot_num'     => 'nullable|string|max:255',
+                //'safety_stock'     => 'required|integer|max:10000000',
+                //'lastStock_receiptdate'     => 'nullable|string',
                 'is_valid'    => 'required|boolean'
             ]);
 
@@ -121,10 +89,10 @@ class InventoryController extends Controller
                 'uuid'                    => Str::uuid(),  // 自動生成 UUID
                 'inventory_no'             => $request['inventory_no'],
                 'inventory_nm'             => $request['inventory_nm'],
-                'inventory_qty'            => $request['inventory_qty'],
-                'lot_num'                  => $request['lot_num']?? null,
-                'safety_stock'            => $request['safety_stock'],
-                'lastStock_receiptdate'    => $request['lastStock_receiptdate'] ?? null,
+                //'inventory_qty'            => $request['inventory_qty'],
+                //'lot_num'                  => $request['lot_num']?? null,
+                //'safety_stock'            => $request['safety_stock'],
+                //'lastStock_receiptdate'    => $request['lastStock_receiptdate'] ?? null,
                 'is_valid'                 => $request['is_valid']
             ]);
 
@@ -184,11 +152,7 @@ class InventoryController extends Controller
      *             type="object",
      *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
      *             @OA\Property(property="inventory_no", type="string", example="INV001"),
-     *             @OA\Property(property="inventory_nm", type="string", example="庫別1"),
-     *             @OA\Property(property="inventory_qty", type="integer", example="1000"),
-     *             @OA\Property(property="lot_num", type="string", example="LOT123"),
-     *             @OA\Property(property="safety_stock", type="integer", example="500"),
-     *             @OA\Property(property="lastStock_receiptdate", type="string", example="2025-03-31"),
+     *             @OA\Property(property="inventory_nm", type="string", example="庫別1"),\
      *             @OA\Property(property="is_valid", type="string", example="1"),
      *             @OA\Property(property="create_user", type="string", example="admin"),
      *             @OA\Property(property="create_time", type="string", example="admin"),
@@ -262,11 +226,7 @@ class InventoryController extends Controller
      *             type="object",
      *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
      *             @OA\Property(property="inventory_no", type="string", example="INV001"),
-     *             @OA\Property(property="inventory_nm", type="string", example="庫別1"),
-     *             @OA\Property(property="inventory_qty", type="integer", example="1000"),
-     *             @OA\Property(property="lot_num", type="string", example="LOT123"),
-     *             @OA\Property(property="safety_stock", type="integer", example="500"),
-     *             @OA\Property(property="lastStock_receiptdate", type="string", example="2025-03-31"),
+     *             @OA\Property(property="inventory_nm", type="string", example="庫別1"),\
      *             @OA\Property(property="is_valid", type="string", example="1"),
      *             @OA\Property(property="create_user", type="string", example="admin"),
      *             @OA\Property(property="create_time", type="string", example="admin"),
@@ -359,10 +319,6 @@ class InventoryController extends Controller
      *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
      *             @OA\Property(property="inventory_no", type="string", example="INV001"),
      *             @OA\Property(property="inventory_nm", type="string", example="庫別1"),
-     *             @OA\Property(property="inventory_qty", type="integer", example="1000"),
-     *             @OA\Property(property="lot_num", type="string", example="LOT123"),
-     *             @OA\Property(property="safety_stock", type="integer", example="500"),
-     *             @OA\Property(property="lastStock_receiptdate", type="string", example="2025-03-31"),
      *             @OA\Property(property="is_valid", type="string", example="0"),
      *             @OA\Property(property="create_user", type="string", example="admin"),
      *             @OA\Property(property="create_time", type="string", example="admin"),
