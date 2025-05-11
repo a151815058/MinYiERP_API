@@ -152,7 +152,7 @@ class InventoryController extends Controller
      *             type="object",
      *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
      *             @OA\Property(property="inventory_no", type="string", example="INV001"),
-     *             @OA\Property(property="inventory_nm", type="string", example="庫別1"),\
+     *             @OA\Property(property="inventory_nm", type="string", example="庫別1"),
      *             @OA\Property(property="is_valid", type="string", example="1"),
      *             @OA\Property(property="create_user", type="string", example="admin"),
      *             @OA\Property(property="create_time", type="string", example="admin"),
@@ -226,7 +226,7 @@ class InventoryController extends Controller
      *             type="object",
      *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
      *             @OA\Property(property="inventory_no", type="string", example="INV001"),
-     *             @OA\Property(property="inventory_nm", type="string", example="庫別1"),\
+     *             @OA\Property(property="inventory_nm", type="string", example="庫別1"),
      *             @OA\Property(property="is_valid", type="string", example="1"),
      *             @OA\Property(property="create_user", type="string", example="admin"),
      *             @OA\Property(property="create_time", type="string", example="admin"),

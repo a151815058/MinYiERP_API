@@ -12,6 +12,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\InvoiceInfoController;
+use App\Http\Controllers\AccountController;
 
 //部門相關  API
 Route::post('/createdept', [DeptController::class, 'store']); // 新增部門資訊
@@ -105,6 +106,11 @@ Route::get('/invoiceInfo2/{period}', action: [InvoiceInfoController::class, 'sho
 Route::get('/invoiceInfo1/valid', [InvoiceInfoController::class, 'getvaildinvoiceinfo']);  // 查詢所有有效期別
 Route::patch('/invoiceinfo/{uuid}/disable', [InvoiceInfoController::class, 'disable']); // 軟刪除期別資訊
 Route::get('/invoiceInfo/showconst', [InvoiceInfoController::class, 'showconst']);  // 列出所有單據需要的常用(下拉、彈窗)
+
+//會計科目資料相關  API
+Route::post('/createaccount', [AccountController::class, 'store']);// 新增會計科目資料
+Route::get('/account1/{AccNo}', action: [AccountController::class, 'showno']);  // 透過會計科目代碼查詢
+Route::get('/account/valid', [AccountController::class, 'getvaildaccount']);  // 查詢所有有效會計科目
 
 
 Route::post('/', function () {

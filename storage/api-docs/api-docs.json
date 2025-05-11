@@ -9,6 +9,319 @@
         "version": "1.0"
     },
     "paths": {
+        "/api/createaccount": {
+            "post": {
+                "tags": [
+                    "base_account"
+                ],
+                "summary": "新增會計科目",
+                "description": "新增會計科目",
+                "operationId": "createaccount",
+                "parameters": [
+                    {
+                        "name": "account_no",
+                        "in": "query",
+                        "description": "會計科目代碼",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "account_name",
+                        "in": "query",
+                        "description": "會計科目名稱",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "Puuid",
+                        "in": "query",
+                        "description": "父層UUID",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "tier",
+                        "in": "query",
+                        "description": "層級",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "dc",
+                        "in": "query",
+                        "description": "借貸方向",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "note",
+                        "in": "query",
+                        "description": "備註",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "is_valid",
+                        "in": "query",
+                        "description": "是否有效",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "account_no": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "account_name": {
+                                            "type": "string",
+                                            "example": "資產"
+                                        },
+                                        "Puuid": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "tier": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "dc": {
+                                            "type": "string",
+                                            "example": "Assets"
+                                        },
+                                        "note": {
+                                            "type": "string",
+                                            "example": "指因過去事項所產生之資源，該資源由商業控制，並預期帶來經濟效益之流入。"
+                                        },
+                                        "is_valid": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "create_user": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "update_user": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "create_time": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "update_time": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "會計科目失敗"
+                    }
+                }
+            }
+        },
+        "/api/account1/{AccNo}": {
+            "get": {
+                "tags": [
+                    "base_account"
+                ],
+                "summary": "查詢特定會計科目資訊",
+                "description": "查詢特定會計科目資訊",
+                "operationId": "getaccount",
+                "parameters": [
+                    {
+                        "name": "AccNo",
+                        "in": "path",
+                        "description": "會計科目代號",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "account_no": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "account_name": {
+                                            "type": "string",
+                                            "example": "資產"
+                                        },
+                                        "Puuid": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "tier": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "dc": {
+                                            "type": "string",
+                                            "example": "Assets"
+                                        },
+                                        "note": {
+                                            "type": "string",
+                                            "example": "指因過去事項所產生之資源，該資源由商業控制，並預期帶來經濟效益之流入。"
+                                        },
+                                        "is_valid": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "create_user": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "update_user": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "create_time": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "update_time": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "未找到會計科目"
+                    }
+                }
+            }
+        },
+        "/api/account/valid": {
+            "get": {
+                "tags": [
+                    "base_account"
+                ],
+                "summary": "查詢所有有效會計科目(含關鍵字查詢)",
+                "description": "查詢所有有效會計科目(含關鍵字查詢)",
+                "operationId": "getallaccount",
+                "parameters": [
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "關鍵字查詢",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "account_no": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "account_name": {
+                                            "type": "string",
+                                            "example": "資產"
+                                        },
+                                        "Puuid": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "tier": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "dc": {
+                                            "type": "string",
+                                            "example": "Assets"
+                                        },
+                                        "note": {
+                                            "type": "string",
+                                            "example": "指因過去事項所產生之資源，該資源由商業控制，並預期帶來經濟效益之流入。"
+                                        },
+                                        "is_valid": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "create_user": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "update_user": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "create_time": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "update_time": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "未找到有效會計科目"
+                    }
+                }
+            }
+        },
         "/api/createbillinfo": {
             "post": {
                 "tags": [
@@ -824,7 +1137,7 @@
                                         },
                                         "client_type": {
                                             "type": "string",
-                                            "example": "一般"
+                                            "example": "個人"
                                         },
                                         "client_fullnm": {
                                             "type": "string",
@@ -2549,42 +2862,6 @@
                         }
                     },
                     {
-                        "name": "inventory_qty",
-                        "in": "query",
-                        "description": "庫存數量",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "lot_num",
-                        "in": "query",
-                        "description": "批號",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "safety_stock",
-                        "in": "query",
-                        "description": "安全庫存",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "lastStock_receiptdate",
-                        "in": "query",
-                        "description": "最近一次進貨日",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
                         "name": "is_valid",
                         "in": "query",
                         "description": "是否有效",
@@ -2613,22 +2890,6 @@
                                         "inventory_nm": {
                                             "type": "string",
                                             "example": "庫別1"
-                                        },
-                                        "inventory_qty": {
-                                            "type": "integer",
-                                            "example": "1000"
-                                        },
-                                        "lot_num": {
-                                            "type": "string",
-                                            "example": "LOT123"
-                                        },
-                                        "safety_stock": {
-                                            "type": "integer",
-                                            "example": "500"
-                                        },
-                                        "lastStock_receiptdate": {
-                                            "type": "string",
-                                            "example": "2025-03-31"
                                         },
                                         "is_valid": {
                                             "type": "string",
@@ -2700,22 +2961,6 @@
                                             "type": "string",
                                             "example": "庫別1"
                                         },
-                                        "inventory_qty": {
-                                            "type": "integer",
-                                            "example": "1000"
-                                        },
-                                        "lot_num": {
-                                            "type": "string",
-                                            "example": "LOT123"
-                                        },
-                                        "safety_stock": {
-                                            "type": "integer",
-                                            "example": "500"
-                                        },
-                                        "lastStock_receiptdate": {
-                                            "type": "string",
-                                            "example": "2025-03-31"
-                                        },
                                         "is_valid": {
                                             "type": "string",
                                             "example": "1"
@@ -2786,22 +3031,6 @@
                                             "type": "string",
                                             "example": "庫別1"
                                         },
-                                        "inventory_qty": {
-                                            "type": "integer",
-                                            "example": "1000"
-                                        },
-                                        "lot_num": {
-                                            "type": "string",
-                                            "example": "LOT123"
-                                        },
-                                        "safety_stock": {
-                                            "type": "integer",
-                                            "example": "500"
-                                        },
-                                        "lastStock_receiptdate": {
-                                            "type": "string",
-                                            "example": "2025-03-31"
-                                        },
                                         "is_valid": {
                                             "type": "string",
                                             "example": "1"
@@ -2871,22 +3100,6 @@
                                         "inventory_nm": {
                                             "type": "string",
                                             "example": "庫別1"
-                                        },
-                                        "inventory_qty": {
-                                            "type": "integer",
-                                            "example": "1000"
-                                        },
-                                        "lot_num": {
-                                            "type": "string",
-                                            "example": "LOT123"
-                                        },
-                                        "safety_stock": {
-                                            "type": "integer",
-                                            "example": "500"
-                                        },
-                                        "lastStock_receiptdate": {
-                                            "type": "string",
-                                            "example": "2025-03-31"
                                         },
                                         "is_valid": {
                                             "type": "string",
@@ -5729,6 +5942,10 @@
         }
     },
     "tags": [
+        {
+            "name": "base_account",
+            "description": "base_account"
+        },
         {
             "name": "base_billinfo",
             "description": "base_billinfo"
