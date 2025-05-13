@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Inventory;
 use Illuminate\Support\Str;
+require_once base_path('app/Models/connect.php'); 
 use OpenApi\Annotations as OA;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
@@ -208,8 +209,8 @@ class InventoryController extends Controller
     /**
      * @OA\GET(
      *     path="/api/inventorys/valid",
-     *     summary="查詢所有有效庫別資訊(含關鍵字查詢)",
-     *     description="查詢所有有效庫別資訊(含關鍵字查詢)",
+     *     summary="查詢所有有效庫別資訊(含關鍵字查詢，庫別代號、庫別名稱)",
+     *     description="查詢所有有效庫別資訊(含關鍵字查詢，庫別代號、庫別名稱)",
      *     operationId="getallinventory",
      *     tags={"base_inventory"},
      *     @OA\Parameter(
@@ -219,21 +220,31 @@ class InventoryController extends Controller
      *         description="關鍵字查詢",
      *         @OA\Schema(type="string")
      *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="成功",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="inventory_no", type="string", example="INV001"),
-     *             @OA\Property(property="inventory_nm", type="string", example="庫別1"),
-     *             @OA\Property(property="is_valid", type="string", example="1"),
-     *             @OA\Property(property="create_user", type="string", example="admin"),
-     *             @OA\Property(property="create_time", type="string", example="admin"),
-     *             @OA\Property(property="update_user", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
-     *         )
-     *     ),
+    * @OA\Response(
+    *     response=200,
+    *     description="成功取得分頁供應商清單",
+    *     @OA\JsonContent(
+    *         type="object",
+    *         @OA\Property(property="atPage", type="integer", example=1),
+    *         @OA\Property(property="total", type="integer", example=10),
+    *         @OA\Property(property="totalPages", type="integer", example=1),
+    *         @OA\Property(
+    *             property="data",
+    *             type="array",
+    *             @OA\Items(
+    *                 type="object",
+    *             	  @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
+    *             	  @OA\Property(property="inventory_no", type="string", example="INV001"),
+    *             	  @OA\Property(property="inventory_nm", type="string", example="庫別1"),
+    *             	  @OA\Property(property="is_valid", type="string", example="1"),
+    *             	  @OA\Property(property="create_user", type="string", example="admin"),
+    *             	  @OA\Property(property="create_time", type="string", example="admin"),
+    *             	  @OA\Property(property="update_user", type="string", example="2025-03-31T08:58:52.001975Z"),
+    *             	  @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
+    *             )
+    *         )
+    *     )
+    * ),
      *     @OA\Response(
      *         response=404,
      *         description="未找到有效庫別"
@@ -244,36 +255,70 @@ class InventoryController extends Controller
     public function getvaildinventory(Request $request)
     {
         try{
+            $pdo = getPDOConnection();
             $keyword = $request->query('keyword'); // 可為 null
+            $page = $request->query('page'); // 當前頁碼
+            $pageSize = $request->query('pageSize'); // 一頁顯示幾筆數值
+            $page = $page ? (int)$page : 1; // 預設為第 1 頁
+            $pageSize = $pageSize ? (int)$pageSize : 30; // 預設每頁顯示 30 筆資料
+
+            $likeKeyword = '%' . $keyword . '%';
 
             // 使用 DB::select 進行關鍵字查詢
             if($keyword != null) {
-                //庫別代號、庫別名稱、批號
                 // 這裡使用了 SQL 的 LIKE 語法來進行模糊查詢
-                $likeKeyword = '%' . $keyword . '%';
+                //查詢目前頁數的資料
+                $offset = ($page - 1) * $pageSize;
+                //LIMIT 30：每次最多回傳 30 筆資料
+                //OFFSET 0：從第 0 筆開始取，也就是第一頁的第 1 筆
+                //LIMIT 30 OFFSET 0  -- 取第 1~30 筆
+                //LIMIT 30 OFFSET 30 -- 取第 31~60 筆
+                //LIMIT 30 OFFSET 60 -- 取第 61~90 筆
+
                 $sql = "select  *
                         from inventory
                         where inventory.is_valid = '1'  
                         and ( inventory.inventory_no LIKE ? 
                            OR inventory.inventory_nm LIKE ?
                            OR inventory.lot_num LIKE ? )
-                        order by update_time,create_time asc;";
+                        order by update_time,create_time asc
+                        LIMIT ? OFFSET ?;";
 
-                $Inventory = DB::select($sql, [$likeKeyword, $likeKeyword, $likeKeyword]);
+                $Inventory = DB::select($sql, [$likeKeyword, $likeKeyword, $likeKeyword, $pageSize, $offset]);
 
             } else {
                 $Inventory = Inventory::where('is_valid', '1')->get();
             }
+            //取得總筆數與總頁數   
+            $sql_count = "
+                    SELECT COUNT(*) as total
+                    from inventory
+                    where inventory.is_valid = '1'  
+                    and ( inventory.inventory_no LIKE ? 
+                        OR inventory.inventory_nm LIKE ?
+                        OR inventory.lot_num LIKE ? )
+                    order by update_time,create_time asc;
+                ";
+            $stmt = $pdo->prepare($sql_count);
+            $stmt->execute([$likeKeyword, $likeKeyword,$likeKeyword]);
+            $total = $stmt->fetchColumn();
+            $totalPages = ceil($total / $pageSize); // 計算總頁數            
 
             if (!$Inventory) {
                 return response()->json([
                     'status' => true,
+                    'atPage' => $page,
+                    'total' => $total,
+                    'totalPages' => $totalPages,                    
                     'message' => '未找到有效庫別',
                     'output'    => $Inventory
                 ], 404);
             }
             return response()->json([                
                 'status' => true,
+                'atPage' => $page,
+                'total' => $total,
+                'totalPages' => $totalPages,                
                 'message' => 'success',
                 'output'    => $Inventory
             ],200);    

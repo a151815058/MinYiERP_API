@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\InvoiceInfo;
 use App\Models\SysCode;
 use Illuminate\Support\Str;
+require_once base_path('app/Models/connect.php'); 
 use Illuminate\Support\Facades\DB;
 use OpenApi\Annotations as OA;
 use Illuminate\Support\Facades\Log;
@@ -123,16 +124,16 @@ class InvoiceInfoController extends Controller
     {
         try{
             $validator = Validator::make($request->all(),[
-                'period_start' => 'required|string|max:7',
-                'period_end' => 'required|string|max:7',
-                'series' => 'required|string|max:3',
-                'invoice_type' => 'required|string|max:2',
-                'track_code' => 'required|string|max:2',
-                'start_number' => 'required|string',
-                'end_number' => 'required|string',
+                'period_start'        => 'required|string|max:7',
+                'period_end'          => 'required|string|max:7',
+                'series'              => 'required|string|max:3',
+                'invoice_type'        => 'required|string|max:2',
+                'track_code'          => 'required|string|max:2',
+                'start_number'        => 'required|string',
+                'end_number'          => 'required|string',
                 'effective_startdate' => 'required|date',
-                'effective_enddate' => 'required|date',
-                'is_valid' => 'required|boolean',
+                'effective_enddate'   => 'required|date',
+                'is_valid'            => 'required|boolean',
             ]);
             if($validator->fails()){
                 return response()->json([
@@ -155,13 +156,13 @@ class InvoiceInfoController extends Controller
             if (!preg_match('/^0?\d{2,3}[\/](0?[1-9]|1[0-2])$/', $request['period_start']) || !preg_match('/^0?\d{2,3}[\/](0?[1-9]|1[0-2])$/', $request['period_end'])) {
                 return response()->json([
                     'status' => true,
-                    'message' => '期別格式錯誤，請使用民國年月的格式(例如：025-01)',
+                    'message' => '期別格式錯誤，請使用民國年月的格式(例如：113/01)',
                     'output' => null
                 ], 200);
             }
 
             //發票號碼需要8碼
-            if (strlen($request['start_number'])-2 != 8 || strlen($request['end_number'])-2 != 8) {
+            if (strlen($request['start_number']) != 8 || strlen($request['end_number']) != 8) {
                 return response()->json([
                     'status' => true,
                     'message' => '發票號碼必須是8碼',
@@ -170,13 +171,13 @@ class InvoiceInfoController extends Controller
             }
 
             //發票號碼數值相減需要等於50
-            if ((intval(substr($request['end_number'],-2)) - intval(substr($request['start_number'],-2)))+1 != 50) {
-                return response()->json([
-                    'status' => true,
-                    'message' => '發票號碼區間必須等於50',
-                    'output' => null
-                ], 200);
-            }
+            //if ((intval(substr($request['end_number'],-2)) - intval(substr($request['start_number'],-2)))+1 != 50) {
+            //    return response()->json([
+            //        'status' => true,
+            //        'message' => '發票號碼區間必須等於50',
+            //        'output' => null
+            //    ], 200);
+            //}
 
             //發票號碼起需要0結尾
             if (substr($request['start_number'], -1) != '0') {
@@ -212,15 +213,15 @@ class InvoiceInfoController extends Controller
 
             // 建立發票資料
             $InvoiceInfo = InvoiceInfo::create([
-                'period_start'     => $request['period_start'],
-                'period_end'     => $request['period_end'],
-                'invoice_type'     => $request['invoice_type'],
-                'track_code'   => $request['track_code'],
-                'start_number' => $request['start_number'],
-                'end_number'   => $request['end_number'],
+                'period_start'        => $request['period_start'],
+                'period_end'          => $request['period_end'],
+                'invoice_type'        => $request['invoice_type'],
+                'track_code'          => $request['track_code'],
+                'start_number'        => $request['start_number'],
+                'end_number'          => $request['end_number'],
                 'effective_startdate' => $request['effective_startdate'],
                 'effective_enddate'   => $request['effective_enddate']?? null,
-                'is_valid'    => $request['is_valid']
+                'is_valid'            => $request['is_valid']
             ]);
     
             if (!$InvoiceInfo) {
@@ -348,32 +349,49 @@ class InvoiceInfoController extends Controller
     /**
      * @OA\GET(
      *     path="/api/invoiceInfo1/valid",
-     *     summary="查詢所有有效發票資訊",
-     *     description="查詢所有有效發票資訊",
+     *     summary="查詢所有有效發票資訊(含關鍵字查詢，開立起始日期、開立迄止日期、發票類型、發票號碼)",
+     *     description="查詢所有有效發票資訊(含關鍵字查詢，開立起始日期、開立迄止日期、發票類型、發票號碼)",
      *     operationId="getallinvoiceinfos",
      *     tags={"base_invoiceinfo"},
-     *     @OA\Response(
-     *         response=200,
-     *         description="成功",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="period_start", type="string", example="025-01"),
-     *             @OA\Property(property="period_end", type="string", example="2025-02"),
-     *             @OA\Property(property="series", type="string", example="001"),
-     *             @OA\Property(property="invoice_type", type="string", example="1"),
-     *             @OA\Property(property="track_code", type="string", example="AQ"),
-     *             @OA\Property(property="start_number", type="string", example="0000000001"),    
-     *             @OA\Property(property="end_number", type="string", example="0000000050"),
-     *             @OA\Property(property="effective_startdate", type="date", example="2025/01/01"),
-     *             @OA\Property(property="effective_enddate", type="date", example="2025/02/28"),
-     *             @OA\Property(property="is_valid", type="string", example="1"),
-     *             @OA\Property(property="create_user", type="string", example="admin"),
-     *             @OA\Property(property="update_user", type="string", example="admin"),
-     *             @OA\Property(property="create_time", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
-     *         )
+     *     @OA\Parameter(
+     *         name="keyword",
+     *         in="query",
+     *         required=false,
+     *         description="關鍵字查詢",
+     *         @OA\Schema(type="string")
      *     ),
+    * @OA\Response(
+    *     response=200,
+    *     description="成功取得分頁供應商清單",
+    *     @OA\JsonContent(
+    *         type="object",
+    *         @OA\Property(property="atPage", type="integer", example=1),
+    *         @OA\Property(property="total", type="integer", example=10),
+    *         @OA\Property(property="totalPages", type="integer", example=1),
+    *         @OA\Property(
+    *             property="data",
+    *             type="array",
+    *             @OA\Items(
+    *                 type="object",
+    *                 @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
+    *                 @OA\Property(property="period_start", type="string", example="025-01"),
+    *                 @OA\Property(property="period_end", type="string", example="2025-02"),
+    *                 @OA\Property(property="series", type="string", example="001"),
+    *                 @OA\Property(property="invoice_type", type="string", example="1"),
+    *                 @OA\Property(property="track_code", type="string", example="AQ"),
+    *                 @OA\Property(property="start_number", type="string", example="0000000001"),    
+    *                 @OA\Property(property="end_number", type="string", example="0000000050"),
+    *                 @OA\Property(property="effective_startdate", type="date", example="2025/01/01"),
+    *                 @OA\Property(property="effective_enddate", type="date", example="2025/02/28"),
+    *                 @OA\Property(property="is_valid", type="string", example="1"),
+    *                 @OA\Property(property="create_user", type="string", example="admin"),
+    *                 @OA\Property(property="update_user", type="string", example="admin"),
+    *                 @OA\Property(property="create_time", type="string", example="2025-03-31T08:58:52.001975Z"),
+    *                 @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
+    *             )
+    *         )
+    *     )
+    * ),
      *     @OA\Response(
      *         response=404,
      *         description="未找到有效發票資訊"
@@ -381,22 +399,78 @@ class InvoiceInfoController extends Controller
      * )
      */
     // 查詢所有有效發票資訊
-    public function getvaildinvoiceinfo()
-    {
+    public function getvaildinvoiceinfo(Request $request)
+    {    
         try {
+            $pdo = getPDOConnection();
+            $keyword = $request->query('keyword'); // 可為 null
+            $page = $request->query('page'); // 當前頁碼
+            $pageSize = $request->query('pageSize'); // 一頁顯示幾筆數值
+            $page = $page ? (int)$page : 1; // 預設為第 1 頁
+            $pageSize = $pageSize ? (int)$pageSize : 30; // 預設每頁顯示 30 筆資料    
 
-            $InvoiceInfo = InvoiceInfo::where('is_valid', '1')->get();
+            $likeKeyword = '%' . $keyword . '%';
+            // 使用 DB::select 進行關鍵字查詢
+            if($keyword != null) {
+                
+                //查詢目前頁數的資料
+                $offset = ($page - 1) * $pageSize;
+                //LIMIT 30：每次最多回傳 30 筆資料
+                //OFFSET 0：從第 0 筆開始取，也就是第一頁的第 1 筆
+                //LIMIT 30 OFFSET 0  -- 取第 1~30 筆
+                //LIMIT 30 OFFSET 30 -- 取第 31~60 筆
+                //LIMIT 30 OFFSET 60 -- 取第 61~90 筆
+                $sql_data = "select  *
+                        from invoice_info
+                        where invoice_info.is_valid = '1'  
+                        and (  invoice_info.invoice_type LIKE ?
+                             OR invoice_info.start_number LIKE ?
+                             OR invoice_info.end_number LIKE ?
+                             OR invoice_info.period_start LIKE ?
+                             OR invoice_info.period_end LIKE ?)
+                        order by invoice_info.update_time, invoice_info.create_time asc
+                        LIMIT ? OFFSET ?;";
+
+                $InvoiceInfo = DB::select($sql_data, [$likeKeyword, $likeKeyword,$likeKeyword, $likeKeyword, $likeKeyword, $pageSize, $offset]);
+
+            } else {
+                $InvoiceInfo = InvoiceInfo::where('is_valid', '1')->get();
+            }
+            //取得總筆數與總頁數   
+            $sql_count = "
+                    SELECT COUNT(*) as total
+                    from invoice_info
+                        where invoice_info.is_valid = '1'  
+                        and (   invoice_info.invoice_type LIKE ?
+                             OR invoice_info.start_number LIKE ?
+                             OR invoice_info.end_number LIKE ?
+                             OR invoice_info.period_start LIKE ?
+                             OR invoice_info.period_end LIKE ?)
+                        order by invoice_info.update_time, invoice_info.create_time asc
+                ";
+            $stmt = $pdo->prepare($sql_count);
+            $stmt->execute([$likeKeyword, $likeKeyword,$likeKeyword, $likeKeyword, $likeKeyword]);
+            $total = $stmt->fetchColumn();
+            $totalPages = ceil($total / $pageSize); // 計算總頁數    
+
+            
 
 
             if (!$InvoiceInfo) {
                 return response()->json([
                     'status' => true,
+                    'atPage' => $page,
+                    'total' => $total,
+                    'totalPages' => $totalPages,                
                     'message' => '有效發票資訊未找到',
                     'output'    => null
                 ], 404);
             }
             return response()->json([                
                 'status' => true,
+                'atPage' => $page,
+                'total' => $total,
+                'totalPages' => $totalPages,                
                 'message' => 'success',
                 'output'    => $InvoiceInfo
             ],200);       

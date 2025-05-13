@@ -9,6 +9,7 @@ use App\Models\SysCode;
 use App\Models\SysUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+require_once base_path('app/Models/connect.php'); 
 use Illuminate\Support\Facades\DB;
 use OpenApi\Annotations as OA;
 use Illuminate\Support\Facades\Log;
@@ -139,28 +140,28 @@ class SupplierController extends Controller
      *         name="currencyid",
      *         in="query",
      *         required=true,
-     *         description="幣別id",
+     *         description="幣別uuid(開窗選擇)",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
      *         name="tax_type",
      *         in="query",
      *         required=true,
-     *         description="稅別 (參數代碼param_sn=04)",
+     *         description="稅別(開窗選擇)",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
      *         name="payment_termid",
      *         in="query",
      *         required=true,
-     *         description="付款條件id",
+     *         description="付款條件uuid(開窗選擇)",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
      *         name="user_id",
      *         in="query",
      *         required=true,
-     *         description="負責採購人員id",
+     *         description="負責採購人員uuid(開窗選擇)",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
@@ -413,8 +414,8 @@ class SupplierController extends Controller
     /**
      * @OA\GET(
      *     path="/api/supplier3/valid",
-     *     summary="查詢所有有效供應商(含關鍵字查詢)",
-     *     description="查詢所有有效供應商(含關鍵字查詢)",
+     *     summary="查詢所有有效供應商(含關鍵字查詢，供應商代碼、供應商簡稱、供應商全稱、統一編號、負責人、公司地址一)",
+     *     description="查詢所有有效供應商(含關鍵字查詢，供應商代碼、供應商簡稱、供應商全稱、統一編號、負責人、公司地址一)",
      *     operationId="getallsupplier",
      *     tags={"base_supplier"},
      *     @OA\Parameter(
@@ -424,40 +425,50 @@ class SupplierController extends Controller
      *         description="關鍵字查詢",
      *         @OA\Schema(type="string")
      *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="成功",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="supplier_no", type="string", example="S003"),
-     *             @OA\Property(property="supplier_shortnm", type="string", example="測試供應商1"),
-     *             @OA\Property(property="supplier_fullnm", type="string", example="測試供應商1"),
-     *             @OA\Property(property="zipcode1", type="string", example="12345"),
-     *             @OA\Property(property="address1", type="string", example="台北市信義區"),
-     *             @OA\Property(property="zipcode2", type="string", example="54321"),
-     *             @OA\Property(property="address2", type="string", example="台北市大安區"),
-     *             @OA\Property(property="taxid", type="string", example="12345678"),
-     *             @OA\Property(property="responsible_person", type="string", example="王小明"),
-     *             @OA\Property(property="established_date", type="string", example="2025-03-31"),
-     *             @OA\Property(property="phone", type="string", example="02-12345678"),
-     *             @OA\Property(property="fax", type="string", example="02-87654321"),
-     *             @OA\Property(property="contact_person", type="string", example="李小華"),
-     *             @OA\Property(property="contact_phone", type="string", example="0912345678"),
-     *             @OA\Property(property="mobile_phone", type="string", example="0987654321"),
-     *             @OA\Property(property="contact_email", type="string", example="a151815058@gmail.com"),
-     *             @OA\Property(property="currencyid", type="string", example="TWD"),
-     *             @OA\Property(property="tax_type", type="string", example="T001"),
-     *             @OA\Property(property="payment_termid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="user_id", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="note", type="string", example=""),
-     *             @OA\Property(property="is_valid", type="boolean", example=true),
-     *             @OA\Property(property="create_user", type="string", example="admin"),
-     *             @OA\Property(property="update_user", type="string", example="admin"),
-     *             @OA\Property(property="create_time", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
-     *         )
-     *     ),
+    * @OA\Response(
+    *     response=200,
+    *     description="成功取得分頁供應商清單",
+    *     @OA\JsonContent(
+    *         type="object",
+    *         @OA\Property(property="atPage", type="integer", example=1),
+    *         @OA\Property(property="total", type="integer", example=10),
+    *         @OA\Property(property="totalPages", type="integer", example=1),
+    *         @OA\Property(
+    *             property="data",
+    *             type="array",
+    *             @OA\Items(
+    *                 type="object",
+	*             		@OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
+	*             		@OA\Property(property="supplier_no", type="string", example="S003"),
+	*             		@OA\Property(property="supplier_shortnm", type="string", example="測試供應商1"),
+	*             		@OA\Property(property="supplier_fullnm", type="string", example="測試供應商1"),
+	*             		@OA\Property(property="zipcode1", type="string", example="12345"),
+	*             		@OA\Property(property="address1", type="string", example="台北市信義區"),
+	*             		@OA\Property(property="zipcode2", type="string", example="54321"),
+	*             		@OA\Property(property="address2", type="string", example="台北市大安區"),
+	*             		@OA\Property(property="taxid", type="string", example="12345678"),
+	*             		@OA\Property(property="responsible_person", type="string", example="王小明"),
+	*             		@OA\Property(property="established_date", type="string", example="2025-03-31"),
+	*             		@OA\Property(property="phone", type="string", example="02-12345678"),
+	*             		@OA\Property(property="fax", type="string", example="02-87654321"),
+	*             		@OA\Property(property="contact_person", type="string", example="李小華"),
+	*             		@OA\Property(property="contact_phone", type="string", example="0912345678"),
+	*             		@OA\Property(property="mobile_phone", type="string", example="0987654321"),
+	*             		@OA\Property(property="contact_email", type="string", example="a151815058@gmail.com"),
+	*             		@OA\Property(property="currencyid", type="string", example="TWD"),
+	*             		@OA\Property(property="tax_type", type="string", example="T001"),
+	*             		@OA\Property(property="payment_termid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
+	*             		@OA\Property(property="user_id", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
+	*             		@OA\Property(property="note", type="string", example=""),
+	*             		@OA\Property(property="is_valid", type="boolean", example=true),
+	*             		@OA\Property(property="create_user", type="string", example="admin"),
+	*             		@OA\Property(property="update_user", type="string", example="admin"),
+	*             		@OA\Property(property="create_time", type="string", example="2025-03-31T08:58:52.001975Z"),
+	*             		@OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
+    *             )
+    *         )
+    *     )
+    * ),
      *     @OA\Response(
      *         response=404,
      *         description="未找到有效供應商"
@@ -468,13 +479,25 @@ class SupplierController extends Controller
     public function getvalidsuppliers(Request $request)
     {
         try {
-
+            $pdo = getPDOConnection();
             $keyword = $request->query('keyword'); // 可為 null
+            $page = $request->query('page'); // 當前頁碼
+            $pageSize = $request->query('pageSize'); // 一頁顯示幾筆數值
+            $page = $page ? (int)$page : 1; // 預設為第 1 頁
+            $pageSize = $pageSize ? (int)$pageSize : 30; // 預設每頁顯示 30 筆資料
 
+            $likeKeyword = '%' . $keyword . '%';
             // 使用 DB::select 進行關鍵字查詢
             if($keyword != null) {
-                $likeKeyword = '%' . $keyword . '%';
-                $sql = "select  *
+                
+                //查詢目前頁數的資料
+                $offset = ($page - 1) * $pageSize;
+                //LIMIT 30：每次最多回傳 30 筆資料
+                //OFFSET 0：從第 0 筆開始取，也就是第一頁的第 1 筆
+                //LIMIT 30 OFFSET 0  -- 取第 1~30 筆
+                //LIMIT 30 OFFSET 30 -- 取第 31~60 筆
+                //LIMIT 30 OFFSET 60 -- 取第 61~90 筆
+                $sql_data = "select  *
                         from supplier
                         where supplier.is_valid = '1'  
                         and ( supplier.supplier_no LIKE ? 
@@ -483,23 +506,46 @@ class SupplierController extends Controller
                           OR supplier.taxid LIKE ?
                           OR supplier.responsible_person LIKE ?
                           OR supplier.address1 LIKE ?)
-                        order by update_time,create_time asc;";
+                        order by update_time,create_time asc
+                        LIMIT ? OFFSET ?;";
 
-                $Supplier = DB::select($sql, [$likeKeyword, $likeKeyword,$likeKeyword, $likeKeyword,$likeKeyword, $likeKeyword]);
+                $Supplier = DB::select($sql_data, [$likeKeyword, $likeKeyword,$likeKeyword, $likeKeyword,$likeKeyword, $likeKeyword, $pageSize, $offset]);
 
             } else {
                 $Supplier = Supplier::where('is_valid', '1')->get();
             }
+            //取得總筆數與總頁數   
+            $sql_count = "
+                    SELECT COUNT(*) as total
+                    from supplier
+                        where supplier.is_valid = '1'  
+                        and ( supplier.supplier_no LIKE ? 
+                          OR supplier.supplier_shortnm LIKE ?
+                          OR supplier.supplier_fullnm LIKE ?
+                          OR supplier.taxid LIKE ?
+                          OR supplier.responsible_person LIKE ?
+                          OR supplier.address1 LIKE ?);
+                ";
+            $stmt = $pdo->prepare($sql_count);
+            $stmt->execute([$likeKeyword, $likeKeyword,$likeKeyword, $likeKeyword,$likeKeyword, $likeKeyword]);
+            $total = $stmt->fetchColumn();
+            $totalPages = ceil($total / $pageSize); // 計算總頁數    
 
             if (!$Supplier) {
                 return response()->json([
                     'status' => true,
+                    'atPage' => $page,
+                    'total' => $total,
+                    'totalPages' => $totalPages,
                     'message' => '未找到有效供應商',
                     'output'    => $Supplier
                 ], 404);
             }
             return response()->json([                
                 'status' => true,
+                'atPage' => $page,
+                'total' => $total,
+                'totalPages' => $totalPages,
                 'message' => 'success',
                 'output'    => $Supplier
             ], 200);

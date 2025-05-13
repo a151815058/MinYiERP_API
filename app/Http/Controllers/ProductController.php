@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
+require_once base_path('app/Models/connect.php'); 
+use App\Models\Supplier;
+use App\Models\Account;
 use App\Models\SysCode;
 use Illuminate\Support\Str;
 use OpenApi\Annotations as OA;
@@ -87,7 +90,7 @@ class ProductController extends Controller
      *         name="batch_control",
      *         in="query",
      *         required=true,
-     *         description="批號管理(param_sn=03)",
+     *         description="批號管理(開窗選擇)",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
@@ -136,7 +139,21 @@ class ProductController extends Controller
      *         name="product_path",
      *         in="query",
      *         required=false,
-     *         description="圖片存放路徑",
+     *         description="圖片路徑",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="main_supplier",
+     *         in="query",
+     *         required=false,
+     *         description="主要供應商uuid(開窗選擇)",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="Accounting",
+     *         in="query",
+     *         required=false,
+     *         description="認列科目uuid(開窗選擇)",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
@@ -167,6 +184,8 @@ class ProductController extends Controller
      *             @OA\Property(property="stock_control", type="integer", example=true),
      *             @OA\Property(property="safety_stock", type="integer", example=0),
      *             @OA\Property(property="expiry_date", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="main_supplier", type="string", example="840ec743-f3d2-4760-b3a2-5e960207a61e"),
+     *             @OA\Property(property="Accounting", type="string", example="04f32f4a-9ac1-43f8-b22c-1c1539de7005"),
      *             @OA\Property(property="description", type="string", example=""),
      *             @OA\Property(property="product_path", type="string", example=""),
      *             @OA\Property(property="is_valid", type="boolean", example=true),
@@ -220,21 +239,21 @@ class ProductController extends Controller
         $Product = Product::create([
             'product_no'     => $request['product_no'],
             'product_nm'     => $request['product_nm'],
-            'specification'   => $request['specification'],
-            'price_1' => $request['price_1'],
-            'cost_1'   => $request['cost_1'],
-            'batch_control' => $request['batch_control'],
-            'valid_days'   => $request['valid_days'],
-            'effective_date'  => $request['effective_date'],
-            'stock_control'   => $request['stock_control'],
-            'safety_stock' => $request['safety_stock'],
-            'expiry_date'   => $request['expiry_date'],
-            'description'  => $request['description']?? null,
-            'product_path' => $request['product_path']?? null,
-            'main_supplier' => $request['main_supplier']?? null,
-            'Accounting' => $request['Accounting']?? null,
-            'unit' => $request['unit']?? null,
-            'is_valid'    => $request['is_valid']
+            'specification'  => $request['specification'],
+            'price_1'        => $request['price_1'],
+            'cost_1'         => $request['cost_1'],
+            'batch_control'  => $request['batch_control'],
+            'valid_days'     => $request['valid_days'],
+            'effective_date' => $request['effective_date'],
+            'stock_control'  => $request['stock_control'],
+            'safety_stock'   => $request['safety_stock'],
+            'expiry_date'    => $request['expiry_date'],
+            'description'    => $request['description']?? null,
+            'product_path'   => $request['product_path']?? null,
+            'main_supplier'  => $request['main_supplier']?? null,
+            'Accounting'     => $request['Accounting']?? null,
+            'unit'           => $request['unit']?? null,
+            'is_valid'       => $request['is_valid']
         ]);
 
         // 回應 JSON
@@ -302,13 +321,16 @@ class ProductController extends Controller
      *             @OA\Property(property="cost_1", type="decimal", example=60),
      *             @OA\Property(property="cost_2", type="integer", example=0),
      *             @OA\Property(property="cost_3", type="integer", example=0),
-     *             @OA\Property(property="batch_control", type="integer", example=true),
+     *             @OA\Property(property="batch_control", type="string", example=01),
      *             @OA\Property(property="valid_days", type="integer", example=0),
      *             @OA\Property(property="effective_date", type="string", example="2025-03-31T08:58:52.001975Z"),
      *             @OA\Property(property="stock_control", type="integer", example=true),
      *             @OA\Property(property="safety_stock", type="integer", example=0),
      *             @OA\Property(property="expiry_date", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="main_supplier", type="string", example="840ec743-f3d2-4760-b3a2-5e960207a61e"),
+     *             @OA\Property(property="Accounting", type="string", example="04f32f4a-9ac1-43f8-b22c-1c1539de7005"),
      *             @OA\Property(property="description", type="string", example=""),
+     *             @OA\Property(property="product_path", type="string", example=""),
      *             @OA\Property(property="is_valid", type="boolean", example=true),
      *             @OA\Property(property="Createuser", type="string", example="admin"),
      *             @OA\Property(property="update_user", type="string", example="admin"),
@@ -364,8 +386,8 @@ class ProductController extends Controller
     /**
      * @OA\GET(
      *     path="/api/product3/valid",
-     *     summary="查詢所有有效品號(含關鍵字查詢)",
-     *     description="查詢所有有效品號(含關鍵字查詢)",
+     *     summary="查詢所有有效品號(含關鍵字查詢，品名、品號、規格、商品描述)",
+     *     description="查詢所有有效品號(含關鍵字查詢，品名、品號、規格、商品描述)",
      *     operationId="getallproduct",
      *     tags={"base_product"},
      *     @OA\Parameter(
@@ -375,35 +397,32 @@ class ProductController extends Controller
      *         description="關鍵字查詢",
      *         @OA\Schema(type="string")
      *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="成功",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="product_no", type="string", example="P001"),
-     *             @OA\Property(property="product_nm", type="string", example="螺絲起子"),
-     *             @OA\Property(property="specification", type="string", example="SP001"),
-     *             @OA\Property(property="price_1", type="integer", example=100),
-     *             @OA\Property(property="price_2", type="integer", example=0),
-     *             @OA\Property(property="price_3", type="integer", example=0),
-     *             @OA\Property(property="cost_1", type="decimal", example=60),
-     *             @OA\Property(property="cost_2", type="integer", example=0),
-     *             @OA\Property(property="cost_3", type="integer", example=0),
-     *             @OA\Property(property="batch_control", type="integer", example=true),
-     *             @OA\Property(property="valid_days", type="integer", example=0),
-     *             @OA\Property(property="effective_date", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="stock_control", type="integer", example=true),
-     *             @OA\Property(property="safety_stock", type="integer", example=0),
-     *             @OA\Property(property="expiry_date", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="description", type="string", example=""),
-     *             @OA\Property(property="is_valid", type="boolean", example=true),
-     *             @OA\Property(property="Createuser", type="string", example="admin"),
-     *             @OA\Property(property="update_user", type="string", example="admin"),
-     *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
-     *         )
-     *     ),
+    * @OA\Response(
+    *     response=200,
+    *     description="成功取得分頁品號資料",
+    *     @OA\JsonContent(
+    *         type="object",
+    *         @OA\Property(property="atPage", type="integer", example=1),
+    *         @OA\Property(property="total", type="integer", example=10),
+    *         @OA\Property(property="totalPages", type="integer", example=1),
+    *         @OA\Property(
+    *             property="data",
+    *             type="array",
+    *             @OA\Items(
+    *                 type="object",
+    *                 @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
+    *                 @OA\Property(property="UsrNo", type="string", example="U001"),
+    *                 @OA\Property(property="UsrNM", type="string", example="姚佩彤"),
+    *                 @OA\Property(property="Note", type="string", example=""),
+    *                 @OA\Property(property="is_valid", type="boolean", example=true),
+    *                 @OA\Property(property="Createuser", type="string", example="admin"),
+    *                 @OA\Property(property="UpdateUser", type="string", example="admin"),
+    *                 @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
+    *                 @OA\Property(property="UpdateTime", type="string", example="2025-03-31T08:58:52.001986Z")
+    *             )
+    *         )
+    *     )
+    * ),
      *     @OA\Response(
      *         response=404,
      *         description="未找到有效品號"
@@ -414,36 +433,83 @@ class ProductController extends Controller
     public function getvalidproduct(Request $request)
     {
         try{
-
+            $pdo = getPDOConnection();
             $keyword = $request->query('keyword'); // 可為 null
-
+            $page = $request->query('page'); // 當前頁碼
+            $pageSize = $request->query('pageSize'); // 一頁顯示幾筆數值
+            $page = $page ? (int)$page : 1; // 預設為第 1 頁
+            $pageSize = $pageSize ? (int)$pageSize : 30; // 預設每頁顯示 30 筆資料
             // 使用 DB::select 進行關鍵字查詢
             // 關鍵字 品號 品名 規格
+
+            $likeKeyword = '%' . $keyword . '%';
             if($keyword != null) {
-                $likeKeyword = '%' . $keyword . '%';
-                $sql = "select  *
+                //取得總筆數與總頁數   
+                $sql_count = "
+                    SELECT COUNT(*) as total
+                    FROM product
+                    WHERE product.is_valid = '1'  
+                    AND (
+                        product.product_no LIKE ? 
+                        OR product.product_nm LIKE ?
+                        OR product.specification LIKE ?
+                    )
+                ";
+                $stmt = $pdo->prepare($sql_count);
+                $stmt->execute([$keyword, $keyword, $keyword]);
+                $total = $stmt->fetchColumn();
+                $totalPages = ceil($total / $pageSize); // 計算總頁數  
+
+                //查詢目前頁數的資料
+                $offset = ($page - 1) * $pageSize;
+                //LIMIT 30：每次最多回傳 30 筆資料
+                //OFFSET 0：從第 0 筆開始取，也就是第一頁的第 1 筆
+                //LIMIT 30 OFFSET 0  -- 取第 1~30 筆
+                //LIMIT 30 OFFSET 30 -- 取第 31~60 筆
+                //LIMIT 30 OFFSET 60 -- 取第 61~90 筆
+                $sql_data = "select  *
                         from product
                         where product.is_valid = '1'  
                         and ( product.product_no LIKE ? 
                            OR product.product_nm LIKE ?
                            OR product.specification LIKE ? )
-                        order by update_time,create_time asc;";
+                        order by update_time,create_time asc
+                        LIMIT ? OFFSET ?
+                        ;";
 
-                $Product = DB::select($sql, [$likeKeyword, $likeKeyword, $likeKeyword]);
+                $Product = DB::select($sql_data, [$likeKeyword, $likeKeyword, $likeKeyword,$pageSize, $offset]);
 
             } else {
+                //取得總筆數與總頁數   
+                $sql_count = "
+                    SELECT COUNT(*) as total
+                    FROM product
+                    WHERE product.is_valid = '1';
+                ";
+                $stmt = $pdo->prepare($sql_count);
+                $stmt->execute();
+                $total = $stmt->fetchColumn();
+                $totalPages = ceil($total / $pageSize); // 計算總頁數  
+
                 $Product = Product::where('is_valid', '1')->get();
             }
+ 
 
             if (!$Product) {
                 return response()->json([
                     'status' => true,
+                    'atPage' => $page,
+                    'total' => $total,
+                    'totalPages' => $totalPages,
                     'message' => '未找到有效品號',
                     'output'    => $Product
                 ], 404);
             }
             return response()->json([                
                 'status' => true,
+                'atPage' => $page,
+                'total' => $total,
+                'totalPages' => $totalPages,
                 'message' => 'success',
                 'output'    => $Product
             ],200);
@@ -496,13 +562,16 @@ class ProductController extends Controller
      *             @OA\Property(property="cost_1", type="decimal", example=60),
      *             @OA\Property(property="cost_2", type="integer", example=0),
      *             @OA\Property(property="cost_3", type="integer", example=0),
-     *             @OA\Property(property="batch_control", type="integer", example=true),
+     *             @OA\Property(property="batch_control", type="string", example=01),
      *             @OA\Property(property="valid_days", type="integer", example=0),
      *             @OA\Property(property="effective_date", type="string", example="2025-03-31T08:58:52.001975Z"),
      *             @OA\Property(property="stock_control", type="integer", example=true),
      *             @OA\Property(property="safety_stock", type="integer", example=0),
      *             @OA\Property(property="expiry_date", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="main_supplier", type="string", example="840ec743-f3d2-4760-b3a2-5e960207a61e"),
+     *             @OA\Property(property="Accounting", type="string", example="04f32f4a-9ac1-43f8-b22c-1c1539de7005"),
      *             @OA\Property(property="description", type="string", example=""),
+     *             @OA\Property(property="product_path", type="string", example=""),
      *             @OA\Property(property="is_valid", type="boolean", example=true),
      *             @OA\Property(property="Createuser", type="string", example="admin"),
      *             @OA\Property(property="update_user", type="string", example="admin"),
@@ -580,6 +649,10 @@ class ProductController extends Controller
     public function showconst($constant='all'){
         // 查詢 '批號管理' 的資料
         $SysCode = SysCode::where('param_sn', '03')->where('is_valid','1')->get();
+        // 查詢 '供應商' 的資料
+        $SysCode1 = Supplier::where('is_valid','1')->get();
+        // 查詢 '認列會計科目' 的資料
+        $SysCode2 = Account::where('is_valid','1')->get();
         try {
             // 檢查是否有結果
             if (!$SysCode ) {
@@ -587,6 +660,8 @@ class ProductController extends Controller
                     'status' => true,
                     'message' => '常用資料未找到',
                     'batch_controloption' => null,
+                    'Supplier' => null,
+                    'Account' => null
                 ], 404);
             }
     
@@ -594,7 +669,9 @@ class ProductController extends Controller
             return response()->json([
                 'status' => true,
                 'message' => 'success',
-                'batch_controloption' => $SysCode
+                'batch_controloption' => $SysCode,
+                'Supplier' => $SysCode1,
+                'Account' => $SysCode2
             ], 200);
     
         } catch (\Illuminate\Validation\ValidationException $e) {

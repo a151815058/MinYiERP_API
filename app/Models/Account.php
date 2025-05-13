@@ -44,10 +44,10 @@ class Account extends Model
         });
     }
 
-    // 🔍 透過 TermsNo 查詢    // 🔍 透過 TermsNo 查詢付款條件
+    // 🔍 透過 AccNo 查詢    // 🔍 透過 AccNo 查詢付款條件
     public static function findByAccNo($AccNo)
     {
-        return self::where('Account_No', $AccNo)->first();
+        return self::where('account_no', $AccNo)->first();
     }
 
      // 🔍 查詢所有有效付款條件

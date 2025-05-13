@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Sysuser;
 use App\Models\SysCode;
+require_once base_path('app/Models/connect.php'); 
 use App\Models\Dept;
 use Illuminate\Support\Str;
 use OpenApi\Annotations as OA;
@@ -39,7 +40,7 @@ class SysuserController extends Controller
      *         name="user_dept",
      *         in="query",
      *         required=false,
-     *         description="人員所在部門(dept_id，逗號區分)",
+     *         description="人員所在部門uuid(開窗選擇)",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
@@ -323,8 +324,8 @@ class SysuserController extends Controller
     /**
      * @OA\GET(
      *     path="/api/users/valid",
-     *     summary="查詢所有有效人員資訊(含關鍵字查詢)",
-     *     description="查詢所有有效人員資訊(含關鍵字查詢)",
+     *     summary="查詢所有有效人員資訊(含關鍵字查詢，人員代碼、人員名稱)",
+     *     description="查詢所有有效人員資訊(含關鍵字查詢，人員代碼、人員名稱)",
      *     operationId="getalluser",
      *     tags={"base_user"},
      *     @OA\Parameter(
@@ -334,22 +335,32 @@ class SysuserController extends Controller
      *         description="關鍵字查詢",
      *         @OA\Schema(type="string")
      *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="成功",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
-     *             @OA\Property(property="UsrNo", type="string", example="U001"),
-     *             @OA\Property(property="UsrNM", type="string", example="姚佩彤"),
-     *             @OA\Property(property="Note", type="string", example=""),
-     *             @OA\Property(property="is_valid", type="boolean", example=true),
-     *             @OA\Property(property="Createuser", type="string", example="admin"),
-     *             @OA\Property(property="UpdateUser", type="string", example="admin"),
-     *             @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
-     *             @OA\Property(property="UpdateTime", type="string", example="2025-03-31T08:58:52.001986Z")
-     *         )
-     *     ),
+    * @OA\Response(
+    *     response=200,
+    *     description="成功取得分頁使用者清單",
+    *     @OA\JsonContent(
+    *         type="object",
+    *         @OA\Property(property="atPage", type="integer", example=1),
+    *         @OA\Property(property="total", type="integer", example=10),
+    *         @OA\Property(property="totalPages", type="integer", example=1),
+    *         @OA\Property(
+    *             property="data",
+    *             type="array",
+    *             @OA\Items(
+    *                 type="object",
+    *                 @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
+    *                 @OA\Property(property="UsrNo", type="string", example="U001"),
+    *                 @OA\Property(property="UsrNM", type="string", example="姚佩彤"),
+    *                 @OA\Property(property="Note", type="string", example=""),
+    *                 @OA\Property(property="is_valid", type="boolean", example=true),
+    *                 @OA\Property(property="Createuser", type="string", example="admin"),
+    *                 @OA\Property(property="UpdateUser", type="string", example="admin"),
+    *                 @OA\Property(property="CreateTime", type="string", example="2025-03-31T08:58:52.001975Z"),
+    *                 @OA\Property(property="UpdateTime", type="string", example="2025-03-31T08:58:52.001986Z")
+    *             )
+    *         )
+    *     )
+    * ),
      *     @OA\Response(
      *         response=404,
      *         description="未有效找到人員"
@@ -360,27 +371,87 @@ class SysuserController extends Controller
     public function getvalidusers(Request $request)
     {
         try{
+            $pdo = getPDOConnection();
             $keyword = $request->query('keyword'); // 可為 null
+            $page = $request->query('page'); // 當前頁碼
+            $pageSize = $request->query('pageSize'); // 一頁顯示幾筆數值
+            $page = $page ? (int)$page : 1; // 預設為第 1 頁
+            $pageSize = $pageSize ? (int)$pageSize : 30; // 預設每頁顯示 30 筆資料
 
+            $likeKeyword = '%' . $keyword . '%';
             // 進行關鍵字查詢
             if($keyword != null) {
-                $likeKeyword = '%' . $keyword . '%';
-                $user = SysUser::with('depts')
-                ->where('is_valid', '1')
-                ->where(function ($query) use ($likeKeyword) {
-                    $query->where('user_no', 'like', $likeKeyword)
-                          ->orWhere('user_nm', 'like', $likeKeyword);
-                })
-                ->get();
+                //取得總筆數與總頁數   
+                $sql_count = "
+                    SELECT COUNT(*) as total
+                    FROM sysusers
+                    INNER JOIN sysuser_depts ON sysuser_depts.user_id = sysusers.`uuid`
+                    INNER JOIN depts ON depts.`uuid` = sysuser_depts.dept_id
+                    WHERE sysusers.is_valid = '1'
+                    and (
+                        sysusers.user_no LIKE ? OR sysusers.user_nm LIKE ?
+                    )
+                ";        
+                $stmt = $pdo->prepare($sql_count);
+                $stmt->execute([$keyword, $keyword]);
+                $total = $stmt->fetchColumn();
+                $totalPages = ceil($total / $pageSize); // 計算總頁數                  
+
+                //查詢目前頁數的資料
+                $offset = ($page - 1) * $pageSize;
+                //LIMIT 30：每次最多回傳 30 筆資料
+                //OFFSET 0：從第 0 筆開始取，也就是第一頁的第 1 筆
+                //LIMIT 30 OFFSET 0  -- 取第 1~30 筆
+                //LIMIT 30 OFFSET 30 -- 取第 31~60 筆
+                //LIMIT 30 OFFSET 60 -- 取第 61~90 筆
+                $sql_data = "select  *
+                    FROM sysusers
+                    INNER JOIN sysuser_depts ON sysuser_depts.user_id = sysusers.`uuid`
+                    INNER JOIN depts ON depts.`uuid` = sysuser_depts.dept_id
+                    WHERE sysusers.is_valid = '1'
+                    AND (
+                        sysusers.user_no LIKE ? OR sysusers.user_nm LIKE ?
+                    )
+                    ORDER BY sysusers.user_no
+                    LIMIT ? OFFSET ?
+                    ;";      
+                $user = DB::select($sql_data, [$likeKeyword, $likeKeyword,$pageSize, $offset]);          
+
+                //$user = SysUser::with('depts')
+                //->where('is_valid', '1')
+                //->where(function ($query) use ($likeKeyword) {
+                //    $query->where('user_no', 'like', $likeKeyword)
+                //          ->orWhere('user_nm', 'like', $likeKeyword);
+                //})
+                //->get();
 
             } else {
                 $user = SysUser::with('depts')->where('is_valid', '1')->get();
+
+                //取得總筆數與總頁數   
+                $sql_count = "
+                    SELECT COUNT(*) as total
+                    FROM sysusers
+                    INNER JOIN sysuser_depts ON sysuser_depts.user_id = sysusers.`uuid`
+                    INNER JOIN depts ON depts.`uuid` = sysuser_depts.dept_id
+                    WHERE sysusers.is_valid = '1';
+                ";
+                $stmt = $pdo->prepare($sql_count);
+                $stmt->execute();
+                $total = $stmt->fetchColumn();
+                $totalPages = ceil($total / $pageSize); // 計算總頁數          
             }
+
+
+  
             
             // 回應 JSON
             if (!$user) {
                 return response()->json([
                     'status' => true,
+                    'atPage' => $page,
+                    'total' => $total,
+                    'totalPages' => $totalPages,
                     'message' => '未有效找到人員',
                     'output'    => $user
                 ], status: 404);
@@ -388,6 +459,9 @@ class SysuserController extends Controller
             // 回應 JSON
                 return response()->json([
                     'status' => true,
+                    'atPage' => $page,
+                    'total' => $total,
+                    'totalPages' => $totalPages,
                     'message' => 'success',
                     'output'    => $user
                     ], 200);

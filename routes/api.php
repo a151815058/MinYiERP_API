@@ -103,15 +103,16 @@ Route::patch('/inventory/{InventoryNO}/disable', [InventoryController::class, 'd
 //發票資料相關  API
 Route::post('/createinvoiceinfo', [InvoiceInfoController::class, 'store']);// 新增發票資料
 Route::get('/invoiceInfo2/{period}', action: [InvoiceInfoController::class, 'show']);  // 透過期別查詢
-Route::get('/invoiceInfo1/valid', [InvoiceInfoController::class, 'getvaildinvoiceinfo']);  // 查詢所有有效期別
-Route::patch('/invoiceinfo/{uuid}/disable', [InvoiceInfoController::class, 'disable']); // 軟刪除期別資訊
-Route::get('/invoiceInfo/showconst', [InvoiceInfoController::class, 'showconst']);  // 列出所有單據需要的常用(下拉、彈窗)
+Route::get('/invoiceInfo1/valid', [InvoiceInfoController::class, 'getvaildinvoiceinfo']);  // 查詢所有有效發票
+Route::patch('/invoiceinfo/{uuid}/disable', [InvoiceInfoController::class, 'disable']); // 軟刪除發票資訊
+Route::get('/invoiceInfo/showconst', [InvoiceInfoController::class, 'showconst']);  // 列出所有發票需要的常用(下拉、彈窗)
 
 //會計科目資料相關  API
 Route::post('/createaccount', [AccountController::class, 'store']);// 新增會計科目資料
 Route::get('/account1/{AccNo}', action: [AccountController::class, 'showno']);  // 透過會計科目代碼查詢
 Route::get('/account/valid', [AccountController::class, 'getvaildaccount']);  // 查詢所有有效會計科目
-
+Route::patch('/account3/{AccNo}/disable', [AccountController::class, 'disable']); // 軟刪除會計科目
+Route::get('/account2/showconst', [AccountController::class, 'showconst']);  // 列出所有會計科目需要的常用(下拉、彈窗)
 
 Route::post('/', function () {
     return response()->json(['message' => 'Hello World!'], 200);

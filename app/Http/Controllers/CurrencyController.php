@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Currency;
 use App\Models\SysCode;
 use Illuminate\Support\Str;
+require_once base_path('app/Models/connect.php'); 
 use \Illuminate\Support\Facades\Http;
 use OpenApi\Annotations as OA;
 use Illuminate\Support\Facades\Log;
@@ -111,12 +112,12 @@ class CurrencyController extends Controller
 
         // 建立幣別資料
         $currency = Currency::create([
-            'uuid'       => Str::uuid(),  // 自動生成 UUID
+            'uuid'            => Str::uuid(),  // 自動生成 UUID
             'currency_no'     => $request['currency_no'],
             'currency_nm'     => $request['currency_nm'],
-            'currency_rate'     => $request['currency_rate']?? null,
-            'note'       => $request['note'] ?? null,
-            'is_valid'    => $request['is_valid']
+            'currency_rate'   => $request['currency_rate']?? null,
+            'note'            => $request['note'] ?? null,
+            'is_valid'        => $request['is_valid']
         ]);
 
         // 回應 JSON
@@ -193,8 +194,8 @@ class CurrencyController extends Controller
     /**
      * @OA\GET(
      *     path="/api/currencys/valid",
-     *     summary="查詢所有有效貨幣資訊(含關鍵字查詢)",
-     *     description="查詢所有有效貨幣資訊(含關鍵字查詢)",
+     *     summary="查詢所有有效貨幣資訊(含關鍵字查詢，貨幣代號、貨幣名稱)",
+     *     description="查詢所有有效貨幣資訊(含關鍵字查詢，貨幣代號、貨幣名稱)",
      *     operationId="getallcurrency",
      *     tags={"base_currency"},
      *     @OA\Parameter(
@@ -229,31 +230,64 @@ class CurrencyController extends Controller
     // 🔍 查詢所有有效幣別(含關鍵字查詢)
     public function getvalidcurrencys(Request $request)
     {
-        $keyword = $request->query('keyword'); // 可為 null
+            $pdo = getPDOConnection();
+            $keyword = $request->query('keyword'); // 可為 null
+            $page = $request->query('page'); // 當前頁碼
+            $pageSize = $request->query('pageSize'); // 一頁顯示幾筆數值
+            $page = $page ? (int)$page : 1; // 預設為第 1 頁
+            $pageSize = $pageSize ? (int)$pageSize : 30; // 預設每頁顯示 30 筆資料
+
+            $likeKeyword = '%' . $keyword . '%';
 
         // 使用 DB::select 進行關鍵字查詢
         if($keyword != null) {
-            $likeKeyword = '%' . $keyword . '%';
+            //查詢目前頁數的資料
+            $offset = ($page - 1) * $pageSize;
+            //LIMIT 30：每次最多回傳 30 筆資料
+            //OFFSET 0：從第 0 筆開始取，也就是第一頁的第 1 筆
+            //LIMIT 30 OFFSET 0  -- 取第 1~30 筆
+            //LIMIT 30 OFFSET 30 -- 取第 31~60 筆
+            //LIMIT 30 OFFSET 60 -- 取第 61~90 筆
             $sql = "select  *
                     from currencys
                     where currencys.is_valid = '1'  
                     and ( currencys.currency_no LIKE ? OR currencys.currency_nm LIKE ?)
-                    order by update_time,create_time asc;";
+                    order by update_time,create_time asc
+                    LIMIT ? OFFSET ?;";
 
-            $currencys = DB::select($sql, [$likeKeyword, $likeKeyword]);
+            $currencys = DB::select($sql, [$likeKeyword, $likeKeyword, $pageSize, $offset]);
 
         } else {
             $currencys = Currency::where('is_valid', '1')->get();
         }
+        //取得總筆數與總頁數   
+        $sql_count = "
+                SELECT COUNT(*) as total
+                from currencys
+                    where currencys.is_valid = '1'  
+                    and ( currencys.currency_no LIKE ? OR currencys.currency_nm LIKE ?)
+                    order by update_time,create_time asc;
+                ";
+            $stmt = $pdo->prepare($sql_count);
+            $stmt->execute([$likeKeyword, $likeKeyword]);
+            $total = $stmt->fetchColumn();
+            $totalPages = ceil($total / $pageSize); // 計算總頁數   
+
         if (!$currencys) {
             return response()->json([
                 'status' => true,
+                'atPage' => $page,
+                'total' => $total,
+                'totalPages' => $totalPages,
                 'message' => '未找到有效貨幣資訊',
                 'output' => $currencys
             ], 404);
         }
         return response()->json([                
             'status' => true,
+            'atPage' => $page,
+            'total' => $total,
+            'totalPages' => $totalPages,
             'message' => 'success',
             'output'    => Currency::getValidCurrencys()
         ],200);
