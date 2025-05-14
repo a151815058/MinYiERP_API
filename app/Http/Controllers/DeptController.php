@@ -268,31 +268,24 @@ class DeptController extends Controller
             $pageSize = $request->query('pageSize'); // 一頁顯示幾筆數值
             $page = $page ? (int)$page : 1; // 預設為第 1 頁
             $pageSize = $pageSize ? (int)$pageSize : 30; // 預設每頁顯示 30 筆資料
+            //查詢目前頁數的資料
+            $offset = ($page - 1) * $pageSize;
+            //LIMIT 30：每次最多回傳 30 筆資料
+            //OFFSET 0：從第 0 筆開始取，也就是第一頁的第 1 筆
+            //LIMIT 30 OFFSET 0  -- 取第 1~30 筆
+            //LIMIT 30 OFFSET 30 -- 取第 31~60 筆
+            //LIMIT 30 OFFSET 60 -- 取第 61~90 筆
 
+            $sql = "select  *
+                    from depts
+                    where depts.is_valid = '1'  
+                    and ( depts.dept_no LIKE ? OR depts.dept_nm LIKE ?)
+                    order by update_time,create_time asc
+                    LIMIT ? OFFSET ?;";
             $likeKeyword = '%' . $keyword . '%';
 
-            // 使用 DB::select 進行關鍵字查詢
-            if($keyword != null) {
-                //查詢目前頁數的資料
-                $offset = ($page - 1) * $pageSize;
-                //LIMIT 30：每次最多回傳 30 筆資料
-                //OFFSET 0：從第 0 筆開始取，也就是第一頁的第 1 筆
-                //LIMIT 30 OFFSET 0  -- 取第 1~30 筆
-                //LIMIT 30 OFFSET 30 -- 取第 31~60 筆
-                //LIMIT 30 OFFSET 60 -- 取第 61~90 筆
+            $depts = DB::select($sql, [$likeKeyword, $likeKeyword, $pageSize, $offset]);
 
-                $sql = "select  *
-                        from depts
-                        where depts.is_valid = '1'  
-                        and ( depts.dept_no LIKE ? OR depts.dept_nm LIKE ?)
-                        order by update_time,create_time asc
-                        LIMIT ? OFFSET ?;";
-
-                $depts = DB::select($sql, [$likeKeyword, $likeKeyword, $pageSize, $offset]);
-
-            } else {
-                $depts = Dept::where('is_valid', '1')->get();
-            }
             //取得總筆數與總頁數   
             $sql_count = "
                     SELECT COUNT(*) as total

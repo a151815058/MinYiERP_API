@@ -236,11 +236,6 @@ class CurrencyController extends Controller
             $pageSize = $request->query('pageSize'); // 一頁顯示幾筆數值
             $page = $page ? (int)$page : 1; // 預設為第 1 頁
             $pageSize = $pageSize ? (int)$pageSize : 30; // 預設每頁顯示 30 筆資料
-
-            $likeKeyword = '%' . $keyword . '%';
-
-        // 使用 DB::select 進行關鍵字查詢
-        if($keyword != null) {
             //查詢目前頁數的資料
             $offset = ($page - 1) * $pageSize;
             //LIMIT 30：每次最多回傳 30 筆資料
@@ -254,12 +249,10 @@ class CurrencyController extends Controller
                     and ( currencys.currency_no LIKE ? OR currencys.currency_nm LIKE ?)
                     order by update_time,create_time asc
                     LIMIT ? OFFSET ?;";
+            $likeKeyword = '%' . $keyword . '%';
 
             $currencys = DB::select($sql, [$likeKeyword, $likeKeyword, $pageSize, $offset]);
 
-        } else {
-            $currencys = Currency::where('is_valid', '1')->get();
-        }
         //取得總筆數與總頁數   
         $sql_count = "
                 SELECT COUNT(*) as total

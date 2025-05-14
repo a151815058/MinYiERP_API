@@ -262,33 +262,26 @@ class InventoryController extends Controller
             $page = $page ? (int)$page : 1; // 預設為第 1 頁
             $pageSize = $pageSize ? (int)$pageSize : 30; // 預設每頁顯示 30 筆資料
 
+            //查詢目前頁數的資料
+            $offset = ($page - 1) * $pageSize;
+            //LIMIT 30：每次最多回傳 30 筆資料
+            //OFFSET 0：從第 0 筆開始取，也就是第一頁的第 1 筆
+            //LIMIT 30 OFFSET 0  -- 取第 1~30 筆
+            //LIMIT 30 OFFSET 30 -- 取第 31~60 筆
+            //LIMIT 30 OFFSET 60 -- 取第 61~90 筆
+
+            $sql = "select  *
+                    from inventory
+                    where inventory.is_valid = '1'  
+                    and ( inventory.inventory_no LIKE ? 
+                        OR inventory.inventory_nm LIKE ?
+                         OR inventory.lot_num LIKE ? )
+                    order by update_time,create_time asc
+                    LIMIT ? OFFSET ?;";
             $likeKeyword = '%' . $keyword . '%';
 
-            // 使用 DB::select 進行關鍵字查詢
-            if($keyword != null) {
-                // 這裡使用了 SQL 的 LIKE 語法來進行模糊查詢
-                //查詢目前頁數的資料
-                $offset = ($page - 1) * $pageSize;
-                //LIMIT 30：每次最多回傳 30 筆資料
-                //OFFSET 0：從第 0 筆開始取，也就是第一頁的第 1 筆
-                //LIMIT 30 OFFSET 0  -- 取第 1~30 筆
-                //LIMIT 30 OFFSET 30 -- 取第 31~60 筆
-                //LIMIT 30 OFFSET 60 -- 取第 61~90 筆
+            $Inventory = DB::select($sql, [$likeKeyword, $likeKeyword, $likeKeyword, $pageSize, $offset]);
 
-                $sql = "select  *
-                        from inventory
-                        where inventory.is_valid = '1'  
-                        and ( inventory.inventory_no LIKE ? 
-                           OR inventory.inventory_nm LIKE ?
-                           OR inventory.lot_num LIKE ? )
-                        order by update_time,create_time asc
-                        LIMIT ? OFFSET ?;";
-
-                $Inventory = DB::select($sql, [$likeKeyword, $likeKeyword, $likeKeyword, $pageSize, $offset]);
-
-            } else {
-                $Inventory = Inventory::where('is_valid', '1')->get();
-            }
             //取得總筆數與總頁數   
             $sql_count = "
                     SELECT COUNT(*) as total

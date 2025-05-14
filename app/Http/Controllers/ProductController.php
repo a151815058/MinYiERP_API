@@ -443,31 +443,15 @@ class ProductController extends Controller
             // 關鍵字 品號 品名 規格
 
             $likeKeyword = '%' . $keyword . '%';
-            if($keyword != null) {
-                //取得總筆數與總頁數   
-                $sql_count = "
-                    SELECT COUNT(*) as total
-                    FROM product
-                    WHERE product.is_valid = '1'  
-                    AND (
-                        product.product_no LIKE ? 
-                        OR product.product_nm LIKE ?
-                        OR product.specification LIKE ?
-                    )
-                ";
-                $stmt = $pdo->prepare($sql_count);
-                $stmt->execute([$keyword, $keyword, $keyword]);
-                $total = $stmt->fetchColumn();
-                $totalPages = ceil($total / $pageSize); // 計算總頁數  
 
-                //查詢目前頁數的資料
+            //查詢目前頁數的資料
                 $offset = ($page - 1) * $pageSize;
                 //LIMIT 30：每次最多回傳 30 筆資料
                 //OFFSET 0：從第 0 筆開始取，也就是第一頁的第 1 筆
                 //LIMIT 30 OFFSET 0  -- 取第 1~30 筆
                 //LIMIT 30 OFFSET 30 -- 取第 31~60 筆
                 //LIMIT 30 OFFSET 60 -- 取第 61~90 筆
-                $sql_data = "select  *
+            $sql_data = "select  *
                         from product
                         where product.is_valid = '1'  
                         and ( product.product_no LIKE ? 
@@ -477,22 +461,20 @@ class ProductController extends Controller
                         LIMIT ? OFFSET ?
                         ;";
 
-                $Product = DB::select($sql_data, [$likeKeyword, $likeKeyword, $likeKeyword,$pageSize, $offset]);
+            $Product = DB::select($sql_data, [$likeKeyword, $likeKeyword, $likeKeyword,$pageSize, $offset]);
 
-            } else {
-                //取得總筆數與總頁數   
-                $sql_count = "
+
+            //取得總筆數與總頁數   
+            $sql_count = "
                     SELECT COUNT(*) as total
                     FROM product
                     WHERE product.is_valid = '1';
                 ";
-                $stmt = $pdo->prepare($sql_count);
-                $stmt->execute();
-                $total = $stmt->fetchColumn();
-                $totalPages = ceil($total / $pageSize); // 計算總頁數  
+            $stmt = $pdo->prepare($sql_count);
+            $stmt->execute();
+            $total = $stmt->fetchColumn();
+            $totalPages = ceil($total / $pageSize); // 計算總頁數  
 
-                $Product = Product::where('is_valid', '1')->get();
-            }
  
 
             if (!$Product) {

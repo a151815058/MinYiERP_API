@@ -402,10 +402,6 @@ class ClientController extends Controller
             $pageSize = $pageSize ? (int)$pageSize : 30; // 預設每頁顯示 30 筆資料
 
             $likeKeyword = '%' . $keyword . '%';
-
-            // 使用 DB::select 進行關鍵字查詢
-            if($keyword != null) {
-            //查詢目前頁數的資料
             $offset = ($page - 1) * $pageSize;
             //LIMIT 30：每次最多回傳 30 筆資料
             //OFFSET 0：從第 0 筆開始取，也就是第一頁的第 1 筆
@@ -423,11 +419,9 @@ class ClientController extends Controller
                         order by update_time,create_time asc
                         LIMIT ? OFFSET ?;";
 
-                $Client = DB::select($sql, [$likeKeyword, $likeKeyword,$likeKeyword, $likeKeyword, $likeKeyword, $pageSize, $offset]);
 
-            } else {
-                $Client = Client::where('is_valid', '1')->get();
-            }
+            $Client = DB::select($sql, [$likeKeyword, $likeKeyword,$likeKeyword, $likeKeyword, $likeKeyword, $pageSize, $offset]);
+
             //取得總筆數與總頁數   
             $sql_count = "
                 SELECT COUNT(*) as total
