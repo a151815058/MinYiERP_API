@@ -13,6 +13,7 @@ use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\InvoiceInfoController;
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\OrderController;
 
 //部門相關  API
 Route::post('/createdept', [DeptController::class, 'store']); // 新增部門資訊
@@ -113,6 +114,13 @@ Route::get('/account1/{AccNo}', action: [AccountController::class, 'showno']);  
 Route::get('/account/valid', [AccountController::class, 'getvaildaccount']);  // 查詢所有有效會計科目
 Route::patch('/account3/{AccNo}/disable', [AccountController::class, 'disable']); // 軟刪除會計科目
 Route::get('/account2/showconst', [AccountController::class, 'showconst']);  // 列出所有會計科目需要的常用(下拉、彈窗)
+
+
+//訂單相關  API
+Route::post('/createorder', [OrderController::class, 'store']);// 新增訂單相關
+Route::get('/orderInfo/{order_no}', action: [OrderController::class, 'showno']);  // 透過訂單單號查詢
+Route::get('/orderInfo1/valid', [OrderController::class, 'getvaildorderinfo']);  // 查詢所有有效訂單資訊
+
 
 Route::post('/', function () {
     return response()->json(['message' => 'Hello World!'], 200);

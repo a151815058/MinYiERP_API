@@ -26,6 +26,7 @@ return new class extends Migration
             $table->string('amount')->comment('金額');
             $table->string('customer_product_no')->comment('客戶品號');
             $table->string('note')->comment('備註');
+            $table->string('status')->comment('狀態 未結案:0 已結案:1 指定結案:2 已作廢:3')->default(0);
             $table->string('is_valid')->comment('是否有效 0:失效 1:有效')->default(1);
             $table->string('create_user')->comment('建立人員')->default('admin');
             $table->dateTime('create_time')->comment('建立時間')->default(now());

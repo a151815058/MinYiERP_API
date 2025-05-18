@@ -3857,6 +3857,495 @@
                 }
             }
         },
+        "/api/createorder": {
+            "post": {
+                "tags": [
+                    "base_order"
+                ],
+                "summary": "新增訂單資訊(主檔+明細)",
+                "description": "新增訂單主檔與明細資料",
+                "operationId": "createorder",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "order_type": {
+                                        "type": "string",
+                                        "example": "SO"
+                                    },
+                                    "order_no": {
+                                        "type": "string",
+                                        "example": "ORD20250514001"
+                                    },
+                                    "order_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-05-14"
+                                    },
+                                    "customer_name": {
+                                        "type": "string",
+                                        "example": "台灣大有限公司"
+                                    },
+                                    "contact_person": {
+                                        "type": "string",
+                                        "example": "王小明"
+                                    },
+                                    "expected_completion_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-06-01"
+                                    },
+                                    "responsible_dept": {
+                                        "type": "string",
+                                        "example": "Sales"
+                                    },
+                                    "responsible_staff": {
+                                        "type": "string",
+                                        "example": "E12345"
+                                    },
+                                    "terms_no": {
+                                        "type": "string",
+                                        "example": "T001"
+                                    },
+                                    "currency_no": {
+                                        "type": "string",
+                                        "example": "TWD"
+                                    },
+                                    "tax_type": {
+                                        "type": "string",
+                                        "example": "1"
+                                    },
+                                    "is_deposit": {
+                                        "type": "string",
+                                        "example": "1"
+                                    },
+                                    "create_deposit_type": {
+                                        "type": "string",
+                                        "example": "現金"
+                                    },
+                                    "deposit": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 1000
+                                    },
+                                    "customer_address": {
+                                        "type": "string",
+                                        "example": "台北市信義區123號"
+                                    },
+                                    "delivery_address": {
+                                        "type": "string",
+                                        "example": "新北市板橋區456巷"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "example": "draft"
+                                    },
+                                    "is_valid": {
+                                        "type": "string",
+                                        "example": "1"
+                                    },
+                                    "orderfile": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "ref_file_path": {
+                                                    "type": "string",
+                                                    "example": "/path/to/file"
+                                                },
+                                                "ref_file_name": {
+                                                    "type": "string",
+                                                    "example": "水電圖"
+                                                },
+                                                "ref_file_type": {
+                                                    "type": "string",
+                                                    "example": "PDF"
+                                                },
+                                                "is_valid": {
+                                                    "type": "string",
+                                                    "example": "1"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "order_details": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "line_no": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "product_no": {
+                                                    "type": "string",
+                                                    "example": "P0001"
+                                                },
+                                                "product_nm": {
+                                                    "type": "string",
+                                                    "example": "筆記型電腦"
+                                                },
+                                                "specification": {
+                                                    "type": "string",
+                                                    "example": "15吋 i7/16G/512G"
+                                                },
+                                                "inventory_no": {
+                                                    "type": "string",
+                                                    "example": "I2025051401"
+                                                },
+                                                "qty": {
+                                                    "type": "number",
+                                                    "format": "float",
+                                                    "example": 2
+                                                },
+                                                "unit": {
+                                                    "type": "string",
+                                                    "example": "台"
+                                                },
+                                                "lot_num": {
+                                                    "type": "string",
+                                                    "example": "L20250401"
+                                                },
+                                                "unit_price": {
+                                                    "type": "number",
+                                                    "format": "float",
+                                                    "example": 30000
+                                                },
+                                                "amount": {
+                                                    "type": "number",
+                                                    "format": "float",
+                                                    "example": 60000
+                                                },
+                                                "customer_product_no": {
+                                                    "type": "string",
+                                                    "example": "CUST001"
+                                                },
+                                                "note": {
+                                                    "type": "string",
+                                                    "example": "急件"
+                                                },
+                                                "status": {
+                                                    "type": "string",
+                                                    "example": "active"
+                                                },
+                                                "is_valid": {
+                                                    "type": "string",
+                                                    "example": "1"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "新增成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "order_id": {
+                                            "type": "string",
+                                            "example": "123e4567-e89b-12d3-a456-426614174000"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "新增成功"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "資料格式錯誤"
+                    },
+                    "500": {
+                        "description": "伺服器錯誤"
+                    }
+                }
+            }
+        },
+        "/api/orderInfo/{order_no}": {
+            "get": {
+                "tags": [
+                    "base_order"
+                ],
+                "summary": "查詢特定發票資訊",
+                "description": "查詢特定發票資訊",
+                "operationId": "getorderInfo",
+                "parameters": [
+                    {
+                        "name": "order_no",
+                        "in": "path",
+                        "description": "訂單單號",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "新增成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "order_id": {
+                                            "type": "string",
+                                            "example": "123e4567-e89b-12d3-a456-426614174000"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "新增成功"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "資料格式錯誤"
+                    },
+                    "500": {
+                        "description": "伺服器錯誤"
+                    }
+                }
+            }
+        },
+        "/api/orderInfo1/valid": {
+            "get": {
+                "tags": [
+                    "base_order"
+                ],
+                "summary": "查詢所有有效訂單資訊(訂單編號、訂單日期、負責部門、負責業務、客戶名稱、客戶地址)",
+                "description": "查詢所有有效訂單資訊(訂單編號、訂單日期、負責部門、負責業務、客戶名稱、客戶地址)",
+                "operationId": "getallorderinfos",
+                "parameters": [
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "關鍵字查詢",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功取得分頁訂單清單",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "atPage": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "total": {
+                                            "type": "integer",
+                                            "example": 10
+                                        },
+                                        "totalPages": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "order_type": {
+                                                        "type": "string",
+                                                        "example": "SO"
+                                                    },
+                                                    "order_no": {
+                                                        "type": "string",
+                                                        "example": "ORD20250514001"
+                                                    },
+                                                    "order_date": {
+                                                        "type": "string",
+                                                        "format": "date",
+                                                        "example": "2025-05-14"
+                                                    },
+                                                    "customer_name": {
+                                                        "type": "string",
+                                                        "example": "台灣大有限公司"
+                                                    },
+                                                    "contact_person": {
+                                                        "type": "string",
+                                                        "example": "王小明"
+                                                    },
+                                                    "expected_completion_date": {
+                                                        "type": "string",
+                                                        "format": "date",
+                                                        "example": "2025-06-01"
+                                                    },
+                                                    "responsible_dept": {
+                                                        "type": "string",
+                                                        "example": "Sales"
+                                                    },
+                                                    "responsible_staff": {
+                                                        "type": "string",
+                                                        "example": "E12345"
+                                                    },
+                                                    "terms_no": {
+                                                        "type": "string",
+                                                        "example": "T001"
+                                                    },
+                                                    "currency_no": {
+                                                        "type": "string",
+                                                        "example": "TWD"
+                                                    },
+                                                    "tax_type": {
+                                                        "type": "string",
+                                                        "example": "1"
+                                                    },
+                                                    "is_deposit": {
+                                                        "type": "string",
+                                                        "example": "1"
+                                                    },
+                                                    "create_deposit_type": {
+                                                        "type": "string",
+                                                        "example": "現金"
+                                                    },
+                                                    "deposit": {
+                                                        "type": "number",
+                                                        "format": "float",
+                                                        "example": 1000
+                                                    },
+                                                    "customer_address": {
+                                                        "type": "string",
+                                                        "example": "台北市信義區123號"
+                                                    },
+                                                    "delivery_address": {
+                                                        "type": "string",
+                                                        "example": "新北市板橋區456巷"
+                                                    },
+                                                    "status": {
+                                                        "type": "string",
+                                                        "example": "draft"
+                                                    },
+                                                    "is_valid": {
+                                                        "type": "string",
+                                                        "example": "1"
+                                                    },
+                                                    "orderfile": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "properties": {
+                                                                "ref_file_path": {
+                                                                    "type": "string",
+                                                                    "example": "/path/to/file"
+                                                                },
+                                                                "ref_file_name": {
+                                                                    "type": "string",
+                                                                    "example": "水電圖"
+                                                                },
+                                                                "ref_file_type": {
+                                                                    "type": "string",
+                                                                    "example": "PDF"
+                                                                },
+                                                                "is_valid": {
+                                                                    "type": "string",
+                                                                    "example": "1"
+                                                                }
+                                                            },
+                                                            "type": "object"
+                                                        }
+                                                    },
+                                                    "order_details": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "properties": {
+                                                                "line_no": {
+                                                                    "type": "integer",
+                                                                    "example": 1
+                                                                },
+                                                                "product_no": {
+                                                                    "type": "string",
+                                                                    "example": "P0001"
+                                                                },
+                                                                "product_nm": {
+                                                                    "type": "string",
+                                                                    "example": "筆記型電腦"
+                                                                },
+                                                                "specification": {
+                                                                    "type": "string",
+                                                                    "example": "15吋 i7/16G/512G"
+                                                                },
+                                                                "inventory_no": {
+                                                                    "type": "string",
+                                                                    "example": "I2025051401"
+                                                                },
+                                                                "qty": {
+                                                                    "type": "number",
+                                                                    "format": "float",
+                                                                    "example": 2
+                                                                },
+                                                                "unit": {
+                                                                    "type": "string",
+                                                                    "example": "台"
+                                                                },
+                                                                "lot_num": {
+                                                                    "type": "string",
+                                                                    "example": "L20250401"
+                                                                },
+                                                                "unit_price": {
+                                                                    "type": "number",
+                                                                    "format": "float",
+                                                                    "example": 30000
+                                                                },
+                                                                "amount": {
+                                                                    "type": "number",
+                                                                    "format": "float",
+                                                                    "example": 60000
+                                                                },
+                                                                "customer_product_no": {
+                                                                    "type": "string",
+                                                                    "example": "CUST001"
+                                                                },
+                                                                "note": {
+                                                                    "type": "string",
+                                                                    "example": "急件"
+                                                                },
+                                                                "status": {
+                                                                    "type": "string",
+                                                                    "example": "active"
+                                                                },
+                                                                "is_valid": {
+                                                                    "type": "string",
+                                                                    "example": "1"
+                                                                }
+                                                            },
+                                                            "type": "object"
+                                                        }
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "未找到有效發票資訊"
+                    }
+                }
+            }
+        },
         "/api/createpaymentterm": {
             "post": {
                 "tags": [
@@ -6286,6 +6775,10 @@
         {
             "name": "base_invoiceinfo",
             "description": "base_invoiceinfo"
+        },
+        {
+            "name": "base_order",
+            "description": "base_order"
         },
         {
             "name": "base_paymentterm",
