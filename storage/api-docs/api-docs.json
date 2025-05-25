@@ -4078,8 +4078,8 @@
                 "tags": [
                     "base_order"
                 ],
-                "summary": "查詢特定發票資訊",
-                "description": "查詢特定發票資訊",
+                "summary": "查詢特定訂單資訊",
+                "description": "查詢特定訂單資訊",
                 "operationId": "getorderInfo",
                 "parameters": [
                     {
@@ -4342,6 +4342,24 @@
                     },
                     "404": {
                         "description": "未找到有效發票資訊"
+                    }
+                }
+            }
+        },
+        "/api/orderInfo2/showconst": {
+            "get": {
+                "tags": [
+                    "base_order"
+                ],
+                "summary": "列出所有訂單需要的常用(下拉、彈窗)",
+                "description": "列出所有訂單需要的常用(下拉、彈窗)",
+                "operationId": "show_order_aLL_const",
+                "responses": {
+                    "200": {
+                        "description": "成功"
+                    },
+                    "404": {
+                        "description": "訂單資料需要的常用未找到"
                     }
                 }
             }
@@ -5227,6 +5245,68 @@
                     },
                     "404": {
                         "description": "未找到品號"
+                    }
+                }
+            }
+        },
+        "/api/product4/{productno}": {
+            "get": {
+                "tags": [
+                    "base_product"
+                ],
+                "summary": "查詢特定品號庫存",
+                "description": "查詢特定品號庫存",
+                "operationId": "getproductinv",
+                "parameters": [
+                    {
+                        "name": "productno",
+                        "in": "path",
+                        "description": "品號代號",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "inventory_no": {
+                                            "type": "string",
+                                            "example": "INV001"
+                                        },
+                                        "inventory_nm": {
+                                            "type": "string",
+                                            "example": "庫別A"
+                                        },
+                                        "lot_num": {
+                                            "type": "string",
+                                            "example": "LOT002"
+                                        },
+                                        "Restock_time": {
+                                            "type": "string",
+                                            "example": "2025-05-20 14:22:45"
+                                        },
+                                        "safety_stock": {
+                                            "type": "integer",
+                                            "example": 50
+                                        },
+                                        "inventory_qty": {
+                                            "type": "integer",
+                                            "example": 590.5
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "未找到品號的庫存"
                     }
                 }
             }

@@ -91,7 +91,8 @@ Route::get('/product/{ProductNO}', [ProductController::class, 'show']);  // 透�
 Route::get('/product2/{keyword}', [ProductController::class, 'shownm']);  // 透過 ProductNO 查詢
 Route::get('/product3/valid', [ProductController::class, 'getvalidproduct']);  // 查詢所有有效品號
 Route::patch('/product/{ProductNO}/disable', [ProductController::class, 'disable']); // 軟刪除品號資訊
-Route::get('/product1/showconst', [ClientController::class, 'showconst']);  // 列出所有單據需要的常用(下拉、彈窗)
+Route::get('/product1/showconst', [ProductController::class, 'showconst']);  // 列出所有單據需要的常用(下拉、彈窗)
+Route::get('/product4/{ProductNO}', [ProductController::class, 'showinv']);  // 查詢品號的庫存
 
 //庫別資料相關  API
 Route::post('/createinventory', [InventoryController::class, 'store']);// 新增庫別資料
@@ -120,6 +121,7 @@ Route::get('/account2/showconst', [AccountController::class, 'showconst']);  // 
 Route::post('/createorder', [OrderController::class, 'store']);// 新增訂單相關
 Route::get('/orderInfo/{order_no}', action: [OrderController::class, 'showno']);  // 透過訂單單號查詢
 Route::get('/orderInfo1/valid', [OrderController::class, 'getvaildorderinfo']);  // 查詢所有有效訂單資訊
+Route::get('/orderInfo2/showconst', [OrderController::class, 'showconst']);  // 列出所有會計科目需要的常用(下拉、彈窗)
 
 
 Route::post('/', function () {

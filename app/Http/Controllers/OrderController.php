@@ -7,13 +7,19 @@ use App\Models\SysCode;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Orderfile;
+use App\Models\BillInfo;
+use App\Models\Client;
+use App\Models\Dept;
+use App\Models\SysUser;
+use App\Models\Currency;
+use App\Models\PaymentTerm;
 use Illuminate\Support\Str;
 require_once base_path('app/Models/connect.php'); 
 use Illuminate\Support\Facades\DB;
 use OpenApi\Annotations as OA;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
-
+use Ramsey\Uuid\Uuid;
 
 /**
  * @OA\POST(
@@ -243,8 +249,8 @@ class OrderController extends Controller
     /**
      * @OA\GET(
      *     path="/api/orderInfo/{order_no}",
-     *     summary="查詢特定發票資訊",
-     *     description="查詢特定發票資訊",
+     *     summary="查詢特定訂單資訊",
+     *     description="查詢特定訂單資訊",
      *     operationId="getorderInfo",
      *     tags={"base_order"},
      *     @OA\Parameter(
@@ -508,5 +514,74 @@ class OrderController extends Controller
                 'error' => $e->getMessage() // 上線環境建議拿掉
             ], 500);
         } 
+    }
+    /**
+     * @OA\get(
+     *     path="/api/orderInfo2/showconst",
+     *     summary="列出所有訂單需要的常用(下拉、彈窗)",
+     *     description="列出所有訂單需要的常用(下拉、彈窗)",
+     *     operationId="show_order_aLL_const",
+     *     tags={"base_order"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="成功"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="訂單資料需要的常用未找到"
+     *     )
+     * )
+     */
+    // 列出所有訂單需要的常用(下拉、彈窗)
+    public function showconst($constant='all'){
+        // 查詢 '訂單單別' 的資料
+        $BillInfo = BillInfo::where('is_valid','1')->get();
+        // 查詢 '客戶資料' 的資料
+        $Client = Client::where('is_valid','1')->get();
+        // 查詢 '負責部門' 的資料
+        $dept = Dept::where('is_valid','1')->get();
+        // 查詢 '付款條件' 的資料
+        $PaymentTerm = PaymentTerm::where('is_valid','1')->get();
+        // 查詢 '幣別' 的資料
+        $Currency = Currency::where('is_valid','1')->get();
+        // 查詢 '課稅別' 的資料
+        $sysCode = SysCode::where('is_valid','1')->where('param_sn','04')->get();
+        
+        try {
+            
+            // 返回查詢結果
+            return response()->json([
+                'status' => true,
+                'message' => 'success',
+                'BillInfoOption' => $BillInfo,
+                'clientOption' => $Client,
+                'deptOption' => $dept,
+                //'SysUser' => $user,
+                'PaymentTermOption' => $PaymentTerm,
+                'CurrencyOption' => $Currency,
+                'taxtypeOption' => $sysCode
+            ], 200);
+    
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 捕捉驗證失敗，並返回錯誤訊息
+            return response()->json([
+                'status' => false,
+                'message' => '驗證錯誤',
+                'errors' => $e->errors()
+            ], 422);
+    
+        } catch (\Exception $e) {
+            // 其他例外處理，並紀錄錯誤訊息
+            Log::error('資料錯誤：' . $e->getMessage(), [
+                'exception' => $e,
+                'stack' => $e->getTraceAsString() // 可選，根據需要可增加更多上下文信息
+            ]);
+    
+            return response()->json([
+                'status' => false,
+                'message' => '伺服器發生錯誤，請稍後再試',
+                'error' => env('APP_DEBUG') ? $e->getMessage() : '請稍後再試'
+            ], 500);
+        }
     }
 }
