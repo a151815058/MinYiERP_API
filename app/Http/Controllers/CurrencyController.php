@@ -22,41 +22,11 @@ class CurrencyController extends Controller
      *     description="新增貨幣資訊",
      *     operationId="createcurrency",
      *     tags={"base_currency"},
-     *     @OA\Parameter(
-     *         name="currency_no",
-     *         in="query",
-     *         required=true,
-     *         description="貨幣代號",
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Parameter(
-     *         name="currency_nm",
-     *         in="query",
-     *         required=true,
-     *         description="貨幣名稱",
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Parameter(
-     *         name="currency_rate",
-     *         in="query",
-     *         required=false,
-     *         description="現在匯率(以台幣為基準)",
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Parameter(
-     *         name="Note",
-     *         in="query",
-     *         required=false,
-     *         description="備註",
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Parameter(
-     *         name="is_valid",
-     *         in="query",
-     *         required=true,
-     *         description="是否有效",
-     *         @OA\Schema(type="string", example=1)
-     *     ),
+     *     @OA\Parameter(name="currency_no",in="query",required=true,description="貨幣代號",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="currency_nm",in="query",required=true,description="貨幣名稱",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="currency_rate",in="query",required=false,description="現在匯率(以台幣為基準)", @OA\Schema(type="string")),
+     *     @OA\Parameter(name="Note",in="query", required=false,description="備註",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="is_valid",in="query",required=true,description="是否有效",@OA\Schema(type="string", example=1)),
      *     @OA\Response(
      *         response=200,
      *         description="成功",
@@ -137,6 +107,88 @@ class CurrencyController extends Controller
         }
     }
     /**
+     * @OA\POST(
+     *     path="/api/updatecurrency",
+     *     summary="更新貨幣資訊",
+     *     description="更新貨幣資訊",
+     *     operationId="updatecurrency",
+     *     tags={"base_currency"},
+     *     @OA\Parameter(name="currency_no",in="query",required=true,description="貨幣代號",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="currency_nm",in="query",required=true,description="貨幣名稱",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="currency_rate",in="query",required=false,description="現在匯率(以台幣為基準)", @OA\Schema(type="string")),
+     *     @OA\Parameter(name="Note",in="query", required=false,description="備註",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="is_valid",in="query",required=true,description="是否有效",@OA\Schema(type="string", example=1)),
+     *     @OA\Response(
+     *         response=200,
+     *         description="成功",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
+     *             @OA\Property(property="currency_no", type="string", example="C001"),
+     *             @OA\Property(property="currency_nm", type="string", example="台幣"),
+     *             @OA\Property(property="currency_rate", type="string", example="取得當下匯率"),
+     *             @OA\Property(property="note", type="string", example="測試測試"),
+     *             @OA\Property(property="is_valid", type="boolean", example=true),
+     *             @OA\Property(property="create_user", type="string", example="admin"),
+     *             @OA\Property(property="update_user", type="string", example="admin"),
+     *             @OA\Property(property="create_time", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="建立失敗"
+     *     )
+     * )
+     */
+    // 更新貨幣資訊
+    public function update(Request $request)
+    {
+        // 驗證請求
+        $validator = Validator::make($request->all(),[
+            'currency_no'     => 'required|string|max:255',
+            'currency_nm'     => 'required|string|max:255',
+            'currency_rate'   => 'nullable|string|max:255',
+            'note'       => 'nullable|string|max:255',
+            'is_valid'    => 'required|string'
+        ]);
+
+        if($validator->fails()){
+            return response()->json([
+                'status' => true,
+                'message' => '資料驗證失敗',
+                'errors' => $validator->errors()
+            ], 200);
+        }
+
+        // 查詢幣別資料
+        $currency = Currency::findByCurrencyNo($request['currency_no'])->where('is_valid','1')->first();
+
+        if (!$currency) {
+            return response()->json([
+                'status' => true,
+                'message' => '貨幣未找到',
+                'output'    => null
+            ], 404);
+        }
+
+        // 更新幣別資料
+        $currency->currency_nm = $request['currency_nm'];
+        $currency->currency_rate = $request['currency_rate'] ?? null;
+        $currency->note = $request['note'] ?? null;
+        $currency->is_valid = $request['is_valid'];
+        $currency->update_user = 'admin'; // 這裡可以根據實際情況設置更新者
+        $currency->update_time = now();
+        $currency->save();
+
+        // 回應 JSON
+        return response()->json([
+            'status' => true,
+            'message' => 'success',
+            'output'    => $currency
+        ], 200);
+    }
+    /**
      * @OA\GET(
      *     path="/api/currency/{currencyno}",
      *     summary="查詢特定貨幣資訊",
@@ -172,7 +224,7 @@ class CurrencyController extends Controller
      *     )
      * )
      */
-        // 🔍 查詢單一幣別
+    // 🔍 查詢單一幣別
     public function show($CurrencyNo)
     {
         $Currency = Currency::findByCurrencyNo($CurrencyNo)->where('is_valid','1')->first();

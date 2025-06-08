@@ -21,54 +21,13 @@ class AccountController extends Controller
      *     description="新增會計科目",
      *     operationId="createaccount",
      *     tags={"base_account"},
-     *     @OA\Parameter(
-     *         name="account_no",
-     *         in="query",
-     *         required=true,
-     *         description="會計科目代碼", 
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Parameter(
-     *         name="account_name",
-     *         in="query",
-     *         required=true,
-     *         description="會計科目名稱",
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Parameter(
-     *         name="Puuid",
-     *         in="query",
-     *         required=false,
-     *         description="父層UUID",
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Parameter(
-     *         name="tier",
-     *         in="query",
-     *         required=true,
-     *         description="層級",
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Parameter(
-     *         name="dc",
-     *         in="query",
-     *         required=false,
-     *         description="借貸方向",
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Parameter(
-     *          name="note", 
-     *          in="query", 
-     *          required=false, 
-     *          description="備註", 
-     *          @OA\Schema(type="string")),
-     *     @OA\Parameter(
-     *         name="is_valid",
-     *         in="query",
-     *         required=true,
-     *         description="是否有效",
-     *         @OA\Schema(type="string", example=1)
-     *     ),
+     *     @OA\Parameter(name="account_no",in="query",required=true,description="會計科目代碼", @OA\Schema(type="string")),
+     *     @OA\Parameter( name="account_name",in="query",required=true, description="會計科目名稱", @OA\Schema(type="string")),
+     *     @OA\Parameter(name="Puuid",in="query",required=false, description="父層UUID",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="tier",in="query",required=true,description="層級",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="dc",in="query", required=false,description="借貸方向",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="note", in="query", required=false,  description="備註", @OA\Schema(type="string")),
+     *     @OA\Parameter(name="is_valid",in="query",required=true,description="是否有效", @OA\Schema(type="string", example=1)),
      *     @OA\Response(
      *         response=200,
      *         description="成功",
@@ -98,21 +57,12 @@ class AccountController extends Controller
     public function store(Request $request)
     {
         try{
-            $validator = Validator::make($request->all(),[
-                'account_no'    => 'required|string|max:10',
-                'account_name'  => 'required|string|max:100',
-                'Puuid'         => 'nullable|string|max:255',
-                'tier'          => 'required|string|max:100',
-                'dc'            => 'nullable|string|max:255',
-                'note'          => 'required|string',
-                'is_valid'      => 'required|boolean',
-            ]);
-            if($validator->fails()){
+            //必填欄位必填
+            if (!$request->has(['account_no', 'account_name', 'tier', 'is_valid'])) {
                 return response()->json([
-                    'status' => true,
-                    'message' => '資料驗證失敗',
-                    'errors' => $validator->errors()
-                ], 200);
+                    'status' => false,
+                    'message' => '必填的欄位未填寫',
+                ], 400);
             }
 
             // 建立會計科目
@@ -141,6 +91,104 @@ class AccountController extends Controller
             ], 200);
     
 
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 捕捉驗證失敗
+            return response()->json([
+                'status' => false,
+                'message' => '驗證錯誤',
+                'errors' => $e->errors()
+            ], 422);
+    
+        } catch (\Exception $e) {
+            // 其他例外處理
+            Log::error('建立資料錯誤：' . $e->getMessage());
+    
+            return response()->json([
+                'status' => false,
+                'message' => '伺服器發生錯誤，請稍後再試',
+                'error' => $e->getMessage() // 上線環境建議拿掉
+            ], 500);
+        }
+    }
+    /**
+     * @OA\POST(
+     *     path="/api/updateaccount",
+     *     summary="更新會計科目",
+     *     description="更新會計科目",
+     *     operationId="updateaccount",
+     *     tags={"base_account"},
+     *     @OA\Parameter(name="account_no",in="query",required=true,description="會計科目代碼", @OA\Schema(type="string")),
+     *     @OA\Parameter(name="account_name",in="query",required=true,description="會計科目名稱",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="Puuid",in="query",required=false,description="父層UUID", @OA\Schema(type="string")),
+     *     @OA\Parameter(name="tier",in="query",required=false,description="層級",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="dc",in="query", required=false,description="借貸方向", @OA\Schema(type="string")),
+     *     @OA\Parameter(name="note", in="query", required=false, description="備註", @OA\Schema(type="string")),
+     *     @OA\Parameter(name="is_valid",in="query", required=true,description="是否有效", @OA\Schema(type="string", example=1)),
+     *     @OA\Response(
+     *         response=200,
+     *         description="成功",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
+     *             @OA\Property(property="account_no", type="string", example="1"),
+     *             @OA\Property(property="account_name", type="string", example="資產"),
+     *             @OA\Property(property="Puuid", type="string", example=""),
+     *             @OA\Property(property="tier", type="string", example="1"),
+     *             @OA\Property(property="dc", type="string", example="Assets"),
+     *             @OA\Property(property="note", type="string", example="指因過去事項所產生之資源，該資源由商業控制，並預期帶來經濟效益之流入。"),    
+     *             @OA\Property(property="is_valid", type="string", example="1"),
+     *             @OA\Property(property="create_user", type="string", example="admin"),
+     *             @OA\Property(property="update_user", type="string", example="admin"),
+     *             @OA\Property(property="create_time", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="會計科目失敗"
+     *     )
+     * )
+     */
+    // 更新會計科目
+    public function update(Request $request)
+    {
+        try{
+            //必填欄位必填
+            if (!$request->has(['account_no', 'account_name', 'tier', 'is_valid'])) {
+                return response()->json([
+                    'status' => false,
+                    'message' => '必填的欄位未填寫',
+                ], 400);
+            }
+
+            // 查詢會計科目
+            $account = Account::where('account_no', $request['account_no'])->first();
+    
+            if (!$account) {
+                return response()->json([
+                    'status' => true,
+                    'message' => '會計科目未找到',
+                    'output'    => null
+                ], 404);
+            }
+    
+            // 更新會計科目
+            $account->account_name = $request['account_name'];
+            $account->Puuid = $request['Puuid'];
+            $account->tier = $request['tier'];
+            $account->dc = $request['dc'];
+            $account->note = $request['note'] ?? null;
+            $account->is_valid = $request['is_valid'];
+            $account->update_user = 'admin';
+            $account->update_time = now();
+    
+            $account->save();
+    
+            return response()->json([
+                'status' => true,
+                'message' => 'success',
+                'output'    => $account
+            ], 200);
         } catch (\Illuminate\Validation\ValidationException $e) {
             // 捕捉驗證失敗
             return response()->json([
