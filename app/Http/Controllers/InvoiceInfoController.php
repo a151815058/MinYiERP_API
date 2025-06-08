@@ -21,76 +21,16 @@ class InvoiceInfoController extends Controller
      *     description="新增發票資料",
      *     operationId="createinvoiceinfo",
      *     tags={"base_invoiceinfo"},
-     *     @OA\Parameter(
-     *         name="period_start",
-     *         in="query",
-     *         required=true,
-     *         description="期別_起", 
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Parameter(
-     *         name="period_end",
-     *         in="query",
-     *         required=true,
-     *         description="期別_迄",
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Parameter(
-     *         name="series",
-     *         in="query",
-     *         required=true,
-     *         description="序號",
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Parameter(
-     *         name="invoice_type",
-     *         in="query",
-     *         required=true,
-     *         description="發票類型",
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Parameter(
-     *         name="track_code",
-     *         in="query",
-     *         required=true,
-     *         description="字軌代碼",
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Parameter(
-     *         name="start_number",
-     *         in="query",
-     *         required=true,
-     *         description="發票起始號碼",
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Parameter(
-     *         name="end_number",
-     *         in="query",
-     *         required=true,
-     *         description="發票截止號碼",
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Parameter(
-     *         name="effective_startdate",
-     *         in="query",
-     *         required=true,
-     *         description="適用起始日期",
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Parameter(
-     *         name="effective_enddate",
-     *         in="query",
-     *         required=false,
-     *         description="適用截止日期",
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Parameter(
-     *         name="is_valid",
-     *         in="query",
-     *         required=true,
-     *         description="是否有效",
-     *         @OA\Schema(type="string", example=1)
-     *     ),
+     *     @OA\Parameter(name="period_start",in="query",required=true,description="期別_起", @OA\Schema(type="string")),
+     *     @OA\Parameter(name="period_end",in="query",required=true,description="期別_迄",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="series",in="query",required=true,description="序號",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="invoice_type",in="query",required=true,description="發票類型", @OA\Schema(type="string")),
+     *     @OA\Parameter(name="track_code",in="query",required=true,description="字軌代碼",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="start_number",in="query",required=true,description="發票起始號碼", @OA\Schema(type="string")),
+     *     @OA\Parameter(name="end_number",in="query",required=true, description="發票截止號碼",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="effective_startdate",in="query",required=true,description="適用起始日期",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="effective_enddate",in="query",required=false,description="適用截止日期",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="is_valid",in="query",required=true,description="是否有效", @OA\Schema(type="string", example=1)),
      *     @OA\Response(
      *         response=200,
      *         description="成功",
@@ -138,8 +78,8 @@ class InvoiceInfoController extends Controller
             if($validator->fails()){
                 return response()->json([
                     'status' => true,
-                    'message' => '資料驗證失敗',
-                    'errors' => $validator->errors()
+                    'message' => '必填欄位驗證失敗',
+                    'output' => null
                 ], 200);
             }
 
@@ -257,6 +197,121 @@ class InvoiceInfoController extends Controller
                 'error' => $e->getMessage() // 上線環境建議拿掉
             ], 500);
         }
+    }
+    /**
+     * @OA\POST(
+     *     path="/api/updateinvoiceinfo",
+     *     summary="更新發票資料",
+     *     description="更新發票資料",
+     *     operationId="updateinvoiceinfo",
+     *     tags={"base_invoiceinfo"},
+     *     @OA\Parameter(name="period_start",in="query",required=true,description="期別_起", @OA\Schema(type="string")),
+     *     @OA\Parameter(name="period_end",in="query",required=true,description="期別_迄",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="series",in="query",required=true,description="序號",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="invoice_type",in="query",required=true,description="發票類型", @OA\Schema(type="string")),
+     *     @OA\Parameter(name="track_code",in="query",required=true,description="字軌代碼",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="start_number",in="query",required=true,description="發票起始號碼", @OA\Schema(type="string")),
+     *     @OA\Parameter(name="end_number",in="query",required=true, description="發票截止號碼",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="effective_startdate",in="query",required=true,description="適用起始日期",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="effective_enddate",in="query",required=false,description="適用截止日期",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="is_valid",in="query",required=true,description="是否有效", @OA\Schema(type="string", example=1)),
+     *     @OA\Response(
+     *         response=200,
+     *         description="成功",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
+     *             @OA\Property(property="period_start", type="string", example="2025-01"),
+     *             @OA\Property(property="period_end", type="string", example="2025-02"),
+     *             @OA\Property(property="series", type="string", example="001"),
+     *             @OA\Property(property="invoice_type", type="string", example="1"),
+     *             @OA\Property(property="track_code", type="string", example="AQ"),
+     *             @OA\Property(property="start_number", type="string", example="0000000001"),    
+     *             @OA\Property(property="end_number", type="string", example="0000000050"),
+     *             @OA\Property(property="effective_startdate", type="date", example="2025/01/01"),
+     *             @OA\Property(property="effective_enddate", type="date", example="2025/02/28"),
+     *             @OA\Property(property="is_valid", type="string", example="1"),
+     *             @OA\Property(property="create_user", type="string", example="admin"),
+     *             @OA\Property(property="update_user", type="string", example="admin"),
+     *             @OA\Property(property="create_time", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="單據發票失敗"
+     *     )
+     * )
+     */
+    // 更新發票資料
+    public function update(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'uuid'                => 'required|uuid',
+                'period_start'        => 'required|string|max:7',
+                'period_end'          => 'required|string|max:7',
+                'series'              => 'required|string|max:3',
+                'invoice_type'        => 'required|string|max:2',
+                'track_code'          => 'required|string|max:2',
+                'start_number'        => 'required|string',
+                'end_number'          => 'required|string',
+                'effective_startdate' => 'required|date',
+                'effective_enddate'   => 'nullable|date',
+                'is_valid'            => 'required|boolean',
+            ]);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => true,
+                    'message' => '必填欄位驗證失敗',
+                    'output' => null
+                ], 200);
+            }
+
+            //發票期別起迄不能相同
+            if ($request['period_start'] == $request['period_end']) {
+                return response()->json([
+                    'status' => true,
+                    'message' => '發票期別起迄不能相同',
+                    'output' => null
+                ], 200);
+            }
+
+            //期別起需要是民國年月的格式
+            if (!preg_match('/^0?\d{2,3}[\/](0?[1-9]|1[0-2])$/', $request['period_start']) || !preg_match('/^0?\d{2,3}[\/](0?[1-9]|1[0-2])$/', $request['period_end'])) {
+                return response()->json([
+                    'status' => true,
+                    'message' => '期別格式錯誤，請使用民國年月的格式(例如：113/01)',
+                    'output' => null
+                ], 200);
+            }
+
+            //發票號碼需要8碼
+            if (strlen($request['start_number']) != 8 || strlen($request['end_number']) != 8) {
+                return response()->json([
+                    'status' => true,
+                    'message' => '發票號碼必須是8碼',
+                    'output' => null
+                ], 200);
+            }
+        }catch (\Illuminate\Validation\ValidationException $e) {
+            // 捕捉驗證失敗
+            return response()->json([
+                'status' => false,
+                'message' => '驗證錯誤',
+                'errors' => $e->errors()
+            ], 422);
+    
+        } catch (\Exception $e) {
+            // 其他例外處理
+            Log::error('建立資料錯誤：' . $e->getMessage());
+    
+            return response()->json([
+                'status' => false,
+                'message' => '伺服器發生錯誤，請稍後再試',
+                'error' => $e->getMessage() // 上線環境建議拿掉
+            ], 500);
+        }    
     }
     /**
      * @OA\GET(

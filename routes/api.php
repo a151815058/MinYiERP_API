@@ -107,8 +107,9 @@ Route::get('/inventorys/valid', [InventoryController::class, 'getvaildinventory'
 Route::patch('/inventory/{InventoryNO}/disable', [InventoryController::class, 'disable']); // 軟刪除庫別資訊
 
 
-//發票資料相關  API
+//發票資料相關  API 
 Route::post('/createinvoiceinfo', [InvoiceInfoController::class, 'store']);// 新增發票資料
+Route::post('/updateinvoiceinfo', [InvoiceInfoController::class, 'update']);// 更新發票資料
 Route::get('/invoiceInfo2/{period}', action: [InvoiceInfoController::class, 'show']);  // 透過期別查詢
 Route::get('/invoiceInfo1/valid', [InvoiceInfoController::class, 'getvaildinvoiceinfo']);  // 查詢所有有效發票
 Route::patch('/invoiceinfo/{uuid}/disable', [InvoiceInfoController::class, 'disable']); // 軟刪除發票資訊
