@@ -150,6 +150,147 @@
                 }
             }
         },
+        "/api/updateaccount": {
+            "post": {
+                "tags": [
+                    "base_account"
+                ],
+                "summary": "更新會計科目",
+                "description": "更新會計科目",
+                "operationId": "updateaccount",
+                "parameters": [
+                    {
+                        "name": "account_no",
+                        "in": "query",
+                        "description": "會計科目代碼",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "account_name",
+                        "in": "query",
+                        "description": "會計科目名稱",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "Puuid",
+                        "in": "query",
+                        "description": "父層UUID",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "tier",
+                        "in": "query",
+                        "description": "層級",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "dc",
+                        "in": "query",
+                        "description": "借貸方向",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "note",
+                        "in": "query",
+                        "description": "備註",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "is_valid",
+                        "in": "query",
+                        "description": "是否有效",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "account_no": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "account_name": {
+                                            "type": "string",
+                                            "example": "資產"
+                                        },
+                                        "Puuid": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "tier": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "dc": {
+                                            "type": "string",
+                                            "example": "Assets"
+                                        },
+                                        "note": {
+                                            "type": "string",
+                                            "example": "指因過去事項所產生之資源，該資源由商業控制，並預期帶來經濟效益之流入。"
+                                        },
+                                        "is_valid": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "create_user": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "update_user": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "create_time": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "update_time": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "會計科目失敗"
+                    }
+                }
+            }
+        },
         "/api/account1/{AccNo}": {
             "get": {
                 "tags": [
@@ -454,6 +595,199 @@
                 "summary": "新增單據資料",
                 "description": "新增單據資料",
                 "operationId": "createbillinfo",
+                "parameters": [
+                    {
+                        "name": "bill_no",
+                        "in": "query",
+                        "description": "單據代號",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "bill_nm",
+                        "in": "query",
+                        "description": "單據名稱",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "bill_type",
+                        "in": "query",
+                        "description": "單據類型",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "bill_encode",
+                        "in": "query",
+                        "description": "單據編碼方式(1:年月日+3碼流水碼,2:手動編碼)",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "bill_calc",
+                        "in": "query",
+                        "description": "單據計算方式(1:單身單筆,2:整張計算)",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "auto_review",
+                        "in": "query",
+                        "description": "是否自動核准(1:是,2:否)",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "gen_order",
+                        "in": "query",
+                        "description": "自動產生單據(1:自動,2:手動)",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "gen_bill_type",
+                        "in": "query",
+                        "description": "產生單據類型",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "order_type",
+                        "in": "query",
+                        "description": "依照gen_bill_type動態產生欄位名稱",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "note",
+                        "in": "query",
+                        "description": "備註",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "is_valid",
+                        "in": "query",
+                        "description": "是否有效",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "bill_no": {
+                                            "type": "string",
+                                            "example": "T001"
+                                        },
+                                        "bill_nm": {
+                                            "type": "string",
+                                            "example": "客戶訂單"
+                                        },
+                                        "bill_type": {
+                                            "type": "string",
+                                            "example": "61"
+                                        },
+                                        "bill_encode": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "bill_calc": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "auto_review": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "gen_order": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "gen_bill_type": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "order_type": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "note": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "is_valid": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "create_user": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "update_user": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "create_time": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "update_time": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "單據建立失敗"
+                    }
+                }
+            }
+        },
+        "/api/updatebillinfo": {
+            "post": {
+                "tags": [
+                    "base_billinfo"
+                ],
+                "summary": "更新單據資料",
+                "description": "更新單據資料",
+                "operationId": "updatebillinfo",
                 "parameters": [
                     {
                         "name": "bill_no",
@@ -2423,6 +2757,121 @@
                 "summary": "新增貨幣資訊",
                 "description": "新增貨幣資訊",
                 "operationId": "createcurrency",
+                "parameters": [
+                    {
+                        "name": "currency_no",
+                        "in": "query",
+                        "description": "貨幣代號",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "currency_nm",
+                        "in": "query",
+                        "description": "貨幣名稱",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "currency_rate",
+                        "in": "query",
+                        "description": "現在匯率(以台幣為基準)",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "Note",
+                        "in": "query",
+                        "description": "備註",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "is_valid",
+                        "in": "query",
+                        "description": "是否有效",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "currency_no": {
+                                            "type": "string",
+                                            "example": "C001"
+                                        },
+                                        "currency_nm": {
+                                            "type": "string",
+                                            "example": "台幣"
+                                        },
+                                        "currency_rate": {
+                                            "type": "string",
+                                            "example": "取得當下匯率"
+                                        },
+                                        "note": {
+                                            "type": "string",
+                                            "example": "測試測試"
+                                        },
+                                        "is_valid": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "create_user": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "update_user": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "create_time": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "update_time": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "建立失敗"
+                    }
+                }
+            }
+        },
+        "/api/updatecurrency": {
+            "post": {
+                "tags": [
+                    "base_currency"
+                ],
+                "summary": "更新貨幣資訊",
+                "description": "更新貨幣資訊",
+                "operationId": "updatecurrency",
                 "parameters": [
                     {
                         "name": "currency_no",
@@ -5322,6 +5771,147 @@
                     },
                     "404": {
                         "description": "未找到部門"
+                    }
+                }
+            }
+        },
+        "/api/updatepaymentterm": {
+            "post": {
+                "tags": [
+                    "base_paymentterm"
+                ],
+                "summary": "更新付款條件",
+                "description": "更新付款條件",
+                "operationId": "updatepaymentterm",
+                "parameters": [
+                    {
+                        "name": "terms_no",
+                        "in": "query",
+                        "description": "付款條件代碼",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "terms_nm",
+                        "in": "query",
+                        "description": "付款條件名稱",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "terms_days",
+                        "in": "query",
+                        "description": "付款條件月結天數",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "pay_mode",
+                        "in": "query",
+                        "description": "付款條件 1:當月/2:隔月",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "pay_day",
+                        "in": "query",
+                        "description": "付款時間",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "note",
+                        "in": "query",
+                        "description": "備註",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "is_valid",
+                        "in": "query",
+                        "description": "是否有效",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "terms_no": {
+                                            "type": "string",
+                                            "example": "T001"
+                                        },
+                                        "terms_nm": {
+                                            "type": "string",
+                                            "example": "月結30天"
+                                        },
+                                        "terms_days": {
+                                            "type": "integer",
+                                            "example": "30"
+                                        },
+                                        "pay_mode": {
+                                            "type": "string",
+                                            "example": "M001"
+                                        },
+                                        "pay_day": {
+                                            "type": "integer",
+                                            "example": "30"
+                                        },
+                                        "note": {
+                                            "type": "string",
+                                            "example": "測試測試"
+                                        },
+                                        "is_valid": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "create_user": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "create_time": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "update_user": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "update_time": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "未找到付款條件"
                     }
                 }
             }

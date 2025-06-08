@@ -64,7 +64,7 @@ class InvoiceInfoController extends Controller
     {
         try{
             //必填欄位未填寫
-            if (!$request->has(['uuid', 'period_start', 'period_end', 'series', 'invoice_type', 'track_code', 'start_number', 'end_number', 'effective_startdate', 'is_valid'])) || empty($request['uuid'])) {
+            if (!$request->has(['uuid', 'period_start', 'period_end', 'series', 'invoice_type', 'track_code', 'start_number', 'end_number', 'effective_startdate', 'is_valid'])) {
                 return response()->json([
                     'status' => true,
                     'message' => '必填欄位未填寫',
@@ -237,7 +237,7 @@ class InvoiceInfoController extends Controller
     {
         try {
             //必填欄位未填寫
-            if (!$request->has(['uuid', 'period_start', 'period_end', 'series', 'invoice_type', 'track_code', 'start_number', 'end_number', 'effective_startdate', 'is_valid'])) || empty($request['uuid'])) {
+            if (!$request->has(['uuid', 'period_start', 'period_end', 'series', 'invoice_type', 'track_code', 'start_number', 'end_number', 'effective_startdate', 'is_valid'])) {
                 return response()->json([
                     'status' => true,
                     'message' => '必填欄位未填寫',
