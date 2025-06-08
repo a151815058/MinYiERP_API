@@ -18,7 +18,7 @@ class Inventory extends Model
     public $timestamps = false; // 因為我們手動使用 CreateTime 和 update_time
 
     protected $fillable = [
-        'uuid', 'inventory_no', 'inventory_nm', 'inventory_qty','lot_num','safety_stock','lastStock_receiptdate', 'is_valid', 'create_user', 'create_time', 'update_user', 'update_time'
+        'uuid', 'inventory_no', 'inventory_nm', 'note', 'is_valid', 'create_user', 'create_time', 'update_user', 'update_time'
     ];
 
     // 自動生成 UUID

@@ -49,6 +49,7 @@ class InventoryController extends Controller
      *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
      *             @OA\Property(property="inventory_no", type="string", example="INV001"),
      *             @OA\Property(property="inventory_nm", type="string", example="庫別1"),
+     *             @OA\Property(property="note", type="string", example="備註"),
      *             @OA\Property(property="is_valid", type="string", example="1"),
      *             @OA\Property(property="create_user", type="string", example="admin"),
      *             @OA\Property(property="create_time", type="string", example="admin"),
@@ -70,10 +71,6 @@ class InventoryController extends Controller
             $validator = Validator::make($request->all(),[
                 'inventory_no'     => 'required|string|max:255|unique:inventory,inventory_no',
                 'inventory_nm'     => 'required|string|max:255',
-                //'inventory_qty'     => 'required|integer|max:10000000',
-                //'lot_num'     => 'nullable|string|max:255',
-                //'safety_stock'     => 'required|integer|max:10000000',
-                //'lastStock_receiptdate'     => 'nullable|string',
                 'is_valid'    => 'required|boolean'
             ]);
 
@@ -90,10 +87,7 @@ class InventoryController extends Controller
                 'uuid'                    => Str::uuid(),  // 自動生成 UUID
                 'inventory_no'             => $request['inventory_no'],
                 'inventory_nm'             => $request['inventory_nm'],
-                //'inventory_qty'            => $request['inventory_qty'],
-                //'lot_num'                  => $request['lot_num']?? null,
-                //'safety_stock'            => $request['safety_stock'],
-                //'lastStock_receiptdate'    => $request['lastStock_receiptdate'] ?? null,
+                'note'                      => $request['note'] ?? null,
                 'is_valid'                 => $request['is_valid']
             ]);
 
@@ -132,6 +126,69 @@ class InventoryController extends Controller
         }
 
     }
+
+    // 更新庫別資料
+    public function update(Request $request)
+    {
+        try {
+            // 驗證請求
+            $validator = Validator::make($request->all(),[
+                'inventory_no'     => 'required|string|max:255',
+                'inventory_nm'     => 'required|string|max:255',
+                'is_valid'    => 'required|boolean'
+            ]);
+
+            if($validator->fails()){
+                return response()->json([
+                    'status' => true,
+                    'message' => '資料驗證失敗',
+                    'errors' => $validator->errors()
+                ], 200);
+            }
+
+            // 查詢庫別資料
+            $Inventory = Inventory::findByInventoryNO($request['inventory_no'])->where('is_valid', '1')->first();
+
+            if (!$Inventory) {
+                return response()->json([
+                    'status' => true,
+                    'message' => '庫別未找到',
+                    'output'    => null
+                ], 404);
+            }
+
+            // 更新庫別資料
+            $Inventory->inventory_nm = $request['inventory_nm'];
+            $Inventory->note = $request['note'] ?? null;
+            $Inventory->is_valid = $request['is_valid'];
+            $Inventory->update_user = 'admin';
+            $Inventory->update_time = now();
+            $Inventory->save();
+
+            // 回應 JSON
+            return response()->json([
+                'status' => true,
+                'message' => 'success',
+                'output'    => $Inventory
+            ], 200);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 捕捉驗證失敗
+            return response()->json([
+                'status' => false,
+                'message' => '驗證錯誤',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {   
+            // 其他例外處理
+            Log::error('更新庫別資料錯誤：' . $e->getMessage());
+    
+            return response()->json([
+                'status' => false,
+                'message' => '伺服器發生錯誤，請稍後再試',
+                'error' => $e->getMessage() // 上線環境建議拿掉
+            ], 500);
+        }
+    }
     /**
      * @OA\GET(
      *     path="/api/inventory/{inventoryno}",
@@ -154,6 +211,7 @@ class InventoryController extends Controller
      *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
      *             @OA\Property(property="inventory_no", type="string", example="INV001"),
      *             @OA\Property(property="inventory_nm", type="string", example="庫別1"),
+     *             @OA\Property(property="note", type="string", example="備註"),
      *             @OA\Property(property="is_valid", type="string", example="1"),
      *             @OA\Property(property="create_user", type="string", example="admin"),
      *             @OA\Property(property="create_time", type="string", example="admin"),
