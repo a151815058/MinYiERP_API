@@ -20,83 +20,17 @@ class BillInfoController extends Controller
      *     description="新增單據資料",
      *     operationId="createbillinfo",
      *     tags={"base_billinfo"},
-     *     @OA\Parameter(
-     *         name="bill_no",
-     *         in="query",
-     *         required=true,
-     *         description="單據代號",
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Parameter(
-     *         name="bill_nm",
-     *         in="query",
-     *         required=true,
-     *         description="單據名稱",
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Parameter(
-     *         name="bill_type",
-     *         in="query",
-     *         required=true,
-     *         description="單據類型",
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Parameter(
-     *         name="bill_encode",
-     *         in="query",
-     *         required=true,
-     *         description="單據編碼方式(1:年月日+3碼流水碼,2:手動編碼)",
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Parameter(
-     *         name="bill_calc",
-     *         in="query",
-     *         required=true,
-     *         description="單據計算方式(1:單身單筆,2:整張計算)",
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Parameter(
-     *         name="auto_review",
-     *         in="query",
-     *         required=true,
-     *         description="是否自動核准(1:是,2:否)",
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Parameter(
-     *         name="gen_order",
-     *         in="query",
-     *         required=false,
-     *         description="自動產生單據(1:自動,2:手動)",
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Parameter(
-     *         name="gen_bill_type",
-     *         in="query",
-     *         required=false,
-     *         description="產生單據類型",
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Parameter(
-     *         name="order_type",
-     *         in="query",
-     *         required=false,
-     *         description="依照gen_bill_type動態產生欄位名稱",
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Parameter(
-     *         name="note",
-     *         in="query",
-     *         required=false,
-     *         description="備註",
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Parameter(
-     *         name="is_valid",
-     *         in="query",
-     *         required=true,
-     *         description="是否有效",
-     *         @OA\Schema(type="string", example=1)
-     *     ),
+     *     @OA\Parameter( name="bill_no",in="query",required=true,description="單據代號",@OA\Schema(type="string")),
+     *     @OA\Parameter( name="bill_nm",in="query", required=true,description="單據名稱", @OA\Schema(type="string")),
+     *     @OA\Parameter( name="bill_type",in="query",required=true,description="單據類型", @OA\Schema(type="string")),
+     *     @OA\Parameter(name="bill_encode",in="query", required=true,description="單據編碼方式(1:年月日+3碼流水碼,2:手動編碼)",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="bill_calc",in="query",required=true,description="單據計算方式(1:單身單筆,2:整張計算)",@OA\Schema(type="string")),
+     *     @OA\Parameter( name="auto_review",in="query",required=true, description="是否自動核准(1:是,2:否)", @OA\Schema(type="string")),
+     *     @OA\Parameter(name="gen_order",in="query",required=false,description="自動產生單據(1:自動,2:手動)",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="gen_bill_type",in="query", required=false,description="產生單據類型", @OA\Schema(type="string")),
+     *     @OA\Parameter(name="order_type",in="query",required=false, description="依照gen_bill_type動態產生欄位名稱",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="note",in="query",required=false,description="備註",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="is_valid",in="query",required=true,description="是否有效",@OA\Schema(type="string", example=1)),
      *     @OA\Response(
      *         response=200,
      *         description="成功",
@@ -130,26 +64,20 @@ class BillInfoController extends Controller
     public function store(Request $request)
     {
         try {
-            // 驗證請求
-            $validator = Validator::make($request->all(),[
-                'bill_no'     => 'required|string|max:255|unique:billinfo,bill_no',
-                'bill_nm'     => 'required|string|max:255',
-                'bill_type'   => 'required|string|max:10',
-                'bill_encode' => 'required|string|max:10',
-                'bill_calc'   => 'required|integer|max:10',
-                'auto_review' => 'required|integer|max:10',
-                'gen_order'   => 'nullable|string|max:10',
-                'gen_bill_type'   => 'nullable|string|max:10',
-                //'order_type'  => 'nullable|integer|max:10',
-                'note'       => 'nullable|string|max:255',
-                'is_valid'    => 'required|string'
-            ]);
-
-            if($validator->fails()){
+            //bill_no為唯一鍵，不能重複
+            if ($request->bill_no && BillInfo::where('bill_no', $request->bill_no)->exists()) {
                 return response()->json([
-                    'status' => false,
-                    'message' => '資料驗證失敗',
-                    'errors' => $validator->errors()
+                    'status' => true,
+                    'message' => '單據代號已存在',
+                    'output' => null
+                ], 200);
+            }
+            //必填欄位
+            if (!$request->bill_no || !$request->bill_nm || !$request->bill_type || !$request->bill_encode || !$request->bill_calc || !$request->auto_review || !$request->is_valid) {
+                return response()->json([
+                    'status' => true,
+                    'message' => '請填寫所有必填欄位',
+                    'output' => null
                 ], 200);
             }
 
@@ -216,6 +144,137 @@ class BillInfoController extends Controller
             ], 500);
         }
     }
+    /**
+     * @OA\POST(
+     *     path="/api/updatebillinfo",
+     *     summary="更新單據資料",
+     *     description="更新單據資料",
+     *     operationId="updatebillinfo",
+     *     tags={"base_billinfo"},
+     *     @OA\Parameter( name="bill_no",in="query",required=true,description="單據代號",@OA\Schema(type="string")),
+     *     @OA\Parameter( name="bill_nm",in="query", required=true,description="單據名稱", @OA\Schema(type="string")),
+     *     @OA\Parameter( name="bill_type",in="query",required=true,description="單據類型", @OA\Schema(type="string")),
+     *     @OA\Parameter(name="bill_encode",in="query", required=true,description="單據編碼方式(1:年月日+3碼流水碼,2:手動編碼)",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="bill_calc",in="query",required=true,description="單據計算方式(1:單身單筆,2:整張計算)",@OA\Schema(type="string")),
+     *     @OA\Parameter( name="auto_review",in="query",required=true, description="是否自動核准(1:是,2:否)", @OA\Schema(type="string")),
+     *     @OA\Parameter(name="gen_order",in="query",required=false,description="自動產生單據(1:自動,2:手動)",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="gen_bill_type",in="query", required=false,description="產生單據類型", @OA\Schema(type="string")),
+     *     @OA\Parameter(name="order_type",in="query",required=false, description="依照gen_bill_type動態產生欄位名稱",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="note",in="query",required=false,description="備註",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="is_valid",in="query",required=true,description="是否有效",@OA\Schema(type="string", example=1)),
+     *     @OA\Response(
+     *         response=200,
+     *         description="成功",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
+     *             @OA\Property(property="bill_no", type="string", example="T001"),
+     *             @OA\Property(property="bill_nm", type="string", example="客戶訂單"),
+     *             @OA\Property(property="bill_type", type="string", example="61"),
+     *             @OA\Property(property="bill_encode", type="string", example="1"),    
+     *             @OA\Property(property="bill_calc", type="string", example="1"),
+     *             @OA\Property(property="auto_review", type="string", example="1"),
+     *             @OA\Property(property="gen_order", type="string", example="1"),
+     *             @OA\Property(property="gen_bill_type", type="string", example="1"),
+     *             @OA\Property(property="order_type", type="string", example="1"),
+     *             @OA\Property(property="note", type="string", example=""),
+     *             @OA\Property(property="is_valid", type="string", example="1"),
+     *             @OA\Property(property="create_user", type="string", example="admin"),
+     *             @OA\Property(property="update_user", type="string", example="admin"),
+     *             @OA\Property(property="create_time", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="單據建立失敗"
+     *     )
+     * )
+     */
+    //更新單據
+    public function update(Request $request)
+    {
+        try {
+            //bill_no為唯一鍵，不能重複
+            if ($request->bill_no && BillInfo::where('bill_no', $request->bill_no)->exists()) {
+                return response()->json([
+                    'status' => true,
+                    'message' => '單據代號已存在',
+                    'output' => null
+                ], 200);
+            }
+            //必填欄位
+            if (!$request->bill_no || !$request->bill_nm || !$request->bill_type || !$request->bill_encode || !$request->bill_calc || !$request->auto_review || !$request->is_valid) {
+                return response()->json([
+                    'status' => true,
+                    'message' => '請填寫所有必填欄位',
+                    'output' => null
+                ], 200);
+            }
+
+            //判斷order_type
+            //單據類別=客戶訂單=>自動產生"銷貨單"，所以gen_bill_type需存"71"
+            //單據類別=銷貨單=>自動產生"結帳單"，所以gen_bill_type需存"81"
+            //單據類別=採購單=>自動產生"進貨單"，所以gen_bill_type需存"51" 
+            if ($request['bill_type'] == '61') {
+                $request['gen_bill_type'] = '71';
+                $request['order_type'] = '銷貨單';
+            } elseif ($request['bill_type'] == '71') {
+                $request['gen_bill_type'] = '81';
+                $request['order_type'] = '結帳單';
+            } elseif ($request['bill_type'] == '採購單') {
+                $request['gen_bill_type'] = '51';
+                $request['order_type'] = '進貨單';
+            }
+
+            // 更新單據資料
+            $BillInfo = BillInfo::findByBillNo($request->bill_no)->where('is_valid','1')->first();
+    
+            if (!$BillInfo) {
+                return response()->json([
+                    'status' => true,
+                    'message' => '未找到要更新的單據',
+                    'output' => null
+                ], 404);
+            }
+    
+            $BillInfo->update([
+                'bill_nm'     => $request['bill_nm'],
+                'bill_type'   => $request['bill_type'],
+                'bill_encode' => $request['bill_encode'],
+                'bill_calc'   => $request['bill_calc'],
+                'auto_review' => $request['auto_review'],
+                'gen_order'   => $request['gen_order'] ?? null,
+                'gen_bill_type'   => $request['gen_bill_type'] ?? null,
+                'order_type'  => $request['order_type'] ?? null,
+                'note'       => $request['note'] ?? null,
+                'is_valid'    => $request['is_valid']
+            ]);
+            return response()->json([
+                'status' => true,
+                'message' => 'success',
+                'output' => $BillInfo
+            ], 200);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 捕捉驗證失敗
+            return response()->json([
+                'status' => false,
+                'message' => '驗證錯誤',
+                'errors' => $e->errors()
+            ], 422);
+    
+        } catch (\Exception $e) {
+            // 其他例外處理
+            Log::error('更新單據資料錯誤：' . $e->getMessage());
+    
+            return response()->json([
+                'status' => false,
+                'message' => '伺服器發生錯誤，請稍後再試',
+                'error' => $e->getMessage() // 上線環境建議拿掉
+            ], 500);
+        }
+        
+    }    
     /**
      * @OA\GET(
      *     path="/api/billinfo/{billno}",

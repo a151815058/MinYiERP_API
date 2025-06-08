@@ -63,22 +63,11 @@ class InvoiceInfoController extends Controller
     public function store(Request $request)
     {
         try{
-            $validator = Validator::make($request->all(),[
-                'period_start'        => 'required|string|max:7',
-                'period_end'          => 'required|string|max:7',
-                'series'              => 'required|string|max:3',
-                'invoice_type'        => 'required|string|max:2',
-                'track_code'          => 'required|string|max:2',
-                'start_number'        => 'required|string',
-                'end_number'          => 'required|string',
-                'effective_startdate' => 'required|date',
-                'effective_enddate'   => 'required|date',
-                'is_valid'            => 'required|boolean',
-            ]);
-            if($validator->fails()){
+            //必填欄位未填寫
+            if (!$request->has(['uuid', 'period_start', 'period_end', 'series', 'invoice_type', 'track_code', 'start_number', 'end_number', 'effective_startdate', 'is_valid'])) || empty($request['uuid'])) {
                 return response()->json([
                     'status' => true,
-                    'message' => '必填欄位驗證失敗',
+                    'message' => '必填欄位未填寫',
                     'output' => null
                 ], 200);
             }
@@ -247,23 +236,11 @@ class InvoiceInfoController extends Controller
     public function update(Request $request)
     {
         try {
-            $validator = Validator::make($request->all(), [
-                'uuid'                => 'required|uuid',
-                'period_start'        => 'required|string|max:7',
-                'period_end'          => 'required|string|max:7',
-                'series'              => 'required|string|max:3',
-                'invoice_type'        => 'required|string|max:2',
-                'track_code'          => 'required|string|max:2',
-                'start_number'        => 'required|string',
-                'end_number'          => 'required|string',
-                'effective_startdate' => 'required|date',
-                'effective_enddate'   => 'nullable|date',
-                'is_valid'            => 'required|boolean',
-            ]);
-            if ($validator->fails()) {
+            //必填欄位未填寫
+            if (!$request->has(['uuid', 'period_start', 'period_end', 'series', 'invoice_type', 'track_code', 'start_number', 'end_number', 'effective_startdate', 'is_valid'])) || empty($request['uuid'])) {
                 return response()->json([
                     'status' => true,
-                    'message' => '必填欄位驗證失敗',
+                    'message' => '必填欄位未填寫',
                     'output' => null
                 ], 200);
             }
@@ -294,6 +271,67 @@ class InvoiceInfoController extends Controller
                     'output' => null
                 ], 200);
             }
+
+            //發票號碼數值相減需要等於50    
+            //if ((intval(substr($request['end_number'],-2)) - intval(substr($request['start_number'],-2)))+1 != 50) {
+            //    return response()->json([
+            //        'status' => true,
+            //        'message' => '發票號碼區間必須等於50',
+            //        'output' => null
+            //    ], 200);
+            //}
+            //發票號碼起需要0結尾
+            if (substr($request['start_number'], -1) != '0') {
+                return response()->json([
+                    'status' => true,
+                    'message' => '發票號碼起需要0結尾',
+                    'output' => null
+                ], 200);
+            }
+            //發票號碼迄需要9結尾
+            if (substr($request['end_number'], -1) != '9') {
+                return response()->json([
+                    'status' => true,
+                    'message' => '發票號碼迄需要9結尾',
+                    'output' => null
+                ], 200);
+            }
+            //同一個期別起迄，同一個發票號碼區間只能有一筆資料
+            $existingInvoiceInfo = InvoiceInfo::where('period_start', $request['period_start'])
+                ->where('period_end', $request['period_end'])
+                ->where('start_number', $request['start_number'])
+                ->where('end_number', $request['end_number'])
+                ->where('uuid', '!=', $request['uuid']) // 排除當前更新的資料
+                ->first();
+            if ($existingInvoiceInfo) {
+                return response()->json([
+                    'status' => true,
+                    'message' => '同一個期別，同一個發票號碼區間只能有一筆資料',
+                    'output' => null
+                ], 200);
+            }
+            // 更新發票資料
+            $InvoiceInfo = InvoiceInfo::where('uuid', $request['uuid'])->first();
+            if (!$InvoiceInfo) {
+                return response()->json([
+                    'status' => true,
+                    'message' => '資料不存在',
+                    'output' => null
+                ], 404);
+            }
+            $InvoiceInfo->period_start = $request['period_start'];
+            $InvoiceInfo->period_end = $request['period_end'];
+            $InvoiceInfo->series = $request['series'];
+            $InvoiceInfo->invoice_type = $request['invoice_type'];
+            $InvoiceInfo->track_code = $request['track_code'];
+            $InvoiceInfo->start_number = $request['start_number'];
+            $InvoiceInfo->end_number = $request['end_number'];
+            $InvoiceInfo->effective_startdate = $request['effective_startdate'];
+            $InvoiceInfo->effective_enddate = $request['effective_enddate'] ?? null;
+            $InvoiceInfo->is_valid = $request['is_valid'];
+            $InvoiceInfo->update_user = 'admin'; // 假設更新者為 admin
+            $InvoiceInfo->update_time = now(); // 更新時間為當前時間
+            $InvoiceInfo->save();
         }catch (\Illuminate\Validation\ValidationException $e) {
             // 捕捉驗證失敗
             return response()->json([

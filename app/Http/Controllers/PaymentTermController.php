@@ -21,55 +21,13 @@ class PaymentTermController extends Controller
      *     description="新增付款條件",
      *     operationId="createpaymentterm",
      *     tags={"base_paymentterm"},
-     *     @OA\Parameter(
-     *         name="terms_no",
-     *         in="query",
-     *         required=true,
-     *         description="付款條件代碼",
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Parameter(
-     *         name="terms_nm",
-     *         in="query",
-     *         required=true,
-     *         description="付款條件名稱",
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Parameter(
-     *         name="terms_days",
-     *         in="query",
-     *         required=true,
-     *         description="付款條件月結天數",
-     *         @OA\Schema(type="integer")
-     *     ),
-     *     @OA\Parameter(
-     *         name="pay_mode",
-     *         in="query",
-     *         required=true,
-     *         description="付款條件 1:當月/2:隔月",
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Parameter(
-     *         name="pay_day",
-     *         in="query",
-     *         required=true,
-     *         description="付款時間",
-     *         @OA\Schema(type="integer")
-     *     ),
-     *     @OA\Parameter(
-     *         name="note",
-     *         in="query",
-     *         required=false,
-     *         description="備註",
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Parameter(
-     *         name="is_valid",
-     *         in="query",
-     *         required=true,
-     *         description="是否有效",
-     *         @OA\Schema(type="string", example=1)
-     *     ),
+     *     @OA\Parameter(name="terms_no", in="query",required=true,description="付款條件代碼",@OA\Schema(type="string")),
+     *     @OA\Parameter( name="terms_nm",in="query", required=true,description="付款條件名稱",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="terms_days",in="query",required=true,description="付款條件月結天數", @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="pay_mode",in="query",required=true,description="付款條件 1:當月/2:隔月",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="pay_day",in="query",required=true,description="付款時間",@OA\Schema(type="integer")),
+     *     @OA\Parameter(name="note",in="query",required=false, description="備註",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="is_valid",in="query", required=true,description="是否有效", @OA\Schema(type="string", example=1)),
      *     @OA\Response(
      *         response=200,
      *         description="成功",
@@ -99,25 +57,40 @@ class PaymentTermController extends Controller
     public function store(Request $request)
     {
         try {
-                // 驗證請求
-                $validator = Validator::make($request->all(),[
-                    'terms_no'       => 'required|string|max:255|unique:paymentterms,terms_no',
-                    'terms_nm'       => 'required|string|max:255',
-                    'terms_days'     => 'required|integer|max:31',
-                    'pay_mode'       => 'required|string|max:255',
-                    'pay_day'        => 'required|integer|max:31',
-                    'note'           => 'nullable|string|max:255',
-                    'is_valid'       => 'required|boolean'
-                ]);
-
-                if($validator->fails()){
+                //必填欄位未填寫
+                if (!$request->has(['terms_no', 'terms_nm', 'terms_days', 'pay_mode', 'pay_day', 'is_valid'])) {
                     return response()->json([
-                        'status' => true,
-                        'message' => '資料驗證失敗',
-                        'errors' => $validator->errors()
-                    ], 200);
+                        'status' => false,
+                        'message' => '請填寫所有必填欄位',
+                        'output'    => null
+                    ], 400);
                 }
-
+                // 檢查 terms_no 是否已存在
+                $existingTerm = PaymentTerm::where('terms_no', $request['terms_no'])->where('is_valid', 1)->first();
+                if ($existingTerm) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => '付款條件代碼已存在',
+                        'output'    => null
+                    ], 400);
+                }
+                // 檢查 terms_nm 是否已存在
+                $existingTermNm = PaymentTerm::where('terms_nm', $request['terms_nm'])->where('is_valid', 1)->first();
+                if ($existingTermNm) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => '付款條件名稱已存在',
+                        'output'    => null
+                    ], 400);
+                }
+                // 檢查 terms_days 是否在 1 到 31 之間
+                if ($request['terms_days'] < 1 || $request['terms_days'] > 31) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => '付款條件月結天數必須在 1 到 31 之間',
+                        'output'    => null
+                    ], 400);
+                }
                 // 建立付款條件
                 $PaymentTerm = PaymentTerm::create([
                     'terms_no'     => $request['terms_no'],
@@ -163,6 +136,123 @@ class PaymentTermController extends Controller
             ], 500);
         }
 
+    }
+        /**
+     * @OA\POST(
+     *     path="/api/updatepaymentterm",
+     *     summary="更新付款條件",
+     *     description="更新付款條件",
+     *     operationId="updatepaymentterm",
+     *     tags={"base_paymentterm"},
+     *     @OA\Parameter(name="terms_no", in="query",required=true,description="付款條件代碼",@OA\Schema(type="string")),
+     *     @OA\Parameter( name="terms_nm",in="query", required=true,description="付款條件名稱",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="terms_days",in="query",required=true,description="付款條件月結天數", @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="pay_mode",in="query",required=true,description="付款條件 1:當月/2:隔月",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="pay_day",in="query",required=true,description="付款時間",@OA\Schema(type="integer")),
+     *     @OA\Parameter(name="note",in="query",required=false, description="備註",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="is_valid",in="query", required=true,description="是否有效", @OA\Schema(type="string", example=1)),
+     *     @OA\Response(
+     *         response=200,
+     *         description="成功",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
+     *             @OA\Property(property="terms_no", type="string", example="T001"),
+     *             @OA\Property(property="terms_nm", type="string", example="月結30天"),
+     *             @OA\Property(property="terms_days", type="integer", example="30"),
+     *             @OA\Property(property="pay_mode", type="string", example="M001"),
+     *             @OA\Property(property="pay_day", type="integer", example="30"),
+     *             @OA\Property(property="note", type="string", example="測試測試"),
+     *             @OA\Property(property="is_valid", type="boolean", example=true),
+     *             @OA\Property(property="create_user", type="string", example="admin"),
+     *             @OA\Property(property="create_time", type="string", example="admin"),
+     *             @OA\Property(property="update_user", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="未找到付款條件"
+     *     )
+     * )
+     */
+    // 更新付款條件
+    public function update(Request $request)
+    {
+        try {
+            //必填欄位未填寫
+            if (!$request->has(['terms_no', 'terms_nm', 'terms_days', 'pay_mode', 'pay_day', 'is_valid'])) {
+                return response()->json([
+                    'status' => false,
+                    'message' => '請填寫所有必填欄位',
+                    'output'    => null
+                ], 400);
+            }
+            // 檢查 terms_no 是否已存在
+            $PaymentTerm = PaymentTerm::findByTermsNo($request['terms_no'])->where('is_valid', 1)->first();
+            if (!$PaymentTerm) {
+                return response()->json([
+                    'status' => false,
+                    'message' => '付款條件未找到',
+                    'output'    => null
+                ], 404);
+            }
+            // 檢查 terms_nm 是否已存在 
+            $existingTermNm = PaymentTerm::where('terms_nm', $request['terms_nm'])
+                ->where('is_valid', 1)
+                ->where('terms_no', '!=', $request['terms_no']) // 排除當前正在更新的條件
+                ->first();
+            if ($existingTermNm) {
+                return response()->json([
+                    'status' => false,
+                    'message' => '付款條件名稱已存在',
+                    'output'    => null
+                ], 400);
+            }
+            // 檢查 terms_days 是否在 1 到 31 之間  
+            if ($request['terms_days'] < 1 || $request['terms_days'] > 31) {
+                return response()->json([
+                    'status' => false,
+                    'message' => '付款條件月結天數必須在 1 到 31 之間',
+                    'output'    => null
+                ], 400);
+            }
+            // 更新付款條件
+            $PaymentTerm->terms_nm = $request['terms_nm'];
+            $PaymentTerm->terms_days = $request['terms_days'];
+            $PaymentTerm->pay_mode = $request['pay_mode'];
+            $PaymentTerm->pay_day = $request['pay_day'];
+            $PaymentTerm->note = $request['note'] ?? null;
+            $PaymentTerm->is_valid = $request['is_valid'];
+            $PaymentTerm->update_user = 'admin';
+            $PaymentTerm->update_time = now();
+            $PaymentTerm->save();
+
+            // 回應 JSON
+            return response()->json([
+                'status' => true,
+                'message' => 'success',
+                'output'   => $PaymentTerm
+            ], 200);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 捕捉驗證失敗
+            return response()->json([
+                'status' => false,
+                'message' => '驗證錯誤',
+                'errors' => $e->errors()
+            ], 422);
+    
+        } catch (\Exception $e) {
+            // 其他例外處理
+            Log::error('更新付款條件錯誤：' . $e->getMessage());
+    
+            return response()->json([
+                'status' => false,
+                'message' => '伺服器發生錯誤，請稍後再試',
+                'error' => $e->getMessage() // 上線環境建議拿掉
+            ],
+            500);
+        }
     }
     /**
      * @OA\GET(

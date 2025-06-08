@@ -49,8 +49,9 @@ Route::get('/exchange-rate/{currency}', [CurrencyController::class, 'getexchange
 Route::patch('/currencys/{CurrencyNo}/disable', [CurrencyController::class, 'disable']); // 軟刪除貨幣資訊
 Route::get('/currencys/showconst', [CurrencyController::class, 'showconst']);  // 列出所有貨幣需要的常用(下拉、彈窗)
 
-//付款條件相關  API
+//付款條件相關  API 
 Route::post('/createpaymentterm', [PaymentTermController::class, 'store']);// 新增付款條件
+Route::post('/updatepaymentterm', [PaymentTermController::class, 'update']);// 新增付款條件
 Route::get('/paymentterm/{TermNo}', [PaymentTermController::class, 'show']);  // 透過 TermsNo 查詢
 Route::get('/paymentterm2/{TermNM}', [PaymentTermController::class, 'shownm']);  // 透過 TermsNM 查詢
 Route::get('/paymentterms/valid', [PaymentTermController::class, 'getvalidterms']);  // 查詢所有有效付款條件
@@ -59,6 +60,7 @@ Route::get('/paymentterms/showconst', [PaymentTermController::class, 'showconst'
 
 //單據資料相關  API
 Route::post('/createbillinfo', [BillInfoController::class, 'store']);// 新增單據資料
+Route::post('/updatebillinfo', [BillInfoController::class, 'update']);// 更新單據資料
 Route::get('/billinfo/{billno}', [BillInfoController::class, 'show']);  // 透過 BillNo 查詢
 Route::get('/billinfo2/{billnm}', [BillInfoController::class, 'shownm']);  // 透過 BillNM 查詢
 Route::get('/billinfo1/valid', [BillInfoController::class, 'getvalidbillnos']);  // 查詢所有有效付款條件

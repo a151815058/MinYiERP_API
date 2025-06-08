@@ -67,20 +67,21 @@ class InventoryController extends Controller
     public function store(Request $request)
     {
         try {
-            // 驗證請求
-            $validator = Validator::make($request->all(),[
-                'inventory_no'     => 'required|string|max:255|unique:inventory,inventory_no',
-                'inventory_nm'     => 'required|string|max:255',
-                'is_valid'    => 'required|boolean'
-            ]);
-
-            if($validator->fails()){
+            //必填欄位
+            if (!$request->has(['inventory_no', 'inventory_nm', 'is_valid'])) {
                 return response()->json([
                     'status' => true,
-                    'message' => '資料驗證失敗',
-                    'errors' => $validator->errors()
-                ], 200);
+                    'message' => '缺少必要的欄位'
+                 ], 422);
             }
+            //inventory_no為唯一值
+            if (Inventory::where('inventory_no', $request->inventory_no)->exists()) {
+                return response()->json([
+                    'status' => true,
+                    'message' => '庫別代號已存在'
+                ], 422);
+            }
+
 
             // 建立庫別資料
             $Inventory = Inventory::create([
@@ -180,19 +181,19 @@ class InventoryController extends Controller
     public function update(Request $request)
     {
         try {
-            // 驗證請求
-            $validator = Validator::make($request->all(),[
-                'inventory_no'     => 'required|string|max:255',
-                'inventory_nm'     => 'required|string|max:255',
-                'is_valid'    => 'required|boolean'
-            ]);
-
-            if($validator->fails()){
+            //必填欄位
+            if (!$request->has(['inventory_no', 'inventory_nm', 'is_valid'])) {
                 return response()->json([
                     'status' => true,
-                    'message' => '資料驗證失敗',
-                    'errors' => $validator->errors()
-                ], 200);
+                    'message' => '缺少必要的欄位'
+                 ], 422);
+            }
+            //inventory_no為唯一值
+            if (Inventory::where('inventory_no', $request->inventory_no)->exists()) {
+                return response()->json([
+                    'status' => true,
+                    'message' => '庫別代號已存在'
+                ], 422);
             }
 
             // 查詢庫別資料
