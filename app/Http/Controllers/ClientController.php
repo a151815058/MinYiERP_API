@@ -106,16 +106,65 @@ class ClientController extends Controller
     public function store(Request $request)
     {
         try {
-            // 檢查是否有必要的參數
-            if (!$request->has(['client_no', 'client_shortnm', 'client_type', 'client_fullnm', 'zip_code2', 'address2',  'established_date', 'mobile_phone', 'contact_email', 'user_id',  'taxid', 'delivery_method', 'is_valid'])) {
+            // 客戶代碼為必填
+            if (!$request->has('client_no')) {
                 return response()->json([
                     'status' => false,
-                    'message' => '缺少必填的欄位'
+                    'message' => '客戶代碼為必填'
                 ], 400);
+            }else {
+                // 檢查客戶代碼是否已存在
+                $existingClient = Client::where('client_no', $request->input('client_no'))->first();
+                if ($existingClient) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => '客戶代碼已存在'
+                    ], status: 200);
+                }
+            }
+
+            // 客戶名稱為必填
+            if (!$request->has('client_fullnm')) {
+                return response()->json([
+                    'status' => false,
+                    'message' => '客戶全名為必填'
+                ], status: 200);
+            }
+
+            //客戶全名為必填
+            if (!$request->has('client_shortnm')) {
+                return response()->json([
+                    'status' => false,
+                    'message' => '客戶簡稱為必填'
+                ], status: 200);
+            }
+
+            //客戶型態為必填
+            if (!$request->has('client_type')) {
+                return response()->json([
+                    'status' => false,
+                    'message' => '客戶型態為必填'
+                ], status: 200);
+            }
+
+            //郵遞區號二為必填
+            if (!$request->has('zip_code2')) {
+                return response()->json([
+                    'status' => false,
+                    'message' => '郵遞區號二為必填'
+                ], status: 200);
+            }
+            //送貨地址為必填
+            if (!$request->has('address2')) {
+                return response()->json([
+                    'status' => false,
+                    'message' => '送貨地址為必填'
+                ], status: 200);
             }
             
             // 建立客戶資料
             $Client = Client::create([
+                'uuid'                => Str::uuid()->toString(), // 生成 UUID
                 'client_no'           => $request['client_no'],            
                 'client_shortnm'      => $request['client_shortnm'],       
                 'client_type'         => $request['client_type'],           
@@ -151,7 +200,7 @@ class ClientController extends Controller
             // 回應 JSON
             if (!$Client) {
                 return response()->json([
-                    'status' => true,
+                    'status' => false,
                     'message' => '客戶資料建立失敗',
                     'output'    => null
                 ], status: 404);

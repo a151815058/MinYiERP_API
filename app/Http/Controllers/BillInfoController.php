@@ -67,11 +67,12 @@ class BillInfoController extends Controller
             //bill_no為唯一鍵，不能重複
             if ($request->bill_no && BillInfo::where('bill_no', $request->bill_no)->exists()) {
                 return response()->json([
-                    'status' => true,
+                    'status' => false,
                     'message' => '單據代號已存在',
                     'output' => null
                 ], 200);
             }
+            
             //必填欄位
             if (!$request->bill_no || !$request->bill_nm || !$request->bill_type || !$request->bill_encode || !$request->bill_calc || !$request->auto_review || !$request->is_valid) {
                 return response()->json([

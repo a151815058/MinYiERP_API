@@ -67,8 +67,7 @@ class InvoiceInfoController extends Controller
             if (!$request->has(['uuid', 'period_start', 'period_end', 'series', 'invoice_type', 'track_code', 'start_number', 'end_number', 'effective_startdate', 'is_valid'])) {
                 return response()->json([
                     'status' => true,
-                    'message' => '必填欄位未填寫',
-                    'output' => null
+                    'message' => '必填欄位未填寫'
                 ], 200);
             }
 
@@ -76,8 +75,7 @@ class InvoiceInfoController extends Controller
             if ($request['period_start'] == $request['period_end']) {
                 return response()->json([
                     'status' => true,
-                    'message' => '發票期別起迄不能相同',
-                    'output' => null
+                    'message' => '發票期別起迄不能相同'
                 ], 200);
             }
 
@@ -548,8 +546,8 @@ class InvoiceInfoController extends Controller
                     'total' => $total,
                     'totalPages' => $totalPages,                
                     'message' => '有效發票資訊未找到',
-                    'output'    => null
-                ], 404);
+                    'output'    => []
+                ], 200);
             }
             return response()->json([                
                 'status' => true,

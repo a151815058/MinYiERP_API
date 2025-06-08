@@ -61,8 +61,37 @@ class AccountController extends Controller
             if (!$request->has(['account_no', 'account_name', 'tier', 'is_valid'])) {
                 return response()->json([
                     'status' => false,
-                    'message' => '必填的欄位未填寫',
-                ], 400);
+                    'message' =>'必填的欄位未填寫',
+                ], status: 200);
+            }
+
+            // 會計代碼須為唯一且必填
+            if (Account::where('account_no', $request['account_no'])->exists()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => '會計科目代碼已存在',
+                ], status: 200);
+            }
+            // 會計科目代碼必填
+            if (empty($request['account_no'])) {
+                return response()->json([
+                    'status' => false,
+                    'message' => '會計科目代碼必填',
+                ], status: 200);
+            }
+            // 會計科目名稱必填
+            if (empty($request['account_name'])) {
+                return response()->json([
+                    'status' => false,
+                    'message' => '會計科目名稱必填',
+                ], status: 200);
+            }
+
+            if (!in_array($request['is_valid'], ['0', '1'])) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'is_valid 欄位必須是 0 或 1',
+                ], status: 422);
             }
 
             // 建立會計科目
@@ -78,7 +107,7 @@ class AccountController extends Controller
     
             if (!$Account) {
                 return response()->json([
-                    'status' => true,
+                    'status' => false,
                     'message' => '資料建立失敗',
                     'output' => null
                 ], 404);
@@ -158,7 +187,7 @@ class AccountController extends Controller
                 return response()->json([
                     'status' => false,
                     'message' => '必填的欄位未填寫',
-                ], 400);
+                ], 200);
             }
 
             // 查詢會計科目
