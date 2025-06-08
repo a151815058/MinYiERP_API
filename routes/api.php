@@ -70,6 +70,7 @@ Route::get('/billinfo3/showconst', [BillInfoController::class, 'showconst']);  /
 
 //供應商資料相關  API
 Route::post('/createsupplier', [SupplierController::class, 'store']);// 新增供應商資料
+Route::post('/updateupplier', [SupplierController::class, 'update']);// 更新供應商資料
 Route::get('/supplier/{supplierNo}', [SupplierController::class, 'show']);  // 透過 supplierNo 查詢
 Route::get('/supplier2/{Keyword}', [SupplierController::class, 'show2']);  // 透過 Keyword 查詢
 Route::get('/supplier3/valid', [SupplierController::class, 'getvalidsuppliers']);// 查詢所有有效供應商
