@@ -114,7 +114,7 @@ class DeptController extends Controller
      *     path="/api/updatedept",
      *     summary="更新部門資訊",
      *     description="更新部門資訊",
-     *     operationId="createdept",
+     *     operationId="updatedept",
      *     tags={"base_dept"},
      *     @OA\Parameter(name="dept_no",in="query",required=true,description="部門代號",@OA\Schema(type="string")),
      *     @OA\Parameter(name="dept_nm",in="query",required=true,description="部門名稱",@OA\Schema(type="string")),

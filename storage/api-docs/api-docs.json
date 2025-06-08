@@ -2946,6 +2946,108 @@
                 }
             }
         },
+        "/api/updatedept": {
+            "post": {
+                "tags": [
+                    "base_dept"
+                ],
+                "summary": "更新部門資訊",
+                "description": "更新部門資訊",
+                "operationId": "updatedept",
+                "parameters": [
+                    {
+                        "name": "dept_no",
+                        "in": "query",
+                        "description": "部門代號",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "dept_nm",
+                        "in": "query",
+                        "description": "部門名稱",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "note",
+                        "in": "query",
+                        "description": "備註",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "is_valid",
+                        "in": "query",
+                        "description": "是否有效",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "dept_no": {
+                                            "type": "string",
+                                            "example": "A02"
+                                        },
+                                        "dept_nm": {
+                                            "type": "string",
+                                            "example": "財務處"
+                                        },
+                                        "note": {
+                                            "type": "string",
+                                            "example": "測試測試"
+                                        },
+                                        "is_valid": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "create_user": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "create_time": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "update_user": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "update_time": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "未找到部門"
+                    }
+                }
+            }
+        },
         "/api/dept/{deptno}": {
             "get": {
                 "tags": [
@@ -3511,6 +3613,103 @@
                                             "type": "string",
                                             "example": "庫別1"
                                         },
+                                        "note": {
+                                            "type": "string",
+                                            "example": "備註"
+                                        },
+                                        "is_valid": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "create_user": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "create_time": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "update_user": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "update_time": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "建立庫別失敗"
+                    }
+                }
+            }
+        },
+        "/api/updateinventory": {
+            "post": {
+                "tags": [
+                    "base_inventory"
+                ],
+                "summary": "更新庫別資訊",
+                "description": "更新庫別資訊",
+                "operationId": "updateinventory",
+                "parameters": [
+                    {
+                        "name": "inventory_no",
+                        "in": "query",
+                        "description": "庫別代號",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "inventory_nm",
+                        "in": "query",
+                        "description": "庫別名稱",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "is_valid",
+                        "in": "query",
+                        "description": "是否有效",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "inventory_no": {
+                                            "type": "string",
+                                            "example": "INV001"
+                                        },
+                                        "inventory_nm": {
+                                            "type": "string",
+                                            "example": "庫別1"
+                                        },
+                                        "note": {
+                                            "type": "string",
+                                            "example": "備註"
+                                        },
                                         "is_valid": {
                                             "type": "string",
                                             "example": "1"
@@ -3580,6 +3779,10 @@
                                         "inventory_nm": {
                                             "type": "string",
                                             "example": "庫別1"
+                                        },
+                                        "note": {
+                                            "type": "string",
+                                            "example": "備註"
                                         },
                                         "is_valid": {
                                             "type": "string",
@@ -3781,6 +3984,188 @@
                 "summary": "新增發票資料",
                 "description": "新增發票資料",
                 "operationId": "createinvoiceinfo",
+                "parameters": [
+                    {
+                        "name": "period_start",
+                        "in": "query",
+                        "description": "期別_起",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "period_end",
+                        "in": "query",
+                        "description": "期別_迄",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "series",
+                        "in": "query",
+                        "description": "序號",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "invoice_type",
+                        "in": "query",
+                        "description": "發票類型",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "track_code",
+                        "in": "query",
+                        "description": "字軌代碼",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "start_number",
+                        "in": "query",
+                        "description": "發票起始號碼",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "end_number",
+                        "in": "query",
+                        "description": "發票截止號碼",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "effective_startdate",
+                        "in": "query",
+                        "description": "適用起始日期",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "effective_enddate",
+                        "in": "query",
+                        "description": "適用截止日期",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "is_valid",
+                        "in": "query",
+                        "description": "是否有效",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "period_start": {
+                                            "type": "string",
+                                            "example": "2025-01"
+                                        },
+                                        "period_end": {
+                                            "type": "string",
+                                            "example": "2025-02"
+                                        },
+                                        "series": {
+                                            "type": "string",
+                                            "example": "001"
+                                        },
+                                        "invoice_type": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "track_code": {
+                                            "type": "string",
+                                            "example": "AQ"
+                                        },
+                                        "start_number": {
+                                            "type": "string",
+                                            "example": "0000000001"
+                                        },
+                                        "end_number": {
+                                            "type": "string",
+                                            "example": "0000000050"
+                                        },
+                                        "effective_startdate": {
+                                            "type": "string",
+                                            "format": "date",
+                                            "example": "2025/01/01"
+                                        },
+                                        "effective_enddate": {
+                                            "type": "string",
+                                            "format": "date",
+                                            "example": "2025/02/28"
+                                        },
+                                        "is_valid": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "create_user": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "update_user": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "create_time": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "update_time": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "單據發票失敗"
+                    }
+                }
+            }
+        },
+        "/api/updateinvoiceinfo": {
+            "post": {
+                "tags": [
+                    "base_invoiceinfo"
+                ],
+                "summary": "更新發票資料",
+                "description": "更新發票資料",
+                "operationId": "updateinvoiceinfo",
                 "parameters": [
                     {
                         "name": "period_start",
@@ -5277,24 +5662,6 @@
                         "name": "price_1",
                         "in": "query",
                         "description": "售價一",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "price_2",
-                        "in": "query",
-                        "description": "售價二",
-                        "required": false,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "price_3",
-                        "in": "query",
-                        "description": "售價三",
                         "required": false,
                         "schema": {
                             "type": "integer"
@@ -5304,24 +5671,6 @@
                         "name": "cost_1",
                         "in": "query",
                         "description": "進價一",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "cost_2",
-                        "in": "query",
-                        "description": "進價二",
-                        "required": false,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "cost_3",
-                        "in": "query",
-                        "description": "進價三",
                         "required": false,
                         "schema": {
                             "type": "integer"
@@ -5331,7 +5680,7 @@
                         "name": "batch_control",
                         "in": "query",
                         "description": "批號管理(開窗選擇)",
-                        "required": true,
+                        "required": false,
                         "schema": {
                             "type": "string"
                         }
@@ -5340,7 +5689,7 @@
                         "name": "valid_days",
                         "in": "query",
                         "description": "有效天數",
-                        "required": true,
+                        "required": false,
                         "schema": {
                             "type": "integer"
                         }
@@ -5349,7 +5698,7 @@
                         "name": "effective_date",
                         "in": "query",
                         "description": "生效日期",
-                        "required": true,
+                        "required": false,
                         "schema": {
                             "type": "string"
                         }
@@ -5358,7 +5707,7 @@
                         "name": "stock_control",
                         "in": "query",
                         "description": "是否庫存管理(1=是,0=否)",
-                        "required": true,
+                        "required": false,
                         "schema": {
                             "type": "string"
                         }
@@ -5367,7 +5716,7 @@
                         "name": "safety_stock",
                         "in": "query",
                         "description": "安全庫存",
-                        "required": true,
+                        "required": false,
                         "schema": {
                             "type": "integer"
                         }
@@ -5376,7 +5725,7 @@
                         "name": "expiry_date",
                         "in": "query",
                         "description": "失效日期",
-                        "required": true,
+                        "required": false,
                         "schema": {
                             "type": "string"
                         }
@@ -5455,25 +5804,267 @@
                                             "type": "integer",
                                             "example": 100
                                         },
-                                        "price_2": {
-                                            "type": "integer",
-                                            "example": 0
-                                        },
-                                        "price_3": {
-                                            "type": "integer",
-                                            "example": 0
-                                        },
                                         "cost_1": {
                                             "type": "decimal",
                                             "example": 60
                                         },
-                                        "cost_2": {
+                                        "batch_control": {
+                                            "type": "string",
+                                            "example": 1
+                                        },
+                                        "valid_days": {
                                             "type": "integer",
                                             "example": 0
                                         },
-                                        "cost_3": {
+                                        "effective_date": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "stock_control": {
+                                            "type": "integer",
+                                            "example": true
+                                        },
+                                        "safety_stock": {
                                             "type": "integer",
                                             "example": 0
+                                        },
+                                        "expiry_date": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "main_supplier": {
+                                            "type": "string",
+                                            "example": "840ec743-f3d2-4760-b3a2-5e960207a61e"
+                                        },
+                                        "Accounting": {
+                                            "type": "string",
+                                            "example": "04f32f4a-9ac1-43f8-b22c-1c1539de7005"
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "product_path": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "is_valid": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "Createuser": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "update_user": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "CreateTime": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "update_time": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "建立失敗"
+                    }
+                }
+            }
+        },
+        "/api/updateproduct": {
+            "post": {
+                "tags": [
+                    "base_product"
+                ],
+                "summary": "更新品號資訊",
+                "description": "更新品號資訊",
+                "operationId": "updateproduct",
+                "parameters": [
+                    {
+                        "name": "product_no",
+                        "in": "query",
+                        "description": "品號",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "product_nm",
+                        "in": "query",
+                        "description": "品名",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "specification",
+                        "in": "query",
+                        "description": "規格",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "price_1",
+                        "in": "query",
+                        "description": "售價一",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "cost_1",
+                        "in": "query",
+                        "description": "進價一",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "batch_control",
+                        "in": "query",
+                        "description": "批號管理(開窗選擇)",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "valid_days",
+                        "in": "query",
+                        "description": "有效天數",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "effective_date",
+                        "in": "query",
+                        "description": "生效日期",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "stock_control",
+                        "in": "query",
+                        "description": "是否庫存管理(1=是,0=否)",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "safety_stock",
+                        "in": "query",
+                        "description": "安全庫存",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "expiry_date",
+                        "in": "query",
+                        "description": "失效日期",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "description",
+                        "in": "query",
+                        "description": "商品描述",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "product_path",
+                        "in": "query",
+                        "description": "圖片路徑",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "main_supplier",
+                        "in": "query",
+                        "description": "主要供應商uuid(開窗選擇)",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "Accounting",
+                        "in": "query",
+                        "description": "認列科目uuid(開窗選擇)",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "is_valid",
+                        "in": "query",
+                        "description": "是否有效",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "product_no": {
+                                            "type": "string",
+                                            "example": "P001"
+                                        },
+                                        "product_nm": {
+                                            "type": "string",
+                                            "example": "螺絲起子"
+                                        },
+                                        "specification": {
+                                            "type": "string",
+                                            "example": "SP001"
+                                        },
+                                        "price_1": {
+                                            "type": "integer",
+                                            "example": 100
+                                        },
+                                        "cost_1": {
+                                            "type": "decimal",
+                                            "example": 60
                                         },
                                         "batch_control": {
                                             "type": "string",
