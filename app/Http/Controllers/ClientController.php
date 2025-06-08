@@ -29,30 +29,30 @@ class ClientController extends Controller
  *     @OA\Parameter(name="client_shortnm", in="query", required=true, description="客戶簡稱", @OA\Schema(type="string")),
  *     @OA\Parameter(name="client_type", in="query", required=true, description="客戶型態", @OA\Schema(type="string")),
  *     @OA\Parameter(name="client_fullnm", in="query", required=true, description="客戶全名", @OA\Schema(type="string")),
- *     @OA\Parameter(name="zip_code1", in="query", required=true, description="郵遞區號 1", @OA\Schema(type="string")),
- *     @OA\Parameter(name="address1", in="query", required=true, description="公司地址 1", @OA\Schema(type="string")),
- *     @OA\Parameter(name="zip_code2", in="query", required=false, description="郵遞區號 2 (選填)", @OA\Schema(type="string")),
- *     @OA\Parameter(name="address2", in="query", required=false, description="公司地址 2 (選填)", @OA\Schema(type="string")),
- *     @OA\Parameter(name="responsible_person", in="query", required=true, description="負責人", @OA\Schema(type="string")),
- *     @OA\Parameter(name="contact_person", in="query", required=true, description="聯絡人", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="zip_code1", in="query", required=false, description="郵遞區號", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="address1", in="query", required=false, description="公司地址", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="zip_code2", in="query", required=true, description="郵遞區號", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="address2", in="query", required=true, description="送貨地址", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="responsible_person", in="query", required=false, description="負責人", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="contact_person", in="query", required=false, description="聯絡人", @OA\Schema(type="string")),
  *     @OA\Parameter(name="contact_phone", in="query", required=true, description="聯絡人電話", @OA\Schema(type="string")),
- *     @OA\Parameter(name="phone", in="query", required=true, description="公司電話", @OA\Schema(type="string")),
- *     @OA\Parameter(name="fax", in="query", required=false, description="公司傳真 (選填)", @OA\Schema(type="string")),
- *     @OA\Parameter(name="established_date", in="query", required=true, description="成立時間", @OA\Schema(type="string")),
- *     @OA\Parameter(name="mobile_phone", in="query", required=true, description="聯絡人行動電話", @OA\Schema(type="string")),
- *     @OA\Parameter(name="contact_email", in="query", required=true, description="聯絡人信箱", @OA\Schema(type="string")),
- *     @OA\Parameter(name="user_id", in="query", required=true, description="負責採購人員id", @OA\Schema(type="string")),
- *     @OA\Parameter(name="currency_id", in="query", required=true, description="幣別id", @OA\Schema(type="string")),
- *     @OA\Parameter(name="paymentterm_id", in="query", required=true, description="付款條件id", @OA\Schema(type="string")),
- *     @OA\Parameter(name="account_category", in="query", required=true, description="科目別", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="phone", in="query", required=false, description="公司電話", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="fax", in="query", required=false, description="公司傳真", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="established_date", in="query", required=false, description="成立時間", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="mobile_phone", in="query", required=false, description="聯絡人行動電話", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="contact_email", in="query", required=false, description="聯絡人信箱", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="user_id", in="query", required=false, description="負責採購人員id", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="currency_id", in="query", required=false, description="幣別id", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="paymentterm_id", in="query", required=false, description="付款條件id", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="account_category", in="query", required=false, description="科目別", @OA\Schema(type="string")),
  *     @OA\Parameter(name="invoice_title", in="query", required=true, description="發票抬頭", @OA\Schema(type="string")),
- *     @OA\Parameter(name="taxtype", in="query", required=true, description="稅別(抓參數資料param_sn=10)", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="taxtype", in="query", required=false, description="稅別(抓參數資料param_sn=10)", @OA\Schema(type="string")),
  *     @OA\Parameter(name="taxid", in="query", required=true, description="統一編號 (台灣: 8 碼)", @OA\Schema(type="string")),
  *     @OA\Parameter(name="delivery_method", in="query", required=true, description="發票寄送方式", @OA\Schema(type="string")),
- *     @OA\Parameter(name="recipient_name", in="query", required=true, description="發票收件人", @OA\Schema(type="string")),
- *     @OA\Parameter(name="recipient_phone", in="query", required=true, description="發票收件人電話", @OA\Schema(type="string")),
- *     @OA\Parameter(name="recipient_email", in="query", required=true, description="發票收件人信箱", @OA\Schema(type="string")),
- *     @OA\Parameter(name="invoice_address", in="query", required=true, description="發票地址", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="recipient_name", in="query", required=false, description="發票收件人", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="recipient_phone", in="query", required=false, description="發票收件人電話", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="recipient_email", in="query", required=false, description="發票收件人信箱", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="invoice_address", in="query", required=false, description="發票地址", @OA\Schema(type="string")),
  *     @OA\Parameter(name="note", in="query", required=false, description="備註", @OA\Schema(type="string")),
  *     @OA\Parameter(name="is_valid", in="query", required=true, description="是否有效", @OA\Schema(type="string", example=1)),
  *     @OA\Response(
@@ -106,49 +106,14 @@ class ClientController extends Controller
     public function store(Request $request)
     {
         try {
-            // 驗證請求
-            $validator = Validator::make($request->all(),[
-                'client_no'           => 'required|string|max:255|unique:clients,client_no',//客戶編號
-                'client_shortnm'      => 'required|string|max:255',//客戶簡稱
-                'client_type'         =>  'required|string|max:255',//客戶型態
-                'client_fullnm'       => 'required|string|max:255',//客戶全名
-                'zip_code1'           => 'nullable|string|max:20',//郵遞區域一
-                'address1'            => 'nullable|string|max:255',//公司地址
-                'zip_code2'           => 'required|string|max:20',//郵遞區域二
-                'address2'            => 'required|string|max:255',//送貨地址
-                'responsible_person'  => 'required|string|max:255', //負責人           
-                'contact_person'      => 'required|string|max:255',  //聯絡人 
-                'contact_phone'       => 'required|string|max:255',   //聯絡電話 
-                'phone'               => 'required|string|max:20',  //公司電話
-                'fax'                 => 'nullable|string|max:10',  //傳真
-                'established_date'    => 'required|string|max:20', //成立時間 
-                'mobile_phone'        => 'required|string|max:255', //行動電話 
-                'contact_email'       => 'required|string|max:255', //聯絡人信箱 
-                'user_id'             => 'required|string|max:255', //負責採購人員id
-                'currency_id'         => 'required|string|max:255', //幣別id 
-                'paymentterm_id'      => 'required|string|max:255', //付款條件id
-                'account_category'    => 'required|string|max:255', //科目別 
-                'invoice_title'       => 'required|string|max:255', //發票抬頭
-                'taxtype'             => 'required|string|max:255', //課稅別 
-                'taxid'               => 'required|string|max:255', //統一編號  
-                'delivery_method'     => 'required|string|max:255', //發票寄送方式 
-                'recipient_name'      => 'required|string|max:255', //發票收件人
-                'recipient_phone'     => 'required|string|max:255', //發票收件人電話
-                'recipient_email'     => 'required|string|max:255', //發票收件人信箱
-                'invoice_address'     => 'required|string|max:255', //發票地址
-                'note'                => 'nullable|string|max:255',//備註
-                'is_valid'            => 'required|string'
-            ]);
-
-            if($validator->fails()){
+            // 檢查是否有必要的參數
+            if (!$request->has(['client_no', 'client_shortnm', 'client_type', 'client_fullnm', 'zip_code2', 'address2',  'established_date', 'mobile_phone', 'contact_email', 'user_id',  'taxid', 'delivery_method', 'is_valid'])) {
                 return response()->json([
                     'status' => false,
-                    'message' => '資料驗證失敗',
-                    'errors' => $validator->errors()
-                ], 200);
+                    'message' => '缺少必填的欄位',
+                ], 400);
             }
             
-        
             // 建立客戶資料
             $Client = Client::create([
                 'client_no'           => $request['client_no'],            
@@ -159,26 +124,26 @@ class ClientController extends Controller
                 'address1'            => $request['address1'] ?? null,          
                 'zip_code2'           => $request['zip_code2'] ?? null,              
                 'address2'            => $request['address2'],          
-                'responsible_person'  => $request['responsible_person'],
-                'contact_person'      => $request['contact_person'],   
-                'contact_phone'       => $request['contact_phone'],     
-                'phone'               => $request['phone'],             
+                'responsible_person'  => $request['responsible_person'] ?? null,   
+                'contact_person'      => $request['contact_person'] ?? null,      
+                'contact_phone'       => $request['contact_phone'] ?? null,       
+                'phone'               => $request['phone'] ?? null,                
                 'fax'                 => $request['fax'] ?? null,                  
                 'established_date'    => $request['established_date'], 
                 'mobile_phone'        => $request['mobile_phone'],      
                 'contact_email'       => $request['contact_email'],     
-                'user_id'             => $request['user_id'],          
-                'currency_id'         => $request['currency_id'],      
-                'paymentterm_id'      => $request['paymentterm_id'],   
-                'account_category'    => $request['account_category'],  
-                'invoice_title'       => $request['invoice_title'],     
-                'taxtype'             => $request['taxtype'],           
+                'user_id'             => $request['user_id'] ?? null,           
+                'currency_id'         => $request['currency_id'] ?? null,        
+                'paymentterm_id'      => $request['paymentterm_id']?? null,    
+                'account_category'    => $request['account_category']?? null,     
+                'invoice_title'       => $request['invoice_title']?? null,      
+                'taxtype'             => $request['taxtype']?? null,             
                 'taxid'               => $request['taxid'],            
                 'delivery_method'     => $request['delivery_method'],   
-                'recipient_name'      => $request['recipient_name'],    
-                'recipient_phone'     => $request['recipient_phone'],   
-                'recipient_email'     => $request['recipient_email'],  
-                'invoice_address'     => $request['invoice_address'],  
+                'recipient_name'      => $request['recipient_name']?? null,       
+                'recipient_phone'     => $request['recipient_phone']?? null,     
+                'recipient_email'     => $request['recipient_email']?? null,     
+                'invoice_address'     => $request['invoice_address']?? null,     
                 'note'                => $request['note'] ?? null,                 
                 'is_valid'            => $request['is_valid'],          
             ]);
@@ -187,7 +152,7 @@ class ClientController extends Controller
             if (!$Client) {
                 return response()->json([
                     'status' => true,
-                    'message' => '客戶資料建失敗',
+                    'message' => '客戶資料建立失敗',
                     'output'    => null
                 ], status: 404);
             }else {
@@ -209,6 +174,169 @@ class ClientController extends Controller
         } catch (\Exception $e) {
             // 其他例外處理
             Log::error('建立客戶資料錯誤：' . $e->getMessage());
+    
+            return response()->json([
+                'status' => false,
+                'message' => '伺服器發生錯誤，請稍後再試',
+                'error' => $e->getMessage() // 上線環境建議拿掉
+            ], 500);
+        }
+
+    }
+/**
+ * @OA\POST(
+ *     path="/api/updateclient",
+ *     summary="更新客戶資料",
+ *     description="更新客戶資料",
+ *     operationId="updateclient",
+ *     tags={"base_client"},
+ *     @OA\Parameter(name="client_no", in="query", required=true, description="客戶編號", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="client_shortnm", in="query", required=true, description="客戶簡稱", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="client_type", in="query", required=true, description="客戶型態", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="client_fullnm", in="query", required=true, description="客戶全名", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="zip_code1", in="query", required=false, description="郵遞區號", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="address1", in="query", required=false, description="公司地址", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="zip_code2", in="query", required=true, description="郵遞區號", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="address2", in="query", required=true, description="送貨地址", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="responsible_person", in="query", required=false, description="負責人", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="contact_person", in="query", required=false, description="聯絡人", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="contact_phone", in="query", required=true, description="聯絡人電話", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="phone", in="query", required=false, description="公司電話", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="fax", in="query", required=false, description="公司傳真", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="established_date", in="query", required=false, description="成立時間", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="mobile_phone", in="query", required=false, description="聯絡人行動電話", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="contact_email", in="query", required=false, description="聯絡人信箱", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="user_id", in="query", required=false, description="負責採購人員id", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="currency_id", in="query", required=false, description="幣別id", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="paymentterm_id", in="query", required=false, description="付款條件id", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="account_category", in="query", required=false, description="科目別", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="invoice_title", in="query", required=true, description="發票抬頭", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="taxtype", in="query", required=false, description="稅別(抓參數資料param_sn=10)", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="taxid", in="query", required=true, description="統一編號 (台灣: 8 碼)", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="delivery_method", in="query", required=true, description="發票寄送方式", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="recipient_name", in="query", required=false, description="發票收件人", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="recipient_phone", in="query", required=false, description="發票收件人電話", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="recipient_email", in="query", required=false, description="發票收件人信箱", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="invoice_address", in="query", required=false, description="發票地址", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="note", in="query", required=false, description="備註", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="is_valid", in="query", required=true, description="是否有效", @OA\Schema(type="string", example=1)),
+ *     @OA\Response(
+ *         response=200,
+ *         description="成功",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="client_no", type="string", example="S003"),
+ *             @OA\Property(property="client_shortnm", type="string", example="測試客戶1"),
+ *             @OA\Property(property="client_type", type="string", example="個人"),
+ *             @OA\Property(property="client_fullnm", type="string", example="測試客戶1"),
+ *             @OA\Property(property="zip_code1", type="string", example="12345"),
+ *             @OA\Property(property="address1", type="string", example="台北市信義區"),
+ *             @OA\Property(property="zip_code2", type="string", example="54321"),
+ *             @OA\Property(property="address2", type="string", example="台北市大安區"),
+ *             @OA\Property(property="responsible_person", type="string", example="王小明"),
+ *             @OA\Property(property="contact_person", type="string", example="李小華"),
+ *             @OA\Property(property="contact_phone", type="string", example="0912345678"),
+ *             @OA\Property(property="phone", type="string", example="02-12345678"),
+ *             @OA\Property(property="fax", type="string", example="02-87654321"),
+ *             @OA\Property(property="established_date", type="string", example="2025-03-31"),
+ *             @OA\Property(property="mobile_phone", type="string", example="0987654321"),
+ *             @OA\Property(property="contact_email", type="string", example="a151815058@gmail.com"),
+ *             @OA\Property(property="user_id", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
+ *             @OA\Property(property="currency_id", type="string", example="TWD"),
+ *             @OA\Property(property="paymentterm_id", type="string", example="NET30"),
+ *             @OA\Property(property="account_category", type="string", example="AC001"),
+ *             @OA\Property(property="invoice_title", type="string", example="宏達電股份有限公司"),
+ *             @OA\Property(property="taxtype", type="string", example="T001"),
+ *             @OA\Property(property="taxid", type="string", example="12345678"),
+ *             @OA\Property(property="delivery_method", type="string", example="宅配"),
+ *             @OA\Property(property="recipient_name", type="string", example="王小姐"),
+ *             @OA\Property(property="recipient_phone", type="string", example="02-22334455"),
+ *             @OA\Property(property="recipient_email", type="string", example="invoice@htc.com"),
+ *             @OA\Property(property="invoice_address", type="string", example="新北市板橋區縣民大道二段100號"),
+ *             @OA\Property(property="note", type="string", example=""),
+ *             @OA\Property(property="is_valid", type="string", example="1"),
+ *             @OA\Property(property="create_user", type="string", example="admin"),
+ *             @OA\Property(property="create_time", type="string", example="2025-03-31T08:58:52.001975Z"),
+ *             @OA\Property(property="update_user", type="string", example="admin"),
+ *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="客戶建立失敗"
+ *     )
+ * )
+     */
+    //更新客戶資料
+    public function update(Request $request){
+        //更新客戶資料
+        try {
+            // 檢查是否有必要的參數
+            if (!$request->has(['client_no', 'client_shortnm', 'client_type', 'client_fullnm', 'zip_code2', 'address2',  'established_date', 'mobile_phone', 'contact_email', 'user_id',  'taxid', 'delivery_method', 'is_valid'])) {
+                return response()->json([
+                    'status' => false,
+                    'message' => '缺少必填的欄位',
+                ], 400);
+            }
+            // 查詢客戶資料
+            $Client = Client::where('client_no', $request->input('client_no'))->first();
+            if (!$Client) {
+                return response()->json([
+                    'status' => true,
+                    'message' => '客戶資料未找到',
+                    'output'    => null
+                ], 404);
+            }
+            // 更新客戶資料
+            $Client->client_shortnm      = $request->input('client_shortnm', $Client->client_shortnm);
+            $Client->client_type         = $request->input('client_type', $Client->client_type);
+            $Client->client_fullnm       = $request->input('client_fullnm', $Client->client_fullnm);
+            $Client->zip_code1           = $request->input('zip_code1', $Client->zip_code1);
+            $Client->address1            = $request->input('address1', $Client->address1);
+            $Client->zip_code2           = $request->input('zip_code2', $Client->zip_code2);
+            $Client->address2            = $request->input('address2', $Client->address2);
+            $Client->responsible_person  = $request->input('responsible_person', $Client->responsible_person);
+            $Client->contact_person      = $request->input('contact_person', $Client->contact_person);
+            $Client->contact_phone       = $request->input('contact_phone', $Client->contact_phone);
+            $Client->phone               = $request->input('phone', $Client->phone);
+            $Client->fax                 = $request->input('fax', $Client->fax);
+            $Client->established_date    = $request->input('established_date', $Client->established_date);
+            $Client->mobile_phone        = $request->input('mobile_phone', $Client->mobile_phone);
+            $Client->contact_email       = $request->input('contact_email', $Client->contact_email);
+            $Client->user_id             = $request->input('user_id', $Client->user_id);
+            $Client->currency_id         = $request->input('currency_id', $Client->currency_id);
+            $Client->paymentterm_id      = $request->input('paymentterm_id', $Client->paymentterm_id);
+            $Client->account_category    = $request->input('account_category', $Client->account_category);
+            $Client->invoice_title       = $request->input('invoice_title', $Client->invoice_title);
+            $Client->taxtype             = $request->input('taxtype', $Client->taxtype);
+            $Client->taxid               = $request->input('taxid', $Client->taxid);
+            $Client->delivery_method     = $request->input('delivery_method', $Client->delivery_method);
+            $Client->recipient_name      = $request->input('recipient_name', $Client->recipient_name);
+            $Client->recipient_phone     = $request->input('recipient_phone', $Client->recipient_phone);
+            $Client->recipient_email     = $request->input('recipient_email', $Client->recipient_email);
+            $Client->invoice_address     = $request->input('invoice_address', $Client->invoice_address);
+            $Client->note                = $request->input('note', $Client->note);
+            $Client->is_valid            = $request->input('is_valid', $Client->is_valid);
+            $Client->update_user         = $request->user()->id; // 更新使用者ID
+            $Client->update_time         = now(); // 更新時間
+            $Client->save();
+            // 回應 JSON
+            return response()->json([
+                'status' => true,
+                'message' => '客戶資料更新成功',
+                'output'    => $Client
+            ], 200);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 捕捉驗證失敗
+            return response()->json([
+                'status' => false,
+                'message' => '驗證錯誤',
+                'errors' => $e->errors()
+            ], 422);
+    
+        } catch (\Exception $e) {
+            // 其他例外處理
+            Log::error('更新客戶資料錯誤：' . $e->getMessage());
     
             return response()->json([
                 'status' => false,
@@ -613,7 +741,8 @@ class ClientController extends Controller
         $SysCode4 = PaymentTerm::where('is_valid', '1')->where('is_valid','1')->get();
         // 發票寄送方式
         $SysCode5 = SysCode::where('param_sn', '10')->where('is_valid','1')->get();
-        
+        // 客戶型態
+        $SysCode6 = SysCode::where('param_sn', '12')->where('is_valid','1')->get();
         try {
             // 檢查是否有結果
             if ($SysCode->isEmpty() ) {
@@ -625,7 +754,8 @@ class ClientController extends Controller
                     'paymenttermOption' => null,
                     'sysuserOption' => null,
                     'paymentterm2Option' => null,
-                    'deliverymethodOption' => null
+                    'deliverymethodOption' => null,
+                    'clienttypeOption' => null
                 ], 404);
             }
     
@@ -638,7 +768,8 @@ class ClientController extends Controller
                 'paymenttermOption' => $SysCode2,
                 'sysuserOption' => $SysCode3,
                 'paymentterm2Option' => $SysCode4,
-                'deliverymethodOption' => $SysCode5
+                'deliverymethodOption' => $SysCode5,
+                'clienttypeOption' => $SysCode6
             ], 200);
     
         } catch (\Illuminate\Validation\ValidationException $e) {

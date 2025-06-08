@@ -78,6 +78,7 @@ Route::get('/supplier4/showconst', [SupplierController::class, 'showconst']);  /
 
 //客戶資料相關  API
 Route::post('/createclient', [ClientController::class, 'store']);// 新增客戶資料
+Route::post('/updateclient', [ClientController::class, 'update']);// 更新客戶資料
 Route::get('/cient1/{clientNo}', [ClientController::class, 'show']);  // 透過 clientNo 查詢
 Route::get('/client2/{Keyword}', [ClientController::class, 'show2']);  // 透過 Keyword 查詢
 Route::get('/clients/valid', [ClientController::class, 'getValidclients']);// 查詢所有有效客戶

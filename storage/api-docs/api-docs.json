@@ -1031,8 +1031,8 @@
                     {
                         "name": "zip_code1",
                         "in": "query",
-                        "description": "郵遞區號 1",
-                        "required": true,
+                        "description": "郵遞區號",
+                        "required": false,
                         "schema": {
                             "type": "string"
                         }
@@ -1040,8 +1040,8 @@
                     {
                         "name": "address1",
                         "in": "query",
-                        "description": "公司地址 1",
-                        "required": true,
+                        "description": "公司地址",
+                        "required": false,
                         "schema": {
                             "type": "string"
                         }
@@ -1049,8 +1049,8 @@
                     {
                         "name": "zip_code2",
                         "in": "query",
-                        "description": "郵遞區號 2 (選填)",
-                        "required": false,
+                        "description": "郵遞區號",
+                        "required": true,
                         "schema": {
                             "type": "string"
                         }
@@ -1058,8 +1058,8 @@
                     {
                         "name": "address2",
                         "in": "query",
-                        "description": "公司地址 2 (選填)",
-                        "required": false,
+                        "description": "送貨地址",
+                        "required": true,
                         "schema": {
                             "type": "string"
                         }
@@ -1068,7 +1068,7 @@
                         "name": "responsible_person",
                         "in": "query",
                         "description": "負責人",
-                        "required": true,
+                        "required": false,
                         "schema": {
                             "type": "string"
                         }
@@ -1077,7 +1077,7 @@
                         "name": "contact_person",
                         "in": "query",
                         "description": "聯絡人",
-                        "required": true,
+                        "required": false,
                         "schema": {
                             "type": "string"
                         }
@@ -1095,7 +1095,7 @@
                         "name": "phone",
                         "in": "query",
                         "description": "公司電話",
-                        "required": true,
+                        "required": false,
                         "schema": {
                             "type": "string"
                         }
@@ -1103,7 +1103,7 @@
                     {
                         "name": "fax",
                         "in": "query",
-                        "description": "公司傳真 (選填)",
+                        "description": "公司傳真",
                         "required": false,
                         "schema": {
                             "type": "string"
@@ -1113,7 +1113,7 @@
                         "name": "established_date",
                         "in": "query",
                         "description": "成立時間",
-                        "required": true,
+                        "required": false,
                         "schema": {
                             "type": "string"
                         }
@@ -1122,7 +1122,7 @@
                         "name": "mobile_phone",
                         "in": "query",
                         "description": "聯絡人行動電話",
-                        "required": true,
+                        "required": false,
                         "schema": {
                             "type": "string"
                         }
@@ -1131,7 +1131,7 @@
                         "name": "contact_email",
                         "in": "query",
                         "description": "聯絡人信箱",
-                        "required": true,
+                        "required": false,
                         "schema": {
                             "type": "string"
                         }
@@ -1140,7 +1140,7 @@
                         "name": "user_id",
                         "in": "query",
                         "description": "負責採購人員id",
-                        "required": true,
+                        "required": false,
                         "schema": {
                             "type": "string"
                         }
@@ -1149,7 +1149,7 @@
                         "name": "currency_id",
                         "in": "query",
                         "description": "幣別id",
-                        "required": true,
+                        "required": false,
                         "schema": {
                             "type": "string"
                         }
@@ -1158,7 +1158,7 @@
                         "name": "paymentterm_id",
                         "in": "query",
                         "description": "付款條件id",
-                        "required": true,
+                        "required": false,
                         "schema": {
                             "type": "string"
                         }
@@ -1167,7 +1167,7 @@
                         "name": "account_category",
                         "in": "query",
                         "description": "科目別",
-                        "required": true,
+                        "required": false,
                         "schema": {
                             "type": "string"
                         }
@@ -1185,7 +1185,7 @@
                         "name": "taxtype",
                         "in": "query",
                         "description": "稅別(抓參數資料param_sn=10)",
-                        "required": true,
+                        "required": false,
                         "schema": {
                             "type": "string"
                         }
@@ -1212,7 +1212,7 @@
                         "name": "recipient_name",
                         "in": "query",
                         "description": "發票收件人",
-                        "required": true,
+                        "required": false,
                         "schema": {
                             "type": "string"
                         }
@@ -1221,7 +1221,7 @@
                         "name": "recipient_phone",
                         "in": "query",
                         "description": "發票收件人電話",
-                        "required": true,
+                        "required": false,
                         "schema": {
                             "type": "string"
                         }
@@ -1230,7 +1230,7 @@
                         "name": "recipient_email",
                         "in": "query",
                         "description": "發票收件人信箱",
-                        "required": true,
+                        "required": false,
                         "schema": {
                             "type": "string"
                         }
@@ -1239,7 +1239,443 @@
                         "name": "invoice_address",
                         "in": "query",
                         "description": "發票地址",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "note",
+                        "in": "query",
+                        "description": "備註",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "is_valid",
+                        "in": "query",
+                        "description": "是否有效",
                         "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "client_no": {
+                                            "type": "string",
+                                            "example": "S003"
+                                        },
+                                        "client_shortnm": {
+                                            "type": "string",
+                                            "example": "測試客戶1"
+                                        },
+                                        "client_type": {
+                                            "type": "string",
+                                            "example": "個人"
+                                        },
+                                        "client_fullnm": {
+                                            "type": "string",
+                                            "example": "測試客戶1"
+                                        },
+                                        "zip_code1": {
+                                            "type": "string",
+                                            "example": "12345"
+                                        },
+                                        "address1": {
+                                            "type": "string",
+                                            "example": "台北市信義區"
+                                        },
+                                        "zip_code2": {
+                                            "type": "string",
+                                            "example": "54321"
+                                        },
+                                        "address2": {
+                                            "type": "string",
+                                            "example": "台北市大安區"
+                                        },
+                                        "responsible_person": {
+                                            "type": "string",
+                                            "example": "王小明"
+                                        },
+                                        "contact_person": {
+                                            "type": "string",
+                                            "example": "李小華"
+                                        },
+                                        "contact_phone": {
+                                            "type": "string",
+                                            "example": "0912345678"
+                                        },
+                                        "phone": {
+                                            "type": "string",
+                                            "example": "02-12345678"
+                                        },
+                                        "fax": {
+                                            "type": "string",
+                                            "example": "02-87654321"
+                                        },
+                                        "established_date": {
+                                            "type": "string",
+                                            "example": "2025-03-31"
+                                        },
+                                        "mobile_phone": {
+                                            "type": "string",
+                                            "example": "0987654321"
+                                        },
+                                        "contact_email": {
+                                            "type": "string",
+                                            "example": "a151815058@gmail.com"
+                                        },
+                                        "user_id": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "currency_id": {
+                                            "type": "string",
+                                            "example": "TWD"
+                                        },
+                                        "paymentterm_id": {
+                                            "type": "string",
+                                            "example": "NET30"
+                                        },
+                                        "account_category": {
+                                            "type": "string",
+                                            "example": "AC001"
+                                        },
+                                        "invoice_title": {
+                                            "type": "string",
+                                            "example": "宏達電股份有限公司"
+                                        },
+                                        "taxtype": {
+                                            "type": "string",
+                                            "example": "T001"
+                                        },
+                                        "taxid": {
+                                            "type": "string",
+                                            "example": "12345678"
+                                        },
+                                        "delivery_method": {
+                                            "type": "string",
+                                            "example": "宅配"
+                                        },
+                                        "recipient_name": {
+                                            "type": "string",
+                                            "example": "王小姐"
+                                        },
+                                        "recipient_phone": {
+                                            "type": "string",
+                                            "example": "02-22334455"
+                                        },
+                                        "recipient_email": {
+                                            "type": "string",
+                                            "example": "invoice@htc.com"
+                                        },
+                                        "invoice_address": {
+                                            "type": "string",
+                                            "example": "新北市板橋區縣民大道二段100號"
+                                        },
+                                        "note": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "is_valid": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "create_user": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "create_time": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "update_user": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "update_time": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "客戶建立失敗"
+                    }
+                }
+            }
+        },
+        "/api/updateclient": {
+            "post": {
+                "tags": [
+                    "base_client"
+                ],
+                "summary": "更新客戶資料",
+                "description": "更新客戶資料",
+                "operationId": "updateclient",
+                "parameters": [
+                    {
+                        "name": "client_no",
+                        "in": "query",
+                        "description": "客戶編號",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "client_shortnm",
+                        "in": "query",
+                        "description": "客戶簡稱",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "client_type",
+                        "in": "query",
+                        "description": "客戶型態",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "client_fullnm",
+                        "in": "query",
+                        "description": "客戶全名",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "zip_code1",
+                        "in": "query",
+                        "description": "郵遞區號",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "address1",
+                        "in": "query",
+                        "description": "公司地址",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "zip_code2",
+                        "in": "query",
+                        "description": "郵遞區號",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "address2",
+                        "in": "query",
+                        "description": "送貨地址",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "responsible_person",
+                        "in": "query",
+                        "description": "負責人",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "contact_person",
+                        "in": "query",
+                        "description": "聯絡人",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "contact_phone",
+                        "in": "query",
+                        "description": "聯絡人電話",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "phone",
+                        "in": "query",
+                        "description": "公司電話",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fax",
+                        "in": "query",
+                        "description": "公司傳真",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "established_date",
+                        "in": "query",
+                        "description": "成立時間",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "mobile_phone",
+                        "in": "query",
+                        "description": "聯絡人行動電話",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "contact_email",
+                        "in": "query",
+                        "description": "聯絡人信箱",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "description": "負責採購人員id",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "currency_id",
+                        "in": "query",
+                        "description": "幣別id",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "paymentterm_id",
+                        "in": "query",
+                        "description": "付款條件id",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "account_category",
+                        "in": "query",
+                        "description": "科目別",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "invoice_title",
+                        "in": "query",
+                        "description": "發票抬頭",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "taxtype",
+                        "in": "query",
+                        "description": "稅別(抓參數資料param_sn=10)",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "taxid",
+                        "in": "query",
+                        "description": "統一編號 (台灣: 8 碼)",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "delivery_method",
+                        "in": "query",
+                        "description": "發票寄送方式",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "recipient_name",
+                        "in": "query",
+                        "description": "發票收件人",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "recipient_phone",
+                        "in": "query",
+                        "description": "發票收件人電話",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "recipient_email",
+                        "in": "query",
+                        "description": "發票收件人信箱",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "invoice_address",
+                        "in": "query",
+                        "description": "發票地址",
+                        "required": false,
                         "schema": {
                             "type": "string"
                         }

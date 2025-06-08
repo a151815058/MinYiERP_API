@@ -423,7 +423,6 @@ class ProductController extends Controller
                     inventory.inventory_nm,
                     productinventory.lot_num,
                     productinventory.create_time,
-                    inventory.safety_stock,
                     SUM(productinventory.inventory_qty) AS inventory_qty
                 FROM productinventory
                 INNER JOIN inventory ON inventory.inventory_no = productinventory.inventory_no AND inventory.is_valid = '1'
