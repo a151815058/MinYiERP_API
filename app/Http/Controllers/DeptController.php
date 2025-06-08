@@ -21,34 +21,10 @@ class DeptController extends Controller
      *     description="新增部門資訊",
      *     operationId="createdept",
      *     tags={"base_dept"},
-     *     @OA\Parameter(
-     *         name="dept_no",
-     *         in="query",
-     *         required=true,
-     *         description="部門代號",
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Parameter(
-     *         name="dept_nm",
-     *         in="query",
-     *         required=true,
-     *         description="部門名稱",
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Parameter(
-     *         name="note",
-     *         in="query",
-     *         required=false,
-     *         description="備註",
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Parameter(
-     *         name="is_valid",
-     *         in="query",
-     *         required=true,
-     *         description="是否有效",
-     *         @OA\Schema(type="string", example=1)
-     *     ),
+     *     @OA\Parameter(name="dept_no",in="query",required=true,description="部門代號",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="dept_nm",in="query",required=true,description="部門名稱",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="note",in="query",required=false,description="備註",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="is_valid",in="query",required=true,description="是否有效",@OA\Schema(type="string", example=1)),
      *     @OA\Response(
      *         response=200,
      *         description="成功",
@@ -85,7 +61,7 @@ class DeptController extends Controller
             if($validator->fails()){
                 return response()->json([
                     'status' => true,
-                    'message' => '資料驗證失敗',
+                    'message' => '必填欄位驗證失敗',
                     'errors' => $validator->errors()
                 ], 200);
             }
@@ -132,6 +108,100 @@ class DeptController extends Controller
             ], 500);
         }
 
+    }
+    /**
+     * @OA\POST(
+     *     path="/api/updatedept",
+     *     summary="更新部門資訊",
+     *     description="更新部門資訊",
+     *     operationId="createdept",
+     *     tags={"base_dept"},
+     *     @OA\Parameter(name="dept_no",in="query",required=true,description="部門代號",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="dept_nm",in="query",required=true,description="部門名稱",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="note",in="query",required=false,description="備註",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="is_valid",in="query",required=true,description="是否有效",@OA\Schema(type="string", example=1)),
+     *     @OA\Response(
+     *         response=200,
+     *         description="成功",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
+     *             @OA\Property(property="dept_no", type="string", example="A02"),
+     *             @OA\Property(property="dept_nm", type="string", example="財務處"),
+     *             @OA\Property(property="note", type="string", example="測試測試"),
+     *             @OA\Property(property="is_valid", type="string", example="1"),
+     *             @OA\Property(property="create_user", type="string", example="admin"),
+     *             @OA\Property(property="create_time", type="string", example="admin"),
+     *             @OA\Property(property="update_user", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="未找到部門"
+     *     )
+     * )
+     */
+    // 更新部門資料
+    public function update(Request $request)
+    {
+        try {
+            // 驗證請求
+            $validator = Validator::make($request->all(),[
+                'dept_no'     => 'required|string|max:255',
+                'dept_nm'     => 'required|string|max:255',
+                'note'        => 'nullable|string|max:255',
+                'is_valid'    => 'required|boolean'
+            ]);
+            if($validator->fails()){
+                return response()->json([
+                    'status' => true,
+                    'message' => '必填欄位驗證失敗',
+                    'errors' => $validator->errors()
+                ], 200);
+            }
+
+            // 更新部門資料
+            $dept = Dept::findByDeptNo($request['dept_no'])->where('is_valid', '1')->first();
+        
+            if (!$dept) {
+                return response()->json([
+                    'status' => true,
+                    'message' => '部門未找到',
+                    'output'    => null
+                ], 404);
+            }
+    
+            $dept->dept_nm = $request['dept_nm'];
+            $dept->note = $request['note'] ?? null;
+            $dept->is_valid = $request['is_valid'];
+            $dept->update_user = 'admin';
+            $dept->update_time = now();
+            $dept->save();
+    
+            return response()->json([
+                'status' => true,
+                'message' => 'success',
+                'output'    => $dept
+            ], 200);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 捕捉驗證失敗
+            return response()->json([
+                'status' => false,
+                'message' => '驗證錯誤',
+                'errors' => $e->errors()
+            ], 422);
+    
+        } catch (\Exception $e) {
+            // 其他例外處理
+            Log::error('更新資料錯誤：' . $e->getMessage());
+    
+            return response()->json([
+                'status' => false,
+                'message' => '伺服器發生錯誤，請稍後再試',
+                'error' => $e->getMessage() // 上線環境建議拿掉
+            ], 500);
+        }
     }
     /**
      * @OA\GET(

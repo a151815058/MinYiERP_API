@@ -126,7 +126,56 @@ class InventoryController extends Controller
         }
 
     }
-
+    /**
+     * @OA\POST(
+     *     path="/api/updateinventory",
+     *     summary="更新庫別資訊",
+     *     description="更新庫別資訊",
+     *     operationId="updateinventory",
+     *     tags={"base_inventory"},
+     *     @OA\Parameter(
+     *         name="inventory_no",
+     *         in="query",
+     *         required=true,
+     *         description="庫別代號",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="inventory_nm",
+     *         in="query",
+     *         required=true,
+     *         description="庫別名稱",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="is_valid",
+     *         in="query",
+     *         required=true,
+     *         description="是否有效",
+     *         @OA\Schema(type="string", example=1)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="成功",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
+     *             @OA\Property(property="inventory_no", type="string", example="INV001"),
+     *             @OA\Property(property="inventory_nm", type="string", example="庫別1"),
+     *             @OA\Property(property="note", type="string", example="備註"),
+     *             @OA\Property(property="is_valid", type="string", example="1"),
+     *             @OA\Property(property="create_user", type="string", example="admin"),
+     *             @OA\Property(property="create_time", type="string", example="admin"),
+     *             @OA\Property(property="update_user", type="string", example="2025-03-31T08:58:52.001975Z"),
+     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="建立庫別失敗",
+     *     )
+     * )
+     */
     // 更新庫別資料
     public function update(Request $request)
     {

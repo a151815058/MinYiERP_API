@@ -15,8 +15,9 @@ use App\Http\Controllers\InvoiceInfoController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\OrderController;
 
-//部門相關  API
+//部門相關  API updatedept
 Route::post('/createdept', [DeptController::class, 'store']); // 新增部門資訊
+Route::post('/updatedept', [DeptController::class, 'update']); // 更新部門資訊
 Route::get('/dept/{deptNo}', [DeptController::class, 'showno']);  // 透過 DeptNo 查詢
 Route::get('/dept2/{deptNM}', [DeptController::class, 'shownm']);  // 透過 DeptNM 查詢
 Route::get('/depts/valid', [DeptController::class, 'getvaliddepts']);  // 查詢所有有效部門
@@ -89,6 +90,7 @@ Route::get('/clients/showconst', [ClientController::class, 'showconst']);  // �
 
 //品號資料相關  API
 Route::post('/createproduct', [ProductController::class, 'store']);// 新增品號資料
+Route::post('/updateproduct', [ProductController::class, 'update']);// 新增品號資料
 Route::get('/product/{ProductNO}', [ProductController::class, 'show']);  // 透過 ProductNO 查詢
 Route::get('/product2/{keyword}', [ProductController::class, 'shownm']);  // 透過 ProductNO 查詢
 Route::get('/product3/valid', [ProductController::class, 'getvalidproduct']);  // 查詢所有有效品號
@@ -98,6 +100,7 @@ Route::get('/product4/{ProductNO}', [ProductController::class, 'showinv']);  // 
 
 //庫別資料相關  API
 Route::post('/createinventory', [InventoryController::class, 'store']);// 新增庫別資料
+Route::post('/updateinventory', [InventoryController::class, 'update']);// 更新庫別資料
 Route::get('/inventory/{InventoryNO}', action: [InventoryController::class, 'showno']);  // 透過 InventoryNO 查詢
 Route::get('/inventory2/{InventoryNM}', action: [InventoryController::class, 'shownm']);  // 透過 InventoryNO 查詢
 Route::get('/inventorys/valid', [InventoryController::class, 'getvaildinventory']);  // 查詢所有有效庫別

@@ -110,7 +110,7 @@ class ClientController extends Controller
             if (!$request->has(['client_no', 'client_shortnm', 'client_type', 'client_fullnm', 'zip_code2', 'address2',  'established_date', 'mobile_phone', 'contact_email', 'user_id',  'taxid', 'delivery_method', 'is_valid'])) {
                 return response()->json([
                     'status' => false,
-                    'message' => '缺少必填的欄位',
+                    'message' => '缺少必填的欄位'
                 ], 400);
             }
             
@@ -317,9 +317,10 @@ class ClientController extends Controller
             $Client->invoice_address     = $request->input('invoice_address', $Client->invoice_address);
             $Client->note                = $request->input('note', $Client->note);
             $Client->is_valid            = $request->input('is_valid', $Client->is_valid);
-            $Client->update_user         = $request->user()->id; // 更新使用者ID
+            $Client->update_user         = $request->user()->name ?? 'admin'; // 更新使用者
             $Client->update_time         = now(); // 更新時間
             $Client->save();
+            
             // 回應 JSON
             return response()->json([
                 'status' => true,

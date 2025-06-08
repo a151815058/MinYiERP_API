@@ -94,7 +94,7 @@ class SupplierController extends Controller
             if (!$request->has(['supplier_no', 'supplier_shortnm', 'supplier_fullnm', 'zipcode1', 'address1', 'taxid',  'is_valid'])) {
                 return response()->json([
                     'status' => true,
-                    'message' => '缺少必填的欄位',
+                    'message' => '缺少必填的欄位'
                 ], 400);
             }
     
@@ -246,7 +246,7 @@ class SupplierController extends Controller
             if (!$supplier) {
                 return response()->json([
                     'status' => true,
-                    'message' => '供應商未找到',
+                    'message' => '供應商未找到'
                 ], 404);
             }
     
@@ -271,7 +271,9 @@ class SupplierController extends Controller
                 'payment_termid'       => $request['payment_termid'],
                 'user_id'              => $request['user_id']?? null,
                 'note'                 => $request['note'] ?? null,
-                'is_valid'             => $request['is_valid']
+                'is_valid'             => $request['is_valid'],
+                'update_user'          => $request->user()->name ?? 'admin', // 更新使用者
+                'update_time'          => now() // 更新時間
             ]);
     
             // 回應 JSON
