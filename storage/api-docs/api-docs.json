@@ -1417,15 +1417,6 @@
                         }
                     },
                     {
-                        "name": "contact_phone",
-                        "in": "query",
-                        "description": "聯絡人電話",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
                         "name": "phone",
                         "in": "query",
                         "description": "公司電話",
@@ -1848,15 +1839,6 @@
                         "in": "query",
                         "description": "聯絡人",
                         "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "contact_phone",
-                        "in": "query",
-                        "description": "聯絡人電話",
-                        "required": true,
                         "schema": {
                             "type": "string"
                         }
