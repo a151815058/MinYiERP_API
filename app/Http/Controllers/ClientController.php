@@ -48,7 +48,7 @@ class ClientController extends Controller
  *     @OA\Parameter(name="invoice_title", in="query", required=true, description="發票抬頭", @OA\Schema(type="string")),
  *     @OA\Parameter(name="taxtype", in="query", required=false, description="稅別(抓參數資料param_sn=10)", @OA\Schema(type="string")),
  *     @OA\Parameter(name="taxid", in="query", required=true, description="統一編號 (台灣: 8 碼)", @OA\Schema(type="string")),
- *     @OA\Parameter(name="delivery_method", in="query", required=true, description="發票寄送方式", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="delivery_method", in="query", required=false, description="發票寄送方式", @OA\Schema(type="string")),
  *     @OA\Parameter(name="recipient_name", in="query", required=false, description="發票收件人", @OA\Schema(type="string")),
  *     @OA\Parameter(name="recipient_phone", in="query", required=false, description="發票收件人電話", @OA\Schema(type="string")),
  *     @OA\Parameter(name="recipient_email", in="query", required=false, description="發票收件人信箱", @OA\Schema(type="string")),
