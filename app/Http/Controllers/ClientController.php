@@ -152,7 +152,7 @@ class ClientController extends Controller
                 ], status: 200);
             }
             //客戶型態須為參數檔資料
-            if (!$request->has('client_type') && !SysCode::where('param_sn', '12')->where('uuid', $request->input('client_type'))->exists()) {
+            if (!$request->has('client_type') && !SysCode::where('param_sn', '03')->where('uuid', $request->input('client_type'))->exists()) {
                 return response()->json([
                     'status' => false,
                     'message' => '欄位格式錯誤',
@@ -197,7 +197,7 @@ class ClientController extends Controller
             }
 
             //課稅別須存在
-            if ($request->has('taxtype') && SysCode::where('param_sn', '04')->where('uuid', $request->input('taxtype'))->exists()) {
+            if ($request->has('taxtype') && SysCode::where('param_sn', '02')->where('uuid', $request->input('taxtype'))->exists()) {
                 return response()->json([
                     'status' => false,
                     'message' => '欄位格式錯誤',
@@ -206,7 +206,7 @@ class ClientController extends Controller
             }
 
             //發票寄送方式需存在
-            if ($request->has('delivery_method') && SysCode::where('param_sn', '10')->where('uuid', $request->input('delivery_method'))->exists()) {
+            if ($request->has('delivery_method') && SysCode::where('param_sn', '04')->where('uuid', $request->input('delivery_method'))->exists()) {
                 return response()->json([
                     'status' => false,
                     'message' => '欄位格式錯誤',
@@ -312,15 +312,6 @@ class ClientController extends Controller
                     ], status: 200);
                 }
             }
-
-            ///發票寄送方式為必填
-            if (!$request->has('delivery_method')) {
-                return response()->json([
-                    'status' => false,
-                    'message' => '缺少必填的欄位',
-                    'delivery_method_err' => '發票寄送方式為必填'
-                ], status: 200);
-            }
   
             // 建立客戶資料
             $Client = Client::create([
@@ -346,7 +337,7 @@ class ClientController extends Controller
                 'invoice_title'       => $request['invoice_title'],      //發票抬頭      
                 'taxid'               => $request['taxid'],            //統一編號
                 'taxtype'             => $request['taxtype']?? null,   //課稅別   
-                'delivery_method'     => $request['delivery_method'],   //發票寄送方式
+                'delivery_method'     => $request['delivery_method']?? null,  //發票寄送方式
                 'recipient_name'      => $request['recipient_name']?? null,   //發票收件人   
                 'invoice_address'     => $request['invoice_address']?? null,  //發票地址    
                 'recipient_phone'     => $request['recipient_phone']?? null,  //聯絡電話2     
