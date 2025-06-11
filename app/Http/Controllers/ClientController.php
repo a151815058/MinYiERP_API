@@ -28,7 +28,7 @@ class ClientController extends Controller
  *     tags={"base_client"},
  *     @OA\Parameter(name="client_no", in="query", required=true, description="客戶編號", @OA\Schema(type="string")),
  *     @OA\Parameter(name="client_shortnm", in="query", required=true, description="客戶簡稱", @OA\Schema(type="string")),
- *     @OA\Parameter(name="client_type", in="query", required=true, description="客戶型態", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="client_type", in="query", required=true, description="客戶型態", @OA\Schema(type="integer")),
  *     @OA\Parameter(name="client_fullnm", in="query", required=true, description="客戶全名", @OA\Schema(type="string")),
  *     @OA\Parameter(name="zip_code1", in="query", required=false, description="郵遞區號", @OA\Schema(type="string")),
  *     @OA\Parameter(name="address1", in="query", required=false, description="公司地址", @OA\Schema(type="string")),
@@ -44,11 +44,11 @@ class ClientController extends Controller
  *     @OA\Parameter(name="user_id", in="query", required=false, description="負責採購人員id", @OA\Schema(type="string")),
  *     @OA\Parameter(name="currency_id", in="query", required=false, description="幣別id", @OA\Schema(type="string")),
  *     @OA\Parameter(name="paymentterm_id", in="query", required=false, description="付款條件id", @OA\Schema(type="string")),
- *     @OA\Parameter(name="account_category", in="query", required=false, description="科目別", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="account_category", in="query", required=false, description="科目別", @OA\Schema(type="integer")),
  *     @OA\Parameter(name="invoice_title", in="query", required=true, description="發票抬頭", @OA\Schema(type="string")),
  *     @OA\Parameter(name="taxtype", in="query", required=false, description="稅別(抓參數資料param_sn=10)", @OA\Schema(type="string")),
  *     @OA\Parameter(name="taxid", in="query", required=true, description="統一編號 (台灣: 8 碼)", @OA\Schema(type="string")),
- *     @OA\Parameter(name="delivery_method", in="query", required=false, description="發票寄送方式", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="delivery_method", in="query", required=false, description="發票寄送方式", @OA\Schema(type="integer")),
  *     @OA\Parameter(name="recipient_name", in="query", required=false, description="發票收件人", @OA\Schema(type="string")),
  *     @OA\Parameter(name="recipient_phone", in="query", required=false, description="發票收件人電話", @OA\Schema(type="string")),
  *     @OA\Parameter(name="recipient_email", in="query", required=false, description="發票收件人信箱", @OA\Schema(type="string")),
@@ -152,7 +152,7 @@ class ClientController extends Controller
                 ], status: 400);
             }
             //客戶型態須為參數檔資料
-            if (!$request->has('client_type') && !SysCode::where('param_sn', '03')->where('uuid', $request->input('client_type'))->exists()) {
+            if (!$request->has('client_type') && !SysCode::where('param_sn', '03')->where('param_code', $request->input('client_type'))->exists()) {
                 return response()->json([
                     'status' => false,
                     'message' => '欄位格式錯誤',
@@ -197,7 +197,7 @@ class ClientController extends Controller
             }
 
             //課稅別須存在
-            if ($request->has('taxtype') && SysCode::where('param_sn', '02')->where('uuid', $request->input('taxtype'))->exists()) {
+            if ($request->has('taxtype') && SysCode::where('param_sn', '02')->where('param_code', $request->input('taxtype'))->exists()) {
                 return response()->json([
                     'status' => false,
                     'message' => '欄位格式錯誤',
@@ -206,7 +206,7 @@ class ClientController extends Controller
             }
 
             //發票寄送方式需存在
-            if ($request->has('delivery_method') && SysCode::where('param_sn', '04')->where('uuid', $request->input('delivery_method'))->exists()) {
+            if ($request->has('delivery_method') && SysCode::where('param_sn', '04')->where('param_code', $request->input('delivery_method'))->exists()) {
                 return response()->json([
                     'status' => false,
                     'message' => '欄位格式錯誤',
@@ -391,7 +391,7 @@ class ClientController extends Controller
  *     tags={"base_client"},
  *     @OA\Parameter(name="client_no", in="query", required=true, description="客戶編號", @OA\Schema(type="string")),
  *     @OA\Parameter(name="client_shortnm", in="query", required=true, description="客戶簡稱", @OA\Schema(type="string")),
- *     @OA\Parameter(name="client_type", in="query", required=true, description="客戶型態", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="client_type", in="query", required=true, description="客戶型態", @OA\Schema(type="integer")),
  *     @OA\Parameter(name="client_fullnm", in="query", required=true, description="客戶全名", @OA\Schema(type="string")),
  *     @OA\Parameter(name="zip_code1", in="query", required=false, description="郵遞區號", @OA\Schema(type="string")),
  *     @OA\Parameter(name="address1", in="query", required=false, description="公司地址", @OA\Schema(type="string")),
@@ -407,11 +407,11 @@ class ClientController extends Controller
  *     @OA\Parameter(name="user_id", in="query", required=false, description="負責採購人員id", @OA\Schema(type="string")),
  *     @OA\Parameter(name="currency_id", in="query", required=false, description="幣別id", @OA\Schema(type="string")),
  *     @OA\Parameter(name="paymentterm_id", in="query", required=false, description="付款條件id", @OA\Schema(type="string")),
- *     @OA\Parameter(name="account_category", in="query", required=false, description="科目別", @OA\Schema(type="string")),
- *     @OA\Parameter(name="invoice_title", in="query", required=false, description="發票抬頭", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="account_category", in="query", required=false, description="科目別", @OA\Schema(type="integer")),
+ *     @OA\Parameter(name="invoice_title", in="query", required=true, description="發票抬頭", @OA\Schema(type="string")),
  *     @OA\Parameter(name="taxtype", in="query", required=false, description="稅別(抓參數資料param_sn=10)", @OA\Schema(type="string")),
  *     @OA\Parameter(name="taxid", in="query", required=true, description="統一編號 (台灣: 8 碼)", @OA\Schema(type="string")),
- *     @OA\Parameter(name="delivery_method", in="query", required=true, description="發票寄送方式", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="delivery_method", in="query", required=false, description="發票寄送方式", @OA\Schema(type="integer")),
  *     @OA\Parameter(name="recipient_name", in="query", required=false, description="發票收件人", @OA\Schema(type="string")),
  *     @OA\Parameter(name="recipient_phone", in="query", required=false, description="發票收件人電話", @OA\Schema(type="string")),
  *     @OA\Parameter(name="recipient_email", in="query", required=false, description="發票收件人信箱", @OA\Schema(type="string")),
@@ -515,7 +515,7 @@ class ClientController extends Controller
                 ], status: 400);
             }
             //客戶型態須為參數檔資料
-            if (!$request->has('client_type') || !SysCode::where('param_sn', '12')->where('code', $request->input('client_type'))->exists()) {
+            if (!$request->has('client_type') || !SysCode::where('param_sn', '12')->where('param_code', $request->input('client_type'))->exists()) {
                 return response()->json([
                     'status' => false,
                     'message' => '欄位格式錯誤',
@@ -560,7 +560,7 @@ class ClientController extends Controller
             }
 
             //課稅別須存在
-            if ($request->has('taxtype') && !SysCode::where('param_sn', '04')->where('code', $request->input('taxtype'))->exists()) {
+            if ($request->has('taxtype') && !SysCode::where('param_sn', '04')->where('param_code', $request->input('taxtype'))->exists()) {
                 return response()->json([
                     'status' => false,
                     'message' => '欄位格式錯誤',
@@ -569,7 +569,7 @@ class ClientController extends Controller
             }
 
             //發票寄送方式需存在
-            if ($request->has('delivery_method') && !SysCode::where('param_sn', '10')->where('code', $request->input('delivery_method'))->exists()) {
+            if ($request->has('delivery_method') && !SysCode::where('param_sn', '10')->where('param_code', $request->input('delivery_method'))->exists()) {
                 return response()->json([
                     'status' => false,
                     'message' => '欄位格式錯誤',

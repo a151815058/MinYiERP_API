@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('client_no',20)->comment(comment: '客戶編號')->unique();
             $table->string('client_shortnm',50)->comment(comment: '客戶簡稱');
             $table->string('client_fullnm',255)->comment(comment: '客戶全名');
-            $table->string('client_type',255)->comment(comment: '客戶型態 (個人客戶、企業客戶、政府客戶)')->default('1');
+            $table->integer('client_type',255)->comment(comment: '客戶型態 (個人客戶、企業客戶、政府客戶)')->default('1');
             $table->string('responsible_person',10)->comment(comment: '負責人')->nullable();
             $table->string('contact_person',10)->comment(comment: '聯絡人')->nullable();
             $table->string('zip_code1',10)->comment(comment: '郵遞區號 1')->nullable();
@@ -33,8 +33,8 @@ return new class extends Migration
             $table->string('account_category',255)->comment(comment: '科目別')->nullable();
             $table->string('invoice_title',100)->comment(comment: '發票抬頭');
             $table->string('taxid',8)->comment(comment: '統一編號');
-            $table->string('taxtype',255)->comment(comment: '課稅別')->nullable();
-            $table->string('delivery_method',255)->comment(comment: '發票寄送方式');
+            $table->integer('taxtype',255)->comment(comment: '課稅別')->nullable();
+            $table->integer('delivery_method',255)->comment(comment: '發票寄送方式');
             $table->string('recipient_name',255)->comment(comment: '發票收件人')->nullable();
             $table->string('invoice_address',255)->comment(comment: '發票地址')->nullable();
             $table->string('recipient_phone',20)->comment(comment: '聯絡電話2')->nullable();
