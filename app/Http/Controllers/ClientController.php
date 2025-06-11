@@ -56,7 +56,7 @@ class ClientController extends Controller
  *     @OA\Parameter(name="note", in="query", required=false, description="備註", @OA\Schema(type="string")),
  *     @OA\Parameter(name="is_valid", in="query", required=true, description="是否有效", @OA\Schema(type="string", example=1)),
  *     @OA\Response(
- *         response=200,
+ *         response=400,
  *         description="成功",
  *         @OA\JsonContent(
  *             type="object",
@@ -121,7 +121,7 @@ class ClientController extends Controller
                         'status' => false,
                         'message' => '欄位資料已存在',
                         'client_no_err' => '客戶代碼已存在'
-                    ], status: 200);
+                    ], status: 400);
                 }
             }
 
@@ -131,7 +131,7 @@ class ClientController extends Controller
                     'status' => false,
                     'message' => '缺少必填的欄位',
                     'client_fullnm_err' => '客戶全名為必填'
-                ], status: 200);
+                ], status: 400);
             }
 
             //客戶全名為必填
@@ -140,7 +140,7 @@ class ClientController extends Controller
                     'status' => false,
                     'message' => '缺少必填的欄位',
                     'client_shortnm_err' => '客戶簡稱為必填'
-                ], status: 200);
+                ], status: 400);
             }
 
             //客戶型態為必填
@@ -149,7 +149,7 @@ class ClientController extends Controller
                     'status' => false,
                     'message' => '缺少必填的欄位',
                     'client_type_err' => '客戶型態為必填'
-                ], status: 200);
+                ], status: 400);
             }
             //客戶型態須為參數檔資料
             if (!$request->has('client_type') && !SysCode::where('param_sn', '03')->where('uuid', $request->input('client_type'))->exists()) {
@@ -157,7 +157,7 @@ class ClientController extends Controller
                     'status' => false,
                     'message' => '欄位格式錯誤',
                     'client_type_err' => '客戶型態不存在，請選擇正確的客戶型態'
-                ], status: 200);
+                ], status: 400);
             }
 
             //幣別須存在
@@ -166,7 +166,7 @@ class ClientController extends Controller
                     'status' => false,
                     'message' => '欄位格式錯誤',
                     'currency_id_err' => '幣別不存在，請選擇正確的幣別'
-                ], status: 200);
+                ], status: 400);
             }
 
             //付款條件須存在
@@ -175,7 +175,7 @@ class ClientController extends Controller
                     'status' => false,
                     'message' => '欄位格式錯誤',
                     'paymentterm_id_err' => '付款條件不存在，請選擇正確的付款條件'
-                ], status: 200);
+                ], status: 400);
             }
 
             //業務人員須存在
@@ -184,7 +184,7 @@ class ClientController extends Controller
                     'status' => false,
                     'message' => '欄位格式錯誤',
                     'user_id_err' => '業務人員不存在，請選擇正確的業務人員'
-                ], status: 200);
+                ], status: 400);
             }
 
             //科目別須存在
@@ -193,7 +193,7 @@ class ClientController extends Controller
                     'status' => false,
                     'message' => '欄位格式錯誤',
                     'account_category_err' => '科目別不存在，請選擇正確的科目別'
-                ], status: 200);
+                ], status: 400);
             }
 
             //課稅別須存在
@@ -202,7 +202,7 @@ class ClientController extends Controller
                     'status' => false,
                     'message' => '欄位格式錯誤',
                     'taxtype_err' => '課稅別不存在，請選擇正確的課稅別'
-                ], status: 200);
+                ], status: 400);
             }
 
             //發票寄送方式需存在
@@ -211,7 +211,7 @@ class ClientController extends Controller
                     'status' => false,
                     'message' => '欄位格式錯誤',
                     'delivery_method_err' => '發票寄送方式不存在，請選擇正確的發票寄送方式'
-                ], status: 200);
+                ], status: 400);
             }
 
             //郵遞區號二為必填
@@ -220,7 +220,7 @@ class ClientController extends Controller
                     'status' => false,
                     'message' => '缺少必填的欄位',
                     'zip_code2_err' => '郵遞區號二為必填'
-                ], status: 200);
+                ], status: 400);
             }
             //送貨地址為必填
             if (!$request->has('address2')) {
@@ -228,7 +228,7 @@ class ClientController extends Controller
                     'status' => false,
                     'message' => '缺少必填的欄位',
                     'address2_err' => '送貨地址為必填'
-                ], status: 200);
+                ], status: 400);
             }
 
             //公司電話不可為中文
@@ -237,7 +237,7 @@ class ClientController extends Controller
                     'status' => false,
                     'message' => '欄位格式錯誤',
                     'phone_err' => '公司電話不可包含中文'
-                ], status: 200);
+                ], status: 400);
             }
 
             //公司傳真不可為中文
@@ -246,7 +246,7 @@ class ClientController extends Controller
                     'status' => false,
                     'message' => '欄位格式錯誤',
                     'fax_err' => '公司傳真不可包含中文'
-                ], status: 200);
+                ], status: 400);
             }
 
             //行動電話不可為中文
@@ -255,7 +255,7 @@ class ClientController extends Controller
                     'status' => false,
                     'message' => '欄位格式錯誤',
                     'mobile_phone_err' => '行動電話不可包含中文'
-                ], status: 200);
+                ], status: 400);
             }
 
             //聯絡人信箱不可為中文
@@ -264,7 +264,7 @@ class ClientController extends Controller
                     'status' => false,
                     'message' => '欄位格式錯誤',
                     'contact_email_err' => '聯絡人信箱不可包含中文'
-                ], status: 200);
+                ], status: 400);
             }
 
             // 發票抬頭為必填
@@ -273,7 +273,7 @@ class ClientController extends Controller
                     'status' => false,
                     'message' => '缺少必填的欄位',
                     'invoice_title_err' => '發票抬頭為必填'
-                ], status: 200);
+                ], status: 400);
             }
 
             ///統一編號為必填
@@ -282,7 +282,7 @@ class ClientController extends Controller
                     'status' => false,
                     'message' => '缺少必填的欄位',
                     'taxid_err' => '統一編號為必填'
-                ], status: 200);
+                ], status: 400);
             }else{
                 // 檢查統一編號格式是否正確
                 if (!preg_match('/^\d{8}$/', $request->input('taxid'))) {
@@ -290,7 +290,7 @@ class ClientController extends Controller
                         'status' => false,
                         'message' => '欄位格式錯誤',
                         'taxid_err' => '統一編號格式錯誤，應為8位數字'
-                    ], status: 200);
+                    ], status: 400);
                 }
                 // 權重驗證
                 $taxid = $request->input('taxid');
@@ -309,7 +309,7 @@ class ClientController extends Controller
                         'status' => false,
                         'message' => '欄位格式錯誤',
                         'taxid_err' => '統一編號驗證失敗'
-                    ], status: 200);
+                    ], status: 400);
                 }
             }
   
@@ -360,7 +360,7 @@ class ClientController extends Controller
                     'status' => true,
                     'message' => 'success',
                     'output'    => $Client
-                ], 200);
+                ], 400);
             }
         } catch (\Illuminate\Validation\ValidationException $e) {
             // 捕捉驗證失敗
@@ -408,7 +408,7 @@ class ClientController extends Controller
  *     @OA\Parameter(name="currency_id", in="query", required=false, description="幣別id", @OA\Schema(type="string")),
  *     @OA\Parameter(name="paymentterm_id", in="query", required=false, description="付款條件id", @OA\Schema(type="string")),
  *     @OA\Parameter(name="account_category", in="query", required=false, description="科目別", @OA\Schema(type="string")),
- *     @OA\Parameter(name="invoice_title", in="query", required=true, description="發票抬頭", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="invoice_title", in="query", required=false, description="發票抬頭", @OA\Schema(type="string")),
  *     @OA\Parameter(name="taxtype", in="query", required=false, description="稅別(抓參數資料param_sn=10)", @OA\Schema(type="string")),
  *     @OA\Parameter(name="taxid", in="query", required=true, description="統一編號 (台灣: 8 碼)", @OA\Schema(type="string")),
  *     @OA\Parameter(name="delivery_method", in="query", required=true, description="發票寄送方式", @OA\Schema(type="string")),
@@ -419,7 +419,7 @@ class ClientController extends Controller
  *     @OA\Parameter(name="note", in="query", required=false, description="備註", @OA\Schema(type="string")),
  *     @OA\Parameter(name="is_valid", in="query", required=true, description="是否有效", @OA\Schema(type="string", example=1)),
  *     @OA\Response(
- *         response=200,
+ *         response=400,
  *         description="成功",
  *         @OA\JsonContent(
  *             type="object",
@@ -484,7 +484,7 @@ class ClientController extends Controller
                         'status' => false,
                         'message' => '欄位資料已存在',
                         'client_no_err' => '客戶代碼已存在'
-                    ], status: 200);
+                    ], status: 400);
                 }
             }
 
@@ -494,7 +494,7 @@ class ClientController extends Controller
                     'status' => false,
                     'message' => '缺少必填的欄位',
                     'client_fullnm_err' => '客戶全名為必填'
-                ], status: 200);
+                ], status: 400);
             }
 
             //客戶全名為必填
@@ -503,7 +503,7 @@ class ClientController extends Controller
                     'status' => false,
                     'message' => '缺少必填的欄位',
                     'client_shortnm_err' => '客戶簡稱為必填'
-                ], status: 200);
+                ], status: 400);
             }
 
             //客戶型態為必填
@@ -512,7 +512,7 @@ class ClientController extends Controller
                     'status' => false,
                     'message' => '缺少必填的欄位',
                     'client_type_err' => '客戶型態為必填'
-                ], status: 200);
+                ], status: 400);
             }
             //客戶型態須為參數檔資料
             if (!$request->has('client_type') || !SysCode::where('param_sn', '12')->where('code', $request->input('client_type'))->exists()) {
@@ -520,7 +520,7 @@ class ClientController extends Controller
                     'status' => false,
                     'message' => '欄位格式錯誤',
                     'client_type_err' => '客戶型態不存在，請選擇正確的客戶型態'
-                ], status: 200);
+                ], status: 400);
             }
 
             //幣別須存在
@@ -529,7 +529,7 @@ class ClientController extends Controller
                     'status' => false,
                     'message' => '欄位格式錯誤',
                     'currency_id_err' => '幣別不存在，請選擇正確的幣別'
-                ], status: 200);
+                ], status: 400);
             }
 
             //付款條件須存在
@@ -538,7 +538,7 @@ class ClientController extends Controller
                     'status' => false,
                     'message' => '欄位格式錯誤',
                     'paymentterm_id_err' => '付款條件不存在，請選擇正確的付款條件'
-                ], status: 200);
+                ], status: 400);
             }
 
             //業務人員須存在
@@ -547,7 +547,7 @@ class ClientController extends Controller
                     'status' => false,
                     'message' => '欄位格式錯誤',
                     'user_id_err' => '業務人員不存在，請選擇正確的業務人員'
-                ], status: 200);
+                ], status: 400);
             }
 
             //科目別須存在
@@ -556,7 +556,7 @@ class ClientController extends Controller
                     'status' => false,
                     'message' => '欄位格式錯誤',
                     'account_category_err' => '科目別不存在，請選擇正確的科目別'
-                ], status: 200);
+                ], status: 400);
             }
 
             //課稅別須存在
@@ -565,7 +565,7 @@ class ClientController extends Controller
                     'status' => false,
                     'message' => '欄位格式錯誤',
                     'taxtype_err' => '課稅別不存在，請選擇正確的課稅別'
-                ], status: 200);
+                ], status: 400);
             }
 
             //發票寄送方式需存在
@@ -574,7 +574,7 @@ class ClientController extends Controller
                     'status' => false,
                     'message' => '欄位格式錯誤',
                     'delivery_method_err' => '發票寄送方式不存在，請選擇正確的發票寄送方式'
-                ], status: 200);
+                ], status: 400);
             }
 
             //郵遞區號二為必填
@@ -583,7 +583,7 @@ class ClientController extends Controller
                     'status' => false,
                     'message' => '缺少必填的欄位',
                     'zip_code2_err' => '郵遞區號二為必填'
-                ], status: 200);
+                ], status: 400);
             }
             //送貨地址為必填
             if (!$request->has('address2')) {
@@ -591,7 +591,7 @@ class ClientController extends Controller
                     'status' => false,
                     'message' => '缺少必填的欄位',
                     'address2_err' => '送貨地址為必填'
-                ], status: 200);
+                ], status: 400);
             }
 
             //公司電話不可為中文
@@ -600,7 +600,7 @@ class ClientController extends Controller
                     'status' => false,
                     'message' => '欄位格式錯誤',
                     'phone_err' => '公司電話不可包含中文'
-                ], status: 200);
+                ], status: 400);
             }
 
             //公司傳真不可為中文
@@ -609,7 +609,7 @@ class ClientController extends Controller
                     'status' => false,
                     'message' => '欄位格式錯誤',
                     'fax_err' => '公司傳真不可包含中文'
-                ], status: 200);
+                ], status: 400);
             }
 
             //行動電話不可為中文
@@ -618,7 +618,7 @@ class ClientController extends Controller
                     'status' => false,
                     'message' => '欄位格式錯誤',
                     'mobile_phone_err' => '行動電話不可包含中文'
-                ], status: 200);
+                ], status: 400);
             }
 
             //聯絡人信箱不可為中文
@@ -627,17 +627,9 @@ class ClientController extends Controller
                     'status' => false,
                     'message' => '欄位格式錯誤',
                     'contact_email_err' => '聯絡人信箱不可包含中文'
-                ], status: 200);
+                ], status: 400);
             }
 
-            // 發票抬頭為必填
-            if (!$request->has('invoice_title')) {
-                return response()->json([
-                    'status' => false,
-                    'message' => '缺少必填的欄位',
-                    'invoice_title_err' => '發票抬頭為必填'
-                ], status: 200);
-            }
 
             ///統一編號為必填
             if (!$request->has('taxid')) {
@@ -645,7 +637,7 @@ class ClientController extends Controller
                     'status' => false,
                     'message' => '缺少必填的欄位',
                     'taxid_err' => '統一編號為必填'
-                ], status: 200);
+                ], status: 400);
             }else{
                 // 檢查統一編號格式是否正確
                 if (!preg_match('/^\d{8}$/', $request->input('taxid'))) {
@@ -653,7 +645,7 @@ class ClientController extends Controller
                         'status' => false,
                         'message' => '欄位格式錯誤',
                         'taxid_err' => '統一編號格式錯誤，應為8位數字'
-                    ], status: 200);
+                    ], status: 400);
                 }
                 // 權重驗證
                 $taxid = $request->input('taxid');
@@ -672,7 +664,7 @@ class ClientController extends Controller
                         'status' => false,
                         'message' => '欄位格式錯誤',
                         'taxid_err' => '統一編號驗證失敗'
-                    ], status: 200);
+                    ], status: 400);
                 }
             }
 
@@ -682,7 +674,7 @@ class ClientController extends Controller
                     'status' => false,
                     'message' => '缺少必填的欄位',
                     'delivery_method_err' => '發票寄送方式為必填'
-                ], status: 200);
+                ], status: 400);
             }
 
             // 查詢客戶資料
@@ -692,7 +684,7 @@ class ClientController extends Controller
                     'status' => false,
                     'message' => '欄位資料錯誤',
                     'client_no_err'    =>  '客戶資料未找到',
-                ], 200);
+                ], 400);
             }
             // 更新客戶資料
             $Client->client_shortnm      = $request->input('client_shortnm', $Client->client_shortnm);
@@ -733,7 +725,7 @@ class ClientController extends Controller
                 'status' => true,
                 'message' => '客戶資料更新成功',
                 'output'    => $Client
-            ], 200);
+            ], 400);
         } catch (\Illuminate\Validation\ValidationException $e) {
             // 捕捉驗證失敗
             return response()->json([
@@ -769,7 +761,7 @@ class ClientController extends Controller
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Response(
-     *         response=200,
+     *         response=400,
      *         description="成功",
      *         @OA\JsonContent(
      *             type="object",
@@ -840,7 +832,7 @@ class ClientController extends Controller
                 'status' => true,
                 'message' => 'success',
                 'output'    => $Client
-            ],200);
+            ],400);
         } catch (\Illuminate\Validation\ValidationException $e) {
             // 捕捉驗證失敗
             return response()->json([
@@ -876,7 +868,7 @@ class ClientController extends Controller
      *         @OA\Schema(type="string")
      *     ),
     * @OA\Response(
-    *     response=200,
+    *     response=400,
     *     description="成功取得分頁供應商清單",
     *     @OA\JsonContent(
     *         type="object",
@@ -999,7 +991,7 @@ class ClientController extends Controller
                 'totalPages' => $totalPages,                
                 'message' => 'success',
                 'output'    => $Client
-            ], 200);
+            ], 400);
         } catch (\Illuminate\Validation\ValidationException $e) {
             // 捕捉驗證失敗
             return response()->json([
@@ -1034,7 +1026,7 @@ class ClientController extends Controller
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Response(
-     *         response=200,
+     *         response=400,
      *         description="成功",
      *         @OA\JsonContent(
      *             type="object",
@@ -1117,7 +1109,7 @@ class ClientController extends Controller
                 'status' => true,
                 'message' => 'success',
                 'output'    => $Client
-            ], 200);
+            ], 400);
         } catch (\Illuminate\Validation\ValidationException $e) {
             // 捕捉驗證失敗
             return response()->json([
@@ -1145,7 +1137,7 @@ class ClientController extends Controller
      *     operationId="show_client_aLL_const",
      *     tags={"base_client"},
      *     @OA\Response(
-     *         response=200,
+     *         response=400,
      *         description="成功"
      *     ),
      *     @OA\Response(
@@ -1205,7 +1197,7 @@ class ClientController extends Controller
                 'deliverymethodOption' => $SysCode5,
                 'clienttypeOption' => $SysCode6,
                 'accountOption' => $Account
-            ], 200);
+            ], 400);
     
         } catch (\Illuminate\Validation\ValidationException $e) {
             // 捕捉驗證失敗，並返回錯誤訊息

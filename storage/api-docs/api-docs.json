@@ -1528,7 +1528,7 @@
                         "name": "delivery_method",
                         "in": "query",
                         "description": "發票寄送方式",
-                        "required": true,
+                        "required": false,
                         "schema": {
                             "type": "string"
                         }
