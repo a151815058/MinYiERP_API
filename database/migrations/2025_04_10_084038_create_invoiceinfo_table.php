@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('invoiceinfo', function (Blueprint $table) {
             $table->uuid('uuid')->comment('KEY')->primary()->unique();
+            $table->uuid('invoice_type')->comment('發票類型');
+            $table->uuid('series')->comment('序號');
             $table->string('period_start')->comment('期別_起');
             $table->string('period_end')->comment('期別_迄');
             $table->string('track_code')->comment('字軌代碼');
