@@ -161,7 +161,7 @@ class ClientController extends Controller
             }
 
             //幣別須存在
-            if ($request->has('currency_id') && !Currency::where('currency_id', $request->input('currency_id'))->exists()) {
+            if ($request->has('currency_id') && !Currency::where('uuid', $request->input('currency_id'))->exists()) {
                 return response()->json([
                     'status' => false,
                     'message' => '欄位格式錯誤',
@@ -170,7 +170,7 @@ class ClientController extends Controller
             }
 
             //付款條件須存在
-            if ($request->has('paymentterm_id') && !PaymentTerm::where('paymentterm_id', $request->input('paymentterm_id'))->exists()) {
+            if ($request->has('paymentterm_id') && !PaymentTerm::where('uuid', $request->input('paymentterm_id'))->exists()) {
                 return response()->json([
                     'status' => false,
                     'message' => '欄位格式錯誤',
@@ -524,7 +524,7 @@ class ClientController extends Controller
             }
 
             //幣別須存在
-            if ($request->has('currency_id') && !Currency::where('currency_id', $request->input('currency_id'))->exists()) {
+            if ($request->has('currency_id') && !Currency::where('uuid', $request->input('currency_id'))->exists()) {
                 return response()->json([
                     'status' => false,
                     'message' => '欄位格式錯誤',
@@ -533,7 +533,7 @@ class ClientController extends Controller
             }
 
             //付款條件須存在
-            if ($request->has('paymentterm_id') && !PaymentTerm::where('paymentterm_id', $request->input('paymentterm_id'))->exists()) {
+            if ($request->has('paymentterm_id') && !PaymentTerm::where('uuid', $request->input('paymentterm_id'))->exists()) {
                 return response()->json([
                     'status' => false,
                     'message' => '欄位格式錯誤',
