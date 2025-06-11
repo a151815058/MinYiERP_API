@@ -217,6 +217,15 @@ class ClientController extends Controller
                 //], status: 400);
                 $errors2['taxtype_err'] = '課稅別不存在，請選擇正確的課稅別';
             }
+            //發票寄送方式需存在
+            if (!$request->has('delivery_method')) {
+                //return response()->json([
+                //    'status' => false,
+                //    'message' => '缺少必填的欄位',
+                //    'zip_code2_err' => '發票寄送方式為必填'
+                //], status: 400);
+                $errors1['delivery_method_err'] = '發票寄送方式為必填';
+            }
 
             //發票寄送方式需存在
             if ($request->has('delivery_method') && SysCode::where('param_sn', '04')->where('param_code', $request->input('delivery_method'))->exists()) {
@@ -613,6 +622,15 @@ class ClientController extends Controller
                 //    'taxtype_err' => '課稅別不存在，請選擇正確的課稅別'
                 //], status: 400);
                 $errors2['taxtype_err'] = '課稅別不存在，請選擇正確的課稅別';
+            }
+            //發票寄送方式需存在
+            if (!$request->has('delivery_method')) {
+                //return response()->json([
+                //    'status' => false,
+                //    'message' => '缺少必填的欄位',
+                //    'zip_code2_err' => '發票寄送方式為必填'
+                //], status: 400);
+                $errors1['delivery_method_err'] = '發票寄送方式為必填';
             }
 
             //發票寄送方式需存在
