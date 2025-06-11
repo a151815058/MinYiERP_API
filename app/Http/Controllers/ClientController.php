@@ -347,7 +347,7 @@ class ClientController extends Controller
             }
 
             // 如果有錯誤，回傳統一格式
-            if (!empty($errors)) {
+            if (!empty($errors1) || !empty($errors2)) {
                 return response()->json([
                     'status' => false,
                     'message1' => '缺少必填的欄位',
@@ -753,7 +753,7 @@ class ClientController extends Controller
             }
 
             // 如果有錯誤，回傳統一格式
-            if (!empty($errors)) {
+            if (!empty($errors1) || !empty($errors2)) {
                 return response()->json([
                     'status' => false,
                     'message1' => '缺少必填的欄位',
