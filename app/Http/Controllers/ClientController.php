@@ -189,7 +189,7 @@ class ClientController extends Controller
             }
 
             //業務人員須存在
-            if ($request->has('user_id') && !SysUser::where('id', $request->input('user_id'))->exists()) {
+            if ($request->has('user_id') && !SysUser::where('uuid', $request->input('user_id'))->exists()) {
                 //return response()->json([
                 //    'status' => false,
                 //    'message' => '欄位格式錯誤',
@@ -586,7 +586,7 @@ class ClientController extends Controller
             }
 
             //業務人員須存在
-            if ($request->has('user_id') && !SysUser::where('id', $request->input('user_id'))->exists()) {
+            if ($request->has('user_id') && !SysUser::where('uuid', $request->input('user_id'))->exists()) {
                 //return response()->json([
                 //    'status' => false,
                 //    'message' => '欄位格式錯誤',
