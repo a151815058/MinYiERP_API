@@ -199,7 +199,7 @@ class ClientController extends Controller
             }
 
             //科目別須存在
-            if ($request->has('account_category') && !Account::where('uuid', $request->input('account_category'))->where(  'is_vaild','1')->exists()) {
+            if ($request->has('account_category') && !Account::where('uuid', $request->input('account_category'))->where(  'is_valid','1')->exists()) {
                 //return response()->json([
                 //    'status' => false,
                 //    'message' => '欄位格式錯誤',
@@ -596,7 +596,7 @@ class ClientController extends Controller
             }
 
             //科目別須存在
-            if ($request->has('account_category') && !Account::where('uuid', $request->input('account_category'))->where(  'is_vaild','1')->exists()) {
+            if ($request->has('account_category') && !Account::where('uuid', $request->input('account_category'))->where(  'is_valid','1')->exists()) {
                 //return response()->json([
                 //    'status' => false,
                 //    'message' => '欄位格式錯誤',
