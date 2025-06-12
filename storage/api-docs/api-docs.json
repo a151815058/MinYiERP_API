@@ -4440,7 +4440,8 @@
                         "description": "序號",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "example": 1
                         }
                     },
                     {
@@ -4449,7 +4450,8 @@
                         "description": "發票類型",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "example": 1
                         }
                     },
                     {
@@ -4458,7 +4460,8 @@
                         "description": "字軌代碼",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "example": "AQ"
                         }
                     },
                     {
@@ -4467,7 +4470,8 @@
                         "description": "發票起始號碼",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "example": 0
                         }
                     },
                     {
@@ -4476,7 +4480,8 @@
                         "description": "發票截止號碼",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "example": 49
                         }
                     },
                     {
@@ -4492,7 +4497,7 @@
                         "name": "effective_enddate",
                         "in": "query",
                         "description": "適用截止日期",
-                        "required": false,
+                        "required": true,
                         "schema": {
                             "type": "string"
                         }
@@ -4521,11 +4526,11 @@
                                         },
                                         "period_start": {
                                             "type": "string",
-                                            "example": "2025-01"
+                                            "example": "'114/01'"
                                         },
                                         "period_end": {
                                             "type": "string",
-                                            "example": "2025-02"
+                                            "example": "'114/02'"
                                         },
                                         "series": {
                                             "type": "string",
@@ -4550,12 +4555,12 @@
                                         "effective_startdate": {
                                             "type": "string",
                                             "format": "date",
-                                            "example": "2025/01/01"
+                                            "example": "'2025/01/01'"
                                         },
                                         "effective_enddate": {
                                             "type": "string",
                                             "format": "date",
-                                            "example": "2025/02/28"
+                                            "example": "'2025/02/28'"
                                         },
                                         "is_valid": {
                                             "type": "string",
@@ -4622,7 +4627,8 @@
                         "description": "序號",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "example": 1
                         }
                     },
                     {
@@ -4631,7 +4637,8 @@
                         "description": "發票類型",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "example": 1
                         }
                     },
                     {
@@ -4640,7 +4647,8 @@
                         "description": "字軌代碼",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "example": "AQ"
                         }
                     },
                     {
@@ -4649,7 +4657,8 @@
                         "description": "發票起始號碼",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "example": 0
                         }
                     },
                     {
@@ -4658,7 +4667,8 @@
                         "description": "發票截止號碼",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "example": 49
                         }
                     },
                     {
@@ -4674,7 +4684,7 @@
                         "name": "effective_enddate",
                         "in": "query",
                         "description": "適用截止日期",
-                        "required": false,
+                        "required": true,
                         "schema": {
                             "type": "string"
                         }
@@ -4703,11 +4713,11 @@
                                         },
                                         "period_start": {
                                             "type": "string",
-                                            "example": "2025-01"
+                                            "example": "'114/01'"
                                         },
                                         "period_end": {
                                             "type": "string",
-                                            "example": "2025-02"
+                                            "example": "'114/02'"
                                         },
                                         "series": {
                                             "type": "string",
@@ -4732,12 +4742,12 @@
                                         "effective_startdate": {
                                             "type": "string",
                                             "format": "date",
-                                            "example": "2025/01/01"
+                                            "example": "'2025/01/01'"
                                         },
                                         "effective_enddate": {
                                             "type": "string",
                                             "format": "date",
-                                            "example": "2025/02/28"
+                                            "example": "'2025/02/28'"
                                         },
                                         "is_valid": {
                                             "type": "string",
@@ -4771,7 +4781,7 @@
                 }
             }
         },
-        "/api/invoiceInfo2/{period}": {
+        "/api/invoiceInfo2/{uuid}": {
             "get": {
                 "tags": [
                     "base_invoiceinfo"
@@ -4781,9 +4791,9 @@
                 "operationId": "getinvoiceinfo",
                 "parameters": [
                     {
-                        "name": "period",
+                        "name": "uuid",
                         "in": "path",
-                        "description": "期別",
+                        "description": "UUID",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -4803,11 +4813,11 @@
                                         },
                                         "period_start": {
                                             "type": "string",
-                                            "example": "025-01"
+                                            "example": "'114/01'"
                                         },
                                         "period_end": {
                                             "type": "string",
-                                            "example": "2025-02"
+                                            "example": "'114/02'"
                                         },
                                         "series": {
                                             "type": "string",
@@ -4832,12 +4842,12 @@
                                         "effective_startdate": {
                                             "type": "string",
                                             "format": "date",
-                                            "example": "2025/01/01"
+                                            "example": "'2025/01/01'"
                                         },
                                         "effective_enddate": {
                                             "type": "string",
                                             "format": "date",
-                                            "example": "2025/02/28"
+                                            "example": "'2025/02/28'"
                                         },
                                         "is_valid": {
                                             "type": "string",
@@ -4876,14 +4886,41 @@
                 "tags": [
                     "base_invoiceinfo"
                 ],
-                "summary": "查詢所有有效發票資訊(含關鍵字查詢，開立起始日期、開立迄止日期、發票類型、發票號碼)",
-                "description": "查詢所有有效發票資訊(含關鍵字查詢，開立起始日期、開立迄止日期、發票類型、發票號碼)",
+                "summary": "查詢所有有效發票資訊(含關鍵字查詢，開立起始日期、開立迄止日期、發票類型)",
+                "description": "查詢所有有效發票資訊(含關鍵字查詢，開立起始日期、開立迄止日期、發票類型)",
                 "operationId": "getallinvoiceinfos",
                 "parameters": [
                     {
+                        "name": "period_start",
+                        "in": "query",
+                        "description": "開立年月起",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "period_end",
+                        "in": "query",
+                        "description": "開立年月迄",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "invoice_type",
+                        "in": "query",
+                        "description": "發票類型",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
                         "name": "keyword",
                         "in": "query",
-                        "description": "關鍵字查詢",
+                        "description": "關鍵字",
                         "required": false,
                         "schema": {
                             "type": "string"
@@ -4919,11 +4956,11 @@
                                                     },
                                                     "period_start": {
                                                         "type": "string",
-                                                        "example": "025-01"
+                                                        "example": "'114/01'"
                                                     },
                                                     "period_end": {
                                                         "type": "string",
-                                                        "example": "2025-02"
+                                                        "example": "'114/01'"
                                                     },
                                                     "series": {
                                                         "type": "string",
@@ -4948,12 +4985,12 @@
                                                     "effective_startdate": {
                                                         "type": "string",
                                                         "format": "date",
-                                                        "example": "2025/01/01"
+                                                        "example": "'2025/01/01'"
                                                     },
                                                     "effective_enddate": {
                                                         "type": "string",
                                                         "format": "date",
-                                                        "example": "2025/02/28"
+                                                        "example": "'2025/02/28'"
                                                     },
                                                     "is_valid": {
                                                         "type": "string",

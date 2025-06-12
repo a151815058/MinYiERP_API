@@ -549,7 +549,7 @@ class ClientController extends Controller
                     //     'message' => '欄位資料已存在',
                     //    'client_no_err' => '客戶代碼已存在'
                     //], status: 400);
-                    $errors1['client_no_err'] = '客戶代碼為必填';
+                    $errors1['client_no_err'] = '客戶代碼是否已存在';
                 }
             }
 
@@ -799,7 +799,7 @@ class ClientController extends Controller
                 ], 400);
             }
 
-            // 查詢客戶資料
+            // 查詢客戶資料client_no
             $Client = Client::where('client_no', $request->input('client_no'))->first();
             if (!$Client) {
                 return response()->json([
@@ -1271,21 +1271,21 @@ class ClientController extends Controller
     // 列出所有客戶需要的常用(下拉、彈窗)
     public function showconst($constant='all'){
         // 查詢 '所有有效幣別資料' 的資料
-        $SysCode = Currency::where('is_valid', '1')->where('is_valid','1')->get();
+        $SysCode = Currency::where('is_valid', '1')->get();
         // 查詢 '所有稅別資料' 的資料
-        $SysCode1 = SysCode::where('param_sn', '04')->where('is_valid','1')->get();
+        $SysCode1 = SysCode::where('param_sn', '02')->where('is_valid','1')->get();
         // 查詢 '所有有效付款條件' 的資料
-        $SysCode2 = PaymentTerm::where('is_valid', '1')->where('is_valid','1')->get();
+        $SysCode2 = PaymentTerm::where('is_valid', '1')->get();
         // 付款條件(當月、次月的常數資料)
-        $SysCode4 = PaymentTerm::where('is_valid', '1')->where('is_valid','1')->get();
+        $SysCode4 = PaymentTerm::where('is_valid', '1')->get();
         // 查詢 '所有有效人員' 的資料
         $SysCode3 = SysUser::with('depts')->where('is_valid', '1')->get();
         // 付款條件(當月、次月的常數資料)
-        $SysCode4 = PaymentTerm::where('is_valid', '1')->where('is_valid','1')->get();
+        $SysCode4 = PaymentTerm::where('is_valid', '1')->get();
         // 發票寄送方式
-        $SysCode5 = SysCode::where('param_sn', '10')->where('is_valid','1')->get();
+        $SysCode5 = SysCode::where('param_sn', '04')->where('is_valid','1')->get();
         // 客戶型態
-        $SysCode6 = SysCode::where('param_sn', '12')->where('is_valid','1')->get();
+        $SysCode6 = SysCode::where('param_sn', '03')->where('is_valid','1')->get();
 
         // 科目別 
         $Account = Account::where('is_valid','1')->get();
