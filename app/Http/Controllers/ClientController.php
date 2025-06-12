@@ -28,7 +28,7 @@ class ClientController extends Controller
  *     tags={"base_client"},
  *     @OA\Parameter(name="client_no", in="query", required=true, description="客戶編號", @OA\Schema(type="string")),
  *     @OA\Parameter(name="client_shortnm", in="query", required=true, description="客戶簡稱", @OA\Schema(type="string")),
- *     @OA\Parameter(name="client_type", in="query", required=true, description="客戶型態", @OA\Schema(type="integer")),
+ *     @OA\Parameter(name="client_type", in="query", required=true, description="客戶型態", @OA\Schema(type="string")),
  *     @OA\Parameter(name="client_fullnm", in="query", required=true, description="客戶全名", @OA\Schema(type="string")),
  *     @OA\Parameter(name="zip_code1", in="query", required=false, description="郵遞區號", @OA\Schema(type="string")),
  *     @OA\Parameter(name="address1", in="query", required=false, description="公司地址", @OA\Schema(type="string")),
@@ -44,11 +44,11 @@ class ClientController extends Controller
  *     @OA\Parameter(name="user_id", in="query", required=false, description="負責採購人員id", @OA\Schema(type="string")),
  *     @OA\Parameter(name="currency_id", in="query", required=false, description="幣別id", @OA\Schema(type="string")),
  *     @OA\Parameter(name="paymentterm_id", in="query", required=false, description="付款條件id", @OA\Schema(type="string")),
- *     @OA\Parameter(name="account_category", in="query", required=false, description="科目別", @OA\Schema(type="integer")),
+ *     @OA\Parameter(name="account_category", in="query", required=false, description="科目別", @OA\Schema(type="string")),
  *     @OA\Parameter(name="invoice_title", in="query", required=true, description="發票抬頭", @OA\Schema(type="string")),
  *     @OA\Parameter(name="taxtype", in="query", required=false, description="稅別(抓參數資料param_sn=10)", @OA\Schema(type="string")),
  *     @OA\Parameter(name="taxid", in="query", required=true, description="統一編號 (台灣: 8 碼)", @OA\Schema(type="string")),
- *     @OA\Parameter(name="delivery_method", in="query", required=true, description="發票寄送方式", @OA\Schema(type="integer")),
+ *     @OA\Parameter(name="delivery_method", in="query", required=true, description="發票寄送方式", @OA\Schema(type="string")),
  *     @OA\Parameter(name="recipient_name", in="query", required=false, description="發票收件人", @OA\Schema(type="string")),
  *     @OA\Parameter(name="recipient_phone", in="query", required=false, description="發票收件人電話", @OA\Schema(type="string")),
  *     @OA\Parameter(name="recipient_email", in="query", required=false, description="發票收件人信箱", @OA\Schema(type="string")),
@@ -106,7 +106,7 @@ class ClientController extends Controller
     public function store(Request $request)
     {
         $errors1 = [];
-        $errors2 = [];
+        $errors1 = [];
         try {
             // 客戶代碼為必填
             if (!$request->has('client_no')) {
@@ -159,13 +159,13 @@ class ClientController extends Controller
                 $errors1['client_type_err'] = '客戶型態為必填';
             }
             //客戶型態須為參數檔資料
-            if (!$request->has('client_type') && !SysCode::where('param_sn', '03')->where('param_code', $request->input('client_type'))->exists()) {
+            if (!$request->has('client_type') && !SysCode::where('param_sn', '03')->where('uuid', $request->input('client_type'))->exists()) {
                 //return response()->json([
                 //    'status' => false,
                 //    'message' => '欄位格式錯誤',
                 //    'client_type_err' => '客戶型態不存在，請選擇正確的客戶型態'
                 //], status: 400);
-                $errors2['client_type_err'] = '客戶型態不存在，請選擇正確的客戶型態';
+                $errors1['client_type_err'] = '客戶型態不存在，請選擇正確的客戶型態';
             }
 
             //幣別須存在
@@ -175,7 +175,7 @@ class ClientController extends Controller
                 //    'message' => '欄位格式錯誤',
                 //    'currency_id_err' => '幣別不存在，請選擇正確的幣別'
                 //], status: 400);
-                 $errors2['currency_id_err'] = '幣別不存在，請選擇正確的幣別';
+                 $errors1['currency_id_err'] = '幣別不存在，請選擇正確的幣別';
             }
 
             //付款條件須存在
@@ -185,7 +185,7 @@ class ClientController extends Controller
                 //    'message' => '欄位格式錯誤',
                 //    'paymentterm_id_err' => '付款條件不存在，請選擇正確的付款條件'
                 //], status: 400);
-                $errors2['paymentterm_id_err'] = '付款條件不存在，請選擇正確的付款條件';
+                $errors1['paymentterm_id_err'] = '付款條件不存在，請選擇正確的付款條件';
             }
 
             //業務人員須存在
@@ -195,7 +195,7 @@ class ClientController extends Controller
                 //    'message' => '欄位格式錯誤',
                 //    'user_id_err' => '業務人員不存在，請選擇正確的業務人員'
                 //], status: 400);
-                $errors2['user_id_err'] = '業務人員不存在，請選擇正確的業務人員';
+                $errors1['user_id_err'] = '業務人員不存在，請選擇正確的業務人員';
             }
 
             //科目別須存在
@@ -205,17 +205,17 @@ class ClientController extends Controller
                 //    'message' => '欄位格式錯誤',
                 //    'account_category_err' => '科目別不存在，請選擇正確的科目別'
                 //], status: 400);
-                $errors2['account_category_err'] = '科目別不存在，請選擇正確的科目別';
+                $errors1['account_category_err'] = '科目別不存在，請選擇正確的科目別';
             }
 
             //課稅別須存在
-            if ($request->has('taxtype') && SysCode::where('param_sn', '02')->where('param_code', $request->input('taxtype'))->exists()) {
+            if ($request->has('taxtype') && !SysCode::where('param_sn', '02')->where('uuid', $request->input('taxtype'))->exists()) {
                 //return response()->json([
                 //    'status' => false,
                 //    'message' => '欄位格式錯誤',
                 //    'taxtype_err' => '課稅別不存在，請選擇正確的課稅別'
                 //], status: 400);
-                $errors2['taxtype_err'] = '課稅別不存在，請選擇正確的課稅別';
+                $errors1['taxtype_err'] = '課稅別不存在，請選擇正確的課稅別';
             }
             //發票寄送方式需存在
             if (!$request->has('delivery_method')) {
@@ -228,13 +228,23 @@ class ClientController extends Controller
             }
 
             //發票寄送方式需存在
-            if ($request->has('delivery_method') && SysCode::where('param_sn', '04')->where('param_code', $request->input('delivery_method'))->exists()) {
+            if ($request->has('delivery_method') && !SysCode::where('param_sn', '04')->where('uuid', $request->input('delivery_method'))->exists()) {
                 //return response()->json([
                 //    'status' => false,
                 //    'message' => '欄位格式錯誤',
                 //    'delivery_method_err' => '發票寄送方式不存在，請選擇正確的發票寄送方式'
                 //], status: 400);
-                $errors2['delivery_method_err'] = '發票寄送方式不存在，請選擇正確的發票寄送方式';
+                $errors1['delivery_method_err'] = '發票寄送方式不存在，請選擇正確的發票寄送方式';
+            }
+
+            //郵遞區號一不可為中文
+            if ($request->has('zip_code1') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('zip_code2'))) {
+                //return response()->json([
+                //    'status' => false,
+                //    'message' => '欄位格式錯誤',
+                //    'zip_code2_err' => '郵遞區號二不可包含中文'
+                //], status: 400);
+                $errors1['zip_code1_err'] = '郵遞區號一不可包含中文';
             }
 
             //郵遞區號二為必填
@@ -245,6 +255,16 @@ class ClientController extends Controller
                 //    'zip_code2_err' => '郵遞區號二為必填'
                 //], status: 400);
                 $errors1['zip_code2_err'] = '郵遞區號二為必填';
+            }
+
+            //郵遞區號二不可為中文
+            if ($request->has('zip_code2') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('zip_code2'))) {
+                //return response()->json([
+                //    'status' => false,
+                //    'message' => '欄位格式錯誤',
+                //    'zip_code2_err' => '郵遞區號二不可包含中文'
+                //], status: 400);
+                $errors1['zip_code2_err'] = '郵遞區號二不可包含中文';
             }
             //送貨地址為必填
             if (!$request->has('address2')) {
@@ -263,7 +283,7 @@ class ClientController extends Controller
                 //    'message' => '欄位格式錯誤',
                 //    'phone_err' => '公司電話不可包含中文'
                 //], status: 400);
-                $errors2['phone_err'] = '公司電話不可包含中文';
+                $errors1['phone_err'] = '公司電話不可包含中文';
             }
 
             //公司傳真不可為中文
@@ -273,7 +293,7 @@ class ClientController extends Controller
                 //    'message' => '欄位格式錯誤',
                 //    'fax_err' => '公司傳真不可包含中文'
                 //], status: 400);
-                $errors2['fax_err'] = '公司傳真不可包含中文';
+                $errors1['fax_err'] = '公司傳真不可包含中文';
             }
 
             //行動電話不可為中文
@@ -283,7 +303,7 @@ class ClientController extends Controller
                 //    'message' => '欄位格式錯誤',
                 //    'mobile_phone_err' => '行動電話不可包含中文'
                 //], status: 400);
-                $errors2['mobile_phone_err'] = '行動電話不可包含中文';
+                $errors1['mobile_phone_err'] = '行動電話不可包含中文';
             }
 
             //聯絡人信箱不可為中文
@@ -293,7 +313,7 @@ class ClientController extends Controller
                 //    'message' => '欄位格式錯誤',
                 //    'contact_email_err' => '聯絡人信箱不可包含中文'
                 //], status: 400);
-                $errors2['contact_email_err'] = '聯絡人信箱不可包含中文';
+                $errors1['contact_email_err'] = '聯絡人信箱不可包含中文';
             }
 
             // 發票抬頭為必填
@@ -322,7 +342,7 @@ class ClientController extends Controller
                     //    'message' => '欄位格式錯誤',
                     //    'taxid_err' => '統一編號格式錯誤，應為8位數字'
                     //], status: 400);
-                    $errors2['taxid_err'] = '統一編號格式錯誤，應為8位數字';
+                    $errors1['taxid_err'] = '統一編號格式錯誤，應為8位數字';
                 }
                 // 權重驗證
                 $taxid = $request->input('taxid');
@@ -342,18 +362,16 @@ class ClientController extends Controller
                     //    'message' => '欄位格式錯誤',
                     //    'taxid_err' => '統一編號驗證失敗'
                     //], status: 400);
-                    $errors2['taxid_err'] = '統一編號驗證失敗';
+                    $errors1['taxid_err'] = '統一編號驗證失敗';
                 }
             }
 
             // 如果有錯誤，回傳統一格式
-            if (!empty($errors1) || !empty($errors2)) {
+            if (!empty($errors1)) {
                 return response()->json([
                     'status' => false,
-                    'message1' => '缺少必填的欄位',
-                    'errors' => $errors1,
-                    'message2' => '欄位格式錯誤',
-                    'errors2' => $errors2
+                    'message1' => '缺少必填的欄位及欄位格式錯誤',
+                    'errors' => $errors1
                 ], 400);
             }
   
@@ -435,7 +453,7 @@ class ClientController extends Controller
  *     tags={"base_client"},
  *     @OA\Parameter(name="client_no", in="query", required=true, description="客戶編號", @OA\Schema(type="string")),
  *     @OA\Parameter(name="client_shortnm", in="query", required=true, description="客戶簡稱", @OA\Schema(type="string")),
- *     @OA\Parameter(name="client_type", in="query", required=true, description="客戶型態", @OA\Schema(type="integer")),
+ *     @OA\Parameter(name="client_type", in="query", required=true, description="客戶型態", @OA\Schema(type="string")),
  *     @OA\Parameter(name="client_fullnm", in="query", required=true, description="客戶全名", @OA\Schema(type="string")),
  *     @OA\Parameter(name="zip_code1", in="query", required=false, description="郵遞區號", @OA\Schema(type="string")),
  *     @OA\Parameter(name="address1", in="query", required=false, description="公司地址", @OA\Schema(type="string")),
@@ -451,11 +469,11 @@ class ClientController extends Controller
  *     @OA\Parameter(name="user_id", in="query", required=false, description="負責採購人員id", @OA\Schema(type="string")),
  *     @OA\Parameter(name="currency_id", in="query", required=false, description="幣別id", @OA\Schema(type="string")),
  *     @OA\Parameter(name="paymentterm_id", in="query", required=false, description="付款條件id", @OA\Schema(type="string")),
- *     @OA\Parameter(name="account_category", in="query", required=false, description="科目別", @OA\Schema(type="integer")),
+ *     @OA\Parameter(name="account_category", in="query", required=false, description="科目別", @OA\Schema(type="string")),
  *     @OA\Parameter(name="invoice_title", in="query", required=true, description="發票抬頭", @OA\Schema(type="string")),
  *     @OA\Parameter(name="taxtype", in="query", required=false, description="稅別(抓參數資料param_sn=10)", @OA\Schema(type="string")),
  *     @OA\Parameter(name="taxid", in="query", required=true, description="統一編號 (台灣: 8 碼)", @OA\Schema(type="string")),
- *     @OA\Parameter(name="delivery_method", in="query", required=true, description="發票寄送方式", @OA\Schema(type="integer")),
+ *     @OA\Parameter(name="delivery_method", in="query", required=true, description="發票寄送方式", @OA\Schema(type="string")),
  *     @OA\Parameter(name="recipient_name", in="query", required=false, description="發票收件人", @OA\Schema(type="string")),
  *     @OA\Parameter(name="recipient_phone", in="query", required=false, description="發票收件人電話", @OA\Schema(type="string")),
  *     @OA\Parameter(name="recipient_email", in="query", required=false, description="發票收件人信箱", @OA\Schema(type="string")),
@@ -512,7 +530,7 @@ class ClientController extends Controller
     //更新客戶資料
     public function update(Request $request){
         $errors1 = [];
-        $errors2 = [];
+        $errors1 = [];
         try {
             // 客戶代碼為必填
             if (!$request->has('client_no')) {
@@ -565,13 +583,13 @@ class ClientController extends Controller
                 $errors1['client_type_err'] = '客戶型態為必填';
             }
             //客戶型態須為參數檔資料
-            if (!$request->has('client_type') && !SysCode::where('param_sn', '03')->where('param_code', $request->input('client_type'))->exists()) {
+            if (!$request->has('client_type') && !SysCode::where('param_sn', '03')->where('uuid', $request->input('client_type'))->exists()) {
                 //return response()->json([
                 //    'status' => false,
                 //    'message' => '欄位格式錯誤',
                 //    'client_type_err' => '客戶型態不存在，請選擇正確的客戶型態'
                 //], status: 400);
-                $errors2['client_type_err'] = '客戶型態不存在，請選擇正確的客戶型態';
+                $errors1['client_type_err'] = '客戶型態不存在，請選擇正確的客戶型態';
             }
 
             //幣別須存在
@@ -581,7 +599,7 @@ class ClientController extends Controller
                 //    'message' => '欄位格式錯誤',
                 //    'currency_id_err' => '幣別不存在，請選擇正確的幣別'
                 //], status: 400);
-                 $errors2['currency_id_err'] = '幣別不存在，請選擇正確的幣別';
+                 $errors1['currency_id_err'] = '幣別不存在，請選擇正確的幣別';
             }
 
             //付款條件須存在
@@ -591,7 +609,7 @@ class ClientController extends Controller
                 //    'message' => '欄位格式錯誤',
                 //    'paymentterm_id_err' => '付款條件不存在，請選擇正確的付款條件'
                 //], status: 400);
-                $errors2['paymentterm_id_err'] = '付款條件不存在，請選擇正確的付款條件';
+                $errors1['paymentterm_id_err'] = '付款條件不存在，請選擇正確的付款條件';
             }
 
             //業務人員須存在
@@ -601,7 +619,7 @@ class ClientController extends Controller
                 //    'message' => '欄位格式錯誤',
                 //    'user_id_err' => '業務人員不存在，請選擇正確的業務人員'
                 //], status: 400);
-                $errors2['user_id_err'] = '業務人員不存在，請選擇正確的業務人員';
+                $errors1['user_id_err'] = '業務人員不存在，請選擇正確的業務人員';
             }
 
             //科目別須存在
@@ -611,17 +629,17 @@ class ClientController extends Controller
                 //    'message' => '欄位格式錯誤',
                 //    'account_category_err' => '科目別不存在，請選擇正確的科目別'
                 //], status: 400);
-                $errors2['account_category_err'] = '科目別不存在，請選擇正確的科目別';
+                $errors1['account_category_err'] = '科目別不存在，請選擇正確的科目別';
             }
 
             //課稅別須存在
-            if ($request->has('taxtype') && SysCode::where('param_sn', '02')->where('param_code', $request->input('taxtype'))->exists()) {
+            if ($request->has('taxtype') && !SysCode::where('param_sn', '02')->where('uuid', $request->input('taxtype'))->exists()) {
                 //return response()->json([
                 //    'status' => false,
                 //    'message' => '欄位格式錯誤',
                 //    'taxtype_err' => '課稅別不存在，請選擇正確的課稅別'
                 //], status: 400);
-                $errors2['taxtype_err'] = '課稅別不存在，請選擇正確的課稅別';
+                $errors1['taxtype_err'] = '課稅別不存在，請選擇正確的課稅別';
             }
             //發票寄送方式需存在
             if (!$request->has('delivery_method')) {
@@ -634,13 +652,23 @@ class ClientController extends Controller
             }
 
             //發票寄送方式需存在
-            if ($request->has('delivery_method') && SysCode::where('param_sn', '04')->where('param_code', $request->input('delivery_method'))->exists()) {
+            if ($request->has('delivery_method') && !SysCode::where('param_sn', '04')->where('uuid', $request->input('delivery_method'))->exists()) {
                 //return response()->json([
                 //    'status' => false,
                 //    'message' => '欄位格式錯誤',
                 //    'delivery_method_err' => '發票寄送方式不存在，請選擇正確的發票寄送方式'
                 //], status: 400);
-                $errors2['delivery_method_err'] = '發票寄送方式不存在，請選擇正確的發票寄送方式';
+                $errors1['delivery_method_err'] = '發票寄送方式不存在，請選擇正確的發票寄送方式';
+            }
+
+            //郵遞區號一不可為中文
+            if ($request->has('zip_code1') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('zip_code2'))) {
+                //return response()->json([
+                //    'status' => false,
+                //    'message' => '欄位格式錯誤',
+                //    'zip_code2_err' => '郵遞區號二不可包含中文'
+                //], status: 400);
+                $errors1['zip_code1_err'] = '郵遞區號一不可包含中文';
             }
 
             //郵遞區號二為必填
@@ -651,6 +679,16 @@ class ClientController extends Controller
                 //    'zip_code2_err' => '郵遞區號二為必填'
                 //], status: 400);
                 $errors1['zip_code2_err'] = '郵遞區號二為必填';
+            }
+
+            //郵遞區號二不可為中文
+            if ($request->has('zip_code2') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('zip_code2'))) {
+                //return response()->json([
+                //    'status' => false,
+                //    'message' => '欄位格式錯誤',
+                //    'zip_code2_err' => '郵遞區號二不可包含中文'
+                //], status: 400);
+                $errors1['zip_code2_err'] = '郵遞區號二不可包含中文';
             }
             //送貨地址為必填
             if (!$request->has('address2')) {
@@ -669,7 +707,7 @@ class ClientController extends Controller
                 //    'message' => '欄位格式錯誤',
                 //    'phone_err' => '公司電話不可包含中文'
                 //], status: 400);
-                $errors2['phone_err'] = '公司電話不可包含中文';
+                $errors1['phone_err'] = '公司電話不可包含中文';
             }
 
             //公司傳真不可為中文
@@ -679,7 +717,7 @@ class ClientController extends Controller
                 //    'message' => '欄位格式錯誤',
                 //    'fax_err' => '公司傳真不可包含中文'
                 //], status: 400);
-                $errors2['fax_err'] = '公司傳真不可包含中文';
+                $errors1['fax_err'] = '公司傳真不可包含中文';
             }
 
             //行動電話不可為中文
@@ -689,7 +727,7 @@ class ClientController extends Controller
                 //    'message' => '欄位格式錯誤',
                 //    'mobile_phone_err' => '行動電話不可包含中文'
                 //], status: 400);
-                $errors2['mobile_phone_err'] = '行動電話不可包含中文';
+                $errors1['mobile_phone_err'] = '行動電話不可包含中文';
             }
 
             //聯絡人信箱不可為中文
@@ -699,7 +737,7 @@ class ClientController extends Controller
                 //    'message' => '欄位格式錯誤',
                 //    'contact_email_err' => '聯絡人信箱不可包含中文'
                 //], status: 400);
-                $errors2['contact_email_err'] = '聯絡人信箱不可包含中文';
+                $errors1['contact_email_err'] = '聯絡人信箱不可包含中文';
             }
 
             // 發票抬頭為必填
@@ -728,7 +766,7 @@ class ClientController extends Controller
                     //    'message' => '欄位格式錯誤',
                     //    'taxid_err' => '統一編號格式錯誤，應為8位數字'
                     //], status: 400);
-                    $errors2['taxid_err'] = '統一編號格式錯誤，應為8位數字';
+                    $errors1['taxid_err'] = '統一編號格式錯誤，應為8位數字';
                 }
                 // 權重驗證
                 $taxid = $request->input('taxid');
@@ -748,18 +786,16 @@ class ClientController extends Controller
                     //    'message' => '欄位格式錯誤',
                     //    'taxid_err' => '統一編號驗證失敗'
                     //], status: 400);
-                    $errors2['taxid_err'] = '統一編號驗證失敗';
+                    $errors1['taxid_err'] = '統一編號驗證失敗';
                 }
             }
 
             // 如果有錯誤，回傳統一格式
-            if (!empty($errors1) || !empty($errors2)) {
+            if (!empty($errors1)) {
                 return response()->json([
                     'status' => false,
-                    'message1' => '缺少必填的欄位',
-                    'errors' => $errors1,
-                    'message2' => '欄位格式錯誤',
-                    'errors2' => $errors2
+                    'message1' => '缺少必填的欄位及欄位格式錯誤',
+                    'errors' => $errors1
                 ], 400);
             }
 

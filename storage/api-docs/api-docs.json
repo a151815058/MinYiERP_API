@@ -1528,7 +1528,7 @@
                         "name": "delivery_method",
                         "in": "query",
                         "description": "發票寄送方式",
-                        "required": false,
+                        "required": true,
                         "schema": {
                             "type": "string"
                         }
@@ -1590,7 +1590,7 @@
                     }
                 ],
                 "responses": {
-                    "200": {
+                    "400": {
                         "description": "成功",
                         "content": {
                             "application/json": {
@@ -2017,7 +2017,7 @@
                     }
                 ],
                 "responses": {
-                    "200": {
+                    "400": {
                         "description": "成功",
                         "content": {
                             "application/json": {
@@ -2191,7 +2191,7 @@
                     }
                 ],
                 "responses": {
-                    "200": {
+                    "400": {
                         "description": "成功",
                         "content": {
                             "application/json": {
@@ -2365,7 +2365,7 @@
                     }
                 ],
                 "responses": {
-                    "200": {
+                    "400": {
                         "description": "成功取得分頁供應商清單",
                         "content": {
                             "application/json": {
@@ -2559,7 +2559,7 @@
                     }
                 ],
                 "responses": {
-                    "200": {
+                    "400": {
                         "description": "成功",
                         "content": {
                             "application/json": {
@@ -2722,7 +2722,7 @@
                 "description": "列出所有客戶需要的常用(下拉、彈窗)",
                 "operationId": "show_client_aLL_const",
                 "responses": {
-                    "200": {
+                    "400": {
                         "description": "成功"
                     },
                     "404": {
