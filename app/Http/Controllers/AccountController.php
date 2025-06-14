@@ -64,7 +64,7 @@ class AccountController extends Controller
                 $errors1['account_no_err'] = '會計代碼為必填';
             }else {
                 // 檢查會計代碼不為空字串
-                if(empty($request['account_no']) || str_contains($request['account_no'] , '*') ){
+                if(empty($request->input('account_no')) || str_contains($request->input('account_no') , '*') ){
                     $errors1['account_no_err'] = '會計代碼不得為空字串或*';
                 }
                 // 檢查會計代碼是否已存在
@@ -75,11 +75,11 @@ class AccountController extends Controller
             }
 
             // 會計科目名稱必填
-            if (empty($request['account_name'])) {
+            if (empty($request->input('account_name'))) {
                 $errors1['account_name_err'] = '會計科目為必填';
             }
             // 檢查會計科目不為空字串
-            if(empty($request['account_name']) || str_contains($request['account_name'] , '*') ){
+            if(empty($request->input('account_name')) || str_contains($request->input('account_name') , '*') ){
                 $errors1['account_name_err'] = '會計科目不得為空字串或*';
             }
             //科目層級必填
@@ -92,7 +92,7 @@ class AccountController extends Controller
             }
 
             //如果科目層級不為第一層，則上層科目代號須為必填
-            if($request['tier']=='aa1f0ed9-48be-11f0-b9d0-002248c47290' && !$request->has('Puuid')){
+            if($request->input('tier')=='aa1f0ed9-48be-11f0-b9d0-002248c47290' && !$request->has('Puuid')){
                 $errors1['Puuid'] = '科目層級不為第一層，則上層科目代號須為必填';
             }
 
@@ -102,7 +102,7 @@ class AccountController extends Controller
             }
 
             //英文別名不為中文
-            if ($request->has('alter_name') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('alter_name')) && str_contains($request['alter_name'] , '*')) {
+            if ($request->has('alter_name') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('alter_name')) && str_contains($request->input('alter_name') , '*')) {
                 $errors1['alter_name_err'] = '英文別名不可包含中文';
             }
 
@@ -117,7 +117,7 @@ class AccountController extends Controller
 
 
             //是否有效不為空字串
-            if(empty($request['is_valid']) || str_contains($request['is_valid'] , '*')  ){
+            if(empty($request->input('is_valid')) || str_contains($request->input('is_valid'), '*')  ){
                 $errors1['is_valid_err'] = ' 是否有效不得為空字串或*';
             } 
             // 如果有錯誤，回傳統一格式
@@ -223,7 +223,7 @@ class AccountController extends Controller
                 $errors1['account_no_err'] = '會計代碼為必填';
             }else {
                 // 檢查會計代碼不為空字串
-                if(empty($request['account_no']) || str_contains($request['account_no'] , '*') ){
+                if(empty($request->input('account_no')) || str_contains($request->input('account_no') , '*') ){
                     $errors1['account_no_err'] = '會計代碼不得為空字串或*';
                 }
                 // 檢查會計代碼是否已存在
@@ -234,11 +234,11 @@ class AccountController extends Controller
             }
 
             // 會計科目名稱必填
-            if (empty($request['account_name'])) {
+            if (empty($request->input('account_name'))) {
                 $errors1['account_name_err'] = '會計科目為必填';
             }
             // 檢查會計科目不為空字串
-            if(empty($request['account_name']) || str_contains($request['account_name'] , '*') ){
+            if(empty($request->input('account_name')) || str_contains($request->input('account_name') , '*') ){
                 $errors1['account_name_err'] = '會計科目不得為空字串或*';
             }
             //科目層級必填
@@ -251,7 +251,7 @@ class AccountController extends Controller
             }
 
             //如果科目層級不為第一層，則上層科目代號須為必填
-            if($request['tier']=='aa1f0ed9-48be-11f0-b9d0-002248c47290' && !$request->has('Puuid')){
+            if($request->input('tier')=='aa1f0ed9-48be-11f0-b9d0-002248c47290' && !$request->has('Puuid')){
                 $errors1['Puuid'] = '科目層級不為第一層，則上層科目代號須為必填';
             }
 
@@ -261,7 +261,7 @@ class AccountController extends Controller
             }
 
             //英文別名不為中文
-            if ($request->has('alter_name') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('alter_name')) && str_contains($request['alter_name'] , '*')) {
+            if ($request->has('alter_name') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('alter_name')) && str_contains($request->input('alter_name') , '*')) {
                 $errors1['alter_name_err'] = '英文別名不可包含中文';
             }
 
@@ -276,7 +276,7 @@ class AccountController extends Controller
 
 
             //是否有效不為空字串
-            if(empty($request['is_valid']) || str_contains($request['is_valid'] , '*')  ){
+            if(empty($request->input('is_valid')) || str_contains($request->input('is_valid'), '*')  ){
                 $errors1['is_valid_err'] = ' 是否有效不得為空字串或*';
             } 
             // 如果有錯誤，回傳統一格式
@@ -286,7 +286,7 @@ class AccountController extends Controller
                     'message1' => '缺少必填的欄位及欄位格式錯誤',
                     'errors' => $errors1
                 ], 400);
-            }   
+            }        
 
             // 查詢會計科目UUID
             $account = Account::where('uuid', $request['uuid'])->first();

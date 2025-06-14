@@ -69,12 +69,12 @@ class InvoiceInfoController extends Controller
                 $errors1['period_start_err'] = '開立年月起為必填';
             }
             // 開立年月起不為空字串
-            if(empty($request['period_start']) || str_contains($request['period_start'] , '*')){
+            if(empty($request->has(['period_start'])) || $request->input('period_start')=="" || str_contains($request->input('period_start') , '*')){
                 $errors1['period_start_err'] = '開立年月起不得為空字串或*';
             }     
 
             //開立年月起須為民國年月例如：114/01
-            if (!preg_match('/^[1-9]\d{2}\/(0[1-9]|1[0-2])$/', $request['period_start'])) {
+            if (!preg_match('/^[1-9]\d{2}\/(0[1-9]|1[0-2])$/', $request->input('period_start'))) {
                 $errors1['period_start_err'] = '開立年月須為民國年月格式(例如：114/01)';
             }
 
@@ -83,17 +83,17 @@ class InvoiceInfoController extends Controller
                 $errors1['period_end_err'] = '開立年月迄為必填';
             }
             // 開立年月迄不為空字串
-            if(empty($request['period_end']) || str_contains($request['period_end'] , '*') ){
+            if(empty($request->has(['period_end'])) || str_contains($request->input('period_end') , '*') ){
                 $errors1['period_end_err'] = '開立年月迄不得為空字串或*';
             }   
             //開立年月迄須為民國年月
-            if (!preg_match('/^[1-9]\d{2}\/(0[1-9]|1[0-2])$/', $request['period_end'])) {
+            if (!preg_match('/^[1-9]\d{2}\/(0[1-9]|1[0-2])$/', $request->input('period_end'))) {
                 $errors1['period_end_err'] = '開立年月須為民國年月格式(例如：114/02)';
             }
 
             //發票期別起迄不能相同
-            if ($request['period_start'] == $request['period_end']) {
-                $errors1['period_start_err'] = '發票期別起迄不能相同';
+            if ($request->input('period_start') == $request->input('period_end')) {
+                $errors1['period_startend_err'] = '發票期別起迄不能相同';
             }
 
 
@@ -103,65 +103,67 @@ class InvoiceInfoController extends Controller
             }
 
             //序號為必填欄位且不得超過3碼
-            if (!$request->has(['series']) || strlen($request['series']) > 3) {
+            if (!$request->has(['series']) || strlen($request->input('series')) > 3) {
                 $errors1['series_err'] = '序號為必填且不得超過3碼';
             }
             // 開立年月迄不為空字串
-            if(empty($request['series']) || str_contains($request['series'] , '*')  ){
+            if(empty($request->input('series')) || str_contains($request->input('series') , '*')  ){
                 $errors1['series_err'] = '開立年月迄不得為空字串或*';
             } 
             //字軌代碼為必填欄位且為2碼
-            if (!$request->has(['track_code']) || strlen($request['track_code']) != 2) {
+            if (!$request->has(['track_code']) || strlen($request->input('track_code')) != 2) {
                 $errors1['track_code_err'] = '字軌代碼為必填且為2碼';
             }
             // 字軌代碼不為空字串
-            if(empty($request['track_code']) || str_contains($request['track_code'] , '*')  ){
+            if(empty($request->input('track_code')) || str_contains($request->input('track_code'), '*')  ){
                 $errors1['track_code_err'] = ' 字軌代碼不得為空字串或*';
             } 
             //發票起始號碼為必填欄位且須為8碼
-            if (!$request->has(['start_number']) || strlen($request['start_number']) != 8) {
+            if (!$request->has(['start_number']) || strlen($request->input('start_number')) != 8) {
                 $errors1['start_number_err'] = '發票起始號碼為必填且須為8碼';
             }
             // /發票起始號碼不為空字串
-            if(empty($request['start_number']) || str_contains($request['start_number'] , '*')  ){
+            if(empty($request['start_number']) || str_contains($request->input('start_number') , '*')  ){
                 $errors1['start_number_err'] = ' 發票起始號碼不得為空字串或*';
             } 
             //發票起始號碼尾數需要為0
-            if (substr($request['start_number'], -1) != '0') {
+            if (substr($request->input('start_number'), -1) != '0') {
                 $errors1['start_number_err'] = '發票起始號碼尾數需要為0';
             }else {
                 $request['start_number'] = $request['track_code'].$request['start_number'];
             }
 
             //發票截止號碼為必填欄位且須為8碼
-            if (!$request->has(['end_number']) || strlen($request['end_number']) != 8) {
+            if (!$request->has(['end_number']) || strlen($request->input('end_number')) != 8) {
                 $errors1['end_number_err'] = '發票截止號碼為必填且須為8碼';
             }
             //發票截止號碼不為空字串
-            if(empty($request['end_number']) || str_contains($request['end_number'] , '*')  ){
+            if(empty($request->input('end_number')) || str_contains($request->input('end_number') , '*')  ){
                 $errors1['end_number_err'] = ' 發票截止號碼不得為空字串或*';
             } 
             //發票截止號碼尾數需要為9
-            if (substr($request['end_number'], -1) != '9') {
+            if (substr($request->input('end_number'), -1) != '9') {
                 $errors1['end_number_err'] = '發票截止號碼尾數需要為9';
             }else {
                 $request['end_number'] = $request['track_code'].$request['end_number'];
             }
 
             //通用日期起為必填欄位且須為西元年年月日格式
-            if (!$request->has(['effective_startdate']) || !preg_match('/^\d{4}\/(0?[1-9]|1[0-2])\/(0?[1-9]|[12][0-9]|3[01])$/', $request['effective_startdate'])) {
+            if (!$request->has(['effective_startdate']) || !preg_match('/^\d{4}\/(0?[1-9]|1[0-2])\/(0?[1-9]|[12][0-9]|3[01])$/', $request->input('effective_startdate'))) {
                 $errors1['effective_startdate_err'] = '通用日期起為必填且須為西元年年月日格式(例如：2025/01/01)';
             }
 
             //通用日期迄為選填欄位且須為西元年年月日格式
-            if ($request->has(['effective_enddate']) && !preg_match('/^\d{4}\/(0?[1-9]|1[0-2])\/(0?[1-9]|[12][0-9]|3[01])$/', $request['effective_enddate'])) {
+            if ($request->has(['effective_enddate']) && !preg_match('/^\d{4}\/(0?[1-9]|1[0-2])\/(0?[1-9]|[12][0-9]|3[01])$/', $request->input('effective_startdate'))) {
                 $errors1['effective_enddate_err'] = '通用日期迄須為西元年年月日格式(例如：2025/01/01)';
             }
 
             //是否有效不為空字串
-            if(empty($request['is_valid']) || str_contains($request['is_valid'] , '*')  ){
+            if(empty($request->input('is_valid')) || str_contains($request->input('is_valid') , '*')  ){
                 $errors1['is_valid_err'] = ' 是否有效不得為空字串或*';
             } 
+
+
             // 如果有錯誤，回傳統一格式
             if (!empty($errors1)) {
                 return response()->json([
@@ -273,12 +275,12 @@ class InvoiceInfoController extends Controller
                 $errors1['period_start_err'] = '開立年月起為必填';
             }
             // 開立年月起不為空字串
-            if(empty($request['period_start']) || str_contains($request['period_start'] , '*')){
+            if(empty($request->has(['period_start'])) || $request->input('period_start')=="" || str_contains($request->input('period_start') , '*')){
                 $errors1['period_start_err'] = '開立年月起不得為空字串或*';
             }     
 
             //開立年月起須為民國年月例如：114/01
-            if (!preg_match('/^[1-9]\d{2}\/(0[1-9]|1[0-2])$/', $request['period_start'])) {
+            if (!preg_match('/^[1-9]\d{2}\/(0[1-9]|1[0-2])$/', $request->input('period_start'))) {
                 $errors1['period_start_err'] = '開立年月須為民國年月格式(例如：114/01)';
             }
 
@@ -287,16 +289,16 @@ class InvoiceInfoController extends Controller
                 $errors1['period_end_err'] = '開立年月迄為必填';
             }
             // 開立年月迄不為空字串
-            if(empty($request['period_end']) || str_contains($request['period_end'] , '*') ){
+            if(empty($request->has(['period_end'])) || str_contains($request->input('period_end') , '*') ){
                 $errors1['period_end_err'] = '開立年月迄不得為空字串或*';
             }   
             //開立年月迄須為民國年月
-            if (!preg_match('/^[1-9]\d{2}\/(0[1-9]|1[0-2])$/', $request['period_end'])) {
+            if (!preg_match('/^[1-9]\d{2}\/(0[1-9]|1[0-2])$/', $request->input('period_end'))) {
                 $errors1['period_end_err'] = '開立年月須為民國年月格式(例如：114/02)';
             }
 
             //發票期別起迄不能相同
-            if ($request['period_start'] == $request['period_end']) {
+            if ($request->input('period_start') == $request->input('period_end')) {
                 $errors1['period_startend_err'] = '發票期別起迄不能相同';
             }
 
@@ -307,63 +309,63 @@ class InvoiceInfoController extends Controller
             }
 
             //序號為必填欄位且不得超過3碼
-            if (!$request->has(['series']) || strlen($request['series']) > 3) {
+            if (!$request->has(['series']) || strlen($request->input('series')) > 3) {
                 $errors1['series_err'] = '序號為必填且不得超過3碼';
             }
             // 開立年月迄不為空字串
-            if(empty($request['series']) || str_contains($request['series'] , '*')  ){
+            if(empty($request->input('series')) || str_contains($request->input('series') , '*')  ){
                 $errors1['series_err'] = '開立年月迄不得為空字串或*';
             } 
             //字軌代碼為必填欄位且為2碼
-            if (!$request->has(['track_code']) || strlen($request['track_code']) != 2) {
+            if (!$request->has(['track_code']) || strlen($request->input('track_code')) != 2) {
                 $errors1['track_code_err'] = '字軌代碼為必填且為2碼';
             }
             // 字軌代碼不為空字串
-            if(empty($request['track_code']) || str_contains($request['track_code'] , '*')  ){
+            if(empty($request->input('track_code')) || str_contains($request->input('track_code'), '*')  ){
                 $errors1['track_code_err'] = ' 字軌代碼不得為空字串或*';
             } 
             //發票起始號碼為必填欄位且須為8碼
-            if (!$request->has(['start_number']) || strlen($request['start_number']) != 8) {
+            if (!$request->has(['start_number']) || strlen($request->input('start_number')) != 8) {
                 $errors1['start_number_err'] = '發票起始號碼為必填且須為8碼';
             }
             // /發票起始號碼不為空字串
-            if(empty($request['start_number']) || str_contains($request['start_number'] , '*')  ){
+            if(empty($request['start_number']) || str_contains($request->input('start_number') , '*')  ){
                 $errors1['start_number_err'] = ' 發票起始號碼不得為空字串或*';
             } 
             //發票起始號碼尾數需要為0
-            if (substr($request['start_number'], -1) != '0') {
+            if (substr($request->input('start_number'), -1) != '0') {
                 $errors1['start_number_err'] = '發票起始號碼尾數需要為0';
             }else {
                 $request['start_number'] = $request['track_code'].$request['start_number'];
             }
 
             //發票截止號碼為必填欄位且須為8碼
-            if (!$request->has(['end_number']) || strlen($request['end_number']) != 8) {
+            if (!$request->has(['end_number']) || strlen($request->input('end_number')) != 8) {
                 $errors1['end_number_err'] = '發票截止號碼為必填且須為8碼';
             }
             //發票截止號碼不為空字串
-            if(empty($request['end_number']) || str_contains($request['end_number'] , '*')  ){
+            if(empty($request->input('end_number')) || str_contains($request->input('end_number') , '*')  ){
                 $errors1['end_number_err'] = ' 發票截止號碼不得為空字串或*';
             } 
             //發票截止號碼尾數需要為9
-            if (substr($request['end_number'], -1) != '9') {
+            if (substr($request->input('end_number'), -1) != '9') {
                 $errors1['end_number_err'] = '發票截止號碼尾數需要為9';
             }else {
                 $request['end_number'] = $request['track_code'].$request['end_number'];
             }
 
             //通用日期起為必填欄位且須為西元年年月日格式
-            if (!$request->has(['effective_startdate']) || !preg_match('/^\d{4}\/(0?[1-9]|1[0-2])\/(0?[1-9]|[12][0-9]|3[01])$/', $request['effective_startdate'])) {
+            if (!$request->has(['effective_startdate']) || !preg_match('/^\d{4}\/(0?[1-9]|1[0-2])\/(0?[1-9]|[12][0-9]|3[01])$/', $request->input('effective_startdate'))) {
                 $errors1['effective_startdate_err'] = '通用日期起為必填且須為西元年年月日格式(例如：2025/01/01)';
             }
 
             //通用日期迄為選填欄位且須為西元年年月日格式
-            if ($request->has(['effective_enddate']) && !preg_match('/^\d{4}\/(0?[1-9]|1[0-2])\/(0?[1-9]|[12][0-9]|3[01])$/', $request['effective_enddate'])) {
+            if ($request->has(['effective_enddate']) && !preg_match('/^\d{4}\/(0?[1-9]|1[0-2])\/(0?[1-9]|[12][0-9]|3[01])$/', $request->input('effective_startdate'))) {
                 $errors1['effective_enddate_err'] = '通用日期迄須為西元年年月日格式(例如：2025/01/01)';
             }
 
             //是否有效不為空字串
-            if(empty($request['is_valid']) || str_contains($request['is_valid'] , '*')  ){
+            if(empty($request->input('is_valid')) || str_contains($request->input('is_valid') , '*')  ){
                 $errors1['is_valid_err'] = ' 是否有效不得為空字串或*';
             } 
 
