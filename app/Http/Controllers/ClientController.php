@@ -113,7 +113,7 @@ class ClientController extends Controller
                 $errors1['client_no_err'] = '客戶代碼為必填';
             }else {
                 // 檢查客戶代碼不為空字串
-                if(empty($request['client_no']) || $request['client_no'] =="*" ){
+                if(empty($request['client_no']) || str_contains($request['client_no'] , '*')){
                     $errors1['client_no_err'] = '客戶代碼不得為空字串或*';
                 }
                 // 檢查客戶代碼是否已存在
@@ -129,7 +129,7 @@ class ClientController extends Controller
             }
 
             // 檢查客戶名稱不為空字串
-            if(empty($request['client_fullnm']) || $request['client_fullnm'] =="*" ){
+            if(empty($request['client_fullnm']) ||  str_contains($request['client_fullnm'] , '*')  ){
                 $errors1['client_fullnm_err'] = '客戶代碼不得為空字串或*';
             }
 
@@ -139,7 +139,7 @@ class ClientController extends Controller
             }
 
             // 檢查客戶全名不為空字串
-            if(empty($request['client_shortnm']) || $request['client_shortnm'] =="*" ){
+            if(empty($request['client_shortnm']) || str_contains($request['client_shortnm'] , '*') ){
                 $errors1['client_shortnm_err'] = '客戶簡稱不得為空字串或*';
             }            
 
@@ -187,11 +187,11 @@ class ClientController extends Controller
             }
 
             //郵遞區號一不可為中文
-            if ($request->has('zip_code1') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('zip_code2'))) {
+            if (preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('zip_code2'))) {
                 $errors1['zip_code1_err'] = '郵遞區號一不可包含中文';
             }
             // 檢查郵遞區號一不為空字串
-            if(empty($request['zip_code1']) || $request['zip_code1'] =="*" ){
+            if(empty($request['zip_code1']) ||str_contains($request['zip_code1'] , '*') ){
                 $errors1['zip_code1_err'] = '郵遞區號一不得為空字串或*';
             }      
             //郵遞區號二為必填
@@ -199,7 +199,7 @@ class ClientController extends Controller
                 $errors1['zip_code2_err'] = '郵遞區號二為必填';
             }
             // 檢查郵遞區號二不為空字串
-            if(empty($request['zip_code2']) || $request['zip_code2'] =="*" ){
+            if(empty($request['zip_code2']) || str_contains($request['zip_code2'] , '*')  ){
                 $errors1['zip_code2_err'] = '郵遞區號二不得為空字串或*';
             }  
 
@@ -212,7 +212,7 @@ class ClientController extends Controller
                 $errors1['address2_err'] = '送貨地址為必填';
             }
             // 檢查送貨地址不為空字串
-            if(empty($request['address2']) || $request['address2'] =="*" ){
+            if(empty($request['address2']) ||  str_contains($request['address2'] , '*') ){
                 $errors1['address2_err'] = '送貨地址不得為空字串或*';
             }  
             //公司電話不可為中文
@@ -240,7 +240,7 @@ class ClientController extends Controller
                 $errors1['invoice_title_err'] = '發票抬頭為必填';
             }
             // 檢查發票抬頭不為空字串
-            if(empty($request['invoice_title']) || $request['invoice_title'] =="*" ){
+            if(empty($request['invoice_title']) ||  str_contains($request['invoice_title'] , '*')){
                 $errors1['invoice_title_err'] = '送貨地址不得為空字串或*';
             }  
             ///統一編號為必填
@@ -252,7 +252,7 @@ class ClientController extends Controller
                     $errors1['taxid_err'] = '統一編號格式錯誤，應為8位數字';
                 }
                 // 權重驗證
-                $taxid = $request->input('taxid');
+                $taxid = str_split($request->input('taxid'));
                 $weight = [1, 2, 1, 2, 1, 2, 4, 1];
                 $sum = 0;
                 for ($i = 0; $i < 8; $i++) {
@@ -263,12 +263,12 @@ class ClientController extends Controller
                     }
                     $sum += $product;
                 }
-                if ($sum % 10 !== 0) {
+                if ($sum ==0 ||$sum % 10 !== 0) {
                     $errors1['taxid_err'] = '統一編號驗證失敗';
                 }
             }
             //是否有效不為空字串
-            if(empty($request['is_valid']) || str_contains($request['is_valid'] , '*')  ){
+            if(empty($request['is_valid']) || str_contains($request['is_valid'] , '*')   ){
                 $errors1['is_valid_err'] = ' 是否有效不得為空字串或*';
             } 
             // 如果有錯誤，回傳統一格式
@@ -442,7 +442,7 @@ class ClientController extends Controller
                 $errors1['client_no_err'] = '客戶代碼為必填';
             }else {
                 // 檢查客戶代碼不為空字串
-                if(empty($request['client_no']) || $request['client_no'] =="*" ){
+                if(empty($request['client_no']) || str_contains($request['client_no'] , '*')){
                     $errors1['client_no_err'] = '客戶代碼不得為空字串或*';
                 }
                 // 檢查客戶代碼是否已存在
@@ -458,7 +458,7 @@ class ClientController extends Controller
             }
 
             // 檢查客戶名稱不為空字串
-            if(empty($request['client_fullnm']) || $request['client_fullnm'] =="*" ){
+            if(empty($request['client_fullnm']) ||  str_contains($request['client_fullnm'] , '*')  ){
                 $errors1['client_fullnm_err'] = '客戶代碼不得為空字串或*';
             }
 
@@ -468,7 +468,7 @@ class ClientController extends Controller
             }
 
             // 檢查客戶全名不為空字串
-            if(empty($request['client_shortnm']) || $request['client_shortnm'] =="*" ){
+            if(empty($request['client_shortnm']) || str_contains($request['client_shortnm'] , '*') ){
                 $errors1['client_shortnm_err'] = '客戶簡稱不得為空字串或*';
             }            
 
@@ -516,11 +516,11 @@ class ClientController extends Controller
             }
 
             //郵遞區號一不可為中文
-            if ($request->has('zip_code1') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('zip_code2'))) {
+            if (preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('zip_code2'))) {
                 $errors1['zip_code1_err'] = '郵遞區號一不可包含中文';
             }
             // 檢查郵遞區號一不為空字串
-            if(empty($request['zip_code1']) || $request['zip_code1'] =="*" ){
+            if(empty($request['zip_code1']) ||str_contains($request['zip_code1'] , '*') ){
                 $errors1['zip_code1_err'] = '郵遞區號一不得為空字串或*';
             }      
             //郵遞區號二為必填
@@ -528,7 +528,7 @@ class ClientController extends Controller
                 $errors1['zip_code2_err'] = '郵遞區號二為必填';
             }
             // 檢查郵遞區號二不為空字串
-            if(empty($request['zip_code2']) || $request['zip_code2'] =="*" ){
+            if(empty($request['zip_code2']) || str_contains($request['zip_code2'] , '*')  ){
                 $errors1['zip_code2_err'] = '郵遞區號二不得為空字串或*';
             }  
 
@@ -541,7 +541,7 @@ class ClientController extends Controller
                 $errors1['address2_err'] = '送貨地址為必填';
             }
             // 檢查送貨地址不為空字串
-            if(empty($request['address2']) || $request['address2'] =="*" ){
+            if(empty($request['address2']) ||  str_contains($request['address2'] , '*') ){
                 $errors1['address2_err'] = '送貨地址不得為空字串或*';
             }  
             //公司電話不可為中文
@@ -569,7 +569,7 @@ class ClientController extends Controller
                 $errors1['invoice_title_err'] = '發票抬頭為必填';
             }
             // 檢查發票抬頭不為空字串
-            if(empty($request['invoice_title']) || $request['invoice_title'] =="*" ){
+            if(empty($request['invoice_title']) ||  str_contains($request['invoice_title'] , '*')){
                 $errors1['invoice_title_err'] = '送貨地址不得為空字串或*';
             }  
             ///統一編號為必填
@@ -581,7 +581,7 @@ class ClientController extends Controller
                     $errors1['taxid_err'] = '統一編號格式錯誤，應為8位數字';
                 }
                 // 權重驗證
-                $taxid = $request->input('taxid');
+                $taxid = str_split($request->input('taxid'));
                 $weight = [1, 2, 1, 2, 1, 2, 4, 1];
                 $sum = 0;
                 for ($i = 0; $i < 8; $i++) {
@@ -592,12 +592,12 @@ class ClientController extends Controller
                     }
                     $sum += $product;
                 }
-                if ($sum % 10 !== 0) {
+                if ($sum ==0 ||$sum % 10 !== 0) {
                     $errors1['taxid_err'] = '統一編號驗證失敗';
                 }
             }
             //是否有效不為空字串
-            if(empty($request['is_valid']) || str_contains($request['is_valid'] , '*')  ){
+            if(empty($request['is_valid']) || str_contains($request['is_valid'] , '*')   ){
                 $errors1['is_valid_err'] = ' 是否有效不得為空字串或*';
             } 
             // 如果有錯誤，回傳統一格式
