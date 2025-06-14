@@ -1749,8 +1749,8 @@
                 "tags": [
                     "base_client"
                 ],
-                "summary": "更新客戶資料",
-                "description": "更新客戶資料",
+                "summary": "更新客戶資料(用UUID更新)",
+                "description": "更新客戶資料(用UUID更新)",
                 "operationId": "updateclient",
                 "parameters": [
                     {
@@ -4599,8 +4599,8 @@
                 "tags": [
                     "base_invoiceinfo"
                 ],
-                "summary": "更新發票資料",
-                "description": "更新發票資料",
+                "summary": "更新發票資料(UUID)",
+                "description": "更新發票資料(UUID)",
                 "operationId": "updateinvoiceinfo",
                 "parameters": [
                     {
