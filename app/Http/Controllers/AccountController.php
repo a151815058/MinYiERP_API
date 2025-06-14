@@ -56,50 +56,86 @@ class AccountController extends Controller
     // 儲存會計科目
     public function store(Request $request)
     {
-        try{
-            //必填欄位必填
-            if (!$request->has(['account_no', 'account_name', 'tier', 'is_valid'])) {
-                return response()->json([
-                    'status' => false,
-                    'message' =>'必填的欄位未填寫',
-                ], status: 200);
+        $errors1 = [];
+        $errors1 = [];
+        try {
+            // 會計代碼為必填
+            if (!$request->has('account_no')) {
+                $errors1['account_no_err'] = '會計代碼為必填';
+            }else {
+                // 檢查會計代碼不為空字串
+                if(empty($request['account_no']) || str_contains($request['account_no'] , '*') ){
+                    $errors1['account_no_err'] = '會計代碼不得為空字串或*';
+                }
+                // 檢查會計代碼是否已存在
+                $existingClient = Account::where('account_no', $request->input('account_no'))->first();
+                if ($existingClient) {
+                    $errors1['account_no_err'] = '會計代碼已存在';
+                }
             }
 
-            // 會計代碼須為唯一且必填
-            if (Account::where('account_no', $request['account_no'])->exists()) {
-                return response()->json([
-                    'status' => false,
-                    'message' => '會計科目代碼已存在',
-                ], status: 200);
-            }
-            // 會計科目代碼必填
-            if (empty($request['account_no'])) {
-                return response()->json([
-                    'status' => false,
-                    'message' => '會計科目代碼必填',
-                ], status: 200);
-            }
             // 會計科目名稱必填
             if (empty($request['account_name'])) {
-                return response()->json([
-                    'status' => false,
-                    'message' => '會計科目名稱必填',
-                ], status: 200);
+                $errors1['account_name_err'] = '會計科目為必填';
+            }
+            // 檢查會計科目不為空字串
+            if(empty($request['account_name']) || str_contains($request['account_name'] , '*') ){
+                $errors1['account_name_err'] = '會計科目不得為空字串或*';
+            }
+            //科目層級必填
+            if (!$request->has('tier')) {
+                $errors1['tier_err'] = '科目層級為必填';
+            }
+            //科目層級須包含在參數檔
+            if (!$request->has('tier') && !SysCode::where('param_sn', '06')->where('uuid', $request->input('tier'))->exists()) {
+                $errors1['tier_err'] = '科目層級不存在，請選擇正確的科目層級';
             }
 
-            if (!in_array($request['is_valid'], ['0', '1'])) {
+            //如果科目層級不為第一層，則上層科目代號須為必填
+            if($request['tier']=='aa1f0ed9-48be-11f0-b9d0-002248c47290' && !$request->has('Puuid')){
+                $errors1['Puuid'] = '科目層級不為第一層，則上層科目代號須為必填';
+            }
+
+            //上層科目需存在在Account資料表中
+            if(!Account::where('uuid', $request->input('Puuid'))->exists()){
+                $errors1['Puuid'] = '上層科目需存在在科目資料表中';
+            }
+
+            //英文別名不為中文
+            if ($request->has('alter_name') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('alter_name')) && str_contains($request['alter_name'] , '*')) {
+                $errors1['alter_name_err'] = '英文別名不可包含中文';
+            }
+
+            //借貸方僅第四層級為必填欄位，其他層級預設為空值
+            if($request['tier']=='52cc568c-48c3-11f0-a3b4-c0185091d167' &&  !$request->has('dc')){
+                $errors1['Puuid'] = '科目層級為第四層，需必填';
+            }
+            //借貸方存在在參數檔
+            if (!$request->has('dc') && !SysCode::where('param_sn', '07')->where('uuid', $request->input('dc'))->exists()) {
+                $errors1['dc_err'] = '科目層級不存在，請選擇正確的客戶型態';
+            }            
+
+
+            //是否有效不為空字串
+            if(empty($request['is_valid']) || str_contains($request['is_valid'] , '*')  ){
+                $errors1['is_valid_err'] = ' 是否有效不得為空字串或*';
+            } 
+            // 如果有錯誤，回傳統一格式
+            if (!empty($errors1)) {
                 return response()->json([
                     'status' => false,
-                    'message' => 'is_valid 欄位必須是 0 或 1',
-                ], status: 422);
-            }
+                    'message1' => '缺少必填的欄位及欄位格式錯誤',
+                    'errors' => $errors1
+                ], 400);
+            }            
 
             // 建立會計科目
             $Account = Account::create([
                 'account_no'      => $request['account_no'],
                 'account_name'    => $request['account_name'],
-                'Puuid'           => $request['Puuid'],
+                'Puuid'           => $request['Puuid']?? null,
                 'tier'            => $request['tier'],
+                'alter_name'      => $request['alter_name']?? null,
                 'dc'              => $request['dc'],
                 'note'            => $request['note']?? null,
                 'is_valid'        => $request['is_valid']
@@ -142,8 +178,8 @@ class AccountController extends Controller
     /**
      * @OA\POST(
      *     path="/api/updateaccount",
-     *     summary="更新會計科目",
-     *     description="更新會計科目",
+     *     summary="更新會計科目(UUID)",
+     *     description="更新會計科目(UUID)",
      *     operationId="updateaccount",
      *     tags={"base_account"},
      *     @OA\Parameter(name="account_no",in="query",required=true,description="會計科目代碼", @OA\Schema(type="string")),
@@ -182,16 +218,78 @@ class AccountController extends Controller
     public function update(Request $request)
     {
         try{
-            //必填欄位必填
-            if (!$request->has(['account_no', 'account_name', 'tier', 'is_valid'])) {
-                return response()->json([
-                    'status' => false,
-                    'message' => '必填的欄位未填寫',
-                ], 200);
+            // 會計代碼為必填
+            if (!$request->has('account_no')) {
+                $errors1['account_no_err'] = '會計代碼為必填';
+            }else {
+                // 檢查會計代碼不為空字串
+                if(empty($request['account_no']) || str_contains($request['account_no'] , '*') ){
+                    $errors1['account_no_err'] = '會計代碼不得為空字串或*';
+                }
+                // 檢查會計代碼是否已存在
+                $existingClient = Account::where('account_no', $request->input('account_no'))->first();
+                if ($existingClient) {
+                    $errors1['account_no_err'] = '會計代碼已存在';
+                }
             }
 
-            // 查詢會計科目
-            $account = Account::where('account_no', $request['account_no'])->first();
+            // 會計科目名稱必填
+            if (empty($request['account_name'])) {
+                $errors1['account_name_err'] = '會計科目為必填';
+            }
+            // 檢查會計科目不為空字串
+            if(empty($request['account_name']) || str_contains($request['account_name'] , '*') ){
+                $errors1['account_name_err'] = '會計科目不得為空字串或*';
+            }
+            //科目層級必填
+            if (!$request->has('tier')) {
+                $errors1['tier_err'] = '科目層級為必填';
+            }
+            //科目層級須包含在參數檔
+            if (!$request->has('tier') && !SysCode::where('param_sn', '06')->where('uuid', $request->input('tier'))->exists()) {
+                $errors1['tier_err'] = '科目層級不存在，請選擇正確的科目層級';
+            }
+
+            //如果科目層級不為第一層，則上層科目代號須為必填
+            if($request['tier']=='aa1f0ed9-48be-11f0-b9d0-002248c47290' && !$request->has('Puuid')){
+                $errors1['Puuid'] = '科目層級不為第一層，則上層科目代號須為必填';
+            }
+
+            //上層科目需存在在Account資料表中
+            if(!Account::where('uuid', $request->input('Puuid'))->exists()){
+                $errors1['Puuid'] = '上層科目需存在在科目資料表中';
+            }
+
+            //英文別名不為中文
+            if ($request->has('alter_name') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('alter_name')) && str_contains($request['alter_name'] , '*')) {
+                $errors1['alter_name_err'] = '英文別名不可包含中文';
+            }
+
+            //借貸方僅第四層級為必填欄位，其他層級預設為空值
+            if($request['tier']=='52cc568c-48c3-11f0-a3b4-c0185091d167' &&  !$request->has('dc')){
+                $errors1['Puuid'] = '科目層級為第四層，需必填';
+            }
+            //借貸方存在在參數檔
+            if (!$request->has('dc') && !SysCode::where('param_sn', '07')->where('uuid', $request->input('dc'))->exists()) {
+                $errors1['dc_err'] = '科目層級不存在，請選擇正確的客戶型態';
+            }            
+
+
+            //是否有效不為空字串
+            if(empty($request['is_valid']) || str_contains($request['is_valid'] , '*')  ){
+                $errors1['is_valid_err'] = ' 是否有效不得為空字串或*';
+            } 
+            // 如果有錯誤，回傳統一格式
+            if (!empty($errors1)) {
+                return response()->json([
+                    'status' => false,
+                    'message1' => '缺少必填的欄位及欄位格式錯誤',
+                    'errors' => $errors1
+                ], 400);
+            }   
+
+            // 查詢會計科目UUID
+            $account = Account::where('uuid', $request['uuid'])->first();
     
             if (!$account) {
                 return response()->json([
@@ -205,6 +303,7 @@ class AccountController extends Controller
             $account->account_name = $request['account_name'];
             $account->Puuid = $request['Puuid'];
             $account->tier = $request['tier'];
+            $account->alter_name = $request['alter_name'];
             $account->dc = $request['dc'];
             $account->note = $request['note'] ?? null;
             $account->is_valid = $request['is_valid'];
@@ -547,9 +646,11 @@ class AccountController extends Controller
     // 列出所有會計科目需要的常用(下拉、彈窗)
     public function showconst($constant='all'){
         // 查詢 '會計科目階層' 的資料
-        $SysCode = SysCode::where('param_sn', '13')->where('is_valid','1')->get();
+        $SysCode = SysCode::where('param_sn', '06')->where('is_valid','1')->get();
         // 查詢 '借貸方' 的資料
-        $SysCode2 = SysCode::where('param_sn', '14')->where('is_valid','1')->get();
+        $SysCode2 = SysCode::where('param_sn', '07')->where('is_valid','1')->get();
+        // 查詢 '所有會計科目' 的資料
+        $SysCode3 = Account::where('is_valid','1')->get();
         try {
             // 檢查是否有結果
             if ($SysCode->isEmpty() ) {
@@ -557,7 +658,8 @@ class AccountController extends Controller
                     'status' => false,
                     'message' => '常用資料未找到',
                     'levelOption' => null,
-                    'dcOption' => null
+                    'dcOption' => null,
+                    'accountOption'=> null,
                 ], 404);
             }
     
@@ -566,7 +668,8 @@ class AccountController extends Controller
                 'status' => true,
                 'message' => 'success',
                 'levelOption' => $SysCode,
-                'dcOption' => $SysCode2
+                'dcOption' => $SysCode2,
+                'accountOption'=> $SysCode3,
             ], 200);
     
         } catch (\Illuminate\Validation\ValidationException $e) {

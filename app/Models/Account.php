@@ -23,6 +23,7 @@ class Account extends Model
         'account_name',
         'Puuid',
         'tier',
+        'alter_name',
         'dc',
         'note',
         'is_valid',
