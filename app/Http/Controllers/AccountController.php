@@ -11,6 +11,7 @@ require_once base_path('app/Models/connect.php');
 use OpenApi\Annotations as OA;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use App\Helpers\ValidationHelper;
 
 class AccountController extends Controller
 {
@@ -56,15 +57,14 @@ class AccountController extends Controller
     // 儲存會計科目
     public function store(Request $request)
     {
-        $errors1 = [];
-        $errors1 = [];
-        try {
+        $errors1=[];
+        try{
             // 會計代碼為必填
             if (!$request->has('account_no')) {
                 $errors1['account_no_err'] = '會計代碼為必填';
             }else {
                 // 檢查會計代碼不為空字串
-                if(empty($request->input('account_no')) || str_contains($request->input('account_no') , '*') ){
+                if (!filter_var($request->has('account_no'), FILTER_VALIDATE_EMAIL)) {
                     $errors1['account_no_err'] = '會計代碼不得為空字串或*';
                 }
                 // 檢查會計代碼是否已存在
@@ -78,9 +78,9 @@ class AccountController extends Controller
             if (empty($request->input('account_name'))) {
                 $errors1['account_name_err'] = '會計科目為必填';
             }
-            // 檢查會計科目不為空字串
-            if(empty($request->input('account_name')) || str_contains($request->input('account_name') , '*') ){
-                $errors1['account_name_err'] = '會計科目不得為空字串或*';
+            // 檢查會計科目名稱不為空字串
+            if (!filter_var($request->has('account_name'), FILTER_VALIDATE_EMAIL)) {
+                $errors1['account_name_err'] = '會計科目名稱不得為空字串或*';
             }
             //科目層級必填
             if (!$request->has('tier')) {
@@ -112,7 +112,7 @@ class AccountController extends Controller
             }
             //借貸方存在在參數檔
             if (!$request->has('dc') && !SysCode::where('param_sn', '07')->where('uuid', $request->input('dc'))->exists()) {
-                $errors1['dc_err'] = '科目層級不存在，請選擇正確的客戶型態';
+                $errors1['dc_err'] = '科目層級不存在，請選擇正確的科目層級';
             }            
 
 
@@ -127,7 +127,7 @@ class AccountController extends Controller
                     'message1' => '缺少必填的欄位及欄位格式錯誤',
                     'errors' => $errors1
                 ], 400);
-            }            
+            }          
 
             // 建立會計科目
             $Account = Account::create([
@@ -217,13 +217,14 @@ class AccountController extends Controller
     // 更新會計科目
     public function update(Request $request)
     {
+        $errors1=[];
         try{
             // 會計代碼為必填
             if (!$request->has('account_no')) {
                 $errors1['account_no_err'] = '會計代碼為必填';
             }else {
                 // 檢查會計代碼不為空字串
-                if(empty($request->input('account_no')) || str_contains($request->input('account_no') , '*') ){
+                if (!filter_var($request->has('account_no'), FILTER_VALIDATE_EMAIL)) {
                     $errors1['account_no_err'] = '會計代碼不得為空字串或*';
                 }
                 // 檢查會計代碼是否已存在
@@ -237,9 +238,9 @@ class AccountController extends Controller
             if (empty($request->input('account_name'))) {
                 $errors1['account_name_err'] = '會計科目為必填';
             }
-            // 檢查會計科目不為空字串
-            if(empty($request->input('account_name')) || str_contains($request->input('account_name') , '*') ){
-                $errors1['account_name_err'] = '會計科目不得為空字串或*';
+            // 檢查會計科目名稱不為空字串
+            if (!filter_var($request->has('account_name'), FILTER_VALIDATE_EMAIL)) {
+                $errors1['account_name_err'] = '會計科目名稱不得為空字串或*';
             }
             //科目層級必填
             if (!$request->has('tier')) {
@@ -271,7 +272,7 @@ class AccountController extends Controller
             }
             //借貸方存在在參數檔
             if (!$request->has('dc') && !SysCode::where('param_sn', '07')->where('uuid', $request->input('dc'))->exists()) {
-                $errors1['dc_err'] = '科目層級不存在，請選擇正確的客戶型態';
+                $errors1['dc_err'] = '科目層級不存在，請選擇正確的科目層級';
             }            
 
 
@@ -657,9 +658,9 @@ class AccountController extends Controller
                 return response()->json([
                     'status' => false,
                     'message' => '常用資料未找到',
-                    'levelOption' => null,
-                    'dcOption' => null,
-                    'accountOption'=> null,
+                    'levelOption' => [],
+                    'dcOption' => [],
+                    'accountOption'=> []
                 ], 404);
             }
     

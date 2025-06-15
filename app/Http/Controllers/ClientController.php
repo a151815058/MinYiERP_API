@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\DB;
 use OpenApi\Annotations as OA;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use App\Helpers\ValidationHelper;
 
 
 class ClientController extends Controller
@@ -112,8 +113,8 @@ class ClientController extends Controller
             if (!$request->has('client_no')) {
                 $errors1['client_no_err'] = '客戶代碼為必填';
             }else {
-                // 檢查客戶代碼不為空字串
-                if(empty($request->input('client_no')) || $request->input('client_no') =="" || str_contains($request->input('client_no') , '*')){
+                // 判斷客戶代碼不能存在空白、""、''、"、'
+                if (!ValidationHelper::isValidText($request->input('client_no'))) {
                     $errors1['client_no_err'] = '客戶代碼不得為空字串或*';
                 }
                 // 檢查客戶代碼是否已存在
@@ -127,10 +128,9 @@ class ClientController extends Controller
             if (!$request->has('client_fullnm')) {
                 $errors1['client_fullnm_err'] = '客戶全名為必填';
             }
-
-            // 檢查客戶名稱不為空字串
-            if(empty($request->input('client_fullnm')) || $request->input('client_fullnm') ==""  ||  str_contains($request->input('client_fullnm') , '*')  ){
-                $errors1['client_fullnm_err'] = '客戶代碼不得為空字串或*';
+            //判斷客戶名稱不能存在空白、""、''、"、'
+            if (!ValidationHelper::isValidText($request->input('client_fullnm'))) {
+                $errors1['client_fullnm_err'] = '客戶名稱不得為空字串或*';
             }
 
             //客戶全名為必填
@@ -138,10 +138,10 @@ class ClientController extends Controller
                 $errors1['client_shortnm_err'] = '客戶簡稱為必填';
             }
 
-            // 檢查客戶全名不為空字串
-            if(empty($request->input('client_shortnm')) || $request->input('client_shortnm') =="" || str_contains($request->input('client_shortnm') , '*') ){
+            //判斷客戶簡稱不能存在空白、""、''、"、'
+            if (!ValidationHelper::isValidText($request->input('client_shortnm'))) {
                 $errors1['client_shortnm_err'] = '客戶簡稱不得為空字串或*';
-            }            
+            }             
 
             //客戶型態為必填
             if (!$request->has('client_type')) {
@@ -190,18 +190,16 @@ class ClientController extends Controller
             if (preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('zip_code1'))) {
                 $errors1['zip_code1_err'] = '郵遞區號一不可包含中文';
             }
-            // 檢查郵遞區號一不為空字串
-            if($request['zip_code1'] =="" ||str_contains($request->input('zip_code1') , '*') ){
-                $errors1['zip_code1_err'] = '郵遞區號一不得為空字串或*';
-            }      
+ 
             //郵遞區號二為必填
             if (!$request->has('zip_code2')) {
                 $errors1['zip_code2_err'] = '郵遞區號二為必填';
             }
-            // 檢查郵遞區號二不為空字串
-            if(empty($request->input('zip_code2')) || str_contains($request->input('zip_code2') , '*')  ){
+
+            //判斷郵遞區號二不能存在空白、""、''、"、'
+            if (!ValidationHelper::isValidText($request->input('zip_code2'))) {
                 $errors1['zip_code2_err'] = '郵遞區號二不得為空字串或*';
-            }  
+            }    
 
             //郵遞區號二不可為中文
             if ($request->has('zip_code2') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('zip_code2'))) {
@@ -211,13 +209,20 @@ class ClientController extends Controller
             if (!$request->has('address2')) {
                 $errors1['address2_err'] = '送貨地址為必填';
             }
-            // 檢查送貨地址不為空字串
-            if(empty($request->input('address2')) || $request->input('address2') =="" ||  str_contains($request->input('address2') , '*') ){
+
+            //判斷送貨地址二不能存在空白、""、''、"、'
+            if (!ValidationHelper::isValidText($request->input('address2'))) {
                 $errors1['address2_err'] = '送貨地址不得為空字串或*';
-            }  
+            }    
+             
             //公司電話不可為中文
             if ($request->has('phone') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('phone'))) {
                 $errors1['phone_err'] = '公司電話不可包含中文';
+            }
+
+            //公司電話須符合格式
+            if(!preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->has('phone'))){
+                $errors1['phone_err'] = '公司電話須符合格式';
             }
 
             //公司傳真不可為中文
@@ -225,23 +230,38 @@ class ClientController extends Controller
                 $errors1['fax_err'] = '公司傳真不可包含中文';
             }
 
+            //公司傳真須符合格式
+            if(!preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->has('fax'))){
+                $errors1['fax_err'] = '公司傳真須符合格式';
+            }
+
             //行動電話不可為中文
             if ($request->has('mobile_phone') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('mobile_phone'))) {
                 $errors1['mobile_phone_err'] = '行動電話不可包含中文';
             }
+
+            //行動電話須符合格式
+            if(!preg_match('/^09\d{2}-?\d{3}-?\d{3}$/', $request->has('mobile_phone'))){
+                $errors1['mobile_phone_err'] = '行動電話須符合格式';
+            }            
 
             //聯絡人信箱不可為中文
             if ($request->has('contact_email') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('contact_email'))) {
                 $errors1['contact_email_err'] = '聯絡人信箱不可包含中文';
             }
 
+            //聯絡人信箱須符合格式
+            if (!filter_var($request->has('contact_email'), FILTER_VALIDATE_EMAIL)) {
+                $errors1['contact_email_err'] = '聯絡人信箱須符合格式';
+            }
+
             // 發票抬頭為必填
             if (!$request->has('invoice_title')) {
                 $errors1['invoice_title_err'] = '發票抬頭為必填';
             }
-            // 檢查發票抬頭不為空字串
-            if(empty($request->has('invoice_title')) || $request->input('invoice_title') =="" ||  str_contains($request->input('invoice_title') , '*')){
-                $errors1['invoice_title_err'] = '送貨地址不得為空字串或*';
+            //判斷發票抬頭不能存在空白、""、''、"、'
+            if (!ValidationHelper::isValidText($request->input('invoice_title'))) {
+                 $errors1['invoice_title_err'] = '送貨地址不得為空字串或*';
             }  
             ///統一編號為必填
             if (!$request->has('taxid')) {
@@ -267,10 +287,12 @@ class ClientController extends Controller
                     $errors1['taxid_err'] = '統一編號驗證失敗';
                 }
             }
-            //是否有效不為空字串
-            if(empty($request->input('is_valid')) || $request->input('is_valid') ==""  || str_contains($request->input('is_valid') , '*')   ){
+
+            //判斷發票抬頭不能存在空白、""、''、"、'
+            if (!ValidationHelper::isValidText($request->input('is_valid'))) {
                 $errors1['is_valid_err'] = ' 是否有效不得為空字串或*';
             } 
+
             // 如果有錯誤，回傳統一格式
             if (!empty($errors1)) {
                 return response()->json([
@@ -442,8 +464,8 @@ class ClientController extends Controller
             if (!$request->has('client_no')) {
                 $errors1['client_no_err'] = '客戶代碼為必填';
             }else {
-                // 檢查客戶代碼不為空字串
-                if(empty($request->input('client_no')) || $request->input('client_no') =="" || str_contains($request->input('client_no') , '*')){
+                // 判斷客戶代碼不能存在空白、""、''、"、'
+                if (!ValidationHelper::isValidText($request->input('client_no'))) {
                     $errors1['client_no_err'] = '客戶代碼不得為空字串或*';
                 }
                 // 檢查客戶代碼是否已存在
@@ -457,10 +479,9 @@ class ClientController extends Controller
             if (!$request->has('client_fullnm')) {
                 $errors1['client_fullnm_err'] = '客戶全名為必填';
             }
-
-            // 檢查客戶名稱不為空字串
-            if(empty($request->input('client_fullnm')) || $request->input('client_fullnm') ==""  ||  str_contains($request->input('client_fullnm') , '*')  ){
-                $errors1['client_fullnm_err'] = '客戶代碼不得為空字串或*';
+            //判斷客戶名稱不能存在空白、""、''、"、'
+            if (!ValidationHelper::isValidText($request->input('client_fullnm'))) {
+                $errors1['client_fullnm_err'] = '客戶名稱不得為空字串或*';
             }
 
             //客戶全名為必填
@@ -468,10 +489,10 @@ class ClientController extends Controller
                 $errors1['client_shortnm_err'] = '客戶簡稱為必填';
             }
 
-            // 檢查客戶全名不為空字串
-            if(empty($request->input('client_shortnm')) || $request->input('client_shortnm') =="" || str_contains($request->input('client_shortnm') , '*') ){
+            //判斷客戶簡稱不能存在空白、""、''、"、'
+            if (!ValidationHelper::isValidText($request->input('client_shortnm'))) {
                 $errors1['client_shortnm_err'] = '客戶簡稱不得為空字串或*';
-            }            
+            }             
 
             //客戶型態為必填
             if (!$request->has('client_type')) {
@@ -520,18 +541,16 @@ class ClientController extends Controller
             if (preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('zip_code1'))) {
                 $errors1['zip_code1_err'] = '郵遞區號一不可包含中文';
             }
-            // 檢查郵遞區號一不為空字串
-            if($request['zip_code1'] =="" ||str_contains($request->input('zip_code1') , '*') ){
-                $errors1['zip_code1_err'] = '郵遞區號一不得為空字串或*';
-            }      
+ 
             //郵遞區號二為必填
             if (!$request->has('zip_code2')) {
                 $errors1['zip_code2_err'] = '郵遞區號二為必填';
             }
-            // 檢查郵遞區號二不為空字串
-            if(empty($request->input('zip_code2')) || str_contains($request->input('zip_code2') , '*')  ){
+
+            //判斷郵遞區號二不能存在空白、""、''、"、'
+            if (!ValidationHelper::isValidText($request->input('zip_code2'))) {
                 $errors1['zip_code2_err'] = '郵遞區號二不得為空字串或*';
-            }  
+            }    
 
             //郵遞區號二不可為中文
             if ($request->has('zip_code2') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('zip_code2'))) {
@@ -541,13 +560,20 @@ class ClientController extends Controller
             if (!$request->has('address2')) {
                 $errors1['address2_err'] = '送貨地址為必填';
             }
-            // 檢查送貨地址不為空字串
-            if(empty($request->input('address2')) || $request->input('address2') =="" ||  str_contains($request->input('address2') , '*') ){
+
+            //判斷送貨地址二不能存在空白、""、''、"、'
+            if (!ValidationHelper::isValidText($request->input('address2'))) {
                 $errors1['address2_err'] = '送貨地址不得為空字串或*';
-            }  
+            }    
+             
             //公司電話不可為中文
             if ($request->has('phone') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('phone'))) {
                 $errors1['phone_err'] = '公司電話不可包含中文';
+            }
+
+            //公司電話須符合格式
+            if(!preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->has('phone'))){
+                $errors1['phone_err'] = '公司電話須符合格式';
             }
 
             //公司傳真不可為中文
@@ -555,23 +581,38 @@ class ClientController extends Controller
                 $errors1['fax_err'] = '公司傳真不可包含中文';
             }
 
+            //公司傳真須符合格式
+            if(!preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->has('fax'))){
+                $errors1['fax_err'] = '公司傳真須符合格式';
+            }
+
             //行動電話不可為中文
             if ($request->has('mobile_phone') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('mobile_phone'))) {
                 $errors1['mobile_phone_err'] = '行動電話不可包含中文';
             }
+
+            //行動電話須符合格式
+            if(!preg_match('/^09\d{2}-?\d{3}-?\d{3}$/', $request->has('mobile_phone'))){
+                $errors1['mobile_phone_err'] = '行動電話須符合格式';
+            }            
 
             //聯絡人信箱不可為中文
             if ($request->has('contact_email') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('contact_email'))) {
                 $errors1['contact_email_err'] = '聯絡人信箱不可包含中文';
             }
 
+            //聯絡人信箱須符合格式
+            if (!filter_var($request->has('contact_email'), FILTER_VALIDATE_EMAIL)) {
+                $errors1['contact_email_err'] = '聯絡人信箱須符合格式';
+            }
+
             // 發票抬頭為必填
             if (!$request->has('invoice_title')) {
                 $errors1['invoice_title_err'] = '發票抬頭為必填';
             }
-            // 檢查發票抬頭不為空字串
-            if(empty($request->has('invoice_title')) || $request->input('invoice_title') =="" ||  str_contains($request->input('invoice_title') , '*')){
-                $errors1['invoice_title_err'] = '送貨地址不得為空字串或*';
+            //判斷發票抬頭不能存在空白、""、''、"、'
+            if (!ValidationHelper::isValidText($request->input('invoice_title'))) {
+                 $errors1['invoice_title_err'] = '送貨地址不得為空字串或*';
             }  
             ///統一編號為必填
             if (!$request->has('taxid')) {
@@ -597,10 +638,12 @@ class ClientController extends Controller
                     $errors1['taxid_err'] = '統一編號驗證失敗';
                 }
             }
-            //是否有效不為空字串
-            if(empty($request->input('is_valid')) || $request->input('is_valid') ==""  || str_contains($request->input('is_valid') , '*')   ){
+
+            //判斷發票抬頭不能存在空白、""、''、"、'
+            if (!ValidationHelper::isValidText($request->input('is_valid'))) {
                 $errors1['is_valid_err'] = ' 是否有效不得為空字串或*';
             } 
+
             // 如果有錯誤，回傳統一格式
             if (!empty($errors1)) {
                 return response()->json([
@@ -1107,14 +1150,14 @@ class ClientController extends Controller
                 return response()->json([
                     'status' => true,
                     'message' => '常用資料未找到',
-                    'currencyOption' => null,
-                    'taxtypeOption' => null,
-                    'paymenttermOption' => null,
-                    'sysuserOption' => null,
-                    'paymentterm2Option' => null,
-                    'deliverymethodOption' => null,
-                    'clienttypeOption' => null,
-                    'accountOption' => null
+                    'currencyOption' => [],
+                    'taxtypeOption' => [],
+                    'paymenttermOption' => [],
+                    'sysuserOption' => [],
+                    'paymentterm2Option' => [],
+                    'deliverymethodOption' => [],
+                    'clienttypeOption' => [],
+                    'accountOption' =>[]
                 ], 404);
             }
     

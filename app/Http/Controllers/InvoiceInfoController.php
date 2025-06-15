@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use OpenApi\Annotations as OA;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use App\Helpers\ValidationHelper;
 
 class InvoiceInfoController extends Controller
 {
@@ -69,10 +70,9 @@ class InvoiceInfoController extends Controller
                 $errors1['period_start_err'] = '開立年月起為必填';
             }
             // 開立年月起不為空字串
-            if(empty($request->has(['period_start'])) || $request->input('period_start')=="" || str_contains($request->input('period_start') , '*')){
+            if (!ValidationHelper::isValidText($request->input('period_start'))) {
                 $errors1['period_start_err'] = '開立年月起不得為空字串或*';
-            }     
-
+            }
             //開立年月起須為民國年月例如：114/01
             if (!preg_match('/^[1-9]\d{2}\/(0[1-9]|1[0-2])$/', $request->input('period_start'))) {
                 $errors1['period_start_err'] = '開立年月須為民國年月格式(例如：114/01)';
@@ -83,9 +83,9 @@ class InvoiceInfoController extends Controller
                 $errors1['period_end_err'] = '開立年月迄為必填';
             }
             // 開立年月迄不為空字串
-            if(empty($request->has(['period_end'])) || str_contains($request->input('period_end') , '*') ){
+            if (!ValidationHelper::isValidText($request->input('period_end'))) {
                 $errors1['period_end_err'] = '開立年月迄不得為空字串或*';
-            }   
+            }
             //開立年月迄須為民國年月
             if (!preg_match('/^[1-9]\d{2}\/(0[1-9]|1[0-2])$/', $request->input('period_end'))) {
                 $errors1['period_end_err'] = '開立年月須為民國年月格式(例如：114/02)';
@@ -115,17 +115,17 @@ class InvoiceInfoController extends Controller
                 $errors1['track_code_err'] = '字軌代碼為必填且為2碼';
             }
             // 字軌代碼不為空字串
-            if(empty($request->input('track_code')) || str_contains($request->input('track_code'), '*')  ){
+            if (!ValidationHelper::isValidText($request->input('track_code'))) {
                 $errors1['track_code_err'] = ' 字軌代碼不得為空字串或*';
-            } 
+            }
             //發票起始號碼為必填欄位且須為8碼
             if (!$request->has(['start_number']) || strlen($request->input('start_number')) != 8) {
                 $errors1['start_number_err'] = '發票起始號碼為必填且須為8碼';
             }
             // /發票起始號碼不為空字串
-            if(empty($request['start_number']) || str_contains($request->input('start_number') , '*')  ){
+            if (!ValidationHelper::isValidText($request->input('start_number'))) {
                 $errors1['start_number_err'] = ' 發票起始號碼不得為空字串或*';
-            } 
+            }
             //發票起始號碼尾數需要為0
             if (substr($request->input('start_number'), -1) != '0') {
                 $errors1['start_number_err'] = '發票起始號碼尾數需要為0';
@@ -138,9 +138,9 @@ class InvoiceInfoController extends Controller
                 $errors1['end_number_err'] = '發票截止號碼為必填且須為8碼';
             }
             //發票截止號碼不為空字串
-            if(empty($request->input('end_number')) || str_contains($request->input('end_number') , '*')  ){
+            if (!ValidationHelper::isValidText($request->input('end_number'))) {
                 $errors1['end_number_err'] = ' 發票截止號碼不得為空字串或*';
-            } 
+            }
             //發票截止號碼尾數需要為9
             if (substr($request->input('end_number'), -1) != '9') {
                 $errors1['end_number_err'] = '發票截止號碼尾數需要為9';
@@ -159,9 +159,9 @@ class InvoiceInfoController extends Controller
             }
 
             //是否有效不為空字串
-            if(empty($request->input('is_valid')) || str_contains($request->input('is_valid') , '*')  ){
+            if (!ValidationHelper::isValidText($request->input('is_valid'))) {
                 $errors1['is_valid_err'] = ' 是否有效不得為空字串或*';
-            } 
+            }
 
 
             // 如果有錯誤，回傳統一格式
@@ -275,10 +275,9 @@ class InvoiceInfoController extends Controller
                 $errors1['period_start_err'] = '開立年月起為必填';
             }
             // 開立年月起不為空字串
-            if(empty($request->has(['period_start'])) || $request->input('period_start')=="" || str_contains($request->input('period_start') , '*')){
+            if (!ValidationHelper::isValidText($request->input('period_start'))) {
                 $errors1['period_start_err'] = '開立年月起不得為空字串或*';
-            }     
-
+            }
             //開立年月起須為民國年月例如：114/01
             if (!preg_match('/^[1-9]\d{2}\/(0[1-9]|1[0-2])$/', $request->input('period_start'))) {
                 $errors1['period_start_err'] = '開立年月須為民國年月格式(例如：114/01)';
@@ -289,9 +288,9 @@ class InvoiceInfoController extends Controller
                 $errors1['period_end_err'] = '開立年月迄為必填';
             }
             // 開立年月迄不為空字串
-            if(empty($request->has(['period_end'])) || str_contains($request->input('period_end') , '*') ){
+            if (!ValidationHelper::isValidText($request->input('period_end'))) {
                 $errors1['period_end_err'] = '開立年月迄不得為空字串或*';
-            }   
+            }
             //開立年月迄須為民國年月
             if (!preg_match('/^[1-9]\d{2}\/(0[1-9]|1[0-2])$/', $request->input('period_end'))) {
                 $errors1['period_end_err'] = '開立年月須為民國年月格式(例如：114/02)';
@@ -321,17 +320,17 @@ class InvoiceInfoController extends Controller
                 $errors1['track_code_err'] = '字軌代碼為必填且為2碼';
             }
             // 字軌代碼不為空字串
-            if(empty($request->input('track_code')) || str_contains($request->input('track_code'), '*')  ){
+            if (!ValidationHelper::isValidText($request->input('track_code'))) {
                 $errors1['track_code_err'] = ' 字軌代碼不得為空字串或*';
-            } 
+            }
             //發票起始號碼為必填欄位且須為8碼
             if (!$request->has(['start_number']) || strlen($request->input('start_number')) != 8) {
                 $errors1['start_number_err'] = '發票起始號碼為必填且須為8碼';
             }
             // /發票起始號碼不為空字串
-            if(empty($request['start_number']) || str_contains($request->input('start_number') , '*')  ){
+            if (!ValidationHelper::isValidText($request->input('start_number'))) {
                 $errors1['start_number_err'] = ' 發票起始號碼不得為空字串或*';
-            } 
+            }
             //發票起始號碼尾數需要為0
             if (substr($request->input('start_number'), -1) != '0') {
                 $errors1['start_number_err'] = '發票起始號碼尾數需要為0';
@@ -344,9 +343,9 @@ class InvoiceInfoController extends Controller
                 $errors1['end_number_err'] = '發票截止號碼為必填且須為8碼';
             }
             //發票截止號碼不為空字串
-            if(empty($request->input('end_number')) || str_contains($request->input('end_number') , '*')  ){
+            if (!ValidationHelper::isValidText($request->input('end_number'))) {
                 $errors1['end_number_err'] = ' 發票截止號碼不得為空字串或*';
-            } 
+            }
             //發票截止號碼尾數需要為9
             if (substr($request->input('end_number'), -1) != '9') {
                 $errors1['end_number_err'] = '發票截止號碼尾數需要為9';
@@ -365,9 +364,9 @@ class InvoiceInfoController extends Controller
             }
 
             //是否有效不為空字串
-            if(empty($request->input('is_valid')) || str_contains($request->input('is_valid') , '*')  ){
+            if (!ValidationHelper::isValidText($request->input('is_valid'))) {
                 $errors1['is_valid_err'] = ' 是否有效不得為空字串或*';
-            } 
+            }
 
 
             // 如果有錯誤，回傳統一格式
@@ -378,6 +377,7 @@ class InvoiceInfoController extends Controller
                     'errors' => $errors1
                 ], 400);
             }
+
             // 驗證 UUID 是否存在
             $InvoiceInfo = InvoiceInfo::where('uuid', $request['uuid'])->where('is_valid','1')->first();
             if (!$InvoiceInfo) {
@@ -830,7 +830,7 @@ class InvoiceInfoController extends Controller
                 return response()->json([
                     'status' => false,
                     'message' => '常用資料未找到',
-                    'InvoiceOption' => null
+                    'InvoiceOption' => []
                 ], 404);
             }
     
