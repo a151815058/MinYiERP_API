@@ -1545,7 +1545,7 @@
                     {
                         "name": "recipient_phone",
                         "in": "query",
-                        "description": "發票收件人電話",
+                        "description": "連絡電話2",
                         "required": false,
                         "schema": {
                             "type": "string"
@@ -1972,7 +1972,7 @@
                     {
                         "name": "recipient_phone",
                         "in": "query",
-                        "description": "發票收件人電話",
+                        "description": "連絡電話2",
                         "required": false,
                         "schema": {
                             "type": "string"

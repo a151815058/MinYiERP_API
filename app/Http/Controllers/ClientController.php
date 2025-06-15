@@ -107,8 +107,7 @@ class ClientController extends Controller
     public function store(Request $request)
     {
         $errors1 = [];
-        $errors1 = [];
-        try {
+        try{
             // 客戶代碼為必填
             if (!$request->has('client_no')) {
                 $errors1['client_no_err'] = '客戶代碼為必填';
@@ -268,23 +267,24 @@ class ClientController extends Controller
                 $errors1['taxid_err'] = '統一編號為必填';
             }else{
                 // 檢查統一編號格式是否正確
-                if (!preg_match('/^\d{8}$/', $request->input('taxid'))) {
+                if (strlen($request->input('taxid')) != 8) {
                     $errors1['taxid_err'] = '統一編號格式錯誤，應為8位數字';
-                }
-                // 權重驗證
-                $taxid = str_split($request->input('taxid'));
-                $weight = [1, 2, 1, 2, 1, 2, 4, 1];
-                $sum = 0;
-                for ($i = 0; $i < 8; $i++) {
-                    $digit = (int)$taxid[$i];
-                    $product = $digit * $weight[$i];
-                    if ($product >= 10) {
-                        $product = array_sum(str_split($product));
+                }else{
+                    // 權重驗證
+                    $taxid = str_split($request->input('taxid'));
+                    $weight = [1, 2, 1, 2, 1, 2, 4, 1];
+                    $sum = 0;
+                    for ($i = 0; $i < 8; $i++) {
+                        $digit = (int)$taxid[$i];
+                        $product = $digit * $weight[$i];
+                        if ($product >= 10) {
+                            $product = array_sum(str_split($product));
+                        }
+                        $sum += $product;
                     }
-                    $sum += $product;
-                }
-                if ($sum ==0 ||$sum % 10 !== 0) {
-                    $errors1['taxid_err'] = '統一編號驗證失敗';
+                    if ($sum ==0 ||$sum % 10 !== 0) {
+                        $errors1['taxid_err'] = '統一編號驗證失敗';
+                    }
                 }
             }
 
@@ -306,7 +306,7 @@ class ClientController extends Controller
             if (!empty($errors1)) {
                 return response()->json([
                     'status' => false,
-                    'message1' => '缺少必填的欄位及欄位格式錯誤',
+                    'message' => '缺少必填的欄位及欄位格式錯誤',
                     'errors' => $errors1
                 ], 400);
             }
@@ -627,23 +627,24 @@ class ClientController extends Controller
                 $errors1['taxid_err'] = '統一編號為必填';
             }else{
                 // 檢查統一編號格式是否正確
-                if (!preg_match('/^\d{8}$/', $request->input('taxid'))) {
+                if (strlen($request->input('taxid')) != 8) {
                     $errors1['taxid_err'] = '統一編號格式錯誤，應為8位數字';
-                }
-                // 權重驗證
-                $taxid = str_split($request->input('taxid'));
-                $weight = [1, 2, 1, 2, 1, 2, 4, 1];
-                $sum = 0;
-                for ($i = 0; $i < 8; $i++) {
-                    $digit = (int)$taxid[$i];
-                    $product = $digit * $weight[$i];
-                    if ($product >= 10) {
-                        $product = array_sum(str_split($product));
+                }else{
+                    // 權重驗證
+                    $taxid = str_split($request->input('taxid'));
+                    $weight = [1, 2, 1, 2, 1, 2, 4, 1];
+                    $sum = 0;
+                    for ($i = 0; $i < 8; $i++) {
+                        $digit = (int)$taxid[$i];
+                        $product = $digit * $weight[$i];
+                        if ($product >= 10) {
+                            $product = array_sum(str_split($product));
+                        }
+                        $sum += $product;
                     }
-                    $sum += $product;
-                }
-                if ($sum ==0 ||$sum % 10 !== 0) {
-                    $errors1['taxid_err'] = '統一編號驗證失敗';
+                    if ($sum ==0 ||$sum % 10 !== 0) {
+                        $errors1['taxid_err'] = '統一編號驗證失敗';
+                    }
                 }
             }
 
@@ -665,7 +666,7 @@ class ClientController extends Controller
             if (!empty($errors1)) {
                 return response()->json([
                     'status' => false,
-                    'message1' => '缺少必填的欄位及欄位格式錯誤',
+                    'message' => '缺少必填的欄位及欄位格式錯誤',
                     'errors' => $errors1
                 ], 400);
             }

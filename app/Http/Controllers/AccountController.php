@@ -124,7 +124,7 @@ class AccountController extends Controller
             if (!empty($errors1)) {
                 return response()->json([
                     'status' => false,
-                    'message1' => '缺少必填的欄位及欄位格式錯誤',
+                    'message' => '缺少必填的欄位及欄位格式錯誤',
                     'errors' => $errors1
                 ], 400);
             }          
@@ -284,7 +284,7 @@ class AccountController extends Controller
             if (!empty($errors1)) {
                 return response()->json([
                     'status' => false,
-                    'message1' => '缺少必填的欄位及欄位格式錯誤',
+                    'message' => '缺少必填的欄位及欄位格式錯誤',
                     'errors' => $errors1
                 ], 400);
             }        

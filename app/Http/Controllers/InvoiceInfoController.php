@@ -168,7 +168,7 @@ class InvoiceInfoController extends Controller
             if (!empty($errors1)) {
                 return response()->json([
                     'status' => false,
-                    'message1' => '缺少必填的欄位及欄位格式錯誤',
+                    'message' => '缺少必填的欄位及欄位格式錯誤',
                     'errors' => $errors1
                 ], 400);
             }
@@ -373,7 +373,7 @@ class InvoiceInfoController extends Controller
             if (!empty($errors1)) {
                 return response()->json([
                     'status' => false,
-                    'message1' => '缺少必填的欄位及欄位格式錯誤',
+                    'message' => '缺少必填的欄位及欄位格式錯誤',
                     'errors' => $errors1
                 ], 400);
             }
@@ -480,7 +480,7 @@ class InvoiceInfoController extends Controller
             if (!empty($errors1)) {
                 return response()->json([
                     'status' => false,
-                    'message1' => '查詢條件不存在',
+                    'message' => '查詢條件不存在',
                     'errors' => $errors1
                 ], 400);
             }
@@ -630,7 +630,7 @@ class InvoiceInfoController extends Controller
             if (!empty($errors1)) {
                 return response()->json([
                     'status' => false,
-                    'message1' => '查詢條件錯誤',
+                    'message' => '查詢條件錯誤',
                     'errors' => $errors1
                 ], 400);
             }
