@@ -53,7 +53,7 @@ class ClientController extends Controller
  *     @OA\Parameter(name="recipient_name", in="query", required=false, description="發票收件人", @OA\Schema(type="string")),
  *     @OA\Parameter(name="recipient_phone", in="query", required=false, description="發票收件人電話", @OA\Schema(type="string")),
  *     @OA\Parameter(name="recipient_email", in="query", required=false, description="發票收件人信箱", @OA\Schema(type="string")),
- *     @OA\Parameter(name="invoice_address", in="query", required=false, description="發票地址", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="invoice_address", in="query", required=true, description="發票地址", @OA\Schema(type="string")),
  *     @OA\Parameter(name="note", in="query", required=false, description="備註", @OA\Schema(type="string")),
  *     @OA\Parameter(name="is_valid", in="query", required=true, description="是否有效", @OA\Schema(type="string", example=1)),
  *     @OA\Response(
@@ -288,7 +288,16 @@ class ClientController extends Controller
                 }
             }
 
-            //判斷發票抬頭不能存在空白、""、''、"、'
+            // 發票地址為必填
+            if (!$request->has('invoice_address')) {
+                $errors1['invoice_address_err'] = '發票地址為必填';
+            }
+            //判斷發票地址不能存在空白、""、''、"、'
+            if (!ValidationHelper::isValidText($request->input('invoice_address'))) {
+                 $errors1['invoice_address_err'] = '發票地址不得為空字串或*';
+            }  
+
+            //判斷是否有效不能存在空白、""、''、"、'
             if (!ValidationHelper::isValidText($request->input('is_valid'))) {
                 $errors1['is_valid_err'] = ' 是否有效不得為空字串或*';
             } 
@@ -329,7 +338,7 @@ class ClientController extends Controller
                 'taxtype'             => $request['taxtype']?? null,   //課稅別   
                 'delivery_method'     => $request['delivery_method']?? null,  //發票寄送方式
                 'recipient_name'      => $request['recipient_name']?? null,   //發票收件人   
-                'invoice_address'     => $request['invoice_address']?? null,  //發票地址    
+                'invoice_address'     => $request['invoice_address'],  //發票地址    
                 'recipient_phone'     => $request['recipient_phone']?? null,  //聯絡電話2     
                 'recipient_email'     => $request['recipient_email']?? null,  //發票收件信箱     
                 'established_date'    => $request['established_date'],      //成立日期   
@@ -405,7 +414,7 @@ class ClientController extends Controller
  *     @OA\Parameter(name="recipient_name", in="query", required=false, description="發票收件人", @OA\Schema(type="string")),
  *     @OA\Parameter(name="recipient_phone", in="query", required=false, description="發票收件人電話", @OA\Schema(type="string")),
  *     @OA\Parameter(name="recipient_email", in="query", required=false, description="發票收件人信箱", @OA\Schema(type="string")),
- *     @OA\Parameter(name="invoice_address", in="query", required=false, description="發票地址", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="invoice_address", in="query", required=true, description="發票地址", @OA\Schema(type="string")),
  *     @OA\Parameter(name="note", in="query", required=false, description="備註", @OA\Schema(type="string")),
  *     @OA\Parameter(name="is_valid", in="query", required=true, description="是否有效", @OA\Schema(type="string", example=1)),
  *     @OA\Response(
@@ -458,8 +467,7 @@ class ClientController extends Controller
     //更新客戶資料
     public function update(Request $request){
         $errors1 = [];
-        $errors1 = [];
-        try {
+        try{
             // 客戶代碼為必填
             if (!$request->has('client_no')) {
                 $errors1['client_no_err'] = '客戶代碼為必填';
@@ -639,7 +647,16 @@ class ClientController extends Controller
                 }
             }
 
-            //判斷發票抬頭不能存在空白、""、''、"、'
+            // 發票地址為必填
+            if (!$request->has('invoice_address')) {
+                $errors1['invoice_address_err'] = '發票地址為必填';
+            }
+            //判斷發票地址不能存在空白、""、''、"、'
+            if (!ValidationHelper::isValidText($request->input('invoice_address'))) {
+                 $errors1['invoice_address_err'] = '發票地址不得為空字串或*';
+            }  
+
+            //判斷是否有效不能存在空白、""、''、"、'
             if (!ValidationHelper::isValidText($request->input('is_valid'))) {
                 $errors1['is_valid_err'] = ' 是否有效不得為空字串或*';
             } 

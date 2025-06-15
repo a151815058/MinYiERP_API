@@ -1564,7 +1564,7 @@
                         "name": "invoice_address",
                         "in": "query",
                         "description": "發票地址",
-                        "required": false,
+                        "required": true,
                         "schema": {
                             "type": "string"
                         }
@@ -1991,7 +1991,7 @@
                         "name": "invoice_address",
                         "in": "query",
                         "description": "發票地址",
-                        "required": false,
+                        "required": true,
                         "schema": {
                             "type": "string"
                         }
