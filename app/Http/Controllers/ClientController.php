@@ -108,6 +108,7 @@ class ClientController extends Controller
     {
         $errors1 = [];
         try{
+
             // 客戶代碼為必填
             if (!$request->filled('client_no')) {
                 $errors1['client_no_err'] = '客戶代碼為必填';
@@ -225,44 +226,52 @@ class ClientController extends Controller
             }    
              
             //公司電話不可為中文
-            if ($request->filled('phone') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('phone'))) {
-                $errors1['phone_err'] = '公司電話不可包含中文';
-            }
-
-            //公司電話須符合格式
-            if(!preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('phone'))){
-                $errors1['phone_err'] = '公司電話須符合格式';
+            if ($request->filled('phone') ) {
+                if(preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('phone'))){
+                    $errors1['phone_err'] = '公司電話不可包含中文';
+                }
+                //公司電話須符合格式
+                if(!preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('phone'))){
+                    $errors1['phone_err'] = '公司電話須符合格式';
+                }
             }
 
             //公司傳真不可為中文
-            if ($request->filled('fax') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('fax'))) {
-                $errors1['fax_err'] = '公司傳真不可包含中文';
-            }
-
-            //公司傳真須符合格式
-            if(!preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('fax'))){
-                $errors1['fax_err'] = '公司傳真須符合格式';
+            if ($request->filled('fax')) {
+                if(preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('fax'))){
+                    $errors1['fax_err'] = '公司傳真不可包含中文';
+                }
+                //公司傳真須符合格式
+                if(!preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('fax'))){
+                    $errors1['fax_err'] = '公司傳真須符合格式';
+                }
             }
 
             //行動電話不可為中文
-            if ($request->filled('mobile_phone') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('mobile_phone'))) {
-                $errors1['mobile_phone_err'] = '行動電話不可包含中文';
+            if ($request->filled('mobile_phone')) {
+                if( preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('mobile_phone'))){
+                    $errors1['mobile_phone_err'] = '行動電話不可包含中文';
+                }
+                //行動電話須符合格式
+                if(!preg_match('/^09\d{2}-?\d{3}-?\d{3}$/', $request->filled('mobile_phone'))){
+                    $errors1['mobile_phone_err'] = '行動電話須符合格式';
+                }                  
             }
 
-            //行動電話須符合格式
-            if(!preg_match('/^09\d{2}-?\d{3}-?\d{3}$/', $request->filled('mobile_phone'))){
-                $errors1['mobile_phone_err'] = '行動電話須符合格式';
-            }            
+          
 
             //聯絡人信箱不可為中文
-            if ($request->filled('contact_email') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('contact_email'))) {
-                $errors1['contact_email_err'] = '聯絡人信箱不可包含中文';
+            if ($request->filled('contact_email') ) {
+                if(preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('contact_email'))){
+                    $errors1['contact_email_err'] = '聯絡人信箱不可包含中文';
+                }
+                //聯絡人信箱須符合格式
+                if (!filter_var($request->filled('contact_email'), FILTER_VALIDATE_EMAIL)) {
+                    $errors1['contact_email_err'] = '聯絡人信箱須符合格式';
+                }                
             }
 
-            //聯絡人信箱須符合格式
-            if (!filter_var($request->filled('contact_email'), FILTER_VALIDATE_EMAIL)) {
-                $errors1['contact_email_err'] = '聯絡人信箱須符合格式';
-            }
+
 
             // 發票抬頭為必填
             if (!$request->filled('invoice_title')) {
@@ -320,7 +329,6 @@ class ClientController extends Controller
                     'errors' => $errors1
                 ], 400);
             }
-
   
             // 建立客戶資料
             $Client = Client::create([
@@ -371,6 +379,7 @@ class ClientController extends Controller
                     'output'    => $Client
                 ], 400);
             }
+
         } catch (\Illuminate\Validation\ValidationException $e) {
             // 捕捉驗證失敗
             return response()->json([
@@ -389,6 +398,7 @@ class ClientController extends Controller
                 'error' => $e->getMessage() // 上線環境建議拿掉
             ], 500);
         }
+        
 
     }
 /**
@@ -478,6 +488,7 @@ class ClientController extends Controller
     public function update(Request $request){
         $errors1 = [];
         try{
+
             // 客戶代碼為必填
             if (!$request->filled('client_no')) {
                 $errors1['client_no_err'] = '客戶代碼為必填';
@@ -522,28 +533,38 @@ class ClientController extends Controller
             }
 
             //幣別須存在
-            if ($request->filled('currency_id') && !Currency::where('uuid', $request->input('currency_id'))->exists()) {
-                 $errors1['currency_id_err'] = '幣別不存在，請選擇正確的幣別';
+            if ($request->filled('currency_id') ) {
+                if(!Currency::where('uuid', $request->input('currency_id'))->exists()){
+                    $errors1['currency_id_err'] = '幣別不存在，請選擇正確的幣別';
+                }
             }
 
             //付款條件須存在
-            if ($request->filled('paymentterm_id') && !PaymentTerm::where('uuid', $request->input('paymentterm_id'))->exists()) {
-                $errors1['paymentterm_id_err'] = '付款條件不存在，請選擇正確的付款條件';
+            if ($request->filled('paymentterm_id')) {
+                if(!PaymentTerm::where('uuid', $request->input('paymentterm_id'))->exists()){
+                    $errors1['paymentterm_id_err'] = '付款條件不存在，請選擇正確的付款條件';
+                }
             }
 
             //業務人員須存在
-            if ($request->filled('user_id') && !SysUser::where('uuid', $request->input('user_id'))->exists()) {
-                $errors1['user_id_err'] = '業務人員不存在，請選擇正確的業務人員';
+            if ($request->filled('user_id')  ) {
+                if(!SysUser::where('uuid', $request->input('user_id'))->exists()){
+                    $errors1['user_id_err'] = '業務人員不存在，請選擇正確的業務人員';
+                }
             }
 
             //科目別須存在
-            if ($request->filled('account_category') && !Account::where('uuid', $request->input('account_category'))->where(  'is_valid','1')->exists()) {
-                $errors1['account_category_err'] = '科目別不存在，請選擇正確的科目別';
+            if ($request->filled('account_category') ) {
+                if(!Account::where('uuid', $request->input('account_category'))->where(  'is_valid','1')->exists()){
+                    $errors1['account_category_err'] = '科目別不存在，請選擇正確的科目別';
+                }
             }
 
             //課稅別須存在
-            if ($request->filled('taxtype') && !SysCode::where('param_sn', '02')->where('uuid', $request->input('taxtype'))->exists()) {
-                $errors1['taxtype_err'] = '課稅別不存在，請選擇正確的課稅別';
+            if ($request->filled('taxtype')) {
+                if(!SysCode::where('param_sn', '02')->where('uuid', $request->input('taxtype'))->exists()){
+                    $errors1['taxtype_err'] = '課稅別不存在，請選擇正確的課稅別';
+                }
             }
             //發票寄送方式需存在
             if (!$request->filled('delivery_method')) {
@@ -585,44 +606,52 @@ class ClientController extends Controller
             }    
              
             //公司電話不可為中文
-            if ($request->filled('phone') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('phone'))) {
-                $errors1['phone_err'] = '公司電話不可包含中文';
-            }
-
-            //公司電話須符合格式
-            if(!preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('phone'))){
-                $errors1['phone_err'] = '公司電話須符合格式';
+            if ($request->filled('phone') ) {
+                if(preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('phone'))){
+                    $errors1['phone_err'] = '公司電話不可包含中文';
+                }
+                //公司電話須符合格式
+                if(!preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('phone'))){
+                    $errors1['phone_err'] = '公司電話須符合格式';
+                }
             }
 
             //公司傳真不可為中文
-            if ($request->filled('fax') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('fax'))) {
-                $errors1['fax_err'] = '公司傳真不可包含中文';
-            }
-
-            //公司傳真須符合格式
-            if(!preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('fax'))){
-                $errors1['fax_err'] = '公司傳真須符合格式';
+            if ($request->filled('fax')) {
+                if(preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('fax'))){
+                    $errors1['fax_err'] = '公司傳真不可包含中文';
+                }
+                //公司傳真須符合格式
+                if(!preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('fax'))){
+                    $errors1['fax_err'] = '公司傳真須符合格式';
+                }
             }
 
             //行動電話不可為中文
-            if ($request->filled('mobile_phone') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('mobile_phone'))) {
-                $errors1['mobile_phone_err'] = '行動電話不可包含中文';
+            if ($request->filled('mobile_phone')) {
+                if( preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('mobile_phone'))){
+                    $errors1['mobile_phone_err'] = '行動電話不可包含中文';
+                }
+                //行動電話須符合格式
+                if(!preg_match('/^09\d{2}-?\d{3}-?\d{3}$/', $request->filled('mobile_phone'))){
+                    $errors1['mobile_phone_err'] = '行動電話須符合格式';
+                }                  
             }
 
-            //行動電話須符合格式
-            if(!preg_match('/^09\d{2}-?\d{3}-?\d{3}$/', $request->filled('mobile_phone'))){
-                $errors1['mobile_phone_err'] = '行動電話須符合格式';
-            }            
+          
 
             //聯絡人信箱不可為中文
-            if ($request->filled('contact_email') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('contact_email'))) {
-                $errors1['contact_email_err'] = '聯絡人信箱不可包含中文';
+            if ($request->filled('contact_email') ) {
+                if(preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('contact_email'))){
+                    $errors1['contact_email_err'] = '聯絡人信箱不可包含中文';
+                }
+                //聯絡人信箱須符合格式
+                if (!filter_var($request->filled('contact_email'), FILTER_VALIDATE_EMAIL)) {
+                    $errors1['contact_email_err'] = '聯絡人信箱須符合格式';
+                }                
             }
 
-            //聯絡人信箱須符合格式
-            if (!filter_var($request->filled('contact_email'), FILTER_VALIDATE_EMAIL)) {
-                $errors1['contact_email_err'] = '聯絡人信箱須符合格式';
-            }
+
 
             // 發票抬頭為必填
             if (!$request->filled('invoice_title')) {
