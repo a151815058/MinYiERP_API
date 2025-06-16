@@ -1187,16 +1187,12 @@ class ClientController extends Controller
         $SysCode1 = SysCode::where('param_sn', '02')->where('is_valid','1')->get();
         // 查詢 '所有有效付款條件' 的資料
         $SysCode2 = PaymentTerm::where('is_valid', '1')->get();
-        // 付款條件(當月、次月的常數資料)
-        $SysCode3 = PaymentTerm::where('is_valid', '1')->get();
         // 查詢 '所有有效人員' 的資料
-        $SysCode4 = SysUser::with('depts')->where('is_valid', '1')->get();
-        // 付款條件(當月、次月的常數資料)
-        $SysCode5 = PaymentTerm::where('is_valid', '1')->get();
+        $SysCode3 = SysUser::with('depts')->where('is_valid', '1')->get();
         // 發票寄送方式
-        $SysCode6 = SysCode::where('param_sn', '04')->where('is_valid','1')->get();
+        $SysCode4 = SysCode::where('param_sn', '04')->where('is_valid','1')->get();
         // 客戶型態
-        $SysCode7 = SysCode::where('param_sn', '03')->where('is_valid','1')->get();
+        $SysCode5 = SysCode::where('param_sn', '03')->where('is_valid','1')->get();
 
         // 科目別 
         $Account = Account::where('is_valid','1')->get();
@@ -1209,8 +1205,6 @@ class ClientController extends Controller
                 $SysCode3->isEmpty() &&
                 $SysCode4->isEmpty() &&
                 $SysCode5->isEmpty() &&
-                $SysCode6->isEmpty() &&
-                $SysCode7->isEmpty() &&
                 $Account->isEmpty() ) {
                 return response()->json([
                     'status' => true,
@@ -1219,7 +1213,6 @@ class ClientController extends Controller
                     'taxtypeOption' => [],
                     'paymenttermOption' => [],
                     'sysuserOption' => [],
-                    'paymentterm2Option' => [],
                     'deliverymethodOption' => [],
                     'clienttypeOption' => [],
                     'accountOption' =>[]
@@ -1232,11 +1225,10 @@ class ClientController extends Controller
                 'message' => 'success',
                 'currencyOption' => $SysCode,
                 'taxtypeOption' => $SysCode1,
-                'paymenttermOption' => $SysCode3,
-                'sysuserOption' => $SysCode4,
-                'paymentterm2Option' => $SysCode5,
-                'deliverymethodOption' => $SysCode6,
-                'clienttypeOption' => $SysCode7,
+                'paymenttermOption' => $SysCode2,
+                'sysuserOption' => $SysCode3,
+                'deliverymethodOption' => $SysCode4,
+                'clienttypeOption' => $SysCode5,
                 'accountOption' => $Account
             ], 400);
     
