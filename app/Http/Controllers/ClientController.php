@@ -152,28 +152,38 @@ class ClientController extends Controller
             }
 
             //幣別須存在
-            if ($request->has('currency_id') && !Currency::where('uuid', $request->input('currency_id'))->exists()) {
-                 $errors1['currency_id_err'] = '幣別不存在，請選擇正確的幣別';
+            if ($request->has('currency_id') ) {
+                if(!Currency::where('uuid', $request->input('currency_id'))->exists()){
+                    $errors1['currency_id_err'] = '幣別不存在，請選擇正確的幣別';
+                }
             }
 
             //付款條件須存在
-            if ($request->has('paymentterm_id') && !PaymentTerm::where('uuid', $request->input('paymentterm_id'))->exists()) {
-                $errors1['paymentterm_id_err'] = '付款條件不存在，請選擇正確的付款條件';
+            if ($request->has('paymentterm_id')) {
+                if(!PaymentTerm::where('uuid', $request->input('paymentterm_id'))->exists()){
+                    $errors1['paymentterm_id_err'] = '付款條件不存在，請選擇正確的付款條件';
+                }
             }
 
             //業務人員須存在
-            if ($request->has('user_id') && !SysUser::where('uuid', $request->input('user_id'))->exists()) {
-                $errors1['user_id_err'] = '業務人員不存在，請選擇正確的業務人員';
+            if ($request->has('user_id')  ) {
+                if(!SysUser::where('uuid', $request->input('user_id'))->exists()){
+                    $errors1['user_id_err'] = '業務人員不存在，請選擇正確的業務人員';
+                }
             }
 
             //科目別須存在
-            if ($request->has('account_category') && !Account::where('uuid', $request->input('account_category'))->where(  'is_valid','1')->exists()) {
-                $errors1['account_category_err'] = '科目別不存在，請選擇正確的科目別';
+            if ($request->has('account_category') ) {
+                if(!Account::where('uuid', $request->input('account_category'))->where(  'is_valid','1')->exists()){
+                    $errors1['account_category_err'] = '科目別不存在，請選擇正確的科目別';
+                }
             }
 
             //課稅別須存在
-            if ($request->has('taxtype') && !SysCode::where('param_sn', '02')->where('uuid', $request->input('taxtype'))->exists()) {
-                $errors1['taxtype_err'] = '課稅別不存在，請選擇正確的課稅別';
+            if ($request->has('taxtype')) {
+                if(!SysCode::where('param_sn', '02')->where('uuid', $request->input('taxtype'))->exists()){
+                    $errors1['taxtype_err'] = '課稅別不存在，請選擇正確的課稅別';
+                }
             }
             //發票寄送方式需存在
             if (!$request->has('delivery_method')) {
