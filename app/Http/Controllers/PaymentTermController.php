@@ -562,7 +562,7 @@ class PaymentTermController extends Controller
     // 列出所有付款條件需要的常用(下拉、彈窗)
     public function showconst($constant='all'){
         // 查詢 '所有付款條件' 的資料
-        $SysCode = SysCode::where('param_sn', '02')->where('is_valid','1')->get();
+        $SysCode = SysCode::where('param_sn', '10')->where('is_valid','1')->get();
         try {
             // 檢查是否有結果
             if ($SysCode->isEmpty() ) {
