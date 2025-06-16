@@ -109,7 +109,7 @@ class ClientController extends Controller
         $errors1 = [];
         try{
             // 客戶代碼為必填
-            if (!$request->has('client_no')) {
+            if (!$request->filled('client_no')) {
                 $errors1['client_no_err'] = '客戶代碼為必填';
             }else {
                 // 判斷客戶代碼不能存在空白、""、''、"、'
@@ -124,7 +124,7 @@ class ClientController extends Controller
             }
 
             // 客戶名稱為必填
-            if (!$request->has('client_fullnm')) {
+            if (!$request->filled('client_fullnm')) {
                 $errors1['client_fullnm_err'] = '客戶全名為必填';
             }
             //判斷客戶名稱不能存在空白、""、''、"、'
@@ -133,7 +133,7 @@ class ClientController extends Controller
             }
 
             //客戶全名為必填
-            if (!$request->has('client_shortnm')) {
+            if (!$request->filled('client_shortnm')) {
                 $errors1['client_shortnm_err'] = '客戶簡稱為必填';
             }
 
@@ -143,55 +143,55 @@ class ClientController extends Controller
             }             
 
             //客戶型態為必填
-            if (!$request->has('client_type')) {
+            if (!$request->filled('client_type')) {
                 $errors1['client_type_err'] = '客戶型態為必填';
             }
             //客戶型態須為參數檔資料
-            if (!$request->has('client_type') && !SysCode::where('param_sn', '03')->where('uuid', $request->input('client_type'))->exists()) {
+            if (!$request->filled('client_type') && !SysCode::where('param_sn', '03')->where('uuid', $request->input('client_type'))->exists()) {
                 $errors1['client_type_err'] = '客戶型態不存在，請選擇正確的客戶型態';
             }
 
             //幣別須存在
-            if ($request->has('currency_id') ) {
+            if ($request->filled('currency_id') ) {
                 if(!Currency::where('uuid', $request->input('currency_id'))->exists()){
                     $errors1['currency_id_err'] = '幣別不存在，請選擇正確的幣別';
                 }
             }
 
             //付款條件須存在
-            if ($request->has('paymentterm_id')) {
+            if ($request->filled('paymentterm_id')) {
                 if(!PaymentTerm::where('uuid', $request->input('paymentterm_id'))->exists()){
                     $errors1['paymentterm_id_err'] = '付款條件不存在，請選擇正確的付款條件';
                 }
             }
 
             //業務人員須存在
-            if ($request->has('user_id')  ) {
+            if ($request->filled('user_id')  ) {
                 if(!SysUser::where('uuid', $request->input('user_id'))->exists()){
                     $errors1['user_id_err'] = '業務人員不存在，請選擇正確的業務人員';
                 }
             }
 
             //科目別須存在
-            if ($request->has('account_category') ) {
+            if ($request->filled('account_category') ) {
                 if(!Account::where('uuid', $request->input('account_category'))->where(  'is_valid','1')->exists()){
                     $errors1['account_category_err'] = '科目別不存在，請選擇正確的科目別';
                 }
             }
 
             //課稅別須存在
-            if ($request->has('taxtype')) {
+            if ($request->filled('taxtype')) {
                 if(!SysCode::where('param_sn', '02')->where('uuid', $request->input('taxtype'))->exists()){
                     $errors1['taxtype_err'] = '課稅別不存在，請選擇正確的課稅別';
                 }
             }
             //發票寄送方式需存在
-            if (!$request->has('delivery_method')) {
+            if (!$request->filled('delivery_method')) {
                 $errors1['delivery_method_err'] = '發票寄送方式為必填';
             }
 
             //發票寄送方式需存在
-            if ($request->has('delivery_method') && !SysCode::where('param_sn', '04')->where('uuid', $request->input('delivery_method'))->exists()) {
+            if ($request->filled('delivery_method') && !SysCode::where('param_sn', '04')->where('uuid', $request->input('delivery_method'))->exists()) {
                 $errors1['delivery_method_err'] = '發票寄送方式不存在，請選擇正確的發票寄送方式';
             }
 
@@ -201,7 +201,7 @@ class ClientController extends Controller
             }
  
             //郵遞區號二為必填
-            if (!$request->has('zip_code2')) {
+            if (!$request->filled('zip_code2')) {
                 $errors1['zip_code2_err'] = '郵遞區號二為必填';
             }
 
@@ -211,11 +211,11 @@ class ClientController extends Controller
             }    
 
             //郵遞區號二不可為中文
-            if ($request->has('zip_code2') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('zip_code2'))) {
+            if ($request->filled('zip_code2') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('zip_code2'))) {
                 $errors1['zip_code2_err'] = '郵遞區號二不可包含中文';
             }
             //送貨地址為必填
-            if (!$request->has('address2')) {
+            if (!$request->filled('address2')) {
                 $errors1['address2_err'] = '送貨地址為必填';
             }
 
@@ -225,47 +225,47 @@ class ClientController extends Controller
             }    
              
             //公司電話不可為中文
-            if ($request->has('phone') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('phone'))) {
+            if ($request->filled('phone') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('phone'))) {
                 $errors1['phone_err'] = '公司電話不可包含中文';
             }
 
             //公司電話須符合格式
-            if(!preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->has('phone'))){
+            if(!preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('phone'))){
                 $errors1['phone_err'] = '公司電話須符合格式';
             }
 
             //公司傳真不可為中文
-            if ($request->has('fax') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('fax'))) {
+            if ($request->filled('fax') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('fax'))) {
                 $errors1['fax_err'] = '公司傳真不可包含中文';
             }
 
             //公司傳真須符合格式
-            if(!preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->has('fax'))){
+            if(!preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('fax'))){
                 $errors1['fax_err'] = '公司傳真須符合格式';
             }
 
             //行動電話不可為中文
-            if ($request->has('mobile_phone') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('mobile_phone'))) {
+            if ($request->filled('mobile_phone') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('mobile_phone'))) {
                 $errors1['mobile_phone_err'] = '行動電話不可包含中文';
             }
 
             //行動電話須符合格式
-            if(!preg_match('/^09\d{2}-?\d{3}-?\d{3}$/', $request->has('mobile_phone'))){
+            if(!preg_match('/^09\d{2}-?\d{3}-?\d{3}$/', $request->filled('mobile_phone'))){
                 $errors1['mobile_phone_err'] = '行動電話須符合格式';
             }            
 
             //聯絡人信箱不可為中文
-            if ($request->has('contact_email') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('contact_email'))) {
+            if ($request->filled('contact_email') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('contact_email'))) {
                 $errors1['contact_email_err'] = '聯絡人信箱不可包含中文';
             }
 
             //聯絡人信箱須符合格式
-            if (!filter_var($request->has('contact_email'), FILTER_VALIDATE_EMAIL)) {
+            if (!filter_var($request->filled('contact_email'), FILTER_VALIDATE_EMAIL)) {
                 $errors1['contact_email_err'] = '聯絡人信箱須符合格式';
             }
 
             // 發票抬頭為必填
-            if (!$request->has('invoice_title')) {
+            if (!$request->filled('invoice_title')) {
                 $errors1['invoice_title_err'] = '發票抬頭為必填';
             }
             //判斷發票抬頭不能存在空白、""、''、"、'
@@ -273,7 +273,7 @@ class ClientController extends Controller
                  $errors1['invoice_title_err'] = '送貨地址不得為空字串或*';
             }  
             ///統一編號為必填
-            if (!$request->has('taxid')) {
+            if (!$request->filled('taxid')) {
                 $errors1['taxid_err'] = '統一編號為必填';
             }else{
                 // 檢查統一編號格式是否正確
@@ -299,7 +299,7 @@ class ClientController extends Controller
             }
 
             // 發票地址為必填
-            if (!$request->has('invoice_address')) {
+            if (!$request->filled('invoice_address')) {
                 $errors1['invoice_address_err'] = '發票地址為必填';
             }
             //判斷發票地址不能存在空白、""、''、"、'
@@ -479,7 +479,7 @@ class ClientController extends Controller
         $errors1 = [];
         try{
             // 客戶代碼為必填
-            if (!$request->has('client_no')) {
+            if (!$request->filled('client_no')) {
                 $errors1['client_no_err'] = '客戶代碼為必填';
             }else {
                 // 判斷客戶代碼不能存在空白、""、''、"、'
@@ -494,7 +494,7 @@ class ClientController extends Controller
             }
 
             // 客戶名稱為必填
-            if (!$request->has('client_fullnm')) {
+            if (!$request->filled('client_fullnm')) {
                 $errors1['client_fullnm_err'] = '客戶全名為必填';
             }
             //判斷客戶名稱不能存在空白、""、''、"、'
@@ -503,7 +503,7 @@ class ClientController extends Controller
             }
 
             //客戶全名為必填
-            if (!$request->has('client_shortnm')) {
+            if (!$request->filled('client_shortnm')) {
                 $errors1['client_shortnm_err'] = '客戶簡稱為必填';
             }
 
@@ -513,45 +513,45 @@ class ClientController extends Controller
             }             
 
             //客戶型態為必填
-            if (!$request->has('client_type')) {
+            if (!$request->filled('client_type')) {
                 $errors1['client_type_err'] = '客戶型態為必填';
             }
             //客戶型態須為參數檔資料
-            if (!$request->has('client_type') && !SysCode::where('param_sn', '03')->where('uuid', $request->input('client_type'))->exists()) {
+            if (!$request->filled('client_type') && !SysCode::where('param_sn', '03')->where('uuid', $request->input('client_type'))->exists()) {
                 $errors1['client_type_err'] = '客戶型態不存在，請選擇正確的客戶型態';
             }
 
             //幣別須存在
-            if ($request->has('currency_id') && !Currency::where('uuid', $request->input('currency_id'))->exists()) {
+            if ($request->filled('currency_id') && !Currency::where('uuid', $request->input('currency_id'))->exists()) {
                  $errors1['currency_id_err'] = '幣別不存在，請選擇正確的幣別';
             }
 
             //付款條件須存在
-            if ($request->has('paymentterm_id') && !PaymentTerm::where('uuid', $request->input('paymentterm_id'))->exists()) {
+            if ($request->filled('paymentterm_id') && !PaymentTerm::where('uuid', $request->input('paymentterm_id'))->exists()) {
                 $errors1['paymentterm_id_err'] = '付款條件不存在，請選擇正確的付款條件';
             }
 
             //業務人員須存在
-            if ($request->has('user_id') && !SysUser::where('uuid', $request->input('user_id'))->exists()) {
+            if ($request->filled('user_id') && !SysUser::where('uuid', $request->input('user_id'))->exists()) {
                 $errors1['user_id_err'] = '業務人員不存在，請選擇正確的業務人員';
             }
 
             //科目別須存在
-            if ($request->has('account_category') && !Account::where('uuid', $request->input('account_category'))->where(  'is_valid','1')->exists()) {
+            if ($request->filled('account_category') && !Account::where('uuid', $request->input('account_category'))->where(  'is_valid','1')->exists()) {
                 $errors1['account_category_err'] = '科目別不存在，請選擇正確的科目別';
             }
 
             //課稅別須存在
-            if ($request->has('taxtype') && !SysCode::where('param_sn', '02')->where('uuid', $request->input('taxtype'))->exists()) {
+            if ($request->filled('taxtype') && !SysCode::where('param_sn', '02')->where('uuid', $request->input('taxtype'))->exists()) {
                 $errors1['taxtype_err'] = '課稅別不存在，請選擇正確的課稅別';
             }
             //發票寄送方式需存在
-            if (!$request->has('delivery_method')) {
+            if (!$request->filled('delivery_method')) {
                 $errors1['delivery_method_err'] = '發票寄送方式為必填';
             }
 
             //發票寄送方式需存在
-            if ($request->has('delivery_method') && !SysCode::where('param_sn', '04')->where('uuid', $request->input('delivery_method'))->exists()) {
+            if ($request->filled('delivery_method') && !SysCode::where('param_sn', '04')->where('uuid', $request->input('delivery_method'))->exists()) {
                 $errors1['delivery_method_err'] = '發票寄送方式不存在，請選擇正確的發票寄送方式';
             }
 
@@ -561,7 +561,7 @@ class ClientController extends Controller
             }
  
             //郵遞區號二為必填
-            if (!$request->has('zip_code2')) {
+            if (!$request->filled('zip_code2')) {
                 $errors1['zip_code2_err'] = '郵遞區號二為必填';
             }
 
@@ -571,11 +571,11 @@ class ClientController extends Controller
             }    
 
             //郵遞區號二不可為中文
-            if ($request->has('zip_code2') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('zip_code2'))) {
+            if ($request->filled('zip_code2') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('zip_code2'))) {
                 $errors1['zip_code2_err'] = '郵遞區號二不可包含中文';
             }
             //送貨地址為必填
-            if (!$request->has('address2')) {
+            if (!$request->filled('address2')) {
                 $errors1['address2_err'] = '送貨地址為必填';
             }
 
@@ -585,47 +585,47 @@ class ClientController extends Controller
             }    
              
             //公司電話不可為中文
-            if ($request->has('phone') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('phone'))) {
+            if ($request->filled('phone') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('phone'))) {
                 $errors1['phone_err'] = '公司電話不可包含中文';
             }
 
             //公司電話須符合格式
-            if(!preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->has('phone'))){
+            if(!preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('phone'))){
                 $errors1['phone_err'] = '公司電話須符合格式';
             }
 
             //公司傳真不可為中文
-            if ($request->has('fax') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('fax'))) {
+            if ($request->filled('fax') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('fax'))) {
                 $errors1['fax_err'] = '公司傳真不可包含中文';
             }
 
             //公司傳真須符合格式
-            if(!preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->has('fax'))){
+            if(!preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('fax'))){
                 $errors1['fax_err'] = '公司傳真須符合格式';
             }
 
             //行動電話不可為中文
-            if ($request->has('mobile_phone') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('mobile_phone'))) {
+            if ($request->filled('mobile_phone') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('mobile_phone'))) {
                 $errors1['mobile_phone_err'] = '行動電話不可包含中文';
             }
 
             //行動電話須符合格式
-            if(!preg_match('/^09\d{2}-?\d{3}-?\d{3}$/', $request->has('mobile_phone'))){
+            if(!preg_match('/^09\d{2}-?\d{3}-?\d{3}$/', $request->filled('mobile_phone'))){
                 $errors1['mobile_phone_err'] = '行動電話須符合格式';
             }            
 
             //聯絡人信箱不可為中文
-            if ($request->has('contact_email') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('contact_email'))) {
+            if ($request->filled('contact_email') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('contact_email'))) {
                 $errors1['contact_email_err'] = '聯絡人信箱不可包含中文';
             }
 
             //聯絡人信箱須符合格式
-            if (!filter_var($request->has('contact_email'), FILTER_VALIDATE_EMAIL)) {
+            if (!filter_var($request->filled('contact_email'), FILTER_VALIDATE_EMAIL)) {
                 $errors1['contact_email_err'] = '聯絡人信箱須符合格式';
             }
 
             // 發票抬頭為必填
-            if (!$request->has('invoice_title')) {
+            if (!$request->filled('invoice_title')) {
                 $errors1['invoice_title_err'] = '發票抬頭為必填';
             }
             //判斷發票抬頭不能存在空白、""、''、"、'
@@ -633,7 +633,7 @@ class ClientController extends Controller
                  $errors1['invoice_title_err'] = '送貨地址不得為空字串或*';
             }  
             ///統一編號為必填
-            if (!$request->has('taxid')) {
+            if (!$request->filled('taxid')) {
                 $errors1['taxid_err'] = '統一編號為必填';
             }else{
                 // 檢查統一編號格式是否正確
@@ -659,7 +659,7 @@ class ClientController extends Controller
             }
 
             // 發票地址為必填
-            if (!$request->has('invoice_address')) {
+            if (!$request->filled('invoice_address')) {
                 $errors1['invoice_address_err'] = '發票地址為必填';
             }
             //判斷發票地址不能存在空白、""、''、"、'
