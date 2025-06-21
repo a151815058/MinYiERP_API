@@ -713,7 +713,6 @@ class ClientController extends Controller
             $Client->zip_code2           = $request->input('zip_code2', $Client->zip_code2);
             $Client->address2            = $request->input('address2', $Client->address2);
             $Client->responsible_person  = $request->input('responsible_person', $Client->responsible_person);
-            $Client->contact_phone       = $request->input('contact_phone', $Client->contact_phone);
             $Client->phone               = $request->input('phone', $Client->phone);
             $Client->fax                 = $request->input('fax', $Client->fax);
             $Client->established_date    = $request->input('established_date', $Client->established_date);
@@ -792,7 +791,6 @@ class ClientController extends Controller
  *             @OA\Property(property="address2", type="string", example="台北市大安區"),
  *             @OA\Property(property="responsible_person", type="string", example="王小明"),
  *             @OA\Property(property="contact_person", type="string", example="李小華"),
- *             @OA\Property(property="contact_phone", type="string", example="0912345678"),
  *             @OA\Property(property="phone", type="string", example="02-12345678"),
  *             @OA\Property(property="fax", type="string", example="02-87654321"),
  *             @OA\Property(property="established_date", type="string", example="2025-03-31"),
@@ -907,7 +905,6 @@ class ClientController extends Controller
 	*             		@OA\Property(property="address2", type="string", example="台北市大安區"),
 	*             		@OA\Property(property="responsible_person", type="string", example="王小明"),
 	*             		@OA\Property(property="contact_person", type="string", example="李小華"),
-	*             		@OA\Property(property="contact_phone", type="string", example="0912345678"),
 	*             		@OA\Property(property="phone", type="string", example="02-12345678"),
 	*             		@OA\Property(property="fax", type="string", example="02-87654321"),
 	*             		@OA\Property(property="established_date", type="string", example="2025-03-31"),
