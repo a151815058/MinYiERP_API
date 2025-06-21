@@ -489,21 +489,6 @@ class ClientController extends Controller
         $errors1 = [];
         try{
 
-            // 客戶代碼為必填
-            if (!$request->filled('client_no')) {
-                $errors1['client_no_err'] = '客戶代碼為必填';
-            }else {
-                // 判斷客戶代碼不能存在空白、""、''、"、'
-                if (!ValidationHelper::isValidText($request->input('client_no'))) {
-                    $errors1['client_no_err'] = '客戶代碼不得為空字串或*';
-                }
-                // 檢查客戶代碼是否已存在
-                $existingClient = Client::where('client_no', $request->input('client_no'))->first();
-                if ($existingClient) {
-                    $errors1['client_no_err'] = '客戶代碼為必填';
-                }
-            }
-
             // 客戶名稱為必填
             if (!$request->filled('client_fullnm')) {
                 $errors1['client_fullnm_err'] = '客戶全名為必填';
