@@ -713,7 +713,6 @@ class ClientController extends Controller
             $Client->zip_code2           = $request->input('zip_code2', $Client->zip_code2);
             $Client->address2            = $request->input('address2', $Client->address2);
             $Client->responsible_person  = $request->input('responsible_person', $Client->responsible_person);
-            $Client->contact_person      = $request->input('contact_person', $Client->contact_person);
             $Client->contact_phone       = $request->input('contact_phone', $Client->contact_phone);
             $Client->phone               = $request->input('phone', $Client->phone);
             $Client->fax                 = $request->input('fax', $Client->fax);
