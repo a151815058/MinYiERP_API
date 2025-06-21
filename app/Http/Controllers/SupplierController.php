@@ -7,6 +7,7 @@ use App\Models\Currency;
 use App\Models\PaymentTerm;
 use App\Models\SysCode;
 use App\Models\SysUser;
+use App\Models\Account;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 require_once base_path('app/Models/connect.php'); 
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\DB;
 use OpenApi\Annotations as OA;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use App\Helpers\ValidationHelper;
 
 class SupplierController extends Controller
 {
@@ -24,28 +26,40 @@ class SupplierController extends Controller
      *     description="新增供應商資料",
      *     operationId="createsupplier",
      *     tags={"base_supplier"},
-     *     @OA\Parameter(name="supplier_no", in="query",required=true,description="供應商編號", @OA\Schema(type="string")),
-     *     @OA\Parameter(name="supplier_shortnm",in="query",required=true,description="供應商簡稱", @OA\Schema(type="string")),
-     *     @OA\Parameter(name="supplier_fullnm",in="query",required=true,description="供應商全名",@OA\Schema(type="string")),
-     *     @OA\Parameter(name="zipcode1",in="query",required=true, description="郵遞區號 1",@OA\Schema(type="string")),
-     *     @OA\Parameter(name="address1",in="query",required=true,description="公司地址 1", @OA\Schema(type="string")),
-     *     @OA\Parameter(name="zipcode2",in="query", required=false,description="郵遞區號 2 (選填)",@OA\Schema(type="string")),
-     *     @OA\Parameter(name="address2",in="query",required=false,description="公司地址 2 (選填)", @OA\Schema(type="string")),
-     *     @OA\Parameter(name="taxid",in="query",required=true,description="統一編號 (台灣: 8 碼)",@OA\Schema(type="string")),
-     *     @OA\Parameter(name="responsible_person",in="query",required=false,description="負責人",@OA\Schema(type="string")),
-     *     @OA\Parameter(name="established_date",in="query", required=false,description="成立時間",@OA\Schema(type="string")),
-     *     @OA\Parameter(name="phone",in="query",required=false, description="公司電話",@OA\Schema(type="string")),
-     *     @OA\Parameter(name="fax",in="query",required=false,description="公司傳真 (選填)",@OA\Schema(type="string")),
-     *     @OA\Parameter(name="contact_person", in="query",required=false,description="聯絡人",@OA\Schema(type="string")),
-     *     @OA\Parameter(name="contact_phone",in="query",required=false,description="聯絡人電話",@OA\Schema(type="string")),
-     *     @OA\Parameter(name="mobile_phone",in="query",required=false,description="聯絡人行動電話",@OA\Schema(type="string")),
-     *     @OA\Parameter(name="contact_email",in="query",required=false,description="聯絡人信箱",@OA\Schema(type="string")),
-     *     @OA\Parameter(name="currencyid",in="query",required=false,description="幣別uuid(開窗選擇)",@OA\Schema(type="string")),
-     *     @OA\Parameter(name="tax_type", in="query",required=false,description="稅別(開窗選擇)",@OA\Schema(type="string")),
-     *     @OA\Parameter(name="payment_termid",in="query",required=false,description="付款條件uuid(開窗選擇)", @OA\Schema(type="string")),
-     *     @OA\Parameter(name="user_id",in="query",required=false, description="負責採購人員uuid(開窗選擇)",@OA\Schema(type="string")),
-     *     @OA\Parameter(name="note",in="query",required=false,description="備註",@OA\Schema(type="string")),
-     *     @OA\Parameter(name="is_valid",in="query",required=true,description="是否有效", @OA\Schema(type="string", example=1)),
+    *   @OA\Parameter(name="uuid", in="query", required=true, description="KEY", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="supplier_no", in="query", required=true, description="供應商編號", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="supplier_shortnm", in="query", required=true, description="供應商簡稱", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="supplier_fullnm", in="query", required=true, description="供應商全名", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="supplier_type", in="query", required=true, description="供應商類型 (公司、個體戶、外商等)", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="Classification", in="query", required=true, description="供應商分類(原物料、零件、服務、代理商)", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="responsible_person", in="query", required=false, description="負責人", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="contact_person", in="query", required=false, description="聯絡人", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="zipcode1", in="query", required=true, description="郵遞區號 1", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="address1", in="query", required=true, description="公司地址 1", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="zipcode2", in="query", required=false, description="郵遞區號 2", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="address2", in="query", required=false, description="公司地址 2", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="currencyid", in="query", required=false, description="幣別", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="payment_termid", in="query", required=false, description="付款條件", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="phone", in="query", required=false, description="公司電話", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="fax", in="query", required=false, description="公司傳真", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="mobile_phone", in="query", required=false, description="行動電話", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="contact_email", in="query", required=false, description="聯絡人信箱", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="user_id", in="query", required=false, description="業務人員", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="account_category", in="query", required=false, description="科目別", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="invoice_title", in="query", required=true, description="發票抬頭", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="taxid", in="query", required=true, description="統一編號", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="tax_type", in="query", required=false, description="課稅別", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="delivery_method", in="query", required=true, description="發票寄送方式", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="recipient_name", in="query", required=false, description="發票收件人", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="invoice_address", in="query", required=true, description="發票地址", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="recipient_phone", in="query", required=false, description="聯絡電話2", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="recipient_email", in="query", required=false, description="發票收件信箱", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="established_date", in="query", required=true, description="成立時間", @OA\Schema(type="string", format="date-time")),
+    *   @OA\Parameter(name="is_valid", in="query", required=false, description="是否有效 0:失效 1:有效", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="create_user", in="query", required=false, description="建立人員", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="create_time", in="query", required=false, description="建立時間", @OA\Schema(type="string", format="date-time")),
+    *   @OA\Parameter(name="update_user", in="query", required=false, description="異動人員", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="update_time", in="query", required=false, description="異動時間", @OA\Schema(type="string", format="date-time")),
      *     @OA\Response(
      *         response=200,
      *         description="成功",
@@ -89,56 +103,279 @@ class SupplierController extends Controller
     // 儲存供應商
     public function store(Request $request)
     {
-        try {
-            // 檢查必填欄位是否都有填寫
-            if (!$request->has(['supplier_no', 'supplier_shortnm', 'supplier_fullnm', 'zipcode1', 'address1', 'taxid',  'is_valid'])) {
+        $errors1 = [];
+        try{
+
+            // 客戶代碼為必填
+            if (!$request->filled('supplier_no')) {
+                $errors1['supplier_no_err'] = '供應商編號為必填';
+            }else {
+                // 判斷客戶代碼不能存在空白、""、''、"、'
+                if (!ValidationHelper::isValidText($request->input('supplier_no'))) {
+                    $errors1['supplier_no_err'] = '供應商編號不得為空字串或*';
+                }
+                // 檢查供應商編號是否已存在
+                $existingClient = Supplier::where('supplier_no', $request->input('supplier_no'))->first();
+                if ($existingClient) {
+                    $errors1['supplier_no_err'] = '供應商編號已存在';
+                }
+            }
+
+            // 供應商名稱為必填
+            if (!$request->filled('supplier_fullnm')) {
+                $errors1['supplier_fullnm_err'] = '供應商全名為必填';
+            }
+            //判斷供應商名稱不能存在空白、""、''、"、'
+            if (!ValidationHelper::isValidText($request->input('supplier_fullnm'))) {
+                $errors1['supplier_fullnm_err'] = '供應商名稱不得為空字串或*';
+            }
+
+            //供應商全名為必填
+            if (!$request->filled('supplier_shortnm')) {
+                $errors1['supplier_shortnm_err'] = '供應商簡稱為必填';
+            }
+
+            //判斷供應商簡稱不能存在空白、""、''、"、'
+            if (!ValidationHelper::isValidText($request->input('supplier_shortnm'))) {
+                $errors1['supplier_shortnm_err'] = '供應商簡稱不得為空字串或*';
+            }
+
+            //供應商型態為必填
+            if (!$request->filled('supplier_type')) {
+                $errors1['supplier_type_err'] = '供應商型態為必填';
+            }
+            //供應商型態須為參數檔資料
+            if (!$request->filled('supplier_type') && !SysCode::where('param_sn', '08')->where('uuid', $request->input('supplier_type'))->exists()) {
+                $errors1['supplier_type_err'] = '供應商型態不存在，請選擇正確的供應商型態';
+            }
+            //供應商分類為必填
+            if (!$request->filled('Classification')) {
+                $errors1['Classification_err'] = '供應商分類為必填';
+            }
+            //供應商分類須為參數檔資料
+            if (!$request->filled('Classification') && !SysCode::where('param_sn', '09')->where('uuid', $request->input('Classification'))->exists()) {
+                $errors1['Classification_err'] = '供應商分類不存在，請選擇正確的供應商分類';
+            }
+            //郵遞區號一不可為中文
+            if (preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('zip_code1'))) {
+                $errors1['zip_code1_err'] = '郵遞區號一不可包含中文';
+            }
+ 
+            //郵遞區號二為必填
+            if (!$request->filled('zip_code2')) {
+                $errors1['zip_code2_err'] = '郵遞區號二為必填';
+            }
+
+            //判斷郵遞區號二不能存在空白、""、''、"、'
+            if (!ValidationHelper::isValidText($request->input('zip_code2'))) {
+                $errors1['zip_code2_err'] = '郵遞區號二不得為空字串或*';
+            }    
+
+            //郵遞區號二不可為中文
+            if ($request->filled('zip_code2') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('zip_code2'))) {
+                $errors1['zip_code2_err'] = '郵遞區號二不可包含中文';
+            }
+            //公司地址二為必填
+            if (!$request->filled('address2')) {
+                $errors1['address2_err'] = '公司地址二為必填';
+            }
+
+            //判斷公司地址二不能存在空白、""、''、"、'
+            if (!ValidationHelper::isValidText($request->input('address2'))) {
+                $errors1['address2_err'] = '公司地址二不得為空字串或*';
+            }   
+            //幣別須存在
+            if ($request->filled('currency_id') ) {
+                if(!Currency::where('uuid', $request->input('currency_id'))->exists()){
+                    $errors1['currency_id_err'] = '幣別不存在，請選擇正確的幣別';
+                }
+            }
+
+            //付款條件須存在
+            if ($request->filled('paymentterm_id')) {
+                if(!PaymentTerm::where('uuid', $request->input('paymentterm_id'))->exists()){
+                    $errors1['paymentterm_id_err'] = '付款條件不存在，請選擇正確的付款條件';
+                }
+            }             //公司電話不可為中文
+            if ($request->filled('phone') ) {
+                if(preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('phone'))){
+                    $errors1['phone_err'] = '公司電話不可包含中文';
+                }
+                //公司電話須符合格式
+                if(!preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('phone'))){
+                    $errors1['phone_err'] = '公司電話須符合格式';
+                }
+            }
+
+            //公司傳真不可為中文
+            if ($request->filled('fax')) {
+                if(preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('fax'))){
+                    $errors1['fax_err'] = '公司傳真不可包含中文';
+                }
+                //公司傳真須符合格式
+                if(!preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('fax'))){
+                    $errors1['fax_err'] = '公司傳真須符合格式';
+                }
+            }
+
+            //行動電話不可為中文
+            if ($request->filled('mobile_phone')) {
+                if( preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('mobile_phone'))){
+                    $errors1['mobile_phone_err'] = '行動電話不可包含中文';
+                }
+                //行動電話須符合格式
+                if(!preg_match('/^09\d{2}-?\d{3}-?\d{3}$/', $request->filled('mobile_phone'))){
+                    $errors1['mobile_phone_err'] = '行動電話須符合格式';
+                }                  
+            }
+
+            //聯絡人信箱不可為中文
+            if ($request->filled('contact_email') ) {
+                if(preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('contact_email'))){
+                    $errors1['contact_email_err'] = '聯絡人信箱不可包含中文';
+                }
+                //聯絡人信箱須符合格式
+                if (!filter_var($request->filled('contact_email'), FILTER_VALIDATE_EMAIL)) {
+                    $errors1['contact_email_err'] = '聯絡人信箱須符合格式';
+                }                
+            }
+
+            //業務人員須存在
+            if ($request->filled('user_id')  ) {
+                if(!SysUser::where('uuid', $request->input('user_id'))->exists()){
+                    $errors1['user_id_err'] = '業務人員不存在，請選擇正確的業務人員';
+                }
+            }
+
+            //科目別須存在
+            if ($request->filled('account_category') ) {
+                if(!Account::where('uuid', $request->input('account_category'))->where(  'is_valid','1')->exists()){
+                    $errors1['account_category_err'] = '科目別不存在，請選擇正確的科目別';
+                }
+            }
+            // 發票抬頭為必填
+            if (!$request->filled('invoice_title')) {
+                $errors1['invoice_title_err'] = '發票抬頭為必填';
+            }
+            //判斷發票抬頭不能存在空白、""、''、"、'
+            if (!ValidationHelper::isValidText($request->input('invoice_title'))) {
+                 $errors1['invoice_title_err'] = '送貨地址不得為空字串或*';
+            }  
+            ///統一編號為必填
+            if (!$request->filled('taxid')) {
+                $errors1['taxid_err'] = '統一編號為必填';
+            }else{
+                // 檢查統一編號格式是否正確
+                if (strlen($request->input('taxid')) != 8) {
+                    $errors1['taxid_err'] = '統一編號格式錯誤，應為8位數字';
+                }else{
+                    // 權重驗證
+                    $taxid = str_split($request->input('taxid'));
+                    $weight = [1, 2, 1, 2, 1, 2, 4, 1];
+                    $sum = 0;
+                    for ($i = 0; $i < 8; $i++) {
+                        $digit = (int)$taxid[$i];
+                        $product = $digit * $weight[$i];
+                        if ($product >= 10) {
+                            $product = array_sum(str_split($product));
+                        }
+                        $sum += $product;
+                    }
+                    if ($sum ==0 ||$sum % 10 !== 0) {
+                        $errors1['taxid_err'] = '統一編號驗證失敗';
+                    }
+                }
+            }
+            //課稅別須存在
+            if ($request->filled('taxtype')) {
+                if(!SysCode::where('param_sn', '02')->where('uuid', $request->input('taxtype'))->exists()){
+                    $errors1['taxtype_err'] = '課稅別不存在，請選擇正確的課稅別';
+                }
+            }
+            //發票寄送方式需存在
+            if (!$request->filled('delivery_method')) {
+                $errors1['delivery_method_err'] = '發票寄送方式為必填';
+            }
+
+            //發票寄送方式需存在
+            if ($request->filled('delivery_method') && !SysCode::where('param_sn', '04')->where('uuid', $request->input('delivery_method'))->exists()) {
+                $errors1['delivery_method_err'] = '發票寄送方式不存在，請選擇正確的發票寄送方式';
+            }
+
+            // 發票地址為必填
+            if (!$request->filled('invoice_address')) {
+                $errors1['invoice_address_err'] = '發票地址為必填';
+            }
+            //判斷發票地址不能存在空白、""、''、"、'
+            if (!ValidationHelper::isValidText($request->input('invoice_address'))) {
+                 $errors1['invoice_address_err'] = '發票地址不得為空字串或*';
+            }  
+
+            //判斷是否有效不能存在空白、""、''、"、'
+            if (!ValidationHelper::isValidText($request->input('is_valid'))) {
+                $errors1['is_valid_err'] = ' 是否有效不得為空字串或*';
+            } 
+
+            // 如果有錯誤，回傳統一格式
+            if (!empty($errors1)) {
                 return response()->json([
-                    'status' => true,
-                    'message' => '缺少必填的欄位'
+                    'status' => false,
+                    'message' => '缺少必填的欄位及欄位格式錯誤',
+                    'errors' => $errors1
                 ], 400);
             }
-    
-        // 建立供應商資料
-        $supplier = Supplier::create([
-            'supplier_no'          => $request['supplier_no'],
-            'supplier_shortnm'     => $request['supplier_shortnm'],
-            'supplier_fullnm'      => $request['supplier_fullnm'],
-            'zipcode1'             => $request['zipcode1'],
-            'address1'             => $request['address1'],
-            'zipcode2'             => $request['zipcode2']?? null,
-            'address2'             => $request['address2']?? null,
-            'taxid'                => $request['taxid'],
-            'responsible_person'   => $request['responsible_person']?? null,
-            'established_date'     => $request['established_date']?? null,
-            'phone'                => $request['phone']?? null,
-            'fax'                  => $request['fax']?? null,
-            'contact_person'       => $request['contact_person']?? null,
-            'contact_phone'        => $request['contact_phone']?? null,
-            'mobile_phone'         => $request['mobile_phone']?? null,
-            'contact_email'        => $request['contact_email']?? null,
-            'currencyid'           => $request['currencyid']?? null,
-            'tax_type'             => $request['tax_type']?? null,
-            'payment_termid'       => $request['payment_termid'],
-            'user_id'              => $request['user_id']?? null,
-            'note'                 => $request['note'] ?? null,
-            'is_valid'             => $request['is_valid']
-        ]);
+  
+            // 建立供應商資料
+            $Supplier = Supplier::create([
+                'uuid' => Str::uuid(),
+                'supplier_no' => $request->input('supplier_no'),
+                'supplier_shortnm' => $request->input('supplier_shortnm'),
+                'supplier_fullnm' => $request->input('supplier_fullnm'),
+                'supplier_type' => $request->input('supplier_type'),
+                'Classification' => $request->input('Classification'),
+                'responsible_person' => $request->input('responsible_person'),
+                'contact_person' => $request->input('contact_person'),
+                'zipcode1' => $request->input('zipcode1'),
+                'address1' => $request->input('address1'),
+                'zipcode2' => $request->input('zipcode2'),
+                'address2' => $request->input('address2'),
+                'currencyid' => $request->input('currencyid'),
+                'payment_termid' => $request->input('payment_termid'),
+                'phone' => $request->input('phone'),
+                'fax' => $request->input('fax'),
+                'mobile_phone' => $request->input('mobile_phone'),
+                'contact_email' => $request->input('contact_email'),
+                'user_id' => $request->input('user_id'),
+                'account_category' => $request->input('account_category'),
+                'invoice_title' => $request->input('invoice_title'),
+                'taxid' => $request->input('taxid'),
+                'tax_type' => $request->input('tax_type'),
+                'delivery_method' => $request->input('delivery_method'),
+                'recipient_name' => $request->input('recipient_name'),
+                'invoice_address' => $request->input('invoice_address'),
+                'recipient_phone' => $request->input('recipient_phone'),
+                'recipient_email' => $request->input('recipient_email'),
+                'established_date' => $request->filled('established_date') ? date($request->filled('established_date')) : null,
+                'is_valid' => (int)$request->filled('is_valid') ? 1 : 0,
+                'create_user'=> $request->input('create_user', 'admin'),
+            ]);
 
-        // 回應 JSON
-        if (!$supplier) {
-            return response()->json([
-                'status' => true,
-                'message' => '供應商資料建失敗',
-                'output'    => null
-            ], status: 404);
-        }else {
             // 回應 JSON
-            return response()->json([
-                'status' => true,
-                'message' => 'success',
-                'output'    => $supplier
-            ], 200);
-        }
+            if (!$Supplier) {
+                return response()->json([
+                    'status' => false,
+                    'message' => '供應商資料建立失敗',
+                    'output'    => null
+                ], status: 404);
+            }else {
+                // 回應 JSON
+                return response()->json([
+                    'status' => true,
+                    'message' => 'success',
+                    'output'    => $Supplier
+                ], 400);
+            }
+
         } catch (\Illuminate\Validation\ValidationException $e) {
             // 捕捉驗證失敗
             return response()->json([
@@ -149,16 +386,14 @@ class SupplierController extends Controller
     
         } catch (\Exception $e) {
             // 其他例外處理
-            Log::error('建立單據資料錯誤：' . $e->getMessage());
-    
+            Log::error('建立供應商資料錯誤：' . $e->getMessage());
+
             return response()->json([
                 'status' => false,
                 'message' => '伺服器發生錯誤，請稍後再試',
                 'error' => $e->getMessage() // 上線環境建議拿掉
             ], 500);
-        }           
-
-
+        }   
     }
     /**
      * @OA\POST(
@@ -167,28 +402,40 @@ class SupplierController extends Controller
      *     description="更新供應商資料",
      *     operationId="updatesupplier",
      *     tags={"base_supplier"},
-     *     @OA\Parameter(name="supplier_no", in="query",required=true,description="供應商編號", @OA\Schema(type="string")),
-     *     @OA\Parameter(name="supplier_shortnm",in="query",required=true,description="供應商簡稱", @OA\Schema(type="string")),
-     *     @OA\Parameter(name="supplier_fullnm",in="query",required=true,description="供應商全名",@OA\Schema(type="string")),
-     *     @OA\Parameter(name="zipcode1",in="query",required=true, description="郵遞區號 1",@OA\Schema(type="string")),
-     *     @OA\Parameter(name="address1",in="query",required=true,description="公司地址 1", @OA\Schema(type="string")),
-     *     @OA\Parameter(name="zipcode2",in="query", required=false,description="郵遞區號 2 (選填)",@OA\Schema(type="string")),
-     *     @OA\Parameter(name="address2",in="query",required=false,description="公司地址 2 (選填)", @OA\Schema(type="string")),
-     *     @OA\Parameter(name="taxid",in="query",required=true,description="統一編號 (台灣: 8 碼)",@OA\Schema(type="string")),
-     *     @OA\Parameter(name="responsible_person",in="query",required=false,description="負責人",@OA\Schema(type="string")),
-     *     @OA\Parameter(name="established_date",in="query", required=false,description="成立時間",@OA\Schema(type="string")),
-     *     @OA\Parameter(name="phone",in="query",required=false, description="公司電話",@OA\Schema(type="string")),
-     *     @OA\Parameter(name="fax",in="query",required=false,description="公司傳真 (選填)",@OA\Schema(type="string")),
-     *     @OA\Parameter(name="contact_person", in="query",required=false,description="聯絡人",@OA\Schema(type="string")),
-     *     @OA\Parameter(name="contact_phone",in="query",required=false,description="聯絡人電話",@OA\Schema(type="string")),
-     *     @OA\Parameter(name="mobile_phone",in="query",required=false,description="聯絡人行動電話",@OA\Schema(type="string")),
-     *     @OA\Parameter(name="contact_email",in="query",required=false,description="聯絡人信箱",@OA\Schema(type="string")),
-     *     @OA\Parameter(name="currencyid",in="query",required=false,description="幣別uuid(開窗選擇)",@OA\Schema(type="string")),
-     *     @OA\Parameter(name="tax_type", in="query",required=false,description="稅別(開窗選擇)",@OA\Schema(type="string")),
-     *     @OA\Parameter(name="payment_termid",in="query",required=false,description="付款條件uuid(開窗選擇)", @OA\Schema(type="string")),
-     *     @OA\Parameter(name="user_id",in="query",required=false, description="負責採購人員uuid(開窗選擇)",@OA\Schema(type="string")),
-     *     @OA\Parameter(name="note",in="query",required=false,description="備註",@OA\Schema(type="string")),
-     *     @OA\Parameter(name="is_valid",in="query",required=true,description="是否有效", @OA\Schema(type="string", example=1)),
+    *   @OA\Parameter(name="uuid", in="query", required=true, description="KEY", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="supplier_no", in="query", required=true, description="供應商編號", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="supplier_shortnm", in="query", required=true, description="供應商簡稱", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="supplier_fullnm", in="query", required=true, description="供應商全名", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="supplier_type", in="query", required=true, description="供應商類型 (公司、個體戶、外商等)", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="Classification", in="query", required=true, description="供應商分類(原物料、零件、服務、代理商)", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="responsible_person", in="query", required=false, description="負責人", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="contact_person", in="query", required=false, description="聯絡人", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="zipcode1", in="query", required=true, description="郵遞區號 1", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="address1", in="query", required=true, description="公司地址 1", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="zipcode2", in="query", required=false, description="郵遞區號 2", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="address2", in="query", required=false, description="公司地址 2", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="currencyid", in="query", required=false, description="幣別", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="payment_termid", in="query", required=false, description="付款條件", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="phone", in="query", required=false, description="公司電話", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="fax", in="query", required=false, description="公司傳真", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="mobile_phone", in="query", required=false, description="行動電話", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="contact_email", in="query", required=false, description="聯絡人信箱", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="user_id", in="query", required=false, description="業務人員", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="account_category", in="query", required=false, description="科目別", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="invoice_title", in="query", required=true, description="發票抬頭", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="taxid", in="query", required=true, description="統一編號", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="tax_type", in="query", required=false, description="課稅別", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="delivery_method", in="query", required=true, description="發票寄送方式", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="recipient_name", in="query", required=false, description="發票收件人", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="invoice_address", in="query", required=true, description="發票地址", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="recipient_phone", in="query", required=false, description="聯絡電話2", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="recipient_email", in="query", required=false, description="發票收件信箱", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="established_date", in="query", required=true, description="成立時間", @OA\Schema(type="string", format="date-time")),
+    *   @OA\Parameter(name="is_valid", in="query", required=false, description="是否有效 0:失效 1:有效", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="create_user", in="query", required=false, description="建立人員", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="create_time", in="query", required=false, description="建立時間", @OA\Schema(type="string", format="date-time")),
+    *   @OA\Parameter(name="update_user", in="query", required=false, description="異動人員", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="update_time", in="query", required=false, description="異動時間", @OA\Schema(type="string", format="date-time")),
      *     @OA\Response(
      *         response=200,
      *         description="成功",
@@ -232,56 +479,292 @@ class SupplierController extends Controller
     //更新供應商資料
     public function update(Request $request){
         try {
-            // 檢查必填欄位是否都有填寫
-            if (!$request->has(['supplier_no', 'supplier_shortnm', 'supplier_fullnm', 'zipcode1', 'address1', 'taxid',  'is_valid'])) {
+        $errors1 = [];
+        try{
+
+            // 供應商名稱為必填
+            if (!$request->filled('supplier_fullnm')) {
+                $errors1['supplier_fullnm_err'] = '供應商全名為必填';
+            }
+            //判斷供應商名稱不能存在空白、""、''、"、'
+            if (!ValidationHelper::isValidText($request->input('supplier_fullnm'))) {
+                $errors1['supplier_fullnm_err'] = '供應商名稱不得為空字串或*';
+            }
+
+            //供應商全名為必填
+            if (!$request->filled('supplier_shortnm')) {
+                $errors1['supplier_shortnm_err'] = '供應商簡稱為必填';
+            }
+
+            //判斷供應商簡稱不能存在空白、""、''、"、'
+            if (!ValidationHelper::isValidText($request->input('supplier_shortnm'))) {
+                $errors1['supplier_shortnm_err'] = '供應商簡稱不得為空字串或*';
+            }
+
+            //供應商型態為必填
+            if (!$request->filled('supplier_type')) {
+                $errors1['supplier_type_err'] = '供應商型態為必填';
+            }
+            //供應商型態須為參數檔資料
+            if (!$request->filled('supplier_type') && !SysCode::where('param_sn', '08')->where('uuid', $request->input('supplier_type'))->exists()) {
+                $errors1['supplier_type_err'] = '供應商型態不存在，請選擇正確的供應商型態';
+            }
+            //供應商分類為必填
+            if (!$request->filled('Classification')) {
+                $errors1['Classification_err'] = '供應商分類為必填';
+            }
+            //供應商分類須為參數檔資料
+            if (!$request->filled('Classification') && !SysCode::where('param_sn', '09')->where('uuid', $request->input('Classification'))->exists()) {
+                $errors1['Classification_err'] = '供應商分類不存在，請選擇正確的供應商分類';
+            }
+            //郵遞區號一不可為中文
+            if (preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('zip_code1'))) {
+                $errors1['zip_code1_err'] = '郵遞區號一不可包含中文';
+            }
+ 
+            //郵遞區號二為必填
+            if (!$request->filled('zip_code2')) {
+                $errors1['zip_code2_err'] = '郵遞區號二為必填';
+            }
+
+            //判斷郵遞區號二不能存在空白、""、''、"、'
+            if (!ValidationHelper::isValidText($request->input('zip_code2'))) {
+                $errors1['zip_code2_err'] = '郵遞區號二不得為空字串或*';
+            }    
+
+            //郵遞區號二不可為中文
+            if ($request->filled('zip_code2') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('zip_code2'))) {
+                $errors1['zip_code2_err'] = '郵遞區號二不可包含中文';
+            }
+            //公司地址二為必填
+            if (!$request->filled('address2')) {
+                $errors1['address2_err'] = '公司地址二為必填';
+            }
+
+            //判斷公司地址二不能存在空白、""、''、"、'
+            if (!ValidationHelper::isValidText($request->input('address2'))) {
+                $errors1['address2_err'] = '公司地址二不得為空字串或*';
+            }   
+            //幣別須存在
+            if ($request->filled('currency_id') ) {
+                if(!Currency::where('uuid', $request->input('currency_id'))->exists()){
+                    $errors1['currency_id_err'] = '幣別不存在，請選擇正確的幣別';
+                }
+            }
+
+            //付款條件須存在
+            if ($request->filled('paymentterm_id')) {
+                if(!PaymentTerm::where('uuid', $request->input('paymentterm_id'))->exists()){
+                    $errors1['paymentterm_id_err'] = '付款條件不存在，請選擇正確的付款條件';
+                }
+            }             //公司電話不可為中文
+            if ($request->filled('phone') ) {
+                if(preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('phone'))){
+                    $errors1['phone_err'] = '公司電話不可包含中文';
+                }
+                //公司電話須符合格式
+                if(!preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('phone'))){
+                    $errors1['phone_err'] = '公司電話須符合格式';
+                }
+            }
+
+            //公司傳真不可為中文
+            if ($request->filled('fax')) {
+                if(preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('fax'))){
+                    $errors1['fax_err'] = '公司傳真不可包含中文';
+                }
+                //公司傳真須符合格式
+                if(!preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('fax'))){
+                    $errors1['fax_err'] = '公司傳真須符合格式';
+                }
+            }
+
+            //行動電話不可為中文
+            if ($request->filled('mobile_phone')) {
+                if( preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('mobile_phone'))){
+                    $errors1['mobile_phone_err'] = '行動電話不可包含中文';
+                }
+                //行動電話須符合格式
+                if(!preg_match('/^09\d{2}-?\d{3}-?\d{3}$/', $request->filled('mobile_phone'))){
+                    $errors1['mobile_phone_err'] = '行動電話須符合格式';
+                }                  
+            }
+
+            //聯絡人信箱不可為中文
+            if ($request->filled('contact_email') ) {
+                if(preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('contact_email'))){
+                    $errors1['contact_email_err'] = '聯絡人信箱不可包含中文';
+                }
+                //聯絡人信箱須符合格式
+                if (!filter_var($request->filled('contact_email'), FILTER_VALIDATE_EMAIL)) {
+                    $errors1['contact_email_err'] = '聯絡人信箱須符合格式';
+                }                
+            }
+
+            //業務人員須存在
+            if ($request->filled('user_id')  ) {
+                if(!SysUser::where('uuid', $request->input('user_id'))->exists()){
+                    $errors1['user_id_err'] = '業務人員不存在，請選擇正確的業務人員';
+                }
+            }
+
+            //科目別須存在
+            if ($request->filled('account_category') ) {
+                if(!Account::where('uuid', $request->input('account_category'))->where(  'is_valid','1')->exists()){
+                    $errors1['account_category_err'] = '科目別不存在，請選擇正確的科目別';
+                }
+            }
+            // 發票抬頭為必填
+            if (!$request->filled('invoice_title')) {
+                $errors1['invoice_title_err'] = '發票抬頭為必填';
+            }
+            //判斷發票抬頭不能存在空白、""、''、"、'
+            if (!ValidationHelper::isValidText($request->input('invoice_title'))) {
+                 $errors1['invoice_title_err'] = '送貨地址不得為空字串或*';
+            }  
+            ///統一編號為必填
+            if (!$request->filled('taxid')) {
+                $errors1['taxid_err'] = '統一編號為必填';
+            }else{
+                // 檢查統一編號格式是否正確
+                if (strlen($request->input('taxid')) != 8) {
+                    $errors1['taxid_err'] = '統一編號格式錯誤，應為8位數字';
+                }else{
+                    // 權重驗證
+                    $taxid = str_split($request->input('taxid'));
+                    $weight = [1, 2, 1, 2, 1, 2, 4, 1];
+                    $sum = 0;
+                    for ($i = 0; $i < 8; $i++) {
+                        $digit = (int)$taxid[$i];
+                        $product = $digit * $weight[$i];
+                        if ($product >= 10) {
+                            $product = array_sum(str_split($product));
+                        }
+                        $sum += $product;
+                    }
+                    if ($sum ==0 ||$sum % 10 !== 0) {
+                        $errors1['taxid_err'] = '統一編號驗證失敗';
+                    }
+                }
+            }
+            //課稅別須存在
+            if ($request->filled('taxtype')) {
+                if(!SysCode::where('param_sn', '02')->where('uuid', $request->input('taxtype'))->exists()){
+                    $errors1['taxtype_err'] = '課稅別不存在，請選擇正確的課稅別';
+                }
+            }
+            //發票寄送方式需存在
+            if (!$request->filled('delivery_method')) {
+                $errors1['delivery_method_err'] = '發票寄送方式為必填';
+            }
+
+            //發票寄送方式需存在
+            if ($request->filled('delivery_method') && !SysCode::where('param_sn', '04')->where('uuid', $request->input('delivery_method'))->exists()) {
+                $errors1['delivery_method_err'] = '發票寄送方式不存在，請選擇正確的發票寄送方式';
+            }
+
+            // 發票地址為必填
+            if (!$request->filled('invoice_address')) {
+                $errors1['invoice_address_err'] = '發票地址為必填';
+            }
+            //判斷發票地址不能存在空白、""、''、"、'
+            if (!ValidationHelper::isValidText($request->input('invoice_address'))) {
+                 $errors1['invoice_address_err'] = '發票地址不得為空字串或*';
+            }  
+
+            //判斷是否有效不能存在空白、""、''、"、'
+            if (!ValidationHelper::isValidText($request->input('is_valid'))) {
+                $errors1['is_valid_err'] = ' 是否有效不得為空字串或*';
+            } 
+
+            // 如果有錯誤，回傳統一格式
+            if (!empty($errors1)) {
                 return response()->json([
-                    'status' => true,
-                    'message' => '缺少必填的欄位',
+                    'status' => false,
+                    'message' => '缺少必填的欄位及欄位格式錯誤',
+                    'errors' => $errors1
                 ], 400);
             }
-    
+  
+            // 查詢供應商資料client_uuid
+            $Supplier = Supplier::where('uuid', $request->input('uuid'))->first();
+            if (!$Supplier) {
+                return response()->json([
+                    'status' => false,
+                    'message' => '欄位資料錯誤',
+                    'Supplier_uuid_err'    =>  '供應商資料未找到',
+                ], 400);
+            }
             // 更新供應商資料
-            $supplier = Supplier::where('supplier_no', $request['supplier_no'])->first();
-    
-            if (!$supplier) {
+            $Supplier->update([
+                'supplier_shortnm' => $request->input('supplier_shortnm'),
+                'supplier_fullnm' => $request->input('supplier_fullnm'),
+                'supplier_type' => $request->input('supplier_type'),
+                'Classification' => $request->input('Classification'),
+                'responsible_person' => $request->input('responsible_person'),
+                'contact_person' => $request->input('contact_person'),
+                'zipcode1' => $request->input('zipcode1'),
+                'address1' => $request->input('address1'),
+                'zipcode2' => $request->input('zipcode2'),
+                'address2' => $request->input('address2'),
+                'currencyid' => $request->input('currencyid'),
+                'payment_termid' => $request->input('payment_termid'),
+                'phone' => $request->input('phone'),
+                'fax' => $request->input('fax'),
+                'mobile_phone' => $request->input('mobile_phone'),
+                'contact_email' => $request->input('contact_email'),
+                'user_id' => $request->input('user_id'),
+                'account_category' => $request->input('account_category'),
+                'invoice_title' => $request->input('invoice_title'),
+                'taxid' => $request->input('taxid'),
+                'tax_type' => $request->input('tax_type'),
+                'delivery_method' => $request->input('delivery_method'),
+                'recipient_name' => $request->input('recipient_name'),
+                'invoice_address' => $request->input('invoice_address'),
+                'recipient_phone' => $request->input('recipient_phone'),
+                'recipient_email' => $request->input('recipient_email'),
+                'established_date' => date($request->filled('established_date')),
+                'is_valid' => (int)$request->filled('is_valid') ? 1 : 0,
+                'update_user'=> $request->input('update_user', 'admin'),
+                'update_time' => now(),
+            ]);
+            // 儲存更新
+            $Supplier->save();
+
+            // 回應 JSON
+            if (!$Supplier) {
+                return response()->json([
+                    'status' => false,
+                    'message' => '供應商資料建立失敗',
+                    'output'    => null
+                ], 404);
+            }else {
+                // 回應 JSON
                 return response()->json([
                     'status' => true,
-                    'message' => '供應商未找到'
-                ], 404);
+                    'message' => 'success',
+                    'output'    => $Supplier
+                ], 200);
             }
-    
-            $supplier->update([
-                'supplier_shortnm'     => $request['supplier_shortnm'],
-                'supplier_fullnm'      => $request['supplier_fullnm'],
-                'zipcode1'             => $request['zipcode1'],
-                'address1'             => $request['address1'],
-                'zipcode2'             => $request['zipcode2']?? null,
-                'address2'             => $request['address2']?? null,
-                'taxid'                => $request['taxid'],
-                'responsible_person'   => $request['responsible_person']?? null,
-                'established_date'     => $request['established_date']?? null,
-                'phone'                => $request['phone']?? null,
-                'fax'                  => $request['fax']?? null,
-                'contact_person'       => $request['contact_person']?? null,
-                'contact_phone'        => $request['contact_phone']?? null,
-                'mobile_phone'         => $request['mobile_phone']?? null,
-                'contact_email'        => $request['contact_email']?? null,
-                'currencyid'           => $request['currencyid']?? null,
-                'tax_type'             => $request['tax_type']?? null,
-                'payment_termid'       => $request['payment_termid'],
-                'user_id'              => $request['user_id']?? null,
-                'note'                 => $request['note'] ?? null,
-                'is_valid'             => $request['is_valid'],
-                'update_user'          => $request->user()->name ?? 'admin', // 更新使用者
-                'update_time'          => now() // 更新時間
-            ]);
-    
-            // 回應 JSON
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 捕捉驗證失敗
             return response()->json([
-                'status' => true,
-                'message' => '供應商資料更新成功',
-                'output'    => $supplier
-            ], 200);
+                'status' => false,
+                'message' => '驗證錯誤',
+                'errors' => $e->errors()
+            ], 422);
+    
+        } catch (\Exception $e) {
+            // 其他例外處理
+            Log::error('建立供應商資料錯誤：' . $e->getMessage());
+
+            return response()->json([
+                'status' => false,
+                'message' => '伺服器發生錯誤，請稍後再試',
+                'error' => $e->getMessage() // 上線環境建議拿掉
+            ], 500);
+        }   
         } catch (\Illuminate\Validation\ValidationException $e) {
             // 捕捉驗證失敗
             return response()->json([
@@ -293,7 +776,7 @@ class SupplierController extends Controller
         } catch (\Exception $e) {
             // 其他例外處理
             Log::error('更新供應商資料錯誤：' . $e->getMessage());
-    
+
             return response()->json([
                 'status' => false,
                 'message' => '伺服器發生錯誤，請稍後再試',
@@ -601,8 +1084,8 @@ class SupplierController extends Controller
     public function disable($supplierNo)
     {
         try{
-            $Supplier = Supplier::findBysupplierNo($supplierNo)->where('is_valid','1')->first();
-        
+            $Supplier = Supplier::where('supplier_no', $supplierNo)->where('is_valid','1')->first();
+
             if (!$Supplier) {
                 return response()->json([
                     'status' => false,
@@ -663,27 +1146,41 @@ class SupplierController extends Controller
         // 查詢 '所有有效幣別資料' 的資料
         $SysCode = Currency::where('is_valid', '1')->get();
         // 查詢 '所有稅別資料' 的資料
-        $SysCode1 = SysCode::where('param_sn', '04')->where('is_valid','1')->get();
+        $SysCode1 = SysCode::where('param_sn', '02')->where('is_valid','1')->get();
         // 查詢 '所有有效付款條件' 的資料
         $SysCode2 = PaymentTerm::where('is_valid', '1')->get();
-        // 付款條件(當月、次月的常數資料)
-        $SysCode4 = PaymentTerm::where('is_valid', '1')->get();
         // 查詢 '所有有效人員' 的資料
         $SysCode3 = SysUser::with('depts')->where('is_valid', '1')->get();
-        // 付款條件(當月、次月的常數資料)
-        $SysCode4 = PaymentTerm::where('is_valid', '1')->get();
+        // 發票寄送方式
+        $SysCode4 = SysCode::where('param_sn', '04')->where('is_valid','1')->get();
+        // 公司類型
+        $SysCode5 = SysCode::where('param_sn', '08')->where('is_valid','1')->get();
+        // 供應商分類
+        $SysCode6 = SysCode::where('param_sn', '09')->where('is_valid','1')->get();
+        // 科目別 
+        $Account = Account::where('is_valid','1')->get();
         
         try {
             // 檢查是否有結果
-            if (!$SysCode) {
+            if ($SysCode->isEmpty() && 
+                $SysCode1->isEmpty() && 
+                $SysCode2->isEmpty() && 
+                $SysCode3->isEmpty() &&
+                $SysCode4->isEmpty() &&
+                $SysCode5->isEmpty() &&
+                $SysCode6->isEmpty() &&
+                $Account->isEmpty() ) {
                 return response()->json([
                     'status' => true,
                     'message' => '常用資料未找到',
-                    'currencyOption' => null,
-                    'taxtypeOption' => null,
-                    'paymenttermOption' => null,
-                    'sysuserOption' => null,
-                    'paymentterm2Option' => null
+                    'currencyOption' => [],
+                    'taxtypeOption' => [],
+                    'paymenttermOption' => [],
+                    'sysuserOption' => [],
+                    'deliverymethodOption' => [],
+                    'suppliertypeOption' => [],
+                    'ClassificationOption' => [],
+                    'accountOption' =>[]
                 ], 404);
             }
     
@@ -695,8 +1192,11 @@ class SupplierController extends Controller
                 'taxtypeOption' => $SysCode1,
                 'paymenttermOption' => $SysCode2,
                 'sysuserOption' => $SysCode3,
-                'paymentterm2Option' => $SysCode4,
-            ], 200);
+                'deliverymethodOption' => $SysCode4,
+                'suppliertypeOption' => $SysCode5,
+                'ClassificationOption' => $SysCode6,
+                'accountOption' => $Account
+            ], 400);
     
         } catch (\Illuminate\Validation\ValidationException $e) {
             // 捕捉驗證失敗，並返回錯誤訊息
