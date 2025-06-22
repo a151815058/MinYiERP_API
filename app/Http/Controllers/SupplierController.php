@@ -26,7 +26,6 @@ class SupplierController extends Controller
      *     description="新增供應商資料",
      *     operationId="createsupplier",
      *     tags={"base_supplier"},
-    *   @OA\Parameter(name="uuid", in="query", required=true, description="KEY", @OA\Schema(type="string")),
     *   @OA\Parameter(name="supplier_no", in="query", required=true, description="供應商編號", @OA\Schema(type="string")),
     *   @OA\Parameter(name="supplier_shortnm", in="query", required=true, description="供應商簡稱", @OA\Schema(type="string")),
     *   @OA\Parameter(name="supplier_fullnm", in="query", required=true, description="供應商全名", @OA\Schema(type="string")),
@@ -34,10 +33,10 @@ class SupplierController extends Controller
     *   @OA\Parameter(name="Classification", in="query", required=true, description="供應商分類(原物料、零件、服務、代理商)", @OA\Schema(type="string")),
     *   @OA\Parameter(name="responsible_person", in="query", required=false, description="負責人", @OA\Schema(type="string")),
     *   @OA\Parameter(name="contact_person", in="query", required=false, description="聯絡人", @OA\Schema(type="string")),
-    *   @OA\Parameter(name="zipcode1", in="query", required=true, description="郵遞區號 1", @OA\Schema(type="string")),
-    *   @OA\Parameter(name="address1", in="query", required=true, description="公司地址 1", @OA\Schema(type="string")),
-    *   @OA\Parameter(name="zipcode2", in="query", required=false, description="郵遞區號 2", @OA\Schema(type="string")),
-    *   @OA\Parameter(name="address2", in="query", required=false, description="公司地址 2", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="zipcode1", in="query", required=false, description="郵遞區號 1", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="address1", in="query", required=false, description="公司地址 1", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="zipcode2", in="query", required=true, description="郵遞區號 2", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="address2", in="query", required=true, description="公司地址 2", @OA\Schema(type="string")),
     *   @OA\Parameter(name="currencyid", in="query", required=false, description="幣別", @OA\Schema(type="string")),
     *   @OA\Parameter(name="payment_termid", in="query", required=false, description="付款條件", @OA\Schema(type="string")),
     *   @OA\Parameter(name="phone", in="query", required=false, description="公司電話", @OA\Schema(type="string")),
@@ -54,7 +53,7 @@ class SupplierController extends Controller
     *   @OA\Parameter(name="invoice_address", in="query", required=true, description="發票地址", @OA\Schema(type="string")),
     *   @OA\Parameter(name="recipient_phone", in="query", required=false, description="聯絡電話2", @OA\Schema(type="string")),
     *   @OA\Parameter(name="recipient_email", in="query", required=false, description="發票收件信箱", @OA\Schema(type="string")),
-    *   @OA\Parameter(name="established_date", in="query", required=true, description="成立時間", @OA\Schema(type="string", format="date-time")),
+    *   @OA\Parameter(name="established_date", in="query", required=false, description="成立時間", @OA\Schema(type="string", format="date-time")),
     *   @OA\Parameter(name="is_valid", in="query", required=false, description="是否有效 0:失效 1:有效", @OA\Schema(type="string")),
     *   @OA\Parameter(name="create_user", in="query", required=false, description="建立人員", @OA\Schema(type="string")),
     *   @OA\Parameter(name="create_time", in="query", required=false, description="建立時間", @OA\Schema(type="string", format="date-time")),
@@ -162,12 +161,12 @@ class SupplierController extends Controller
             }
  
             //郵遞區號二為必填
-            if (!$request->filled('zip_code2')) {
+            if ($request->filled('zip_code2')) {
                 $errors1['zip_code2_err'] = '郵遞區號二為必填';
             }
 
             //判斷郵遞區號二不能存在空白、""、''、"、'
-            if (!ValidationHelper::isValidText($request->input('zip_code2'))) {
+            if (ValidationHelper::isValidText($request->input('zip_code2'))) {
                 $errors1['zip_code2_err'] = '郵遞區號二不得為空字串或*';
             }    
 
@@ -402,7 +401,6 @@ class SupplierController extends Controller
      *     description="更新供應商資料",
      *     operationId="updatesupplier",
      *     tags={"base_supplier"},
-    *   @OA\Parameter(name="uuid", in="query", required=true, description="KEY", @OA\Schema(type="string")),
     *   @OA\Parameter(name="supplier_no", in="query", required=true, description="供應商編號", @OA\Schema(type="string")),
     *   @OA\Parameter(name="supplier_shortnm", in="query", required=true, description="供應商簡稱", @OA\Schema(type="string")),
     *   @OA\Parameter(name="supplier_fullnm", in="query", required=true, description="供應商全名", @OA\Schema(type="string")),
@@ -410,10 +408,10 @@ class SupplierController extends Controller
     *   @OA\Parameter(name="Classification", in="query", required=true, description="供應商分類(原物料、零件、服務、代理商)", @OA\Schema(type="string")),
     *   @OA\Parameter(name="responsible_person", in="query", required=false, description="負責人", @OA\Schema(type="string")),
     *   @OA\Parameter(name="contact_person", in="query", required=false, description="聯絡人", @OA\Schema(type="string")),
-    *   @OA\Parameter(name="zipcode1", in="query", required=true, description="郵遞區號 1", @OA\Schema(type="string")),
-    *   @OA\Parameter(name="address1", in="query", required=true, description="公司地址 1", @OA\Schema(type="string")),
-    *   @OA\Parameter(name="zipcode2", in="query", required=false, description="郵遞區號 2", @OA\Schema(type="string")),
-    *   @OA\Parameter(name="address2", in="query", required=false, description="公司地址 2", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="zipcode1", in="query", required=false, description="郵遞區號 1", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="address1", in="query", required=false, description="公司地址 1", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="zipcode2", in="query", required=true, description="郵遞區號 2", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="address2", in="query", required=true, description="公司地址 2", @OA\Schema(type="string")),
     *   @OA\Parameter(name="currencyid", in="query", required=false, description="幣別", @OA\Schema(type="string")),
     *   @OA\Parameter(name="payment_termid", in="query", required=false, description="付款條件", @OA\Schema(type="string")),
     *   @OA\Parameter(name="phone", in="query", required=false, description="公司電話", @OA\Schema(type="string")),
@@ -430,7 +428,7 @@ class SupplierController extends Controller
     *   @OA\Parameter(name="invoice_address", in="query", required=true, description="發票地址", @OA\Schema(type="string")),
     *   @OA\Parameter(name="recipient_phone", in="query", required=false, description="聯絡電話2", @OA\Schema(type="string")),
     *   @OA\Parameter(name="recipient_email", in="query", required=false, description="發票收件信箱", @OA\Schema(type="string")),
-    *   @OA\Parameter(name="established_date", in="query", required=true, description="成立時間", @OA\Schema(type="string", format="date-time")),
+    *   @OA\Parameter(name="established_date", in="query", required=false, description="成立時間", @OA\Schema(type="string", format="date-time")),
     *   @OA\Parameter(name="is_valid", in="query", required=false, description="是否有效 0:失效 1:有效", @OA\Schema(type="string")),
     *   @OA\Parameter(name="create_user", in="query", required=false, description="建立人員", @OA\Schema(type="string")),
     *   @OA\Parameter(name="create_time", in="query", required=false, description="建立時間", @OA\Schema(type="string", format="date-time")),
