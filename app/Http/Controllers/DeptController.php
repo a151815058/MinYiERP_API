@@ -10,7 +10,7 @@ require_once base_path('app/Models/connect.php');
 use OpenApi\Annotations as OA;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
-
+use App\Helpers\ValidationHelper;
 
 class DeptController extends Controller
 {
@@ -50,20 +50,39 @@ class DeptController extends Controller
     // 儲存部門資料
     public function store(Request $request)
     {
+        $errors1 = [];
         try {
-            // 驗證請求
-            $validator = Validator::make($request->all(),[
-                'dept_no'     => 'required|string|max:255|unique:depts,dept_no',
-                'dept_nm'     => 'required|string|max:255',
-                'note'        => 'nullable|string|max:255',
-                'is_valid'    => 'required|boolean'
-            ]);
-            if($validator->fails()){
+            // 部門代碼為必填
+            if (!$request->filled('dept_no')) {
+                $errors1['dept_no_err'] = '部門代碼為必填';
+            }else {
+                // 判斷部門代碼不能存在空白、""、''、"、'
+                if (!ValidationHelper::isValidText($request->input('dept_no'))) {
+                    $errors1['dept_no_err'] = '部門代碼不得為空字串或*';
+                }
+                // 檢查部門代碼是否已存在
+                $existingDept = Dept::where('dept_no', $request->input('dept_no'))->first();
+                if ($existingDept) {
+                    $errors1['dept_no_err'] = '部門代碼已存在';
+                }
+            }
+
+            // 部門名稱為必填
+            if (!$request->filled('dept_nm')) {
+                $errors1['dept_nm_err'] = '部門名稱為必填';
+            }
+            //判斷部門名稱不能存在空白、""、''、"、'
+            if (!ValidationHelper::isValidText($request->input('dept_nm'))) {
+                $errors1['dept_nm_err'] = '部門名稱不得為空字串或*';
+            }
+
+            // 如果有錯誤，回傳統一格式
+            if (!empty($errors1)) {
                 return response()->json([
-                    'status' => true,
-                    'message' => '必填欄位驗證失敗',
-                    'errors' => $validator->errors()
-                ], 200);
+                    'status' => false,
+                    'message' => '缺少必填的欄位及欄位格式錯誤',
+                    'errors' => $errors1
+                ], 400);
             }
 
             // 建立部門資料
@@ -72,7 +91,7 @@ class DeptController extends Controller
                 'dept_no'     => $request['dept_no'],
                 'dept_nm'     => $request['dept_nm'],
                 'note'       => $request['note'] ?? null,
-                'is_valid'    => $request['is_valid']
+                'is_valid'    => $request['is_valid'] ?? 1
             ]);
 
             if (!$dept) {
@@ -145,25 +164,50 @@ class DeptController extends Controller
     // 更新部門資料
     public function update(Request $request)
     {
+        $errors1 = [];
         try {
-            // 驗證請求
-            $validator = Validator::make($request->all(),[
-                'dept_no'     => 'required|string|max:255',
-                'dept_nm'     => 'required|string|max:255',
-                'note'        => 'nullable|string|max:255',
-                'is_valid'    => 'required|boolean'
-            ]);
-            if($validator->fails()){
-                return response()->json([
-                    'status' => true,
-                    'message' => '必填欄位驗證失敗',
-                    'errors' => $validator->errors()
-                ], 200);
+            // 部門代碼為必填
+            if (!$request->filled('dept_no')) {
+                $errors1['dept_no_err'] = '部門代碼為必填';
+            }else {
+                // 判斷部門代碼不能存在空白、""、''、"、'
+                if (!ValidationHelper::isValidText($request->input('dept_no'))) {
+                    $errors1['dept_no_err'] = '部門代碼不得為空字串或*';
+                }
+                // 檢查部門代碼是否已存在
+                $existingDept = Dept::where('dept_no', $request->input('dept_no'))->first();
+                if ($existingDept) {
+                    $errors1['dept_no_err'] = '部門代碼已存在';
+                }
             }
 
-            // 更新部門資料
-            $dept = Dept::findByDeptNo($request['dept_no'])->where('is_valid', '1')->first();
-        
+            // 部門名稱為必填
+            if (!$request->filled('dept_nm')) {
+                $errors1['dept_nm_err'] = '部門名稱為必填';
+            }
+            //判斷部門名稱不能存在空白、""、''、"、'
+            if (!ValidationHelper::isValidText($request->input('dept_nm'))) {
+                $errors1['dept_nm_err'] = '部門名稱不得為空字串或*';
+            }
+
+            // 如果有錯誤，回傳統一格式
+            if (!empty($errors1)) {
+                return response()->json([
+                    'status' => false,
+                    'message' => '缺少必填的欄位及欄位格式錯誤',
+                    'errors' => $errors1
+                ], 400);
+            }
+
+            // 查詢部門資料
+            $dept = Dept::where('uuid', $request->input('uuid'))->first();
+            if (!$dept) {
+                return response()->json([
+                    'status' => false,
+                    'message' => '欄位資料錯誤',
+                    'dept_no_err'    =>  '部門資料未找到',
+                ], 400);
+            }        
             if (!$dept) {
                 return response()->json([
                     'status' => true,
@@ -171,7 +215,8 @@ class DeptController extends Controller
                     'output'    => null
                 ], 404);
             }
-    
+ 
+            // 更新資料   
             $dept->dept_nm = $request['dept_nm'];
             $dept->note = $request['note'] ?? null;
             $dept->is_valid = $request['is_valid'];

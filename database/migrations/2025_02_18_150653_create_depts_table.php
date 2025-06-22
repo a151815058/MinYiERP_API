@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('depts', function (Blueprint $table) {
             $table->uuid('uuid')->comment('KEY')->primary()->unique();
-            $table->string('dept_no')->comment('部門代號')->unique();
-            $table->string('dept_nm')->comment('部門名稱');
-            $table->string('note')->comment('備註')->nullable();
+            $table->string('dept_no',255)->comment('部門代號')->unique();
+            $table->string('dept_nm',255)->comment('部門名稱');
+            $table->string('note',255)->comment('備註')->nullable();
             $table->string('is_valid')->comment('是否有效 0:失效 1:有效')->default(1);
             $table->string('create_user')->comment('建立人員')->default('admin');
             $table->dateTime('create_time')->comment('建立時間')->default(now());
