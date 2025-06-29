@@ -608,10 +608,10 @@ class BillInfoController extends Controller
                 return response()->json([
                     'status' => true,
                     'message' => '常用資料未找到',
-                    'bill_typeoption' => null,
-                    'bill_type81option' => null,
-                    'bill_type71option' => null,
-                    'bill_type51option' => null
+                    'bill_typeoption' => [],
+                    'bill_type81option' => [],
+                    'bill_type71option' => [],
+                    'bill_type51option' => []
                 ], 404);
             }
     
