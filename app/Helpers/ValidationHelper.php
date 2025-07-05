@@ -16,4 +16,18 @@ class ValidationHelper
             $trimmed === "*"  || str_contains($trimmed,'*')
         ); 
     }
+    /*判斷日期格式*/
+    public static function isValidDate($value): bool
+    {
+        $format = 'Y/m/d';
+        $dateTime = \DateTime::createFromFormat($format, $value);
+        return $dateTime && $dateTime->format($format) === $value;
+    }
+    /*判斷時間格式*/
+    public static function isValidTime($value): bool
+    {
+        $format = 'H:i:s';
+        $dateTime = \DateTime::createFromFormat($format, $value);
+        return $dateTime && $dateTime->format($format) === $value;
+    }
 }

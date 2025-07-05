@@ -12,6 +12,8 @@ use App\Models\Client;
 use App\Models\Dept;
 use App\Models\SysUser;
 use App\Models\Currency;
+use App\Models\Product;
+use App\Models\Productinventory;
 use App\Models\PaymentTerm;
 use Illuminate\Support\Str;
 require_once base_path('app/Models/connect.php'); 
@@ -20,7 +22,7 @@ use OpenApi\Annotations as OA;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Ramsey\Uuid\Uuid;
-
+use App\Helpers\ValidationHelper;
 /**
  * @OA\POST(
  *     path="/api/createorder",
@@ -109,59 +111,131 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         try{
-            // 驗證請求資料
-            $validator = Validator::make($request->all(), [
-                // 訂單主檔驗證
-                'order_type' => 'required|string|max:10',
-                'order_no' => 'required|string|max:20 |unique:order,order_no',
-                'order_date' => 'required|date',
-                'customer_name' => 'required|string|max:100',
-                'contact_person' => 'nullable|string|max:50',
-                'expected_completion_date' => 'nullable|date',
-                'responsible_dept' => 'nullable|string|max:50',
-                'responsible_staff' => 'nullable|string|max:20',
-                'terms_no' => 'nullable|string|max:10',
-                'currency_no' => 'nullable|string|max:3',
-                'tax_type' => 'nullable|string|max:1',
-                'is_deposit' => 'nullable|boolean',
-                'create_deposit_type' => 'nullable|string|max:20',
-                'deposit' => 'nullable|numeric',
-                'customer_address' => 'nullable|string|max:255',
-                'delivery_address' => 'nullable|string|max:255',
-                'status' => 'required|string|max:10',
-                'is_valid' => 'required|boolean'
-            ])->validate();
+            $errors1 = [];
 
-            // 驗證訂單明細是否存在
-            if (!$request->has('order_details') || !is_array($request->input('order_details'))) {
-                return response()->json(['message' => '訂單明細不存在或格式錯誤'], 400);
+            //////訂單主檔//////
+
+            /*訂單單別為必填*/
+            if (!$request->filled('order_type')) {
+                $errors1[] = '訂單單別為必填';
             }
-            // 驗證訂單明細至少有一筆
-            if (count($request->input('order_details')) < 1) {
-                return response()->json(['message' => '訂單明細至少需要一筆'], 400);
+            /*訂單單別必須存在單據管理*/
+            if(!BillInfo::where('bill_no', $request->input('order_type'))->exists()){
+                $errors1['order_type_err'] = '訂單單別不存在，請選擇正確的訂單單別';
             }
 
+            /*訂單單號為必填*/
+            if (!$request->filled('order_no')) {
+                $errors1[] = '訂單單號為必填';
+            }
+
+            /*訂單日期為必填*/
+            if (!$request->filled('order_date')) {
+                $errors1[] = '訂單日期為必填';
+            } elseif (!ValidationHelper::isValidDate($request->input('order_date'))) {
+                $errors1[] = '訂單日期格式錯誤，請使用 YYYY/MM/DD 格式';
+            }
+
+            /*客戶名稱為必填 */
+            if (!$request->filled('customer_name')) {
+                $errors1[] = '客戶名稱為必填';
+            }
+
+            /*聯絡人為必填*/
+            if (!$request->filled('contact_person')) {
+                $errors1[] = '聯絡人為必填';
+            }
+
+            /*負責部門為必填*/
+            if (!$request->filled('responsible_dept')) {
+                $errors1[] = '負責部門為必填';
+            } elseif (!Dept::where('dept_no', $request->input('responsible_dept'))->exists()) {
+                $errors1[] = '負責部門不存在，請選擇正確的負責部門';
+            }
+            /*負責業務為必填*/  
+            if (!$request->filled('responsible_staff')) {
+                $errors1[] = '負責業務為必填';
+            } elseif (!SysUser::where('user_no', $request->input('responsible_staff'))->exists()) {
+                $errors1[] = '負責業務不存在，請選擇正確的負責業務';
+            }   
+
+            /*付款條件為必填*/
+            if (!$request->filled('terms_no')) {
+                $errors1[] = '付款條件為必填';
+            } elseif (!PaymentTerm::where('terms_no', $request->input('terms_no'))->exists()) {
+                $errors1[] = '付款條件不存在，請選擇正確的付款條件';
+            }
+
+            /*幣別為必填*/  
+            if (!$request->filled('currency_no')) {
+                $errors1[] = '幣別為必填';
+            } elseif (!Currency::where('currency_no', $request->input('currency_no'))->exists()) {
+                $errors1[] = '幣別不存在，請選擇正確的幣別';
+            }
+
+            /*課稅別為必填*/
+            if (!$request->filled('tax_type')) {
+                $errors1[] = '課稅別為必填';
+            } elseif (!SysCode::where('param_sn', '04')->where('code', $request->input('tax_type'))->exists()) {
+                $errors1[] = '課稅別不存在，請選擇正確的課稅別';
+            }
+
+            /*勾選是否開立訂金，則開立方式為必填*/
+            if ($request->input('is_deposit')) {
+                if (!$request->filled('create_deposit_type')) {
+                    $errors1[] = '開立方式為必填';
+                }
+            }
+
+            //////訂單明細檔//////
             // 驗證訂單明細的每一筆資料
             foreach ($request->input('order_details') as $detail) {
-                $validator = Validator::make($detail, [
-                    'line_no' => 'required|integer|min:1',
-                    'product_no' => 'required|string|max:20',
-                    'product_nm' => 'required|string|max:100',
-                    'specification' => 'nullable|string|max:100',
-                    'inventory_no' => 'nullable|string|max:20',
-                    'qty' => 'required|numeric|min:0',
-                    'unit' => 'required|string|max:10',
-                    'lot_num' => 'nullable|string|max:20',
-                    'unit_price' => 'required|numeric|min:0',
-                    'amount' => 'required|numeric|min:0',
-                    'customer_product_no' => 'nullable|string|max:20',
-                    'note' => 'nullable|string|max:255',
-                    'status' => 'required|string|max:10',
-                    'is_valid' => 'required|boolean'
-                ])->validate();
+
+                /*訂單品號為必填*/
+                if (!$detail['product_no']) {
+                    $errors1[] = '訂單品號為必填';
+                }
+                /*品號必須存在產品主檔*/
+                if (!Product::where('product_no', $detail['product_no'])->exists()) {
+                    $errors1[] = '品號不存在，請選擇正確的品號';
+                }
+
+                /*品名出庫庫別為必填*/
+                if (!$detail['inventory_no']) {
+                    $errors1[] = '品名出庫庫別為必填';
+                }
+
+                /*品名數量為必填*/
+                if (!$detail['qty']) {
+                    $errors1[] = '品名數量為必填';
+                } elseif (!is_numeric($detail['qty']) || $detail['qty'] <= 0) {
+                    $errors1[] = '品名數量必須為正數';
+                }
+
+                /*品名批號為必填*/
+                if (!$detail['lot_num']) {
+                    $errors1[] = '品名批號為必填';
+                }
+
+                /*品名數量必須小於等於批號數量*/
+                if (isset($detail['lot_num']) && isset($detail['qty'])) {
+                    $inventory = Productinventory::where('product_no', $detail['product_no'])
+                        ->where('lot_num', $detail['lot_num'])
+                        ->first();
+                    if ($inventory && $detail['qty'] > $inventory->qty) {
+                        $errors1[] = '品名數量必須小於等於批號數量';
+                    }
+                }
+
+                /*單價為必填*/
+                if (!$detail['unit_price']) {
+                    $errors1[] = '單價為必填';
+                } elseif (!is_numeric($detail['unit_price']) || $detail['unit_price'] <= 0) {
+                    $errors1[] = '單價必須為正數';
+                } 
             }
 
-            // 驗證訂單圖片
+            // 驗證訂單圖片 
             foreach ($request->input('orderfile') as $detail) {
                 $validator = Validator::make($detail, [
                     'ref_file_path' => 'required|string|max:255',

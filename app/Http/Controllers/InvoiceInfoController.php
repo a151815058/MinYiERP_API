@@ -599,17 +599,23 @@ class InvoiceInfoController extends Controller
             $period_end = $request->query('period_end'); // 可為 null
             $invoice_type = $request->query('invoice_type'); // 可為 null
             $keyword = $request->query('keyword'); // 關鍵字查詢
-            // 開立年月起須為民國年月格式(例如：114-01)
-            //開立年月起須為民國年月例如：114/01
-            if (!preg_match('/^[1-9]\d{2}\/(0[1-9]|1[0-2])$/', $request['period_start'])) {
-                $errors1['period_start_err'] = '開立年月須為民國年月格式(例如：114/01)';
+
+
+            if($request['period_start'] != null) {
+                //開立年月起須為民國年月例如：114/01
+                if (!preg_match('/^[1-9]\d{2}\/(0[1-9]|1[0-2])$/', $request['period_start'])) {
+                    $errors1['period_start_err'] = '開立年月須為民國年月格式(例如：114/01)';
+                }
             }
 
-            // 開立年月迄須為民國年月格式(例如：114-02)
-            //開立年月起須為民國年月例如：114/01
-            if (!preg_match('/^[1-9]\d{2}\/(0[1-9]|1[0-2])$/', $request['period_start'])) {
-                $errors1['period_end_err'] = '開立年月須為民國年月格式(例如：114/02)';
+            if($request['period_end'] != null) {
+                // 開立年月迄須為民國年月格式(例如：114-02)
+                //開立年月起須為民國年月例如：114/01
+                if (!preg_match('/^[1-9]\d{2}\/(0[1-9]|1[0-2])$/', $request['period_end'])) {
+                    $errors1['period_end_err'] = '開立年月須為民國年月格式(例如：114/02)';
+                }
             }
+
 
             // 發票類型須存在於參數檔中
             if ($invoice_type && !SysCode::where('param_sn', '05')->where('uuid', $invoice_type)->exists()) {
