@@ -110,7 +110,11 @@ class SysuserController extends Controller
                 'user_no'  => $request['user_no'],
                 'user_nm'  => $request['user_nm'],
                 'note'     => $request['note'] ?? null,
-                'is_valid' => $request['is_valid']
+                'is_valid' => $request['is_valid'],
+                'create_user' => 'admin',
+                'create_time' => now(),
+                'update_user' => 'admin',
+                'update_time' => now()
             ]);
 
             DB::commit(); // 成功則提交
