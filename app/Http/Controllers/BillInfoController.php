@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\BillInfo;
 use App\Models\SysCode;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 require_once base_path('app/Models/connect.php'); 
 use OpenApi\Annotations as OA;
@@ -109,7 +110,11 @@ class BillInfoController extends Controller
                 'gen_bill_type'   => $request['gen_bill_type']?? null,
                 'order_type'  => $request['order_type']?? null,
                 'note'       => $request['note'] ?? null,
-                'is_valid'    => $request['is_valid']
+                'is_valid'    => $request['is_valid'],
+                'create_user'     => Auth::user()->username ?? 'admin',
+                'update_user'     => Auth::user()->username ?? 'admin',
+                'create_time'     => now(),
+                'update_time'     => now()
             ]);
     
             if (!$BillInfo) {
@@ -249,8 +254,11 @@ class BillInfoController extends Controller
                 'gen_bill_type'   => $request['gen_bill_type'] ?? null,
                 'order_type'  => $request['order_type'] ?? null,
                 'note'       => $request['note'] ?? null,
-                'is_valid'    => $request['is_valid']
+                'is_valid'    => $request['is_valid'],
+                'update_user'     => Auth::user()->username ?? 'admin',
+                'update_time'     => now()
             ]);
+            
             return response()->json([
                 'status' => true,
                 'message' => 'success',

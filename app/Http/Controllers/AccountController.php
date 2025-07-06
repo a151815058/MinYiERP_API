@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Account;
 use App\Models\SysCode;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 require_once base_path('app/Models/connect.php'); 
@@ -57,6 +58,7 @@ class AccountController extends Controller
     // 儲存會計科目
     public function store(Request $request)
     {
+
         $errors1=[];
         try{
             // 會計代碼為必填
@@ -138,7 +140,11 @@ class AccountController extends Controller
                 'alter_name'      => $request['alter_name']?? null,
                 'dc'              => $request['dc'],
                 'note'            => $request['note']?? null,
-                'is_valid'        => $request['is_valid']
+                'is_valid'        => $request['is_valid'],
+                'create_user'     => Auth::user()->username ?? 'admin',
+                'update_user'     => Auth::user()->username ?? 'admin',
+                'create_time'     => now(),
+                'update_time'     => now()
             ]);
     
             if (!$Account) {
@@ -308,7 +314,7 @@ class AccountController extends Controller
             $account->dc = $request['dc'];
             $account->note = $request['note'] ?? null;
             $account->is_valid = $request['is_valid'];
-            $account->update_user = 'admin';
+            $account->update_user = Auth::user()->username ?? 'admin';
             $account->update_time = now();
     
             $account->save();

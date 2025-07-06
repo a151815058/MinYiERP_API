@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Dept;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 require_once base_path('app/Models/connect.php'); 
@@ -91,7 +92,11 @@ class DeptController extends Controller
                 'dept_no'     => $request['dept_no'],
                 'dept_nm'     => $request['dept_nm'],
                 'note'       => $request['note'] ?? null,
-                'is_valid'    => $request['is_valid'] ?? 1
+                'is_valid'    => $request['is_valid'] ?? 1,
+                'create_user'     => Auth::user()->username ?? 'admin',
+                'update_user'     => Auth::user()->username ?? 'admin',
+                'create_time'     => now(),
+                'update_time'     => now()                
             ]);
 
             if (!$dept) {
@@ -220,7 +225,7 @@ class DeptController extends Controller
             $dept->dept_nm = $request['dept_nm'];
             $dept->note = $request['note'] ?? null;
             $dept->is_valid = $request['is_valid'];
-            $dept->update_user = 'admin';
+            $dept->update_user = Auth::user()->username ?? 'admin'; // 更新人員
             $dept->update_time = now();
             $dept->save();
     

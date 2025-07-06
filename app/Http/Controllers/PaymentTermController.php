@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\PaymentTerm;
 use App\Models\SysCode;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 require_once base_path('app/Models/connect.php'); 
 use Illuminate\Support\Str;
 use OpenApi\Annotations as OA;
@@ -99,7 +100,11 @@ class PaymentTermController extends Controller
                     'pay_mode'     => $request['pay_mode'],
                     'pay_day'      => $request['pay_day'],
                     'note'         => $request['note'] ?? null,
-                    'is_valid'     => $request['is_valid']
+                    'is_valid'     => $request['is_valid'],
+                    'create_user' => Auth::user()->username ?? 'admin',
+                    'update_user' => Auth::user()->username ?? 'admin',
+                    'create_time' => now(),
+                    'update_time' => now()
                 ]);
 
                 // 回應 JSON
@@ -224,7 +229,7 @@ class PaymentTermController extends Controller
             $PaymentTerm->pay_day = $request['pay_day'];
             $PaymentTerm->note = $request['note'] ?? null;
             $PaymentTerm->is_valid = $request['is_valid'];
-            $PaymentTerm->update_user = 'admin';
+            $PaymentTerm->update_user = Auth::user()->username ?? 'admin'; // 假設更新人為 admin
             $PaymentTerm->update_time = now();
             $PaymentTerm->save();
 

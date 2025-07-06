@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
+use Illuminate\Support\Facades\Auth;
 require_once base_path('app/Models/connect.php'); 
 use App\Models\Supplier;
 use App\Models\Account;
@@ -103,7 +104,11 @@ class ProductController extends Controller
             'main_supplier'  => $request['main_supplier']?? null,
             'Accounting'     => $request['Accounting']?? null,
             'unit'           => $request['unit'],
-            'is_valid'       => $request['is_valid']
+            'is_valid'       => $request['is_valid'],
+            'create_user'   => Auth::user()->username ?? 'admin',
+            'update_user'   => Auth::user()->username ?? 'admin',
+            'create_time'   => now(),
+            'update_time'   => now()
         ]);
 
         // 回應 JSON
@@ -241,7 +246,7 @@ class ProductController extends Controller
                 'Accounting'     => $request['Accounting']?? null,
                 'unit'           => $request['unit'],
                 'is_valid'       => $request['is_valid'],
-                'update_user'    => $request->user()->name ?? 'admin', // 更新使用者
+                'update_user'    => Auth::user()->username ?? 'admin', // 更新使用者
                 'update_time'    => now()
             ]);
     

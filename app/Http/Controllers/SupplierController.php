@@ -45,14 +45,7 @@ class SupplierController extends Controller
     *   @OA\Parameter(name="contact_email", in="query", required=false, description="聯絡人信箱", @OA\Schema(type="string")),
     *   @OA\Parameter(name="user_id", in="query", required=false, description="業務人員", @OA\Schema(type="string")),
     *   @OA\Parameter(name="account_category", in="query", required=false, description="科目別", @OA\Schema(type="string")),
-    *   @OA\Parameter(name="invoice_title", in="query", required=true, description="發票抬頭", @OA\Schema(type="string")),
     *   @OA\Parameter(name="taxid", in="query", required=true, description="統一編號", @OA\Schema(type="string")),
-    *   @OA\Parameter(name="tax_type", in="query", required=false, description="課稅別", @OA\Schema(type="string")),
-    *   @OA\Parameter(name="delivery_method", in="query", required=true, description="發票寄送方式", @OA\Schema(type="string")),
-    *   @OA\Parameter(name="recipient_name", in="query", required=false, description="發票收件人", @OA\Schema(type="string")),
-    *   @OA\Parameter(name="invoice_address", in="query", required=true, description="發票地址", @OA\Schema(type="string")),
-    *   @OA\Parameter(name="recipient_phone", in="query", required=false, description="聯絡電話2", @OA\Schema(type="string")),
-    *   @OA\Parameter(name="recipient_email", in="query", required=false, description="發票收件信箱", @OA\Schema(type="string")),
     *   @OA\Parameter(name="established_date", in="query", required=false, description="成立時間", @OA\Schema(type="string", format="date-time")),
     *   @OA\Parameter(name="is_valid", in="query", required=false, description="是否有效 0:失效 1:有效", @OA\Schema(type="string")),
     *   @OA\Parameter(name="create_user", in="query", required=false, description="建立人員", @OA\Schema(type="string")),
@@ -78,7 +71,6 @@ class SupplierController extends Controller
      *             @OA\Property(property="phone", type="string", example="02-12345678"),
      *             @OA\Property(property="fax", type="string", example="02-87654321"),
      *             @OA\Property(property="contact_person", type="string", example="李小華"),
-     *             @OA\Property(property="contact_phone", type="string", example="0912345678"),
      *             @OA\Property(property="mobile_phone", type="string", example="0987654321"),
      *             @OA\Property(property="contact_email", type="string", example="a151815058@gmail.com"),
      *             @OA\Property(property="currencyid", type="string", example="TWD"),
@@ -285,30 +277,6 @@ class SupplierController extends Controller
                     }
                 }
             }
-            //課稅別須存在
-            if ($request->filled('taxtype')) {
-                if(!SysCode::where('param_sn', '02')->where('uuid', $request->input('taxtype'))->exists()){
-                    $errors1['taxtype_err'] = '課稅別不存在，請選擇正確的課稅別';
-                }
-            }
-            //發票寄送方式需存在
-            if (!$request->filled('delivery_method')) {
-                $errors1['delivery_method_err'] = '發票寄送方式為必填';
-            }
-
-            //發票寄送方式需存在
-            if ($request->filled('delivery_method') && !SysCode::where('param_sn', '04')->where('uuid', $request->input('delivery_method'))->exists()) {
-                $errors1['delivery_method_err'] = '發票寄送方式不存在，請選擇正確的發票寄送方式';
-            }
-
-            // 發票地址為必填
-            if (!$request->filled('invoice_address')) {
-                $errors1['invoice_address_err'] = '發票地址為必填';
-            }
-            //判斷發票地址不能存在空白、""、''、"、'
-            if (!ValidationHelper::isValidText($request->input('invoice_address'))) {
-                 $errors1['invoice_address_err'] = '發票地址不得為空字串或*';
-            }  
 
             //判斷是否有效不能存在空白、""、''、"、'
             if (!ValidationHelper::isValidText($request->input('is_valid'))) {
@@ -348,15 +316,12 @@ class SupplierController extends Controller
                 'account_category' => $request->input('account_category'),
                 'invoice_title' => $request->input('invoice_title'),
                 'taxid' => $request->input('taxid'),
-                'tax_type' => $request->input('tax_type'),
-                'delivery_method' => $request->input('delivery_method'),
-                'recipient_name' => $request->input('recipient_name'),
-                'invoice_address' => $request->input('invoice_address'),
-                'recipient_phone' => $request->input('recipient_phone'),
-                'recipient_email' => $request->input('recipient_email'),
                 'established_date' => $request->filled('established_date') ? date($request->filled('established_date')) : null,
                 'is_valid' => (int)$request->filled('is_valid') ? 1 : 0,
                 'create_user'=> $request->input('create_user', 'admin'),
+                'create_time' => $request->input('create_time', now()),
+                'update_user' => $request->input('update_user', 'admin'),
+                'update_time' => $request->input('update_time', now())
             ]);
 
             // 回應 JSON
@@ -420,14 +385,7 @@ class SupplierController extends Controller
     *   @OA\Parameter(name="contact_email", in="query", required=false, description="聯絡人信箱", @OA\Schema(type="string")),
     *   @OA\Parameter(name="user_id", in="query", required=false, description="業務人員", @OA\Schema(type="string")),
     *   @OA\Parameter(name="account_category", in="query", required=false, description="科目別", @OA\Schema(type="string")),
-    *   @OA\Parameter(name="invoice_title", in="query", required=true, description="發票抬頭", @OA\Schema(type="string")),
     *   @OA\Parameter(name="taxid", in="query", required=true, description="統一編號", @OA\Schema(type="string")),
-    *   @OA\Parameter(name="tax_type", in="query", required=false, description="課稅別", @OA\Schema(type="string")),
-    *   @OA\Parameter(name="delivery_method", in="query", required=true, description="發票寄送方式", @OA\Schema(type="string")),
-    *   @OA\Parameter(name="recipient_name", in="query", required=false, description="發票收件人", @OA\Schema(type="string")),
-    *   @OA\Parameter(name="invoice_address", in="query", required=true, description="發票地址", @OA\Schema(type="string")),
-    *   @OA\Parameter(name="recipient_phone", in="query", required=false, description="聯絡電話2", @OA\Schema(type="string")),
-    *   @OA\Parameter(name="recipient_email", in="query", required=false, description="發票收件信箱", @OA\Schema(type="string")),
     *   @OA\Parameter(name="established_date", in="query", required=false, description="成立時間", @OA\Schema(type="string", format="date-time")),
     *   @OA\Parameter(name="is_valid", in="query", required=false, description="是否有效 0:失效 1:有效", @OA\Schema(type="string")),
     *   @OA\Parameter(name="create_user", in="query", required=false, description="建立人員", @OA\Schema(type="string")),
@@ -453,7 +411,6 @@ class SupplierController extends Controller
      *             @OA\Property(property="phone", type="string", example="02-12345678"),
      *             @OA\Property(property="fax", type="string", example="02-87654321"),
      *             @OA\Property(property="contact_person", type="string", example="李小華"),
-     *             @OA\Property(property="contact_phone", type="string", example="0912345678"),
      *             @OA\Property(property="mobile_phone", type="string", example="0987654321"),
      *             @OA\Property(property="contact_email", type="string", example="a151815058@gmail.com"),
      *             @OA\Property(property="currencyid", type="string", example="TWD"),
@@ -612,14 +569,6 @@ class SupplierController extends Controller
                     $errors1['account_category_err'] = '科目別不存在，請選擇正確的科目別';
                 }
             }
-            // 發票抬頭為必填
-            if (!$request->filled('invoice_title')) {
-                $errors1['invoice_title_err'] = '發票抬頭為必填';
-            }
-            //判斷發票抬頭不能存在空白、""、''、"、'
-            if (!ValidationHelper::isValidText($request->input('invoice_title'))) {
-                 $errors1['invoice_title_err'] = '送貨地址不得為空字串或*';
-            }  
             ///統一編號為必填
             if (!$request->filled('taxid')) {
                 $errors1['taxid_err'] = '統一編號為必填';
@@ -645,30 +594,6 @@ class SupplierController extends Controller
                     }
                 }
             }
-            //課稅別須存在
-            if ($request->filled('taxtype')) {
-                if(!SysCode::where('param_sn', '02')->where('uuid', $request->input('taxtype'))->exists()){
-                    $errors1['taxtype_err'] = '課稅別不存在，請選擇正確的課稅別';
-                }
-            }
-            //發票寄送方式需存在
-            if (!$request->filled('delivery_method')) {
-                $errors1['delivery_method_err'] = '發票寄送方式為必填';
-            }
-
-            //發票寄送方式需存在
-            if ($request->filled('delivery_method') && !SysCode::where('param_sn', '04')->where('uuid', $request->input('delivery_method'))->exists()) {
-                $errors1['delivery_method_err'] = '發票寄送方式不存在，請選擇正確的發票寄送方式';
-            }
-
-            // 發票地址為必填
-            if (!$request->filled('invoice_address')) {
-                $errors1['invoice_address_err'] = '發票地址為必填';
-            }
-            //判斷發票地址不能存在空白、""、''、"、'
-            if (!ValidationHelper::isValidText($request->input('invoice_address'))) {
-                 $errors1['invoice_address_err'] = '發票地址不得為空字串或*';
-            }  
 
             //判斷是否有效不能存在空白、""、''、"、'
             if (!ValidationHelper::isValidText($request->input('is_valid'))) {
@@ -713,14 +638,8 @@ class SupplierController extends Controller
                 'contact_email' => $request->input('contact_email'),
                 'user_id' => $request->input('user_id'),
                 'account_category' => $request->input('account_category'),
-                'invoice_title' => $request->input('invoice_title'),
                 'taxid' => $request->input('taxid'),
                 'tax_type' => $request->input('tax_type'),
-                'delivery_method' => $request->input('delivery_method'),
-                'recipient_name' => $request->input('recipient_name'),
-                'invoice_address' => $request->input('invoice_address'),
-                'recipient_phone' => $request->input('recipient_phone'),
-                'recipient_email' => $request->input('recipient_email'),
                 'established_date' => date($request->filled('established_date')),
                 'is_valid' => (int)$request->filled('is_valid') ? 1 : 0,
                 'update_user'=> $request->input('update_user', 'admin'),
@@ -815,7 +734,6 @@ class SupplierController extends Controller
      *             @OA\Property(property="phone", type="string", example="02-12345678"),
      *             @OA\Property(property="fax", type="string", example="02-87654321"),
      *             @OA\Property(property="contact_person", type="string", example="李小華"),
-     *             @OA\Property(property="contact_phone", type="string", example="0912345678"),
      *             @OA\Property(property="mobile_phone", type="string", example="0987654321"),
      *             @OA\Property(property="contact_email", type="string", example="a151815058@gmail.com"),
      *             @OA\Property(property="currencyid", type="string", example="TWD"),
@@ -916,7 +834,6 @@ class SupplierController extends Controller
 	*             		@OA\Property(property="phone", type="string", example="02-12345678"),
 	*             		@OA\Property(property="fax", type="string", example="02-87654321"),
 	*             		@OA\Property(property="contact_person", type="string", example="李小華"),
-	*             		@OA\Property(property="contact_phone", type="string", example="0912345678"),
 	*             		@OA\Property(property="mobile_phone", type="string", example="0987654321"),
 	*             		@OA\Property(property="contact_email", type="string", example="a151815058@gmail.com"),
 	*             		@OA\Property(property="currencyid", type="string", example="TWD"),
@@ -1057,7 +974,6 @@ class SupplierController extends Controller
      *             @OA\Property(property="phone", type="string", example="02-12345678"),
      *             @OA\Property(property="fax", type="string", example="02-87654321"),
      *             @OA\Property(property="contact_person", type="string", example="李小華"),
-     *             @OA\Property(property="contact_phone", type="string", example="0912345678"),
      *             @OA\Property(property="mobile_phone", type="string", example="0987654321"),
      *             @OA\Property(property="contact_email", type="string", example="a151815058@gmail.com"),
      *             @OA\Property(property="currencyid", type="string", example="TWD"),

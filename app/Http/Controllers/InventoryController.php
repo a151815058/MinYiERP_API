@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Inventory;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 require_once base_path('app/Models/connect.php'); 
 use OpenApi\Annotations as OA;
@@ -89,7 +90,11 @@ class InventoryController extends Controller
                 'inventory_no'             => $request['inventory_no'],
                 'inventory_nm'             => $request['inventory_nm'],
                 'note'                      => $request['note'] ?? null,
-                'is_valid'                 => $request['is_valid']
+                'is_valid'                 => $request['is_valid'],
+                'create_user'     => Auth::user()->username ?? 'admin',
+                'update_user'     => Auth::user()->username ?? 'admin',
+                'create_time'     => now(),
+                'update_time'     => now()                
             ]);
 
             // 回應 JSON
@@ -211,7 +216,7 @@ class InventoryController extends Controller
             $Inventory->inventory_nm = $request['inventory_nm'];
             $Inventory->note = $request['note'] ?? null;
             $Inventory->is_valid = $request['is_valid'];
-            $Inventory->update_user = 'admin';
+            $Inventory->update_user = Auth::user()->username ?? 'admin'; // 更新人員
             $Inventory->update_time = now();
             $Inventory->save();
 

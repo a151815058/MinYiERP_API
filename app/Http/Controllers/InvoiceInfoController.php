@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\InvoiceInfo;
 use App\Models\SysCode;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 require_once base_path('app/Models/connect.php'); 
 use Illuminate\Support\Facades\DB;
@@ -183,7 +184,11 @@ class InvoiceInfoController extends Controller
                 'end_number'          => $request['end_number'],
                 'effective_startdate' => $request['effective_startdate'],
                 'effective_enddate'   => $request['effective_enddate']?? null,
-                'is_valid'            => $request['is_valid']
+                'is_valid'            => $request['is_valid'],
+                'create_user'        => Auth::user()->username ?? 'admin',
+                'update_user'        => Auth::user()->username ?? 'admin',
+                'create_time'        => now(),
+                'update_time'        => now()
             ]);
     
             if (!$InvoiceInfo) {
@@ -397,7 +402,7 @@ class InvoiceInfoController extends Controller
             $InvoiceInfo->effective_startdate = $request['effective_startdate'];
             $InvoiceInfo->effective_enddate = $request['effective_enddate'] ?? null;
             $InvoiceInfo->is_valid = $request['is_valid'];
-            $InvoiceInfo->update_user = 'admin'; // 假設更新人為 admin
+            $InvoiceInfo->update_user = Auth::user()->username ?? 'admin'; // 假設更新人為 admin
             $InvoiceInfo->update_time = now(); // 更新時間為當前時間
             $InvoiceInfo->save();
             return response()->json([

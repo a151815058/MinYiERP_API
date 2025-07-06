@@ -587,6 +587,243 @@
                 }
             }
         },
+        "/api/getcaptcha": {
+            "get": {
+                "tags": [
+                    "base_auth"
+                ],
+                "summary": "取得驗證碼",
+                "description": "取得驗證碼",
+                "operationId": "getcaptcha",
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "captcha_img": {
+                                            "type": "string",
+                                            "example": "data:image/png;base64,iVBORw0K..."
+                                        },
+                                        "key": {
+                                            "type": "string",
+                                            "example": "f2bb62f0fae1f8b935d..."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "取得驗證碼失敗"
+                    }
+                }
+            }
+        },
+        "/api/verifyuser": {
+            "post": {
+                "tags": [
+                    "base_auth"
+                ],
+                "summary": "驗證登入帳號密碼",
+                "description": "驗證登入帳號密碼",
+                "operationId": "verifyuser",
+                "parameters": [
+                    {
+                        "name": "useraccount",
+                        "in": "query",
+                        "description": "使用者名稱",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "password",
+                        "in": "query",
+                        "description": "密碼",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "captcha_input",
+                        "in": "query",
+                        "description": "驗證碼",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "captcha_key",
+                        "in": "query",
+                        "description": "驗證碼 Key",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "useraccount": {
+                                            "type": "string",
+                                            "example": "wendyyao"
+                                        },
+                                        "password_hash": {
+                                            "type": "string",
+                                            "example": "$2y$10$xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                                        },
+                                        "is_valid": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "create_user": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "update_user": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "create_time": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "update_time": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "驗證帳號密碼失敗"
+                    }
+                }
+            }
+        },
+        "/api/RegisterAccount": {
+            "post": {
+                "tags": [
+                    "base_auth"
+                ],
+                "summary": "註冊帳號密碼",
+                "description": "註冊帳號密碼",
+                "operationId": "RegisterAccount",
+                "parameters": [
+                    {
+                        "name": "username",
+                        "in": "query",
+                        "description": "使用者名稱",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "useraccount",
+                        "in": "query",
+                        "description": "使用者帳號",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "password",
+                        "in": "query",
+                        "description": "密碼",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "mail",
+                        "in": "query",
+                        "description": "電子郵件",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "username": {
+                                            "type": "string",
+                                            "example": "wendyyao"
+                                        },
+                                        "useraccount": {
+                                            "type": "string",
+                                            "example": "wendyyao"
+                                        },
+                                        "password_hash": {
+                                            "type": "string",
+                                            "example": "$2y$10$xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                                        },
+                                        "mail": {
+                                            "type": "string",
+                                            "example": "wendyyao@example.com"
+                                        },
+                                        "is_valid": {
+                                            "type": "string",
+                                            "example": "1"
+                                        },
+                                        "create_user": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "update_user": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "create_time": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001975Z"
+                                        },
+                                        "update_time": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "註冊帳號密碼失敗"
+                    }
+                }
+            }
+        },
         "/api/createbillinfo": {
             "post": {
                 "tags": [
@@ -7370,73 +7607,10 @@
                         }
                     },
                     {
-                        "name": "invoice_title",
-                        "in": "query",
-                        "description": "發票抬頭",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
                         "name": "taxid",
                         "in": "query",
                         "description": "統一編號",
                         "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "tax_type",
-                        "in": "query",
-                        "description": "課稅別",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "delivery_method",
-                        "in": "query",
-                        "description": "發票寄送方式",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "recipient_name",
-                        "in": "query",
-                        "description": "發票收件人",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "invoice_address",
-                        "in": "query",
-                        "description": "發票地址",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "recipient_phone",
-                        "in": "query",
-                        "description": "聯絡電話2",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "recipient_email",
-                        "in": "query",
-                        "description": "發票收件信箱",
-                        "required": false,
                         "schema": {
                             "type": "string"
                         }
@@ -7561,10 +7735,6 @@
                                         "contact_person": {
                                             "type": "string",
                                             "example": "李小華"
-                                        },
-                                        "contact_phone": {
-                                            "type": "string",
-                                            "example": "0912345678"
                                         },
                                         "mobile_phone": {
                                             "type": "string",
@@ -7807,73 +7977,10 @@
                         }
                     },
                     {
-                        "name": "invoice_title",
-                        "in": "query",
-                        "description": "發票抬頭",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
                         "name": "taxid",
                         "in": "query",
                         "description": "統一編號",
                         "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "tax_type",
-                        "in": "query",
-                        "description": "課稅別",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "delivery_method",
-                        "in": "query",
-                        "description": "發票寄送方式",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "recipient_name",
-                        "in": "query",
-                        "description": "發票收件人",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "invoice_address",
-                        "in": "query",
-                        "description": "發票地址",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "recipient_phone",
-                        "in": "query",
-                        "description": "聯絡電話2",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "recipient_email",
-                        "in": "query",
-                        "description": "發票收件信箱",
-                        "required": false,
                         "schema": {
                             "type": "string"
                         }
@@ -7998,10 +8105,6 @@
                                         "contact_person": {
                                             "type": "string",
                                             "example": "李小華"
-                                        },
-                                        "contact_phone": {
-                                            "type": "string",
-                                            "example": "0912345678"
                                         },
                                         "mobile_phone": {
                                             "type": "string",
@@ -8144,10 +8247,6 @@
                                         "contact_person": {
                                             "type": "string",
                                             "example": "李小華"
-                                        },
-                                        "contact_phone": {
-                                            "type": "string",
-                                            "example": "0912345678"
                                         },
                                         "mobile_phone": {
                                             "type": "string",
@@ -8307,10 +8406,6 @@
                                                         "type": "string",
                                                         "example": "李小華"
                                                     },
-                                                    "contact_phone": {
-                                                        "type": "string",
-                                                        "example": "0912345678"
-                                                    },
                                                     "mobile_phone": {
                                                         "type": "string",
                                                         "example": "0987654321"
@@ -8456,10 +8551,6 @@
                                         "contact_person": {
                                             "type": "string",
                                             "example": "李小華"
-                                        },
-                                        "contact_phone": {
-                                            "type": "string",
-                                            "example": "0912345678"
                                         },
                                         "mobile_phone": {
                                             "type": "string",
@@ -8993,6 +9084,10 @@
         {
             "name": "base_account",
             "description": "base_account"
+        },
+        {
+            "name": "base_auth",
+            "description": "base_auth"
         },
         {
             "name": "base_billinfo",

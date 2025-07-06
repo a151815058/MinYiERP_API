@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Sysuser;
 use App\Models\SysCode;
+use Illuminate\Support\Facades\Auth;
 require_once base_path('app/Models/connect.php'); 
 use App\Models\Dept;
 use Illuminate\Support\Str;
@@ -111,10 +112,10 @@ class SysuserController extends Controller
                 'user_nm'  => $request['user_nm'],
                 'note'     => $request['note'] ?? null,
                 'is_valid' => $request['is_valid'],
-                'create_user' => 'admin',
-                'create_time' => now(),
-                'update_user' => 'admin',
-                'update_time' => now()
+                'create_user'     => Auth::user()->username ?? 'admin',
+                'update_user'     => Auth::user()->username ?? 'admin',
+                'create_time'     => now(),
+                'update_time'     => now()
             ]);
 
             DB::commit(); // 成功則提交
@@ -132,9 +133,9 @@ class SysuserController extends Controller
                             'dept_id'      => $dept->uuid,
                             'user_id'      => $user->uuid,
                             'is_valid'     => 1,
-                            'create_user'  => 'admin',
+                            'create_user'  => Auth::user()->username ?? 'admin',
                             'create_time'  => now(),
-                            'update_user'  => 'admin',
+                            'update_user'  => Auth::user()->username ?? 'admin',
                             'update_time'  => now()
                         ]);
                         $attachedDepts[] = $dept->dept_no;

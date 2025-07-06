@@ -9,6 +9,7 @@ use App\Models\Currency;
 use App\Models\SysUser;
 use App\Models\Account;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 require_once base_path('app/Models/connect.php'); 
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
@@ -361,7 +362,11 @@ class ClientController extends Controller
                 'recipient_email'     => $request['recipient_email']?? null,  //發票收件信箱     
                 'established_date'    => $request['established_date'],      //成立日期   
                 'note'                => $request['note'] ?? null,                 
-                'is_valid'            => $request['is_valid'],          
+                'is_valid' => (int)$request->filled('is_valid') ? 1 : 0,
+                'create_user'     => Auth::user()->username ?? 'admin',
+                'update_user'     => Auth::user()->username ?? 'admin',
+                'create_time'     => now(),
+                'update_time'     => now()
             ]);
 
             // 回應 JSON
@@ -732,7 +737,7 @@ class ClientController extends Controller
             $Client->invoice_address     = $request->input('invoice_address', $Client->invoice_address);
             $Client->note                = $request->input('note', $Client->note);
             $Client->is_valid            = $request->input('is_valid', $Client->is_valid);
-            $Client->update_user         = $request->user()->name ?? 'admin'; // 更新使用者
+            $Client->update_user         = Auth::user()->username ?? 'admin'; // 更新人員
             $Client->update_time         = now(); // 更新時間
             $Client->save();
             
