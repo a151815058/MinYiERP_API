@@ -1154,7 +1154,9 @@ class SupplierController extends Controller
                     'deliverymethodOption' => [],
                     'suppliertypeOption' => [],
                     'ClassificationOption' => [],
-                    'accountOption' =>[]
+                    'accountOption' =>[],
+                    'MMcityOption' => [],
+                    'MMtownOption' => []
                 ], 404);
             }
     
@@ -1169,7 +1171,9 @@ class SupplierController extends Controller
                 'deliverymethodOption' => $SysCode4,
                 'suppliertypeOption' => $SysCode5,
                 'ClassificationOption' => $SysCode6,
-                'accountOption' => $Account
+                'accountOption' => $Account,
+                'MMcityOption' => $MMcity,
+                'MMtownOption' => $MMtown
             ], 400);
     
         } catch (\Illuminate\Validation\ValidationException $e) {
