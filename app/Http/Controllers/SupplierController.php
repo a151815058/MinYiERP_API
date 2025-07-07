@@ -184,9 +184,9 @@ class SupplierController extends Controller
                 $errors1['address2_err'] = '公司地址二不得為空字串或*';
             }   
             //幣別須存在
-            if ($request->filled('currency_id') ) {
-                if(!Currency::where('uuid', $request->input('currency_id'))->exists()){
-                    $errors1['currency_id_err'] = '幣別不存在，請選擇正確的幣別';
+            if ($request->filled('currencyid') ) {
+                if(!Currency::where('uuid', $request->input('currencyid'))->exists()){
+                    $errors1['currencyid_err'] = '幣別不存在，請選擇正確的幣別';
                 }
             }
 
@@ -521,9 +521,9 @@ class SupplierController extends Controller
                 $errors1['address2_err'] = '公司地址二不得為空字串或*';
             }   
             //幣別須存在
-            if ($request->filled('currency_id') ) {
-                if(!Currency::where('uuid', $request->input('currency_id'))->exists()){
-                    $errors1['currency_id_err'] = '幣別不存在，請選擇正確的幣別';
+            if ($request->filled('currencyid') ) {
+                if(!Currency::where('uuid', $request->input('currencyid'))->exists()){
+                    $errors1['currencyid_err'] = '幣別不存在，請選擇正確的幣別';
                 }
             }
 
