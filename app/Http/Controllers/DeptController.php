@@ -222,7 +222,7 @@ class DeptController extends Controller
             }
  
             // 更新資料   
-            $dept->dept_nm = $request['dept_nm'];
+            $dept->dept_nm = $request['dept_nm']?? null;
             $dept->note = $request['note'] ?? null;
             $dept->is_valid = $request['is_valid'];
             $dept->update_user = Auth::user()->username ?? 'admin'; // 更新人員
