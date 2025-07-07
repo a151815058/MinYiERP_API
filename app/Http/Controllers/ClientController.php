@@ -1206,9 +1206,9 @@ class ClientController extends Controller
         $Account = Account::where('is_valid','1')->get();
 
         // 縣市資料
-        $MMcity = MMcity::where('is_valid', '1')->get();
+        $MMcity = MMcity::get();
         // 區域資料
-        $MMtown = MMtown::where('is_valid', '1')->get();
+        $MMtown = MMtown::get();
 
         try {
             // 檢查是否有結果

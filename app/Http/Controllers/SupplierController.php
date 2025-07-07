@@ -7,6 +7,8 @@ use App\Models\Currency;
 use App\Models\PaymentTerm;
 use App\Models\SysCode;
 use App\Models\SysUser;
+use App\Models\MMtown;
+use App\Models\MMcity;
 use App\Models\Account;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -1124,6 +1126,11 @@ class SupplierController extends Controller
         $SysCode6 = SysCode::where('param_sn', '09')->where('is_valid','1')->get();
         // 科目別 
         $Account = Account::where('is_valid','1')->get();
+
+        // 縣市資料
+        $MMcity = MMcity::get();
+        // 區域資料
+        $MMtown = MMtown::get();
         
         try {
             // 檢查是否有結果
@@ -1134,7 +1141,9 @@ class SupplierController extends Controller
                 $SysCode4->isEmpty() &&
                 $SysCode5->isEmpty() &&
                 $SysCode6->isEmpty() &&
-                $Account->isEmpty() ) {
+                $Account->isEmpty() &&
+                $MMcity->isEmpty() &&
+                $MMtown->isEmpty()) {
                 return response()->json([
                     'status' => true,
                     'message' => '常用資料未找到',
