@@ -191,9 +191,9 @@ class SupplierController extends Controller
             }
 
             //付款條件須存在
-            if ($request->filled('paymentterm_id')) {
-                if(!PaymentTerm::where('uuid', $request->input('paymentterm_id'))->exists()){
-                    $errors1['paymentterm_id_err'] = '付款條件不存在，請選擇正確的付款條件';
+            if ($request->filled('payment_termid')) {
+                if(!PaymentTerm::where('uuid', $request->input('payment_termid'))->exists()){
+                    $errors1['payment_termid_err'] = '付款條件不存在，請選擇正確的付款條件';
                 }
             }             //公司電話不可為中文
             if ($request->filled('phone') ) {
@@ -528,9 +528,9 @@ class SupplierController extends Controller
             }
 
             //付款條件須存在
-            if ($request->filled('paymentterm_id')) {
-                if(!PaymentTerm::where('uuid', $request->input('paymentterm_id'))->exists()){
-                    $errors1['paymentterm_id_err'] = '付款條件不存在，請選擇正確的付款條件';
+            if ($request->filled('payment_termid')) {
+                if(!PaymentTerm::where('uuid', $request->input('payment_termid'))->exists()){
+                    $errors1['payment_termid_err'] = '付款條件不存在，請選擇正確的付款條件';
                 }
             }             //公司電話不可為中文
             if ($request->filled('phone') ) {
