@@ -1609,6 +1609,24 @@
                         }
                     },
                     {
+                        "name": "city_id",
+                        "in": "query",
+                        "description": "縣市",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "town_id",
+                        "in": "query",
+                        "description": "區域",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
                         "name": "address1",
                         "in": "query",
                         "description": "公司地址",
@@ -1621,6 +1639,24 @@
                         "name": "zip_code2",
                         "in": "query",
                         "description": "郵遞區號",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "city_id2",
+                        "in": "query",
+                        "description": "縣市2",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "town_id2",
+                        "in": "query",
+                        "description": "區域2",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -1853,6 +1889,14 @@
                                             "type": "string",
                                             "example": "12345"
                                         },
+                                        "city_id": {
+                                            "type": "string",
+                                            "example": "台北市"
+                                        },
+                                        "town_id": {
+                                            "type": "string",
+                                            "example": "信義區"
+                                        },
                                         "address1": {
                                             "type": "string",
                                             "example": "台北市信義區"
@@ -1861,9 +1905,17 @@
                                             "type": "string",
                                             "example": "54321"
                                         },
+                                        "city_id2": {
+                                            "type": "string",
+                                            "example": "新北市"
+                                        },
+                                        "town_id2": {
+                                            "type": "string",
+                                            "example": "板橋區"
+                                        },
                                         "address2": {
                                             "type": "string",
-                                            "example": "台北市大安區"
+                                            "example": "新北市板橋區"
                                         },
                                         "responsible_person": {
                                             "type": "string",
@@ -2036,6 +2088,24 @@
                         }
                     },
                     {
+                        "name": "city_id",
+                        "in": "query",
+                        "description": "縣市",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "town_id",
+                        "in": "query",
+                        "description": "區域",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
                         "name": "address1",
                         "in": "query",
                         "description": "公司地址",
@@ -2048,6 +2118,24 @@
                         "name": "zip_code2",
                         "in": "query",
                         "description": "郵遞區號",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "city_id2",
+                        "in": "query",
+                        "description": "縣市2",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "town_id2",
+                        "in": "query",
+                        "description": "區域2",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -7508,6 +7596,24 @@
                         }
                     },
                     {
+                        "name": "city_id",
+                        "in": "query",
+                        "description": "縣市",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "town_id",
+                        "in": "query",
+                        "description": "區域",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
                         "name": "address1",
                         "in": "query",
                         "description": "公司地址 1",
@@ -7520,6 +7626,24 @@
                         "name": "zipcode2",
                         "in": "query",
                         "description": "郵遞區號 2",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "city_id2",
+                        "in": "query",
+                        "description": "縣市 2",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "town_id2",
+                        "in": "query",
+                        "description": "區域 2",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -7700,6 +7824,14 @@
                                             "type": "string",
                                             "example": "12345"
                                         },
+                                        "city_id": {
+                                            "type": "string",
+                                            "example": "台北市"
+                                        },
+                                        "town_id": {
+                                            "type": "string",
+                                            "example": "信義區"
+                                        },
                                         "address1": {
                                             "type": "string",
                                             "example": "台北市信義區"
@@ -7707,6 +7839,14 @@
                                         "zipcode2": {
                                             "type": "string",
                                             "example": "54321"
+                                        },
+                                        "city_id2": {
+                                            "type": "string",
+                                            "example": "台北市"
+                                        },
+                                        "town_id2": {
+                                            "type": "string",
+                                            "example": "大安區"
                                         },
                                         "address2": {
                                             "type": "string",
@@ -7878,6 +8018,24 @@
                         }
                     },
                     {
+                        "name": "city_id",
+                        "in": "query",
+                        "description": "縣市",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "town_id",
+                        "in": "query",
+                        "description": "區域",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
                         "name": "address1",
                         "in": "query",
                         "description": "公司地址 1",
@@ -7890,6 +8048,24 @@
                         "name": "zipcode2",
                         "in": "query",
                         "description": "郵遞區號 2",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "city_id2",
+                        "in": "query",
+                        "description": "縣市 2",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "town_id2",
+                        "in": "query",
+                        "description": "區域 2",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -8070,6 +8246,14 @@
                                             "type": "string",
                                             "example": "12345"
                                         },
+                                        "city_id": {
+                                            "type": "string",
+                                            "example": "台北市"
+                                        },
+                                        "town_id": {
+                                            "type": "string",
+                                            "example": "信義區"
+                                        },
                                         "address1": {
                                             "type": "string",
                                             "example": "台北市信義區"
@@ -8077,6 +8261,14 @@
                                         "zipcode2": {
                                             "type": "string",
                                             "example": "54321"
+                                        },
+                                        "city_id2": {
+                                            "type": "string",
+                                            "example": "台北市"
+                                        },
+                                        "town_id2": {
+                                            "type": "string",
+                                            "example": "大安區"
                                         },
                                         "address2": {
                                             "type": "string",

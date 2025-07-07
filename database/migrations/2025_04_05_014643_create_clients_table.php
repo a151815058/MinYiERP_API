@@ -12,16 +12,20 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('clients', function (Blueprint $table) {
-            $table->uuid('uuid')->comment('KEY')->primary()->unique();
+            $table->uuid('uuid')->comment('KEY')->primary();
             $table->string('client_no',20)->comment(comment: '客戶編號')->unique();
             $table->string('client_shortnm',50)->comment(comment: '客戶簡稱');
             $table->string('client_fullnm',255)->comment(comment: '客戶全名');
-            $table->integer('client_type',255)->comment(comment: '客戶型態 (個人客戶、企業客戶、政府客戶)')->default('1');
+            $table->string('client_type',255)->comment(comment: '客戶型態 (個人客戶、企業客戶、政府客戶)')->default('1');
             $table->string('responsible_person',10)->comment(comment: '負責人')->nullable();
             $table->string('contact_person',10)->comment(comment: '聯絡人')->nullable();
             $table->string('zip_code1',10)->comment(comment: '郵遞區號 1')->nullable();
+            $table->string('city_id',255)->comment(comment: '縣市')->nullable();
+            $table->string('town_id',255)->comment(comment: '區域')->nullable();
             $table->string('address1',255)->comment(comment: '公司地址 1')->nullable();
             $table->string('zip_code2',10)->comment(comment: '郵遞區號 2');
+            $table->string('city_id2',255)->comment(comment: '縣市2');
+            $table->string('town_id2',255)->comment(comment: '區域2');            
             $table->string('address2',255)->comment(comment: '送貨地址');
             $table->string('currency_id',255)->comment(comment: '幣別')->nullable();
             $table->string('paymentterm_id',255)->comment(comment: '付款條件')->nullable();
@@ -33,8 +37,8 @@ return new class extends Migration
             $table->string('account_category',255)->comment(comment: '科目別')->nullable();
             $table->string('invoice_title',100)->comment(comment: '發票抬頭');
             $table->string('taxid',8)->comment(comment: '統一編號');
-            $table->integer('taxtype',255)->comment(comment: '課稅別')->nullable();
-            $table->integer('delivery_method',255)->comment(comment: '發票寄送方式');
+            $table->string('taxtype',length: 255)->comment(comment: '課稅別')->nullable();
+            $table->string('delivery_method',255)->comment(comment: '發票寄送方式');
             $table->string('recipient_name',255)->comment(comment: '發票收件人')->nullable();
             $table->string('invoice_address',255)->comment(comment: '發票地址');
             $table->string('recipient_phone',20)->comment(comment: '聯絡電話2')->nullable();

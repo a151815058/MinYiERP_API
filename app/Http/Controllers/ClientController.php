@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Client;
 use App\Models\SysCode;
+use App\Models\MMtown;
+use App\Models\MMcity;
 use App\Models\PaymentTerm;
 use App\Models\Currency;
 use App\Models\SysUser;
@@ -33,8 +35,12 @@ class ClientController extends Controller
  *     @OA\Parameter(name="client_type", in="query", required=true, description="客戶型態", @OA\Schema(type="string")),
  *     @OA\Parameter(name="client_fullnm", in="query", required=true, description="客戶全名", @OA\Schema(type="string")),
  *     @OA\Parameter(name="zip_code1", in="query", required=false, description="郵遞區號", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="city_id", in="query", required=false, description="縣市", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="town_id", in="query", required=false, description="區域", @OA\Schema(type="string")),
  *     @OA\Parameter(name="address1", in="query", required=false, description="公司地址", @OA\Schema(type="string")),
  *     @OA\Parameter(name="zip_code2", in="query", required=true, description="郵遞區號", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="city_id2", in="query", required=true, description="縣市2", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="town_id2", in="query", required=true, description="區域2", @OA\Schema(type="string")),
  *     @OA\Parameter(name="address2", in="query", required=true, description="送貨地址", @OA\Schema(type="string")),
  *     @OA\Parameter(name="responsible_person", in="query", required=false, description="負責人", @OA\Schema(type="string")),
  *     @OA\Parameter(name="contact_person", in="query", required=false, description="聯絡人", @OA\Schema(type="string")),
@@ -67,9 +73,13 @@ class ClientController extends Controller
  *             @OA\Property(property="client_type", type="string", example="個人"),
  *             @OA\Property(property="client_fullnm", type="string", example="測試客戶1"),
  *             @OA\Property(property="zip_code1", type="string", example="12345"),
+ *             @OA\Property(property="city_id", type="string", example="台北市"),
+ *             @OA\Property(property="town_id", type="string", example="信義區"),
  *             @OA\Property(property="address1", type="string", example="台北市信義區"),
  *             @OA\Property(property="zip_code2", type="string", example="54321"),
- *             @OA\Property(property="address2", type="string", example="台北市大安區"),
+ *             @OA\Property(property="city_id2", type="string", example="新北市"),
+ *             @OA\Property(property="town_id2", type="string", example="板橋區"),
+ *             @OA\Property(property="address2", type="string", example="新北市板橋區"),
  *             @OA\Property(property="responsible_person", type="string", example="王小明"),
  *             @OA\Property(property="contact_person", type="string", example="李小華"),
  *             @OA\Property(property="contact_phone", type="string", example="0912345678"),
@@ -341,8 +351,12 @@ class ClientController extends Controller
                 'responsible_person'  => $request['responsible_person'] ?? null, //負責人  
                 'contact_person'      => $request['contact_person'] ?? null,   //聯絡人  
                 'zip_code1'           => $request['zip_code1']?? null,  //郵遞區號一  
+                'city_id'             => $request['city_id'] ?? null,    //縣市
+                'town_id'             => $request['town_id'] ?? null,    //區域
                 'address1'            => $request['address1'] ?? null,  //公司地址        
-                'zip_code2'           => $request['zip_code2'] ,        //郵遞區號二           
+                'zip_code2'           => $request['zip_code2'] ,        //郵遞區號二  
+                'city_id2'            => $request['city_id2'] ,  //縣市2
+                'town_id2'            => $request['town_id2'] ,  //區域2
                 'address2'            => $request['address2'],          //送貨地址
                 'currency_id'         => $request['currency_id'] ?? null, //幣別id 
                 'paymentterm_id'      => $request['paymentterm_id']?? null,    //付款條件
@@ -418,8 +432,12 @@ class ClientController extends Controller
  *     @OA\Parameter(name="client_type", in="query", required=true, description="客戶型態", @OA\Schema(type="string")),
  *     @OA\Parameter(name="client_fullnm", in="query", required=true, description="客戶全名", @OA\Schema(type="string")),
  *     @OA\Parameter(name="zip_code1", in="query", required=false, description="郵遞區號", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="city_id", in="query", required=false, description="縣市", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="town_id", in="query", required=false, description="區域", @OA\Schema(type="string")),
  *     @OA\Parameter(name="address1", in="query", required=false, description="公司地址", @OA\Schema(type="string")),
  *     @OA\Parameter(name="zip_code2", in="query", required=true, description="郵遞區號", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="city_id2", in="query", required=true, description="縣市2", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="town_id2", in="query", required=true, description="區域2", @OA\Schema(type="string")),
  *     @OA\Parameter(name="address2", in="query", required=true, description="送貨地址", @OA\Schema(type="string")),
  *     @OA\Parameter(name="responsible_person", in="query", required=false, description="負責人", @OA\Schema(type="string")),
  *     @OA\Parameter(name="contact_person", in="query", required=false, description="聯絡人", @OA\Schema(type="string")),
@@ -714,8 +732,12 @@ class ClientController extends Controller
             $Client->client_type         = $request->input('client_type', $Client->client_type);
             $Client->client_fullnm       = $request->input('client_fullnm', $Client->client_fullnm);
             $Client->zip_code1           = $request->input('zip_code1', $Client->zip_code1);
+            $Client->city_id             = $request->input('city_id', $Client->city_id);
+            $Client->town_id             = $request->input('town_id', $Client->town_id);
             $Client->address1            = $request->input('address1', $Client->address1);
             $Client->zip_code2           = $request->input('zip_code2', $Client->zip_code2);
+            $Client->city_id2           = $request->input('city_id2', $Client->city_id2);
+            $Client->town_id2           = $request->input('town_id2', $Client->town_id2);
             $Client->address2            = $request->input('address2', $Client->address2);
             $Client->responsible_person  = $request->input('responsible_person', $Client->responsible_person);
             $Client->phone               = $request->input('phone', $Client->phone);
@@ -1183,6 +1205,11 @@ class ClientController extends Controller
         // 科目別 
         $Account = Account::where('is_valid','1')->get();
 
+        // 縣市資料
+        $MMcity = MMcity::where('is_valid', '1')->get();
+        // 區域資料
+        $MMtown = MMtown::where('is_valid', '1')->get();
+
         try {
             // 檢查是否有結果
             if ($SysCode->isEmpty() && 
@@ -1191,7 +1218,9 @@ class ClientController extends Controller
                 $SysCode3->isEmpty() &&
                 $SysCode4->isEmpty() &&
                 $SysCode5->isEmpty() &&
-                $Account->isEmpty() ) {
+                $Account->isEmpty() &&
+                $MMcity->isEmpty() &&
+                $MMtown->isEmpty()) {
                 return response()->json([
                     'status' => true,
                     'message' => '常用資料未找到',
@@ -1201,7 +1230,9 @@ class ClientController extends Controller
                     'sysuserOption' => [],
                     'deliverymethodOption' => [],
                     'clienttypeOption' => [],
-                    'accountOption' =>[]
+                    'accountOption' =>[],
+                    'MMcityOption' => [],
+                    'MMtownOption' => []
                 ], 404);
             }
     
@@ -1215,7 +1246,9 @@ class ClientController extends Controller
                 'sysuserOption' => $SysCode3,
                 'deliverymethodOption' => $SysCode4,
                 'clienttypeOption' => $SysCode5,
-                'accountOption' => $Account
+                'accountOption' => $Account,
+                'MMcityOption' => $MMcity,
+                'MMtownOption' => $MMtown
             ], 400);
     
         } catch (\Illuminate\Validation\ValidationException $e) {

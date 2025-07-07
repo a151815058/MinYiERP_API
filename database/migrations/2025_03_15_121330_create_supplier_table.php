@@ -21,8 +21,12 @@ return new class extends Migration
             $table->string('responsible_person')->comment(comment: '負責人')->nullable();
             $table->string('contact_person')->comment(comment: '聯絡人')->nullable();
             $table->string('zipcode1')->comment(comment: '郵遞區號 1');
+            $table->string('city_id',255)->comment(comment: '縣市');
+            $table->string('town_id',255)->comment(comment: '區域');
             $table->string('address1')->comment(comment: '公司地址 1');
             $table->string('zipcode2')->comment(comment: '郵遞區號 2')->nullable();
+            $table->string('city_id2',255)->comment(comment: '縣市2')->nullable();
+            $table->string('town_id2',255)->comment(comment: '區域2')->nullable();             
             $table->string('address2')->comment(comment: '公司地址 2')->nullable();
             $table->string('currencyid')->comment(comment: '幣別 ')->nullable();
             $table->string('payment_termid')->comment(comment: '付款條件')->nullable();
