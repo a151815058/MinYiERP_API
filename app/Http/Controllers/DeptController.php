@@ -23,7 +23,7 @@ class DeptController extends Controller
      *     operationId="createdept",
      *     tags={"base_dept"},
      *     @OA\Parameter(name="dept_no",in="query",required=true,description="部門代號",@OA\Schema(type="string")),
-     *     @OA\Parameter(name="dept_nm",in="query",required=true,description="部門名稱",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="dept_nm",in="query",required=false,description="部門名稱",@OA\Schema(type="string")),
      *     @OA\Parameter(name="note",in="query",required=false,description="備註",@OA\Schema(type="string")),
      *     @OA\Parameter(name="is_valid",in="query",required=true,description="是否有效",@OA\Schema(type="string", example=1)),
      *     @OA\Response(
@@ -69,13 +69,13 @@ class DeptController extends Controller
             }
 
             // 部門名稱為必填
-            if (!$request->filled('dept_nm')) {
-                $errors1['dept_nm_err'] = '部門名稱為必填';
-            }
+            //if (!$request->filled('dept_nm')) {
+            //    $errors1['dept_nm_err'] = '部門名稱為必填';
+            //}
             //判斷部門名稱不能存在空白、""、''、"、'
-            if (!ValidationHelper::isValidText($request->input('dept_nm'))) {
-                $errors1['dept_nm_err'] = '部門名稱不得為空字串或*';
-            }
+            //if (!ValidationHelper::isValidText($request->input('dept_nm'))) {
+            //    $errors1['dept_nm_err'] = '部門名稱不得為空字串或*';
+            //}
 
             // 如果有錯誤，回傳統一格式
             if (!empty($errors1)) {
@@ -90,7 +90,7 @@ class DeptController extends Controller
             $dept = Dept::create([
                 'uuid'       => Str::uuid(),  // 自動生成 UUID
                 'dept_no'     => $request['dept_no'],
-                'dept_nm'     => $request['dept_nm'],
+                'dept_nm'     => $request['dept_nm']?? null,
                 'note'       => $request['note'] ?? null,
                 'is_valid'    => $request['is_valid'] ?? 1,
                 'create_user'     => Auth::user()->username ?? 'admin',
@@ -141,7 +141,7 @@ class DeptController extends Controller
      *     operationId="updatedept",
      *     tags={"base_dept"},
      *     @OA\Parameter(name="dept_no",in="query",required=true,description="部門代號",@OA\Schema(type="string")),
-     *     @OA\Parameter(name="dept_nm",in="query",required=true,description="部門名稱",@OA\Schema(type="string")),
+     *     @OA\Parameter(name="dept_nm",in="query",required=false,description="部門名稱",@OA\Schema(type="string")),
      *     @OA\Parameter(name="note",in="query",required=false,description="備註",@OA\Schema(type="string")),
      *     @OA\Parameter(name="is_valid",in="query",required=true,description="是否有效",@OA\Schema(type="string", example=1)),
      *     @OA\Response(
@@ -187,13 +187,13 @@ class DeptController extends Controller
             }
 
             // 部門名稱為必填
-            if (!$request->filled('dept_nm')) {
-                $errors1['dept_nm_err'] = '部門名稱為必填';
-            }
+            //if (!$request->filled('dept_nm')) {
+            //    $errors1['dept_nm_err'] = '部門名稱為必填';
+            //}
             //判斷部門名稱不能存在空白、""、''、"、'
-            if (!ValidationHelper::isValidText($request->input('dept_nm'))) {
-                $errors1['dept_nm_err'] = '部門名稱不得為空字串或*';
-            }
+            //if (!ValidationHelper::isValidText($request->input('dept_nm'))) {
+            //    $errors1['dept_nm_err'] = '部門名稱不得為空字串或*';
+            //}
 
             // 如果有錯誤，回傳統一格式
             if (!empty($errors1)) {
