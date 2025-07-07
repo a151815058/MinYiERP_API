@@ -187,6 +187,7 @@ class SupplierController extends Controller
             if (!ValidationHelper::isValidText($request->input('address2'))) {
                 $errors1['address2_err'] = '公司地址二不得為空字串或*';
             }   
+
             //幣別須存在
             if ($request->filled('currencyid') ) {
                 if(!Currency::where('uuid', $request->input('currencyid'))->exists()){
@@ -316,10 +317,10 @@ class SupplierController extends Controller
                 'Classification' => $request->input('Classification'),
                 'responsible_person' => $request->input('responsible_person'),
                 'contact_person' => $request->input('contact_person'),
-                'zipcode1' => $request->input('zipcode1'),
-                'city_id' => $request->input('city_id'),
-                'town_id' => $request->input('town_id'),
-                'address1' => $request->input('address1'),
+                'zipcode1' => $request->input('zipcode1') ?? null,
+                'city_id' => $request->input('city_id') ?? null,
+                'town_id' => $request->input('town_id') ?? null,
+                'address1' => $request->input('address1') ?? null,
                 'zipcode2' => $request->input('zipcode2'),
                 'city_id2' => $request->input('city_id2'),
                 'town_id2' => $request->input('town_id2'),
@@ -666,10 +667,10 @@ class SupplierController extends Controller
                 'Classification' => $request->input('Classification'),
                 'responsible_person' => $request->input('responsible_person'),
                 'contact_person' => $request->input('contact_person'),
-                'zipcode1' => $request->input('zipcode1'),
-                'city_id' => $request->input('city_id'),
-                'town_id' => $request->input('town_id'),
-                'address1' => $request->input('address1'),
+                'zipcode1' => $request->input('zipcode1') ?? null,
+                'city_id' => $request->input('city_id') ?? null,
+                'town_id' => $request->input('town_id') ?? null,
+                'address1' => $request->input('address1') ?? null,
                 'zipcode2' => $request->input('zipcode2'),
                 'city_id2' => $request->input('city_id2'),
                 'town_id2' => $request->input('town_id2'),
