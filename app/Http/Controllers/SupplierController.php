@@ -44,6 +44,7 @@ class SupplierController extends Controller
     *   @OA\Parameter(name="currencyid", in="query", required=false, description="幣別", @OA\Schema(type="string")),
     *   @OA\Parameter(name="payment_termid", in="query", required=false, description="付款條件", @OA\Schema(type="string")),
     *   @OA\Parameter(name="phone", in="query", required=false, description="公司電話", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="phone2", in="query", required=false, description="聯絡電話2", @OA\Schema(type="string")),
     *   @OA\Parameter(name="fax", in="query", required=false, description="公司傳真", @OA\Schema(type="string")),
     *   @OA\Parameter(name="mobile_phone", in="query", required=false, description="行動電話", @OA\Schema(type="string")),
     *   @OA\Parameter(name="contact_email", in="query", required=false, description="聯絡人信箱", @OA\Schema(type="string")),
@@ -77,6 +78,7 @@ class SupplierController extends Controller
      *             @OA\Property(property="responsible_person", type="string", example="王小明"),
      *             @OA\Property(property="established_date", type="string", example="2025-03-31"),
      *             @OA\Property(property="phone", type="string", example="02-12345678"),
+     *             @OA\Property(property="phone2", type="string", example="02-23456789"),
      *             @OA\Property(property="fax", type="string", example="02-87654321"),
      *             @OA\Property(property="contact_person", type="string", example="李小華"),
      *             @OA\Property(property="mobile_phone", type="string", example="0987654321"),
@@ -195,7 +197,8 @@ class SupplierController extends Controller
                 if(!PaymentTerm::where('uuid', $request->input('payment_termid'))->exists()){
                     $errors1['payment_termid_err'] = '付款條件不存在，請選擇正確的付款條件';
                 }
-            }             //公司電話不可為中文
+            }
+            //公司電話不可為中文
             if ($request->filled('phone') ) {
                 if(preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('phone'))){
                     $errors1['phone_err'] = '公司電話不可包含中文';
@@ -216,7 +219,16 @@ class SupplierController extends Controller
                     $errors1['fax_err'] = '公司傳真須符合格式';
                 }
             }
-
+            //連絡電話2不可為中文
+            if ($request->filled('phone2') ) {
+                if(preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('phone2'))){
+                    $errors1['phone2_err'] = '連絡電話2不可包含中文';
+                }
+                //連絡電話2須符合格式
+                if(!preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('phone2'))){
+                    $errors1['phone2_err'] = '連絡電話2須符合格式';
+                }
+            }
             //行動電話不可為中文
             if ($request->filled('mobile_phone')) {
                 if( preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('mobile_phone'))){
@@ -321,6 +333,7 @@ class SupplierController extends Controller
                 'currencyid' => $request->input('currencyid'),
                 'payment_termid' => $request->input('payment_termid'),
                 'phone' => $request->input('phone'),
+                'phone2' => $request->input('phone2'),
                 'fax' => $request->input('fax'),
                 'mobile_phone' => $request->input('mobile_phone'),
                 'contact_email' => $request->input('contact_email'),
@@ -396,6 +409,7 @@ class SupplierController extends Controller
     *   @OA\Parameter(name="currencyid", in="query", required=false, description="幣別", @OA\Schema(type="string")),
     *   @OA\Parameter(name="payment_termid", in="query", required=false, description="付款條件", @OA\Schema(type="string")),
     *   @OA\Parameter(name="phone", in="query", required=false, description="公司電話", @OA\Schema(type="string")),
+    *   @OA\Parameter(name="phone2", in="query", required=false, description="聯絡電話2", @OA\Schema(type="string")),
     *   @OA\Parameter(name="fax", in="query", required=false, description="公司傳真", @OA\Schema(type="string")),
     *   @OA\Parameter(name="mobile_phone", in="query", required=false, description="行動電話", @OA\Schema(type="string")),
     *   @OA\Parameter(name="contact_email", in="query", required=false, description="聯絡人信箱", @OA\Schema(type="string")),
@@ -429,6 +443,7 @@ class SupplierController extends Controller
      *             @OA\Property(property="responsible_person", type="string", example="王小明"),
      *             @OA\Property(property="established_date", type="string", example="2025-03-31"),
      *             @OA\Property(property="phone", type="string", example="02-12345678"),
+     *             @OA\Property(property="phone2", type="string", example="02-23456789"),
      *             @OA\Property(property="fax", type="string", example="02-87654321"),
      *             @OA\Property(property="contact_person", type="string", example="李小華"),
      *             @OA\Property(property="mobile_phone", type="string", example="0987654321"),
@@ -532,7 +547,8 @@ class SupplierController extends Controller
                 if(!PaymentTerm::where('uuid', $request->input('payment_termid'))->exists()){
                     $errors1['payment_termid_err'] = '付款條件不存在，請選擇正確的付款條件';
                 }
-            }             //公司電話不可為中文
+            }             
+            //公司電話不可為中文
             if ($request->filled('phone') ) {
                 if(preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('phone'))){
                     $errors1['phone_err'] = '公司電話不可包含中文';
@@ -542,7 +558,17 @@ class SupplierController extends Controller
                     $errors1['phone_err'] = '公司電話須符合格式';
                 }
             }
-
+            //連絡電話2不可為中文
+            if ($request->filled('phone2') ) {
+                if(preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('phone2'))){
+                    $errors1['phone2_err'] = '連絡電話2不可包含中文';
+                }
+                //連絡電話2須符合格式
+                if(!preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('phone2'))){
+                    $errors1['phone2_err'] = '連絡電話2須符合格式';
+                }
+            }
+            
             //公司傳真不可為中文
             if ($request->filled('fax')) {
                 if(preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('fax'))){
@@ -657,6 +683,7 @@ class SupplierController extends Controller
                 'currencyid' => $request->input('currencyid'),
                 'payment_termid' => $request->input('payment_termid'),
                 'phone' => $request->input('phone'),
+                'phone2' => $request->input('phone2'),
                 'fax' => $request->input('fax'),
                 'mobile_phone' => $request->input('mobile_phone'),
                 'contact_email' => $request->input('contact_email'),

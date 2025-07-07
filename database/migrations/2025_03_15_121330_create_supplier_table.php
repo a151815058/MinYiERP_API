@@ -31,6 +31,7 @@ return new class extends Migration
             $table->string('currencyid')->comment(comment: '幣別 ')->nullable();
             $table->string('payment_termid')->comment(comment: '付款條件')->nullable();
             $table->string('phone')->comment(comment: '公司電話')->nullable();
+            $table->string('phone2')->comment(comment: '聯絡電話2')->nullable();
             $table->string('fax')->comment(comment: '公司傳真')->nullable();
             $table->string('mobile_phone')->comment(comment: '行動電話')->nullable();
             $table->string('contact_email')->comment(comment: '聯絡人信箱')->nullable();
@@ -39,11 +40,6 @@ return new class extends Migration
             $table->string('invoice_title',100)->comment(comment: '發票抬頭');
             $table->string('taxid')->comment(comment: '統一編號');
             $table->string('tax_type')->comment(comment: '課稅別')->nullable();
-            $table->string('delivery_method',255)->comment(comment: '發票寄送方式');
-            $table->string('recipient_name',255)->comment(comment: '發票收件人')->nullable();
-            $table->string('invoice_address',255)->comment(comment: '發票地址');
-            $table->string('recipient_phone',20)->comment(comment: '聯絡電話2')->nullable();
-            $table->string('recipient_email',255)->comment(comment: '發票收件信箱')->nullable();
             $table->dateTime('established_date')->comment(comment: '成立時間');
             $table->string('is_valid')->comment('是否有效 0:失效 1:有效')->default(1);
             $table->string('create_user')->comment('建立人員')->default('admin');

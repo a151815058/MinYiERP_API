@@ -3614,7 +3614,7 @@
                         "name": "dept_nm",
                         "in": "query",
                         "description": "部門名稱",
-                        "required": true,
+                        "required": false,
                         "schema": {
                             "type": "string"
                         }
@@ -3716,7 +3716,7 @@
                         "name": "dept_nm",
                         "in": "query",
                         "description": "部門名稱",
-                        "required": true,
+                        "required": false,
                         "schema": {
                             "type": "string"
                         }
@@ -7686,6 +7686,15 @@
                         }
                     },
                     {
+                        "name": "phone2",
+                        "in": "query",
+                        "description": "聯絡電話2",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
                         "name": "fax",
                         "in": "query",
                         "description": "公司傳真",
@@ -7867,6 +7876,10 @@
                                         "phone": {
                                             "type": "string",
                                             "example": "02-12345678"
+                                        },
+                                        "phone2": {
+                                            "type": "string",
+                                            "example": "02-23456789"
                                         },
                                         "fax": {
                                             "type": "string",
@@ -8108,6 +8121,15 @@
                         }
                     },
                     {
+                        "name": "phone2",
+                        "in": "query",
+                        "description": "聯絡電話2",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
                         "name": "fax",
                         "in": "query",
                         "description": "公司傳真",
@@ -8289,6 +8311,10 @@
                                         "phone": {
                                             "type": "string",
                                             "example": "02-12345678"
+                                        },
+                                        "phone2": {
+                                            "type": "string",
+                                            "example": "02-23456789"
                                         },
                                         "fax": {
                                             "type": "string",

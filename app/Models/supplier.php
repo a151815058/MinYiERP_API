@@ -35,6 +35,7 @@ class Supplier extends Model
         'responsible_person',
         'established_date',
         'phone',
+        'phone2', // 新增聯絡電話2
         'fax',
         'contact_person',
         'contact_phone',
