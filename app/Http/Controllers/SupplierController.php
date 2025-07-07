@@ -266,14 +266,6 @@ class SupplierController extends Controller
                     $errors1['account_category_err'] = '科目別不存在，請選擇正確的科目別';
                 }
             }
-            // 發票抬頭為必填
-            if (!$request->filled('invoice_title')) {
-                $errors1['invoice_title_err'] = '發票抬頭為必填';
-            }
-            //判斷發票抬頭不能存在空白、""、''、"、'
-            if (!ValidationHelper::isValidText($request->input('invoice_title'))) {
-                 $errors1['invoice_title_err'] = '送貨地址不得為空字串或*';
-            }  
             ///統一編號為必填
             if (!$request->filled('taxid')) {
                 $errors1['taxid_err'] = '統一編號為必填';
@@ -1112,14 +1104,14 @@ class SupplierController extends Controller
     public function showconst($constant='all'){
         // 查詢 '所有有效幣別資料' 的資料
         $SysCode = Currency::where('is_valid', '1')->get();
-        // 查詢 '所有稅別資料' 的資料
-        $SysCode1 = SysCode::where('param_sn', '02')->where('is_valid','1')->get();
+        // 查詢 '所有稅別資料' 的資料(不需發票資訊)
+        //$SysCode1 = SysCode::where('param_sn', '02')->where('is_valid','1')->get();
         // 查詢 '所有有效付款條件' 的資料
         $SysCode2 = PaymentTerm::where('is_valid', '1')->get();
         // 查詢 '所有有效人員' 的資料
         $SysCode3 = SysUser::with('depts')->where('is_valid', '1')->get();
-        // 發票寄送方式
-        $SysCode4 = SysCode::where('param_sn', '04')->where('is_valid','1')->get();
+        // 發票寄送方式(不需發票資訊)
+        //$SysCode4 = SysCode::where('param_sn', '04')->where('is_valid','1')->get();
         // 公司類型
         $SysCode5 = SysCode::where('param_sn', '08')->where('is_valid','1')->get();
         // 供應商分類
@@ -1135,10 +1127,8 @@ class SupplierController extends Controller
         try {
             // 檢查是否有結果
             if ($SysCode->isEmpty() && 
-                $SysCode1->isEmpty() && 
                 $SysCode2->isEmpty() && 
                 $SysCode3->isEmpty() &&
-                $SysCode4->isEmpty() &&
                 $SysCode5->isEmpty() &&
                 $SysCode6->isEmpty() &&
                 $Account->isEmpty() &&
@@ -1148,10 +1138,8 @@ class SupplierController extends Controller
                     'status' => true,
                     'message' => '常用資料未找到',
                     'currencyOption' => [],
-                    'taxtypeOption' => [],
                     'paymenttermOption' => [],
                     'sysuserOption' => [],
-                    'deliverymethodOption' => [],
                     'suppliertypeOption' => [],
                     'ClassificationOption' => [],
                     'accountOption' =>[],
@@ -1165,10 +1153,8 @@ class SupplierController extends Controller
                 'status' => true,
                 'message' => 'success',
                 'currencyOption' => $SysCode,
-                'taxtypeOption' => $SysCode1,
                 'paymenttermOption' => $SysCode2,
                 'sysuserOption' => $SysCode3,
-                'deliverymethodOption' => $SysCode4,
                 'suppliertypeOption' => $SysCode5,
                 'ClassificationOption' => $SysCode6,
                 'accountOption' => $Account,
