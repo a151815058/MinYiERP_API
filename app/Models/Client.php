@@ -36,6 +36,7 @@ class Client extends Model
             'paymentterm_id',
             'phone2',
             'phone',
+            'phone1',
             'fax',
             'mobile_phone',
             'contact_email',

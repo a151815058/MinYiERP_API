@@ -44,6 +44,7 @@ class ClientController extends Controller
  *     @OA\Parameter(name="address2", in="query", required=true, description="送貨地址", @OA\Schema(type="string")),
  *     @OA\Parameter(name="responsible_person", in="query", required=false, description="負責人", @OA\Schema(type="string")),
  *     @OA\Parameter(name="contact_person", in="query", required=false, description="聯絡人", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="phone1", in="query", required=false, description="聯絡電話", @OA\Schema(type="string")),
  *     @OA\Parameter(name="phone", in="query", required=false, description="公司電話", @OA\Schema(type="string")),
  *     @OA\Parameter(name="fax", in="query", required=false, description="公司傳真", @OA\Schema(type="string")),
  *     @OA\Parameter(name="established_date", in="query", required=false, description="成立時間", @OA\Schema(type="string")),
@@ -242,7 +243,7 @@ class ClientController extends Controller
                     $errors1['phone_err'] = '公司電話不可包含中文';
                 }
                 //公司電話須符合格式
-                if(!preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('phone'))){
+                if(preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('phone'))){
                     $errors1['phone_err'] = '公司電話須符合格式';
                 }
             }
@@ -253,7 +254,7 @@ class ClientController extends Controller
                     $errors1['fax_err'] = '公司傳真不可包含中文';
                 }
                 //公司傳真須符合格式
-                if(!preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('fax'))){
+                if(preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('fax'))){
                     $errors1['fax_err'] = '公司傳真須符合格式';
                 }
             }
@@ -264,9 +265,20 @@ class ClientController extends Controller
                     $errors1['mobile_phone_err'] = '行動電話不可包含中文';
                 }
                 //行動電話須符合格式
-                if(!preg_match('/^09\d{2}-?\d{3}-?\d{3}$/', $request->filled('mobile_phone'))){
+                if(preg_match('/^09\d{2}-?\d{3}-?\d{3}$/', $request->filled('mobile_phone'))){
                     $errors1['mobile_phone_err'] = '行動電話須符合格式';
                 }                  
+            }
+
+            //連絡電話1不可為中文
+            if ($request->filled('phone1')) {
+                if(preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('phone1'))){
+                    $errors1['phone1_err'] = '聯絡電話1不可包含中文';
+                }
+                //連絡電話1須符合格式
+                if(preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('phone1'))){
+                    $errors1['phone1_err'] = '聯絡電話1須符合格式';
+                }
             }
 
             //連絡電話2不可為中文
@@ -275,7 +287,7 @@ class ClientController extends Controller
                     $errors1['phone2_err'] = '聯絡電話2不可包含中文';
                 }
                 //連絡電話2須符合格式
-                if(!preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('phone2'))){
+                if(preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('phone2'))){
                     $errors1['phone2_err'] = '聯絡電話2須符合格式';
                 }
             }
@@ -288,7 +300,7 @@ class ClientController extends Controller
                     $errors1['contact_email_err'] = '聯絡人信箱不可包含中文';
                 }
                 //聯絡人信箱須符合格式
-                if (!filter_var($request->filled('contact_email'), FILTER_VALIDATE_EMAIL)) {
+                if (filter_var($request->filled('contact_email'), FILTER_VALIDATE_EMAIL)) {
                     $errors1['contact_email_err'] = '聯絡人信箱須符合格式';
                 }                
             }
@@ -381,7 +393,8 @@ class ClientController extends Controller
                 'currency_id'         => $request['currency_id'] ?? null, //幣別id 
                 'paymentterm_id'      => $request['paymentterm_id']?? null,    //付款條件
                 'phone'               => $request['phone'] ?? null,          //公司電話     
-                'phone2'     => $request['phone2']?? null,  //聯絡電話2      
+                'phone1'              => $request['phone1'] ?? null,          //聯絡電話1
+                'phone2'              => $request['phone2']?? null,  //聯絡電話2      
                 'fax'                 => $request['fax'] ?? null,             //公司傳真 
                 'mobile_phone'        => $request['mobile_phone'],          //行動電話  
                 'contact_email'       => $request['contact_email'],         //聯絡人信箱     
@@ -639,7 +652,7 @@ class ClientController extends Controller
                     $errors1['phone_err'] = '公司電話不可包含中文';
                 }
                 //公司電話須符合格式
-                if(!preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('phone'))){
+                if(preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('phone'))){
                     $errors1['phone_err'] = '公司電話須符合格式';
                 }
             }
@@ -650,7 +663,7 @@ class ClientController extends Controller
                     $errors1['fax_err'] = '公司傳真不可包含中文';
                 }
                 //公司傳真須符合格式
-                if(!preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('fax'))){
+                if(preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('fax'))){
                     $errors1['fax_err'] = '公司傳真須符合格式';
                 }
             }
@@ -661,9 +674,20 @@ class ClientController extends Controller
                     $errors1['mobile_phone_err'] = '行動電話不可包含中文';
                 }
                 //行動電話須符合格式
-                if(!preg_match('/^09\d{2}-?\d{3}-?\d{3}$/', $request->filled('mobile_phone'))){
+                if(preg_match('/^09\d{2}-?\d{3}-?\d{3}$/', $request->filled('mobile_phone'))){
                     $errors1['mobile_phone_err'] = '行動電話須符合格式';
                 }                  
+            }
+
+            //連絡電話1不可為中文
+            if ($request->filled('phone1')) {
+                if(preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('phone1'))){
+                    $errors1['phone1_err'] = '聯絡電話1不可包含中文';
+                }
+                //連絡電話1須符合格式
+                if(preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('phone1'))){
+                    $errors1['phone1_err'] = '聯絡電話1須符合格式';
+                }
             }
 
             //連絡電話2不可為中文
@@ -672,7 +696,7 @@ class ClientController extends Controller
                     $errors1['phone2_err'] = '聯絡電話2不可包含中文';
                 }
                 //連絡電話2須符合格式
-                if(!preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('phone2'))){
+                if(preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('phone2'))){
                     $errors1['phone2_err'] = '聯絡電話2須符合格式';
                 }
             }   
@@ -684,7 +708,7 @@ class ClientController extends Controller
                     $errors1['contact_email_err'] = '聯絡人信箱不可包含中文';
                 }
                 //聯絡人信箱須符合格式
-                if (!filter_var($request->filled('contact_email'), FILTER_VALIDATE_EMAIL)) {
+                if (filter_var($request->filled('contact_email'), FILTER_VALIDATE_EMAIL)) {
                     $errors1['contact_email_err'] = '聯絡人信箱須符合格式';
                 }                
             }
@@ -781,6 +805,7 @@ class ClientController extends Controller
             $Client->address2            = $request->input('address2', $Client->address2);
             $Client->responsible_person  = $request->input('responsible_person', $Client->responsible_person);
             $Client->phone               = $request->input('phone', $Client->phone);
+            $Client->phone1              = $request->input('phone1', $Client->phone1);
             $Client->phone2              = $request->input('phone2', $Client->phone2);
             $Client->fax                 = $request->input('fax', $Client->fax);
             $Client->established_date    = $date ?? null; // 成立日期
