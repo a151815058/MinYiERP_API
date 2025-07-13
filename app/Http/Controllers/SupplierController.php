@@ -351,7 +351,7 @@ class SupplierController extends Controller
                 'account_category' => $request->input('account_category'),
                 'invoice_title' => $request->input('invoice_title'),
                 'taxid' => $request->input('taxid'),
-                'established_date' => $request->filled('established_date') ? $request->filled('established_date') : null,
+                'established_date' => $date,
                 'is_valid' => (int)$request->filled('is_valid') ? 1 : 0,
                 'create_user'=> $request->input('create_user', 'admin'),
                 'create_time' => $request->input('create_time', now()),
