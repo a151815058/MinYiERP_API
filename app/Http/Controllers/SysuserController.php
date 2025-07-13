@@ -13,6 +13,8 @@ use OpenApi\Annotations as OA;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use App\Helpers\ValidationHelper;
+use Carbon\Carbon;
 
 class SysuserController extends Controller
 {
@@ -84,23 +86,36 @@ class SysuserController extends Controller
     // 儲存人員資料
     public function store(Request $request)
     {
-        // 驗證輸入
-        $validator = Validator::make($request->all(),[
-            'user_no'   => 'required|string|max:255|unique:sysusers,user_no',
-            'user_nm'   => 'required|string|max:255',
-            'user_dept' => 'nullable|string|max:255', // 可為多部門，逗號分隔
-            'note'      => 'nullable|string|max:255',
-            'is_valid'  => 'required|boolean'
-        ]);
+        $errors1 = [];
 
-        // 輸入驗證
-        if($validator->fails()){
+        // 使用者代碼為必填
+        if (!$request->filled('user_no')) {
+            $errors1['user_no_err'] = '使用者代碼為必填';
+        }else {
+            // 判斷使用者代碼不能存在空白、""、''、"、'
+            if (!ValidationHelper::isValidText($request->input('user_no'))) {
+                $errors1['user_no_err'] = '使用者代碼不得為空字串或*';
+            }
+            // 檢查使用者代碼是否已存在
+            $existingUser = Sysuser::where('user_no', $request->input('user_no'))->first();
+            if ($existingUser) {
+                $errors1['user_no_err'] = '使用者代碼已存在';
+            }
+        }
+
+        // 隸屬部門為必填
+        if (!$request->filled('user_dept')) {
+            $errors1['user_dept_err'] = '隸屬部門為必填';
+        }
+
+        // 如果有錯誤，回傳統一格式
+        if (!empty($errors1)) {
             return response()->json([
-                'status' => true,
-                'message' => '資料驗證失敗',
-                'errors' => $validator->errors()
-            ], 200);
-        }  
+                'status' => false,
+                'message' => '缺少必填的欄位及欄位格式錯誤',
+                'errors' => $errors1
+            ], 400);
+        }
     
         DB::beginTransaction(); // 開始交易
     
@@ -171,11 +186,176 @@ class SysuserController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * @OA\POST(
+     *     path="/api/updateuser",
+     *     summary="更新人員資訊",
+     *     description="更新人員資訊",
+     *     operationId="updateuser",
+     *     tags={"base_user"},
+     *     @OA\Parameter(
+     *         name="user_no",
+     *         in="query",
+     *         required=true,
+     *         description="人員代號",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="user_nm",
+     *         in="query",
+     *         required=true,
+     *         description="人員名稱",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="user_dept",
+     *         in="query",
+     *         required=false,
+     *         description="人員所在部門uuid(開窗選擇)",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="note",
+     *         in="query",
+     *         required=false,
+     *         description="備註",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="is_valid",
+     *         in="query",
+     *         required=true,
+     *         description="是否有效",
+     *         @OA\Schema(type="string", example=1)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="成功",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="uuid", type="string", example="0b422f02-5acf-4bbb-bddf-4f6fdd843b08"),
+     *             @OA\Property(property="user_no", type="string", example="U001"),
+     *             @OA\Property(property="user_nm", type="string", example="姚佩彤"),
+     *             @OA\Property(property="user_dept", type="string", example="D001,D002"),
+     *             @OA\Property(property="note", type="string", example=""),
+     *             @OA\Property(property="is_valid", type="boolean", example=true),
+     *             @OA\Property(property="create_user", type="string", example="admin"),
+     *             @OA\Property(property="create_time", type="string", example="admin"),
+     *             @OA\Property(property="update_user", type="string", example="admin"),
+     *             @OA\Property(property="update_time", type="string", example="2025-03-31T08:58:52.001986Z")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="客戶端請求錯誤"
+     *     )
+     * )
+     */
+    // 更新人員資料
+    public function update(Request $request, $id)
+    {
+        $errors1 = [];
+
+        $errors1 = [];
+
+        // 使用者代碼為必填
+        if (!$request->filled('user_no')) {
+            $errors1['user_no_err'] = '使用者代碼為必填';
+        }else {
+            // 判斷使用者代碼不能存在空白、""、''、"、'
+            if (!ValidationHelper::isValidText($request->input('user_no'))) {
+                $errors1['user_no_err'] = '使用者代碼不得為空字串或*';
+            }
+            // 檢查使用者代碼是否已存在
+            $existingUser = Sysuser::where('user_no', $request->input('user_no'))->first();
+            if ($existingUser) {
+                $errors1['user_no_err'] = '使用者代碼已存在';
+            }
+        }
+
+        // 隸屬部門為必填
+        if (!$request->filled('user_dept')) {
+            $errors1['user_dept_err'] = '隸屬部門為必填';
+        }
+
+        DB::beginTransaction(); // 開始交易
+
+        try {
+            // 查詢使用者資料user_uuid
+            $Client = Sysuser::where('uuid', $request->input('uuid'))->first();
+            if (!$Client) {
+                return response()->json([
+                    'status' => false,
+                    'message' => '欄位資料錯誤',
+                    'user_no_err'    =>  '使用者資料未找到',
+                ], 400);
+            }
+
+            $user = Sysuser::findOrFail($Client->uuid);
+            $user->update([
+                'user_no'  => $request['user_no'],
+                'user_nm'  => $request['user_nm'],
+                'note'     => $request['note'] ?? null,
+                'is_valid' => $request['is_valid'],
+                'update_user'     => Auth::user()->username ?? 'admin',
+                'update_time'     => now()
+            ]);
+
+            // 清除舊的部門關聯
+            $user->depts()->detach();
+
+            // 建立新的部門關聯
+            if (!empty($request['user_dept'])) {
+                $deptNos = explode(',', $request['user_dept']);
+                foreach ($deptNos as $deptNo) {
+                    $dept = Dept::where('uuid', trim($deptNo))->first();
+                    if ($dept) {
+                        $user->depts()->attach($dept->uuid, [
+                            'uuid'         => Str::uuid(),
+                            'dept_id'      => $dept->uuid,
+                            'user_id'      => $user->uuid,
+                            'is_valid'     => 1,
+                            'create_user'  => Auth::user()->username ?? 'admin',
+                            'create_time'  => now(),
+                            'update_user'  => Auth::user()->username ?? 'admin',
+                            'update_time'  => now()
+                        ]);
+                    }
+                }
+            }
+
+            DB::commit(); // 提交交易
+
+            return response()->json([
+                'status' => true,
+                'message' => '更新成功',
+                'User'    => $user
+            ], 200);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // 捕捉驗證失敗
+            return response()->json([
+                'status' => false,
+                'message' => '驗證錯誤',
+                'errors' => $e->errors()
+            ], 422);
+
+        } catch (\Exception $e) {
+            // 其他例外處理
+            Log::error('建立資料錯誤：' . $e->getMessage());
+
+            return response()->json([
+                'status' => false,
+                'message' => '伺服器發生錯誤，請稍後再試',
+                'error' => $e->getMessage() // 上線環境建議拿掉
+            ], 500);
+        }
+
+    }
     /**
      * @OA\GET(
      *     path="/api/user/{userno}",
      *     summary="查詢特定人員資訊",
-     *     description="查詢特定人員資訊",
      *     operationId="getuser",
      *     tags={"base_user"},
      *     @OA\Parameter(
@@ -329,10 +509,17 @@ class SysuserController extends Controller
     /**
      * @OA\GET(
      *     path="/api/users/valid",
-     *     summary="查詢所有有效人員資訊(含關鍵字查詢，人員代碼、人員名稱)",
-     *     description="查詢所有有效人員資訊(含關鍵字查詢，人員代碼、人員名稱)",
+     *     summary="查詢所有有效人員資訊(含關鍵字查詢，隸屬部門、人員代碼、人員名稱)",
+     *     description="查詢所有有效人員資訊(含關鍵字查詢，隸屬部門、人員代碼、人員名稱)",
      *     operationId="getalluser",
      *     tags={"base_user"},
+     *     @OA\Parameter(
+     *         name="dept_id",
+     *         in="query",
+     *         required=false,
+     *         description="隸屬部門",
+     *         @OA\Schema(type="string")
+     *     ),
      *     @OA\Parameter(
      *         name="keyword",
      *         in="query",
@@ -378,27 +565,54 @@ class SysuserController extends Controller
         try{
             $pdo = getPDOConnection();
             $keyword = $request->query('keyword'); // 可為 null
+            $dept_id = $request->query('dept_id'); // 可為 null
             $page = $request->query('page'); // 當前頁碼
             $pageSize = $request->query('pageSize'); // 一頁顯示幾筆數值
             $page = $page ? (int)$page : 1; // 預設為第 1 頁
             $pageSize = $pageSize ? (int)$pageSize : 30; // 預設每頁顯示 30 筆資料
 
-            $likeKeyword = '%' . $keyword . '%';
-            // 進行關鍵字查詢
-            if($keyword != null) {
-                //取得總筆數與總頁數   
-                $sql_count = "
-                    SELECT COUNT(*) as total
-                    FROM sysusers
-                    INNER JOIN sysuser_depts ON sysuser_depts.user_id = sysusers.`uuid`
+            
+            //進行關鍵字查詢
+            if ($keyword != null && $keyword != '') {
+                $likeKeyword = '%' . $keyword . '%';
+            } else {
+                $likeKeyword = '%'; // 如果沒有關鍵字，則查詢所有
+            }
+
+            //進行隸屬部門查詢
+            if ($dept_id != null && $dept_id != '') {
+                $dept_id = $dept_id; // 如果有部門ID，則查詢
+            } else {
+                $dept_id = null; // 如果沒有部門ID，則查詢所有部門
+            }
+
+            // 進行關鍵字、隸屬部門查詢
+            if($keyword != null && $keyword != '') {
+                $likeKeyword = '%' . $keyword . '%';
+                // 如果有部門ID，則查詢該部門下的有效人員
+                if ($dept_id != null && $dept_id != '') {
+                    $dept_id = $dept_id; // 如果有部門ID，則查詢
+                } else {
+                    $dept_id = null; // 如果沒有部門ID，則查詢所有部門
+                }
+            }
+
+            //取得總筆數與總頁數
+            $sql_count = "
+                SELECT COUNT(*) as total
+                FROM sysusers
+                INNER JOIN sysuser_depts ON sysuser_depts.user_id = sysusers.`uuid`
                     INNER JOIN depts ON depts.`uuid` = sysuser_depts.dept_id
                     WHERE sysusers.is_valid = '1'
                     and (
                         sysusers.user_no LIKE ? OR sysusers.user_nm LIKE ?
                     )
+                    and (
+                        depts.uuid = ? OR ? IS NULL
+                    )
                 ";        
                 $stmt = $pdo->prepare($sql_count);
-                $stmt->execute([$keyword, $keyword]);
+                $stmt->execute([$likeKeyword, $likeKeyword, $dept_id, $dept_id]);
                 $total = $stmt->fetchColumn();
                 $totalPages = ceil($total / $pageSize); // 計算總頁數                  
 
@@ -428,27 +642,7 @@ class SysuserController extends Controller
                 //    $query->where('user_no', 'like', $likeKeyword)
                 //          ->orWhere('user_nm', 'like', $likeKeyword);
                 //})
-                //->get();
-
-            } else {
-                $user = SysUser::with('depts')->where('is_valid', '1')->get();
-
-                //取得總筆數與總頁數   
-                $sql_count = "
-                    SELECT COUNT(*) as total
-                    FROM sysusers
-                    INNER JOIN sysuser_depts ON sysuser_depts.user_id = sysusers.`uuid`
-                    INNER JOIN depts ON depts.`uuid` = sysuser_depts.dept_id
-                    WHERE sysusers.is_valid = '1';
-                ";
-                $stmt = $pdo->prepare($sql_count);
-                $stmt->execute();
-                $total = $stmt->fetchColumn();
-                $totalPages = ceil($total / $pageSize); // 計算總頁數          
-            }
-
-
-  
+                //->get(); 
             
             // 回應 JSON
             if (!$user) {

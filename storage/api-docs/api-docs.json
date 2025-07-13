@@ -8981,13 +8981,127 @@
                 }
             }
         },
+        "/api/updateuser": {
+            "post": {
+                "tags": [
+                    "base_user"
+                ],
+                "summary": "更新人員資訊",
+                "description": "更新人員資訊",
+                "operationId": "updateuser",
+                "parameters": [
+                    {
+                        "name": "user_no",
+                        "in": "query",
+                        "description": "人員代號",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "user_nm",
+                        "in": "query",
+                        "description": "人員名稱",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "user_dept",
+                        "in": "query",
+                        "description": "人員所在部門uuid(開窗選擇)",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "note",
+                        "in": "query",
+                        "description": "備註",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "is_valid",
+                        "in": "query",
+                        "description": "是否有效",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "uuid": {
+                                            "type": "string",
+                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
+                                        },
+                                        "user_no": {
+                                            "type": "string",
+                                            "example": "U001"
+                                        },
+                                        "user_nm": {
+                                            "type": "string",
+                                            "example": "姚佩彤"
+                                        },
+                                        "user_dept": {
+                                            "type": "string",
+                                            "example": "D001,D002"
+                                        },
+                                        "note": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "is_valid": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "create_user": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "create_time": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "update_user": {
+                                            "type": "string",
+                                            "example": "admin"
+                                        },
+                                        "update_time": {
+                                            "type": "string",
+                                            "example": "2025-03-31T08:58:52.001986Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "客戶端請求錯誤"
+                    }
+                }
+            }
+        },
         "/api/user/{userno}": {
             "get": {
                 "tags": [
                     "base_user"
                 ],
                 "summary": "查詢特定人員資訊",
-                "description": "查詢特定人員資訊",
                 "operationId": "getuser",
                 "parameters": [
                     {
@@ -9134,10 +9248,19 @@
                 "tags": [
                     "base_user"
                 ],
-                "summary": "查詢所有有效人員資訊(含關鍵字查詢，人員代碼、人員名稱)",
-                "description": "查詢所有有效人員資訊(含關鍵字查詢，人員代碼、人員名稱)",
+                "summary": "查詢所有有效人員資訊(含關鍵字查詢，隸屬部門、人員代碼、人員名稱)",
+                "description": "查詢所有有效人員資訊(含關鍵字查詢，隸屬部門、人員代碼、人員名稱)",
                 "operationId": "getalluser",
                 "parameters": [
+                    {
+                        "name": "dept_id",
+                        "in": "query",
+                        "description": "隸屬部門",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
                     {
                         "name": "keyword",
                         "in": "query",

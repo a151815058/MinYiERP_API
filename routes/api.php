@@ -35,6 +35,7 @@ Route::post('/RegisterAccount', [RegisterController::class, 'register']); // 註
 
     //人員相關  API
     Route::post('/createuser', [SysuserController::class, 'store']);// 新增人員資訊
+    Route::post('/updateuser', [SysuserController::class, 'update']);// 更新人員資訊
     Route::get('/user/{UsrNo}', [SysuserController::class, 'showno']);  // 透過 UsrNo 查詢
     Route::get('/user2/{UsrNM}', [SysuserController::class, 'shownm']);  // 透過 UsrNo 查詢
     Route::get('/user3/{dept_id}', [SysuserController::class, 'showdeptuser']);  // 透過 UsrNo 查詢
