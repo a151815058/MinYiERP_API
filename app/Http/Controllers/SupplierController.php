@@ -161,22 +161,22 @@ class SupplierController extends Controller
                 $errors1['Classification_err'] = '供應商分類不存在，請選擇正確的供應商分類';
             }
             //郵遞區號一不可為中文
-            if (preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('zip_code1'))) {
+            if (!preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('zip_code1'))) {
                 $errors1['zip_code1_err'] = '郵遞區號一不可包含中文';
             }
  
             //郵遞區號二為必填
-            if ($request->filled('zip_code2')) {
+            if (!$request->filled('zip_code2')) {
                 $errors1['zip_code2_err'] = '郵遞區號二為必填';
             }
 
             //判斷郵遞區號二不能存在空白、""、''、"、'
-            if (ValidationHelper::isValidText($request->input('zip_code2'))) {
+            if (!ValidationHelper::isValidText($request->input('zip_code2'))) {
                 $errors1['zip_code2_err'] = '郵遞區號二不得為空字串或*';
             }    
 
             //郵遞區號二不可為中文
-            if ($request->filled('zip_code2') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('zip_code2'))) {
+            if (!$request->filled('zip_code2') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('zip_code2'))) {
                 $errors1['zip_code2_err'] = '郵遞區號二不可包含中文';
             }
             //公司地址二為必填
@@ -204,55 +204,55 @@ class SupplierController extends Controller
             }
             //公司電話不可為中文
             if ($request->filled('phone') ) {
-                if(preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('phone'))){
+                if(!preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('phone'))){
                     $errors1['phone_err'] = '公司電話不可包含中文';
                 }
                 //公司電話須符合格式
-                if(preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('phone'))){
+                if(!preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('phone'))){
                     $errors1['phone_err'] = '公司電話須符合格式';
                 }
             }
 
             //公司傳真不可為中文
             if ($request->filled('fax')) {
-                if(preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('fax'))){
+                if(!preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('fax'))){
                     $errors1['fax_err'] = '公司傳真不可包含中文';
                 }
                 //公司傳真須符合格式
-                if(preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('fax'))){
+                if(!preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('fax'))){
                     $errors1['fax_err'] = '公司傳真須符合格式';
                 }
             }
             //連絡電話2不可為中文
             if ($request->filled('phone2') ) {
-                if(preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('phone2'))){
+                if(!preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('phone2'))){
                     $errors1['phone2_err'] = '連絡電話2不可包含中文';
                 }
                 //連絡電話2須符合格式
-                if(preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('phone2'))){
+                if(!preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('phone2'))){
                     $errors1['phone2_err'] = '連絡電話2須符合格式';
                 }
             }
             //行動電話不可為中文
             if ($request->filled('mobile_phone')) {
-                if( preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('mobile_phone'))){
+                if(!preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('mobile_phone'))){
                     $errors1['mobile_phone_err'] = '行動電話不可包含中文';
                 }
                 //行動電話須符合格式
-                if(preg_match('/^09\d{2}-?\d{3}-?\d{3}$/', $request->filled('mobile_phone'))){
+                if(!preg_match('/^09\d{2}-?\d{3}-?\d{3}$/', $request->filled('mobile_phone'))){
                     $errors1['mobile_phone_err'] = '行動電話須符合格式';
                 }                  
             }
 
             //聯絡人信箱不可為中文
             if ($request->filled('contact_email') ) {
-                if(preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('contact_email'))){
+                if(!preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('contact_email'))){
                     $errors1['contact_email_err'] = '聯絡人信箱不可包含中文';
                 }
                 //聯絡人信箱須符合格式
                 if ($request->filled('contact_email')) {
                     $email = $request->input('contact_email');
-                    if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                         $errors1['contact_email_err'] = '聯絡人信箱須符合格式';
                     }
                 }              
@@ -517,7 +517,7 @@ class SupplierController extends Controller
                 $errors1['Classification_err'] = '供應商分類不存在，請選擇正確的供應商分類';
             }
             //郵遞區號一不可為中文
-            if (preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('zip_code1'))) {
+            if (!preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('zip_code1'))) {
                 $errors1['zip_code1_err'] = '郵遞區號一不可包含中文';
             }
  
@@ -527,12 +527,12 @@ class SupplierController extends Controller
             }
 
             //判斷郵遞區號二不能存在空白、""、''、"、'
-            if (ValidationHelper::isValidText($request->input('zip_code2'))) {
+            if (!ValidationHelper::isValidText($request->input('zip_code2'))) {
                 $errors1['zip_code2_err'] = '郵遞區號二不得為空字串或*';
             }    
 
             //郵遞區號二不可為中文
-            if ($request->filled('zip_code2') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('zip_code2'))) {
+            if (!$request->filled('zip_code2') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('zip_code2'))) {
                 $errors1['zip_code2_err'] = '郵遞區號二不可包含中文';
             }
             //公司地址二為必填
@@ -559,54 +559,54 @@ class SupplierController extends Controller
             }             
             //公司電話不可為中文
             if ($request->filled('phone') ) {
-                if(preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('phone'))){
+                if(!preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('phone'))){
                     $errors1['phone_err'] = '公司電話不可包含中文';
                 }
                 //公司電話須符合格式
-                if(preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('phone'))){
+                if(!preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('phone'))){
                     $errors1['phone_err'] = '公司電話須符合格式';
                 }
             }
             //連絡電話2不可為中文
             if ($request->filled('phone2') ) {
-                if(preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('phone2'))){
+                if(!preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('phone2'))){
                     $errors1['phone2_err'] = '連絡電話2不可包含中文';
                 }
                 //連絡電話2須符合格式
-                if(preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('phone2'))){
+                if(!preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('phone2'))){
                     $errors1['phone2_err'] = '連絡電話2須符合格式';
                 }
             }
             
             //公司傳真不可為中文
             if ($request->filled('fax')) {
-                if(preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('fax'))){
+                if(!preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('fax'))){
                     $errors1['fax_err'] = '公司傳真不可包含中文';
                 }
                 //公司傳真須符合格式
-                if(preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('fax'))){
+                if(!preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('fax'))){
                     $errors1['fax_err'] = '公司傳真須符合格式';
                 }
             }
 
             //行動電話不可為中文
             if ($request->filled('mobile_phone')) {
-                if( preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('mobile_phone'))){
+                if( !preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('mobile_phone'))){
                     $errors1['mobile_phone_err'] = '行動電話不可包含中文';
                 }
                 //行動電話須符合格式
-                if(preg_match('/^09\d{2}-?\d{3}-?\d{3}$/', $request->filled('mobile_phone'))){
+                if(!preg_match('/^09\d{2}-?\d{3}-?\d{3}$/', $request->filled('mobile_phone'))){
                     $errors1['mobile_phone_err'] = '行動電話須符合格式';
                 }                  
             }
 
             //聯絡人信箱不可為中文
             if ($request->filled('contact_email') ) {
-                if(preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('contact_email'))){
+                if(!preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('contact_email'))){
                     $errors1['contact_email_err'] = '聯絡人信箱不可包含中文';
                 }
                 //聯絡人信箱須符合格式
-                if (filter_var($request->filled('contact_email'), FILTER_VALIDATE_EMAIL)) {
+                if (!filter_var($request->filled('contact_email'), FILTER_VALIDATE_EMAIL)) {
                     $errors1['contact_email_err'] = '聯絡人信箱須符合格式';
                 }                
             }
