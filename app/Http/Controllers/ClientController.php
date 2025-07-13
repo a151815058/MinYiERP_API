@@ -394,7 +394,7 @@ class ClientController extends Controller
                 'recipient_name'      => $request['recipient_name']?? null,   //發票收件人   
                 'invoice_address'     => $request['invoice_address'],  //發票地址    
                 'recipient_email'     => $request['recipient_email']?? null,  //發票收件信箱     
-                'established_date'    => $date,      //成立日期   
+                'established_date'    => $date ?? null,      //成立日期   
                 'note'                => $request['note'] ?? null,                 
                 'is_valid' => (int)$request->filled('is_valid') ? 1 : 0,
                 'create_user'     => Auth::user()->username ?? 'admin',
@@ -783,7 +783,7 @@ class ClientController extends Controller
             $Client->phone               = $request->input('phone', $Client->phone);
             $Client->phone2              = $request->input('phone2', $Client->phone2);
             $Client->fax                 = $request->input('fax', $Client->fax);
-            $Client->established_date    = $date; // 成立日期
+            $Client->established_date    = $date ?? null; // 成立日期
             $Client->mobile_phone        = $request->input('mobile_phone', $Client->mobile_phone);
             $Client->contact_email       = $request->input('contact_email', $Client->contact_email);
             $Client->user_id             = $request->input('user_id', $Client->user_id);
