@@ -18,7 +18,7 @@ use OpenApi\Annotations as OA;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use App\Helpers\ValidationHelper;
-use App\Http\Controllers\Date;
+use Carbon\Carbon;
 
 class SupplierController extends Controller
 {
@@ -302,9 +302,8 @@ class SupplierController extends Controller
                 $errors1['established_date_err'] = '成立日期為必填';
             } else {
                 $date = $request->input('established_date');
-                $format = 'Y-m-d';
-                $d = Date::createFromFormat($format, $date);
-                if (!$d || $d->format($format) !== $date) {
+                $date = $date ? Carbon::parse($date)->format('Y-m-d') : null;
+                if (!$date) {
                     $errors1['established_date_err'] = '成立日期格式錯誤，應為YYYY-MM-DD';
                 }
             }
