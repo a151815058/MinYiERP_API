@@ -1690,6 +1690,15 @@
                         }
                     },
                     {
+                        "name": "phone1",
+                        "in": "query",
+                        "description": "聯絡電話",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
                         "name": "phone",
                         "in": "query",
                         "description": "公司電話",
@@ -2172,6 +2181,15 @@
                         "name": "phone",
                         "in": "query",
                         "description": "公司電話",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "phone1",
+                        "in": "query",
+                        "description": "聯絡電話1",
                         "required": false,
                         "schema": {
                             "type": "string"

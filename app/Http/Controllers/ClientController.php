@@ -475,6 +475,7 @@ class ClientController extends Controller
  *     @OA\Parameter(name="responsible_person", in="query", required=false, description="負責人", @OA\Schema(type="string")),
  *     @OA\Parameter(name="contact_person", in="query", required=false, description="聯絡人", @OA\Schema(type="string")),
  *     @OA\Parameter(name="phone", in="query", required=false, description="公司電話", @OA\Schema(type="string")),
+ *     @OA\Parameter(name="phone1", in="query", required=false, description="聯絡電話1", @OA\Schema(type="string")),
  *     @OA\Parameter(name="fax", in="query", required=false, description="公司傳真", @OA\Schema(type="string")),
  *     @OA\Parameter(name="established_date", in="query", required=false, description="成立時間", @OA\Schema(type="string")),
  *     @OA\Parameter(name="mobile_phone", in="query", required=false, description="聯絡人行動電話", @OA\Schema(type="string")),
