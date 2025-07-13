@@ -19,7 +19,7 @@ use OpenApi\Annotations as OA;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use App\Helpers\ValidationHelper;
-
+use Carbon\Carbon;
 
 class ClientController extends Controller
 {
@@ -269,6 +269,17 @@ class ClientController extends Controller
                 }                  
             }
 
+            //連絡電話2不可為中文
+            if ($request->filled('phone2')) {
+                if(preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('phone2'))){
+                    $errors1['phone2_err'] = '聯絡電話2不可包含中文';
+                }
+                //連絡電話2須符合格式
+                if(!preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('phone2'))){
+                    $errors1['phone2_err'] = '聯絡電話2須符合格式';
+                }
+            }
+
           
 
             //聯絡人信箱不可為中文
@@ -332,6 +343,15 @@ class ClientController extends Controller
                 $errors1['is_valid_err'] = ' 是否有效不得為空字串或*';
             } 
 
+            //established_date為年月日
+            if ($request->filled('established_date')) {
+                $date = $request->input('established_date');
+                $date = $date ? Carbon::parse($date)->format('Y-m-d') : null;
+                if (!$date) {
+                    $errors1['established_date_err'] = '成立日期格式錯誤，應為YYYY-MM-DD';
+                }
+            }            
+
             // 如果有錯誤，回傳統一格式
             if (!empty($errors1)) {
                 return response()->json([
@@ -360,7 +380,8 @@ class ClientController extends Controller
                 'address2'            => $request['address2'],          //送貨地址
                 'currency_id'         => $request['currency_id'] ?? null, //幣別id 
                 'paymentterm_id'      => $request['paymentterm_id']?? null,    //付款條件
-                'phone'               => $request['phone'] ?? null,          //公司電話      
+                'phone'               => $request['phone'] ?? null,          //公司電話     
+                'phone2'     => $request['phone2']?? null,  //聯絡電話2      
                 'fax'                 => $request['fax'] ?? null,             //公司傳真 
                 'mobile_phone'        => $request['mobile_phone'],          //行動電話  
                 'contact_email'       => $request['contact_email'],         //聯絡人信箱     
@@ -372,9 +393,8 @@ class ClientController extends Controller
                 'delivery_method'     => $request['delivery_method']?? null,  //發票寄送方式
                 'recipient_name'      => $request['recipient_name']?? null,   //發票收件人   
                 'invoice_address'     => $request['invoice_address'],  //發票地址    
-                'recipient_phone'     => $request['recipient_phone']?? null,  //聯絡電話2     
                 'recipient_email'     => $request['recipient_email']?? null,  //發票收件信箱     
-                'established_date'    => $request['established_date'],      //成立日期   
+                'established_date'    => $date,      //成立日期   
                 'note'                => $request['note'] ?? null,                 
                 'is_valid' => (int)$request->filled('is_valid') ? 1 : 0,
                 'create_user'     => Auth::user()->username ?? 'admin',
@@ -646,6 +666,16 @@ class ClientController extends Controller
                 }                  
             }
 
+            //連絡電話2不可為中文
+            if ($request->filled('phone2')) {       
+                if(preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('phone2'))){
+                    $errors1['phone2_err'] = '聯絡電話2不可包含中文';
+                }
+                //連絡電話2須符合格式
+                if(!preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('phone2'))){
+                    $errors1['phone2_err'] = '聯絡電話2須符合格式';
+                }
+            }   
           
 
             //聯絡人信箱不可為中文
@@ -709,6 +739,16 @@ class ClientController extends Controller
                 $errors1['is_valid_err'] = ' 是否有效不得為空字串或*';
             } 
 
+            //established_date為須為年月日
+            if ($request->filled('established_date')) {
+                $date = $request->input('established_date');
+                $date = $date ? Carbon::parse($date)->format('Y-m-d') : null;
+                if (!$date) {
+                    $errors1['established_date_err'] = '成立日期格式錯誤，應為YYYY-MM-DD';
+                }
+            }
+
+
             // 如果有錯誤，回傳統一格式
             if (!empty($errors1)) {
                 return response()->json([
@@ -741,8 +781,9 @@ class ClientController extends Controller
             $Client->address2            = $request->input('address2', $Client->address2);
             $Client->responsible_person  = $request->input('responsible_person', $Client->responsible_person);
             $Client->phone               = $request->input('phone', $Client->phone);
+            $Client->phone2              = $request->input('phone2', $Client->phone2);
             $Client->fax                 = $request->input('fax', $Client->fax);
-            $Client->established_date    = $request->input('established_date', $Client->established_date);
+            $Client->established_date    = $date; // 成立日期
             $Client->mobile_phone        = $request->input('mobile_phone', $Client->mobile_phone);
             $Client->contact_email       = $request->input('contact_email', $Client->contact_email);
             $Client->user_id             = $request->input('user_id', $Client->user_id);
@@ -754,7 +795,6 @@ class ClientController extends Controller
             $Client->taxid               = $request->input('taxid', $Client->taxid);
             $Client->delivery_method     = $request->input('delivery_method', $Client->delivery_method);
             $Client->recipient_name      = $request->input('recipient_name', $Client->recipient_name);
-            $Client->recipient_phone     = $request->input('recipient_phone', $Client->recipient_phone);
             $Client->recipient_email     = $request->input('recipient_email', $Client->recipient_email);
             $Client->invoice_address     = $request->input('invoice_address', $Client->invoice_address);
             $Client->note                = $request->input('note', $Client->note);

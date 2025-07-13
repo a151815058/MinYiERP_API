@@ -297,10 +297,8 @@ class SupplierController extends Controller
                 }
             }
 
-            //established_date為必填且須為年月日
-            if (!$request->filled('established_date')) {
-                $errors1['established_date_err'] = '成立日期為必填';
-            } else {
+            //established_date為年月日
+            if ($request->filled('established_date')) {
                 $date = $request->input('established_date');
                 $date = $date ? Carbon::parse($date)->format('Y-m-d') : null;
                 if (!$date) {
@@ -658,10 +656,8 @@ class SupplierController extends Controller
                 $errors1['is_valid_err'] = ' 是否有效不得為空字串或*';
             } 
 
-            //established_date為必填且須為年月日
-            if (!$request->filled('established_date')) {
-                $errors1['established_date_err'] = '成立日期為必填';
-            } else {
+            //established_date為須為年月日
+            if ($request->filled('established_date')) {
                 $date = $request->input('established_date');
                 $date = $date ? Carbon::parse($date)->format('Y-m-d') : null;
                 if (!$date) {

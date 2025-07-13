@@ -30,6 +30,7 @@ return new class extends Migration
             $table->string('currency_id',255)->comment(comment: '幣別')->nullable();
             $table->string('paymentterm_id',255)->comment(comment: '付款條件')->nullable();
             $table->string('phone',20)->comment(comment: '公司電話')->nullable();
+            $table->string('phone2',20)->comment(comment: '聯絡電話2')->nullable();
             $table->string('fax',20)->comment(comment: '公司傳真')->nullable();
             $table->string('mobile_phone',20)->comment(comment: '聯絡人行動電話')->nullable();
             $table->string('contact_email',255)->comment(comment: '聯絡人信箱')->nullable();
@@ -41,7 +42,6 @@ return new class extends Migration
             $table->string('delivery_method',255)->comment(comment: '發票寄送方式');
             $table->string('recipient_name',255)->comment(comment: '發票收件人')->nullable();
             $table->string('invoice_address',255)->comment(comment: '發票地址');
-            $table->string('recipient_phone',20)->comment(comment: '聯絡電話2')->nullable();
             $table->string('recipient_email',255)->comment(comment: '發票收件信箱')->nullable();
             $table->dateTime('established_date')->comment(comment: '成立時間')->nullable();
             $table->string('note',255)->comment('備註')->nullable();
