@@ -18,6 +18,7 @@ use OpenApi\Annotations as OA;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use App\Helpers\ValidationHelper;
+use App\Http\Controllers\Date;
 
 class SupplierController extends Controller
 {
@@ -207,7 +208,7 @@ class SupplierController extends Controller
                     $errors1['phone_err'] = '公司電話不可包含中文';
                 }
                 //公司電話須符合格式
-                if(!preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('phone'))){
+                if(preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('phone'))){
                     $errors1['phone_err'] = '公司電話須符合格式';
                 }
             }
@@ -218,7 +219,7 @@ class SupplierController extends Controller
                     $errors1['fax_err'] = '公司傳真不可包含中文';
                 }
                 //公司傳真須符合格式
-                if(!preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('fax'))){
+                if(preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('fax'))){
                     $errors1['fax_err'] = '公司傳真須符合格式';
                 }
             }
@@ -228,7 +229,7 @@ class SupplierController extends Controller
                     $errors1['phone2_err'] = '連絡電話2不可包含中文';
                 }
                 //連絡電話2須符合格式
-                if(!preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('phone2'))){
+                if(preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('phone2'))){
                     $errors1['phone2_err'] = '連絡電話2須符合格式';
                 }
             }
@@ -238,7 +239,7 @@ class SupplierController extends Controller
                     $errors1['mobile_phone_err'] = '行動電話不可包含中文';
                 }
                 //行動電話須符合格式
-                if(!preg_match('/^09\d{2}-?\d{3}-?\d{3}$/', $request->filled('mobile_phone'))){
+                if(preg_match('/^09\d{2}-?\d{3}-?\d{3}$/', $request->filled('mobile_phone'))){
                     $errors1['mobile_phone_err'] = '行動電話須符合格式';
                 }                  
             }
@@ -251,7 +252,7 @@ class SupplierController extends Controller
                 //聯絡人信箱須符合格式
                 if ($request->filled('contact_email')) {
                     $email = $request->input('contact_email');
-                    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
                         $errors1['contact_email_err'] = '聯絡人信箱須符合格式';
                     }
                 }              
@@ -293,6 +294,18 @@ class SupplierController extends Controller
                     if ($sum ==0 ||$sum % 10 !== 0) {
                         $errors1['taxid_err'] = '統一編號驗證失敗';
                     }
+                }
+            }
+
+            //established_date為必填且須為年月日
+            if (!$request->filled('established_date')) {
+                $errors1['established_date_err'] = '成立日期為必填';
+            } else {
+                $date = $request->input('established_date');
+                $format = 'Y-m-d';
+                $d = Date::createFromFormat($format, $date);
+                if (!$d || $d->format($format) !== $date) {
+                    $errors1['established_date_err'] = '成立日期格式錯誤，應為YYYY-MM-DD';
                 }
             }
 
