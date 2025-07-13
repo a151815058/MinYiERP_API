@@ -208,7 +208,7 @@ class SupplierController extends Controller
                     $errors1['phone_err'] = '公司電話不可包含中文';
                 }
                 //公司電話須符合格式
-                if(!preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('phone'))){
+                if(preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('phone'))){
                     $errors1['phone_err'] = '公司電話須符合格式';
                 }
             }
@@ -219,7 +219,7 @@ class SupplierController extends Controller
                     $errors1['fax_err'] = '公司傳真不可包含中文';
                 }
                 //公司傳真須符合格式
-                if(!preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('fax'))){
+                if(preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('fax'))){
                     $errors1['fax_err'] = '公司傳真須符合格式';
                 }
             }
@@ -229,7 +229,7 @@ class SupplierController extends Controller
                     $errors1['phone2_err'] = '連絡電話2不可包含中文';
                 }
                 //連絡電話2須符合格式
-                if(!preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('phone2'))){
+                if(preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('phone2'))){
                     $errors1['phone2_err'] = '連絡電話2須符合格式';
                 }
             }
@@ -239,7 +239,7 @@ class SupplierController extends Controller
                     $errors1['mobile_phone_err'] = '行動電話不可包含中文';
                 }
                 //行動電話須符合格式
-                if(!preg_match('/^09\d{2}-?\d{3}-?\d{3}$/', $request->filled('mobile_phone'))){
+                if(preg_match('/^09\d{2}-?\d{3}-?\d{3}$/', $request->filled('mobile_phone'))){
                     $errors1['mobile_phone_err'] = '行動電話須符合格式';
                 }                  
             }
@@ -563,7 +563,7 @@ class SupplierController extends Controller
                     $errors1['phone_err'] = '公司電話不可包含中文';
                 }
                 //公司電話須符合格式
-                if(!preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('phone'))){
+                if(preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('phone'))){
                     $errors1['phone_err'] = '公司電話須符合格式';
                 }
             }
@@ -573,7 +573,7 @@ class SupplierController extends Controller
                     $errors1['phone2_err'] = '連絡電話2不可包含中文';
                 }
                 //連絡電話2須符合格式
-                if(!preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('phone2'))){
+                if(preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('phone2'))){
                     $errors1['phone2_err'] = '連絡電話2須符合格式';
                 }
             }
@@ -584,7 +584,7 @@ class SupplierController extends Controller
                     $errors1['fax_err'] = '公司傳真不可包含中文';
                 }
                 //公司傳真須符合格式
-                if(!preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('fax'))){
+                if(preg_match('/^0\d{1,2}-?\d{6,8}$/', $request->filled('fax'))){
                     $errors1['fax_err'] = '公司傳真須符合格式';
                 }
             }
@@ -595,7 +595,7 @@ class SupplierController extends Controller
                     $errors1['mobile_phone_err'] = '行動電話不可包含中文';
                 }
                 //行動電話須符合格式
-                if(!preg_match('/^09\d{2}-?\d{3}-?\d{3}$/', $request->filled('mobile_phone'))){
+                if(preg_match('/^09\d{2}-?\d{3}-?\d{3}$/', $request->filled('mobile_phone'))){
                     $errors1['mobile_phone_err'] = '行動電話須符合格式';
                 }                  
             }
