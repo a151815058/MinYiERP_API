@@ -166,18 +166,18 @@ class SupplierController extends Controller
             }
  
             //郵遞區號二為必填
-            if (!$request->filled('zip_code2')) {
-                $errors1['zip_code2_err'] = '郵遞區號二為必填';
+            if (!$request->filled('zipcode2')) {
+                $errors1['zipcode2_err'] = '郵遞區號二為必填';
             }
 
             //判斷郵遞區號二不能存在空白、""、''、"、'
-            if (ValidationHelper::isValidText($request->input('zip_code2'))) {
-                $errors1['zip_code2_err'] = '郵遞區號二不得為空字串或*';
-            }    
+            if (ValidationHelper::isValidText($request->input('zipcode2'))) {
+                $errors1['zipcode2_err'] = '郵遞區號二不得為空字串或*';
+            }
 
             //郵遞區號二不可為中文
-            if (!$request->filled('zip_code2') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('zip_code2'))) {
-                $errors1['zip_code2_err'] = '郵遞區號二不可包含中文';
+            if (!$request->filled('zipcode2') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('zipcode2'))) {
+                $errors1['zipcode2_err'] = '郵遞區號二不可包含中文';
             }
             //公司地址二為必填
             if (!$request->filled('address2')) {
@@ -522,18 +522,18 @@ class SupplierController extends Controller
             }
  
             //郵遞區號二為必填
-            if (!$request->filled('zip_code2')) {
-                $errors1['zip_code2_err'] = '郵遞區號二為必填';
+            if (!$request->filled('zipcode2')) {
+                $errors1['zipcode2_err'] = '郵遞區號二為必填';
             }
 
             //判斷郵遞區號二不能存在空白、""、''、"、'
-            if (ValidationHelper::isValidText($request->input('zip_code2'))) {
-                $errors1['zip_code2_err'] = '郵遞區號二不得為空字串或*';
+            if (ValidationHelper::isValidText($request->input('zipcode2'))) {
+                $errors1['zipcode2_err'] = '郵遞區號二不得為空字串或*';
             }    
 
             //郵遞區號二不可為中文
-            if (!$request->filled('zip_code2') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('zip_code2'))) {
-                $errors1['zip_code2_err'] = '郵遞區號二不可包含中文';
+            if (!$request->filled('zipcode2') && preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('zipcode2'))) {
+                $errors1['zipcode2_err'] = '郵遞區號二不可包含中文';
             }
             //公司地址二為必填
             if (!$request->filled('address2')) {
