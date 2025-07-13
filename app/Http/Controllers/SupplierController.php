@@ -185,7 +185,7 @@ class SupplierController extends Controller
             }
 
             //判斷公司地址二不能存在空白、""、''、"、'
-            if (ValidationHelper::isValidText($request->input('address2'))) {
+            if (!ValidationHelper::isValidText($request->input('address2'))) {
                 $errors1['address2_err'] = '公司地址二不得為空字串或*';
             }   
 
@@ -541,7 +541,7 @@ class SupplierController extends Controller
             }
 
             //判斷公司地址二不能存在空白、""、''、"、'
-            if (ValidationHelper::isValidText($request->input('address2'))) {
+            if (!ValidationHelper::isValidText($request->input('address2'))) {
                 $errors1['address2_err'] = '公司地址二不得為空字串或*';
             }   
             //幣別須存在

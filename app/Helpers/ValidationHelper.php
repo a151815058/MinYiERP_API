@@ -9,7 +9,7 @@ class ValidationHelper
     public static function isValidText($value): bool
     {
         $trimmed = trim($value);
-        return !(
+        return (
             $trimmed === '' ||
             $trimmed === '""' || $trimmed === "''" ||
             $trimmed === '"'  || $trimmed === "'"  ||
