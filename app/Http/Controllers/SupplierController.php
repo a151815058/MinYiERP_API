@@ -252,7 +252,7 @@ class SupplierController extends Controller
                 //聯絡人信箱須符合格式
                 if ($request->filled('contact_email')) {
                     $email = $request->input('contact_email');
-                    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
                         $errors1['contact_email_err'] = '聯絡人信箱須符合格式';
                     }
                 }              
@@ -606,8 +606,11 @@ class SupplierController extends Controller
                     $errors1['contact_email_err'] = '聯絡人信箱不可包含中文';
                 }
                 //聯絡人信箱須符合格式
-                if (!filter_var($request->filled('contact_email'), FILTER_VALIDATE_EMAIL)) {
-                    $errors1['contact_email_err'] = '聯絡人信箱須符合格式';
+                if ($request->filled('contact_email')) {
+                    $email = $request->input('contact_email');
+                    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                        $errors1['contact_email_err'] = '聯絡人信箱須符合格式';
+                    }
                 }                
             }
 
