@@ -204,7 +204,7 @@ class SupplierController extends Controller
             }
             //公司電話不可為中文
             if ($request->filled('phone') ) {
-                if(!preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('phone'))){
+                if(preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('phone'))){
                     $errors1['phone_err'] = '公司電話不可包含中文';
                 }
                 //公司電話須符合格式
@@ -215,7 +215,7 @@ class SupplierController extends Controller
 
             //公司傳真不可為中文
             if ($request->filled('fax')) {
-                if(!preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('fax'))){
+                if(preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('fax'))){
                     $errors1['fax_err'] = '公司傳真不可包含中文';
                 }
                 //公司傳真須符合格式
@@ -225,7 +225,7 @@ class SupplierController extends Controller
             }
             //連絡電話2不可為中文
             if ($request->filled('phone2') ) {
-                if(!preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('phone2'))){
+                if(preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('phone2'))){
                     $errors1['phone2_err'] = '連絡電話2不可包含中文';
                 }
                 //連絡電話2須符合格式
@@ -235,7 +235,7 @@ class SupplierController extends Controller
             }
             //行動電話不可為中文
             if ($request->filled('mobile_phone')) {
-                if(!preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('mobile_phone'))){
+                if(preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('mobile_phone'))){
                     $errors1['mobile_phone_err'] = '行動電話不可包含中文';
                 }
                 //行動電話須符合格式
@@ -246,7 +246,7 @@ class SupplierController extends Controller
 
             //聯絡人信箱不可為中文
             if ($request->filled('contact_email') ) {
-                if(!preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('contact_email'))){
+                if(preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('contact_email'))){
                     $errors1['contact_email_err'] = '聯絡人信箱不可包含中文';
                 }
                 //聯絡人信箱須符合格式
@@ -559,7 +559,7 @@ class SupplierController extends Controller
             }             
             //公司電話不可為中文
             if ($request->filled('phone') ) {
-                if(!preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('phone'))){
+                if(preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('phone'))){
                     $errors1['phone_err'] = '公司電話不可包含中文';
                 }
                 //公司電話須符合格式
@@ -569,7 +569,7 @@ class SupplierController extends Controller
             }
             //連絡電話2不可為中文
             if ($request->filled('phone2') ) {
-                if(!preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('phone2'))){
+                if(preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('phone2'))){
                     $errors1['phone2_err'] = '連絡電話2不可包含中文';
                 }
                 //連絡電話2須符合格式
@@ -580,7 +580,7 @@ class SupplierController extends Controller
             
             //公司傳真不可為中文
             if ($request->filled('fax')) {
-                if(!preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('fax'))){
+                if(preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('fax'))){
                     $errors1['fax_err'] = '公司傳真不可包含中文';
                 }
                 //公司傳真須符合格式
@@ -591,7 +591,7 @@ class SupplierController extends Controller
 
             //行動電話不可為中文
             if ($request->filled('mobile_phone')) {
-                if( !preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('mobile_phone'))){
+                if( preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('mobile_phone'))){
                     $errors1['mobile_phone_err'] = '行動電話不可包含中文';
                 }
                 //行動電話須符合格式
@@ -602,7 +602,7 @@ class SupplierController extends Controller
 
             //聯絡人信箱不可為中文
             if ($request->filled('contact_email') ) {
-                if(!preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('contact_email'))){
+                if(preg_match('/[\x{4e00}-\x{9fa5}]/u', $request->input('contact_email'))){
                     $errors1['contact_email_err'] = '聯絡人信箱不可包含中文';
                 }
                 //聯絡人信箱須符合格式
