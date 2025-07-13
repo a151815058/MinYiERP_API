@@ -249,9 +249,12 @@ class SupplierController extends Controller
                     $errors1['contact_email_err'] = '聯絡人信箱不可包含中文';
                 }
                 //聯絡人信箱須符合格式
-                if (!filter_var($request->filled('contact_email'), FILTER_VALIDATE_EMAIL)) {
-                    $errors1['contact_email_err'] = '聯絡人信箱須符合格式';
-                }                
+                if ($request->filled('contact_email')) {
+                    $email = $request->input('contact_email');
+                    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                        $errors1['contact_email_err'] = '聯絡人信箱須符合格式';
+                    }
+                }              
             }
 
             //業務人員須存在
@@ -336,7 +339,7 @@ class SupplierController extends Controller
                 'account_category' => $request->input('account_category'),
                 'invoice_title' => $request->input('invoice_title'),
                 'taxid' => $request->input('taxid'),
-                'established_date' => $request->filled('established_date') ? date($request->filled('established_date')) : null,
+                'established_date' => $request->filled('established_date') ? $request->filled('established_date') : null,
                 'is_valid' => (int)$request->filled('is_valid') ? 1 : 0,
                 'create_user'=> $request->input('create_user', 'admin'),
                 'create_time' => $request->input('create_time', now()),
