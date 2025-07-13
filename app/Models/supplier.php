@@ -23,6 +23,8 @@ class Supplier extends Model
         'supplier_no', 
         'supplier_shortnm', 
         'supplier_fullnm',
+        'supplier_type',    
+        'Classification',
         'zipcode1', 
         'city_id',
         'town_id',

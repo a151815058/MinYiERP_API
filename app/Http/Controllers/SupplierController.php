@@ -655,6 +655,17 @@ class SupplierController extends Controller
             if (!ValidationHelper::isValidText($request->input('is_valid'))) {
                 $errors1['is_valid_err'] = ' 是否有效不得為空字串或*';
             } 
+            
+            //established_date為必填且須為年月日
+            if (!$request->filled('established_date')) {
+                $errors1['established_date_err'] = '成立日期為必填';
+            } else {
+                $date = $request->input('established_date');
+                $date = $date ? Carbon::parse($date)->format('Y-m-d') : null;
+                if (!$date) {
+                    $errors1['established_date_err'] = '成立日期格式錯誤，應為YYYY-MM-DD';
+                }
+            }
 
             // 如果有錯誤，回傳統一格式
             if (!empty($errors1)) {
