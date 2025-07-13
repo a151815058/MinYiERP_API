@@ -631,10 +631,13 @@ class SysuserController extends Controller
                     AND (
                         sysusers.user_no LIKE ? OR sysusers.user_nm LIKE ?
                     )
+                    AND (
+                        depts.uuid = ? OR ? IS NULL
+                    )
                     ORDER BY sysusers.user_no
                     LIMIT ? OFFSET ?
                     ;";      
-                $user = DB::select($sql_data, [$likeKeyword, $likeKeyword,$pageSize, $offset]);          
+                $user = DB::select($sql_data, [$likeKeyword, $likeKeyword, $dept_id, $dept_id, $pageSize, $offset]);
 
                 //$user = SysUser::with('depts')
                 //->where('is_valid', '1')
