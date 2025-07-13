@@ -349,7 +349,6 @@ class SupplierController extends Controller
                 'contact_email' => $request->input('contact_email'),
                 'user_id' => $request->input('user_id'),
                 'account_category' => $request->input('account_category'),
-                'invoice_title' => $request->input('invoice_title'),
                 'taxid' => $request->input('taxid'),
                 'established_date' => $date,
                 'is_valid' => (int)$request->filled('is_valid') ? 1 : 0,
@@ -655,7 +654,7 @@ class SupplierController extends Controller
             if (!ValidationHelper::isValidText($request->input('is_valid'))) {
                 $errors1['is_valid_err'] = ' 是否有效不得為空字串或*';
             } 
-            
+
             //established_date為必填且須為年月日
             if (!$request->filled('established_date')) {
                 $errors1['established_date_err'] = '成立日期為必填';

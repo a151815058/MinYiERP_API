@@ -37,9 +37,7 @@ return new class extends Migration
             $table->string('contact_email')->comment(comment: '聯絡人信箱')->nullable();
             $table->string('user_id')->comment(comment: '業務人員')->nullable();
             $table->string('account_category',255)->comment(comment: '科目別')->nullable();
-            $table->string('invoice_title',100)->comment(comment: '發票抬頭');
             $table->string('taxid')->comment(comment: '統一編號');
-            $table->string('tax_type')->comment(comment: '課稅別')->nullable();
             $table->dateTime('established_date')->comment(comment: '成立時間');
             $table->string('is_valid')->comment('是否有效 0:失效 1:有效')->default(1);
             $table->string('create_user')->comment('建立人員')->default('admin');
