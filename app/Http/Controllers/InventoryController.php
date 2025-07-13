@@ -387,13 +387,12 @@ class InventoryController extends Controller
                     from inventory
                     where inventory.is_valid = '1'  
                     and ( inventory.inventory_no LIKE ? 
-                        OR inventory.inventory_nm LIKE ?
-                         OR inventory.lot_num LIKE ? )
+                        OR inventory.inventory_nm LIKE ?)
                     order by update_time,create_time asc
                     LIMIT ? OFFSET ?;";
             $likeKeyword = '%' . $keyword . '%';
 
-            $Inventory = DB::select($sql, [$likeKeyword, $likeKeyword, $likeKeyword, $pageSize, $offset]);
+            $Inventory = DB::select($sql, [$likeKeyword, $likeKeyword, $pageSize, $offset]);
 
             //取得總筆數與總頁數   
             $sql_count = "
@@ -401,12 +400,11 @@ class InventoryController extends Controller
                     from inventory
                     where inventory.is_valid = '1'  
                     and ( inventory.inventory_no LIKE ? 
-                        OR inventory.inventory_nm LIKE ?
-                        OR inventory.lot_num LIKE ? )
+                        OR inventory.inventory_nm LIKE ? )
                     order by update_time,create_time asc;
                 ";
             $stmt = $pdo->prepare($sql_count);
-            $stmt->execute([$likeKeyword, $likeKeyword,$likeKeyword]);
+            $stmt->execute([$likeKeyword, $likeKeyword]);
             $total = $stmt->fetchColumn();
             $totalPages = ceil($total / $pageSize); // 計算總頁數            
 
