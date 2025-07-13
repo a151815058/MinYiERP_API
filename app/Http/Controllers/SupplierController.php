@@ -527,7 +527,7 @@ class SupplierController extends Controller
             }
 
             //判斷郵遞區號二不能存在空白、""、''、"、'
-            if (ValidationHelper::isValidText($request->input('zipcode2'))) {
+            if (!ValidationHelper::isValidText($request->input('zipcode2'))) {
                 $errors1['zipcode2_err'] = '郵遞區號二不得為空字串或*';
             }    
 
