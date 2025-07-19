@@ -659,11 +659,11 @@ class SysuserController extends Controller
                             'create_time'   => $row['create_time'],
                             'update_user'   => $row['update_user'],
                             'update_time'   => $row['update_time'],
-                            'departments'   => [],
+                            'depts'   => [],
                         ];
                     }
 
-                    $groupedUsers[$userId]['departments'][] = [
+                    $groupedUsers[$userId]['depts'][] = [
                         'dept_id'  => $row['dept_id'],
                         'dept_no'  => $row['dept_no'],
                         'dept_nm'  => $row['dept_nm'],
