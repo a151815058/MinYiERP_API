@@ -130,8 +130,6 @@ class InvoiceInfoController extends Controller
             //發票起始號碼尾數需要為0
             if (substr($request->input('start_number'), -1) != '0') {
                 $errors1['start_number_err'] = '發票起始號碼尾數需要為0';
-            }else {
-                $request['start_number'] = $request['track_code'].$request['start_number'];
             }
 
             //發票截止號碼為必填欄位且須為8碼
@@ -145,17 +143,14 @@ class InvoiceInfoController extends Controller
             //發票截止號碼尾數需要為9
             if (substr($request->input('end_number'), -1) != '9') {
                 $errors1['end_number_err'] = '發票截止號碼尾數需要為9';
-            }else {
-                $request['end_number'] = $request['track_code'].$request['end_number'];
             }
-
             //通用日期起為必填欄位且須為西元年年月日格式
-            if (!$request->has(['effective_startdate']) || !preg_match('/^\d{4}\/(0?[1-9]|1[0-2])\/(0?[1-9]|[12][0-9]|3[01])$/', $request->input('effective_startdate'))) {
+            if (!$request->has(['effective_startdate']) || !preg_match('/^\d{4}[-\/](0?[1-9]|1[0-2])[-\/](0?[1-9]|[12][0-9]|3[01])$/', $request->input('effective_startdate'))) {
                 $errors1['effective_startdate_err'] = '通用日期起為必填且須為西元年年月日格式(例如：2025/01/01)';
             }
 
             //通用日期迄為選填欄位且須為西元年年月日格式
-            if ($request->has(['effective_enddate']) && !preg_match('/^\d{4}\/(0?[1-9]|1[0-2])\/(0?[1-9]|[12][0-9]|3[01])$/', $request->input('effective_startdate'))) {
+            if ($request->has(['effective_enddate']) && !preg_match('/^\d{4}[-\/](0?[1-9]|1[0-2])[-\/](0?[1-9]|[12][0-9]|3[01])$/', $request->input('effective_startdate'))) {
                 $errors1['effective_enddate_err'] = '通用日期迄須為西元年年月日格式(例如：2025/01/01)';
             }
 
@@ -339,8 +334,6 @@ class InvoiceInfoController extends Controller
             //發票起始號碼尾數需要為0
             if (substr($request->input('start_number'), -1) != '0') {
                 $errors1['start_number_err'] = '發票起始號碼尾數需要為0';
-            }else {
-                $request['start_number'] = $request['track_code'].$request['start_number'];
             }
 
             //發票截止號碼為必填欄位且須為8碼
@@ -354,17 +347,15 @@ class InvoiceInfoController extends Controller
             //發票截止號碼尾數需要為9
             if (substr($request->input('end_number'), -1) != '9') {
                 $errors1['end_number_err'] = '發票截止號碼尾數需要為9';
-            }else {
-                $request['end_number'] = $request['track_code'].$request['end_number'];
             }
 
             //通用日期起為必填欄位且須為西元年年月日格式
-            if (!$request->has(['effective_startdate']) || !preg_match('/^\d{4}\/(0?[1-9]|1[0-2])\/(0?[1-9]|[12][0-9]|3[01])$/', $request->input('effective_startdate'))) {
+            if (!$request->has(['effective_startdate']) || !preg_match('/^\d{4}[-\/](0?[1-9]|1[0-2])[-\/](0?[1-9]|[12][0-9]|3[01])$/', $request->input('effective_startdate'))) {
                 $errors1['effective_startdate_err'] = '通用日期起為必填且須為西元年年月日格式(例如：2025/01/01)';
             }
 
             //通用日期迄為選填欄位且須為西元年年月日格式
-            if ($request->has(['effective_enddate']) && !preg_match('/^\d{4}\/(0?[1-9]|1[0-2])\/(0?[1-9]|[12][0-9]|3[01])$/', $request->input('effective_startdate'))) {
+            if ($request->has(['effective_enddate']) && !preg_match('/^\d{4}[-\/](0?[1-9]|1[0-2])[-\/](0?[1-9]|[12][0-9]|3[01])$/', $request->input('effective_enddate'))) {
                 $errors1['effective_enddate_err'] = '通用日期迄須為西元年年月日格式(例如：2025/01/01)';
             }
 

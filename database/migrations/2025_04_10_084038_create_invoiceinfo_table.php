@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('period_start',6)->comment('期別_起');
             $table->string('period_end',6)->comment('期別_迄');
             $table->string('track_code',2)->comment('字軌代碼');
-            $table->string('start_number',8)->comment('發票起始號碼');
-            $table->string('end_number',8)->comment('發票截止號碼');
+            $table->string('start_number',10)->comment('發票起始號碼');
+            $table->string('end_number',10)->comment('發票截止號碼');
             $table->date('effective_startdate')->comment('適用起始日期');
             $table->date('effective_enddate')->comment('適用截止日期');
             $table->string('is_valid')->comment('是否有效 0:失效 1:有效')->default(1);
