@@ -602,8 +602,8 @@ class BillInfoController extends Controller
      */
     // 列出所有單據需要的常用(下拉、彈窗)
     public function showconst($constant='all'){
-        // 查詢 '單據管理' 的資料
-        $SysCode = SysCode::where('note', '單據管理')->where('is_valid','1')->get();
+        // 查詢 '單據類別' 的資料
+        $SysCode = SysCode::where('param_no', '11')->where('is_valid','1')->get();
         // 查詢 '單據類型=81' 的單據資料
         $BillType81 = BillInfo::where('bill_type', '81')->where('is_valid','1')->get();
         // 查詢 '單據類型=71' 的單據資料
@@ -612,7 +612,7 @@ class BillInfoController extends Controller
         $BillType51 = BillInfo::where('bill_type', '51')->where('is_valid','1')->get();
         try {
             // 檢查是否有結果
-            if ($SysCode->isEmpty() && $BillType81->isEmpty()) {
+            if ($SysCode->isEmpty() && $BillType81->isEmpty() && $BillType71->isEmpty() && $BillType51->isEmpty()) {
                 return response()->json([
                     'status' => true,
                     'message' => '常用資料未找到',
