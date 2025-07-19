@@ -623,7 +623,7 @@ class InvoiceInfoController extends Controller
 
 
             // 發票類型須存在於參數檔中
-            if ($invoice_type && !SysCode::where('param_sn', '05')->where('uuid', $invoice_type)->exists()) {
+            if (!$invoice_type && !SysCode::where('param_sn', '05')->where('uuid', $invoice_type)->exists()) {
                 return response()->json([
                     'status' => false,
                     'message' => '發票類型須存在於參數檔中'
