@@ -608,9 +608,9 @@ class SysuserController extends Controller
                     FROM sysuser_depts
                     left JOIN depts ON depts.`uuid` = sysuser_depts.dept_id  
                     WHERE sysusers.`uuid` = sysuser_depts.user_id
-                    and depts.uuid = ? OR ? IS NULL
+                    and (depts.uuid = ? OR ? IS NULL)
                     )
-                    and sysusers.user_no LIKE ? OR sysusers.user_nm LIKE ?
+                    and (sysusers.user_no LIKE ? OR sysusers.user_nm LIKE ?)
                 ";
                 $stmt = $pdo->prepare($sql_count);
                 $stmt->execute([$likeKeyword, $likeKeyword, $dept_id, $dept_id]);
