@@ -92,7 +92,8 @@ class InventoryController extends Controller
             // 建立庫別資料
             $Inventory = Inventory::create([
                 'uuid'                    => Str::uuid(),  // 自動生成 UUID
-                'inventory_no'             => $request['inventory_no'] ?? 0,
+                'inventory_no'             => $request['inventory_no'] ,
+                'inventory_nm'             => $request['inventory_nm'] ?? 0,
                 'note'                      => $request['note'] ?? null,
                 'is_valid'                 => $request['is_valid'],
                 'create_user'     => Auth::user()->username ?? 'admin',
