@@ -606,9 +606,8 @@ class SysuserController extends Controller
                     SELECT sysuser_depts.dept_id,
                         sysuser_depts.user_id
                     FROM sysuser_depts
-                    left JOIN depts ON depts.`uuid` = sysuser_depts.dept_id  
+                    left JOIN depts ON depts.`uuid` = sysuser_depts.dept_id  and (depts.uuid = ? OR ? IS NULL)
                     WHERE sysusers.`uuid` = sysuser_depts.user_id
-                    and (depts.uuid = ? OR ? IS NULL)
                     )
                     and (sysusers.user_no LIKE ? OR sysusers.user_nm LIKE ?)
                 ";
