@@ -600,8 +600,9 @@ class SysuserController extends Controller
             //取得總筆數與總頁數
             $sql_count = "
                     SELECT COUNT(*) as total
-                    FROM sysusers
+                  FROM sysusers
                     WHERE sysusers.is_valid = '1'
+                    and (sysusers.user_no LIKE ? OR sysusers.user_nm LIKE ?)
                     AND EXISTS (
                     SELECT sysuser_depts.dept_id,
                         sysuser_depts.user_id
@@ -609,7 +610,7 @@ class SysuserController extends Controller
                     left JOIN depts ON depts.`uuid` = sysuser_depts.dept_id  and (depts.uuid = ? OR ? IS NULL)
                     WHERE sysusers.`uuid` = sysuser_depts.user_id
                     )
-                    and (sysusers.user_no LIKE ? OR sysusers.user_nm LIKE ?)
+                    
                 ";
                 $stmt = $pdo->prepare($sql_count);
                 $stmt->execute([$likeKeyword, $likeKeyword, $dept_id, $dept_id]);
