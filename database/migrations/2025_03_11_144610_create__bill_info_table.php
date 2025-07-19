@@ -21,7 +21,7 @@ return new class extends Migration
             $table->integer('auto_review')->comment('是否自動核准 1:是 0:否');
             $table->string('gen_order')->comment('自動產生單據 1:自動 2:手動')->nullable();
             $table->string('gen_bill_type')->comment('產生單據類型[參數檔]')->nullable();
-            $table->integer('order_type')->comment('依照gen_bill_type動態產生欄位名稱')->nullable();
+            $table->string('order_type')->comment('依照gen_bill_type動態產生欄位名稱')->nullable();
             $table->string('note')->comment('備註')->nullable();
             $table->string('is_valid')->comment('是否有效 0:失效 1:有效')->default(1);
             $table->string('create_user')->comment('建立人員')->default('admin');

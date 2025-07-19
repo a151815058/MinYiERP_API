@@ -637,37 +637,65 @@ class SysuserController extends Controller
                     ORDER BY sysusers.user_no
                     LIMIT ? OFFSET ?
                     ;";      
-                $user = DB::select($sql_data, [$likeKeyword, $likeKeyword, $dept_id, $dept_id, $pageSize, $offset]);
+                $rawUsers = DB::select($sql_data, [$likeKeyword, $likeKeyword, $dept_id, $dept_id, $pageSize, $offset]);
 
-                //$user = SysUser::with('depts')
-                //->where('is_valid', '1')
-                //->where(function ($query) use ($likeKeyword) {
-                //    $query->where('user_no', 'like', $likeKeyword)
-                //          ->orWhere('user_nm', 'like', $likeKeyword);
-                //})
-                //->get(); 
-            
-            // 回應 JSON
-            if (!$user) {
-                return response()->json([
-                    'status' => true,
-                    'atPage' => $page,
-                    'total' => $total,
-                    'totalPages' => $totalPages,
-                    'message' => '未有效找到人員',
-                    'output'    => $user
-                ], status: 404);
-            }else {
-            // 回應 JSON
-                return response()->json([
-                    'status' => true,
-                    'atPage' => $page,
-                    'total' => $total,
-                    'totalPages' => $totalPages,
-                    'message' => 'success',
-                    'output'    => $user
+                // 將 stdClass 轉成 array（optional）
+                $users = json_decode(json_encode($rawUsers), true);
+
+                // 重組資料：以 user_id 分組，整合部門資料
+                $groupedUsers = [];
+
+                foreach ($users as $row) {
+                    $userId = $row['user_id'];
+
+                    if (!isset($groupedUsers[$userId])) {
+                        $groupedUsers[$userId] = [
+                            'user_id'       => $row['user_id'],
+                            'user_no'       => $row['user_no'],
+                            'user_nm'       => $row['user_nm'],
+                            'note'          => $row['note'],
+                            'is_valid'      => $row['is_valid'],
+                            'create_user'   => $row['create_user'],
+                            'create_time'   => $row['create_time'],
+                            'update_user'   => $row['update_user'],
+                            'update_time'   => $row['update_time'],
+                            'departments'   => [],
+                        ];
+                    }
+
+                    $groupedUsers[$userId]['departments'][] = [
+                        'dept_id'  => $row['dept_id'],
+                        'dept_no'  => $row['dept_no'],
+                        'dept_nm'  => $row['dept_nm'],
+                        'uuid'     => $row['uuid'],
+                        'is_valid' => $row['is_valid'],
+                        'note'     => $row['note'] ?? null,
+                    ];
+                }
+
+                // 轉成 array values 給前端（移除 user_id 為 key）
+                $output = array_values($groupedUsers);
+
+                // 回應 JSON
+                if (empty($output)) {
+                    return response()->json([
+                        'status' => true,
+                        'atPage' => $page,
+                        'total' => $total,
+                        'totalPages' => $totalPages,
+                        'message' => '未有效找到人員',
+                        'output' => []
+                    ], 404);
+                } else {
+                    return response()->json([
+                        'status' => true,
+                        'atPage' => $page,
+                        'total' => $total,
+                        'totalPages' => $totalPages,
+                        'message' => 'success',
+                        'output' => $output
                     ], 200);
-            }
+                }
         } catch (\Illuminate\Validation\ValidationException $e) {
             // 捕捉驗證失敗
             return response()->json([
