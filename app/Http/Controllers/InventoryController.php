@@ -67,28 +67,32 @@ class InventoryController extends Controller
     // 儲存庫別資料
     public function store(Request $request)
     {
+        $errors1 = [];
         try {
-            //必填欄位
-            if (!$request->has(['inventory_no', 'inventory_nm', 'is_valid'])) {
-                return response()->json([
-                    'status' => true,
-                    'message' => '缺少必要的欄位'
-                 ], 422);
+            //開立年月起為必填欄位
+            if (!$request->has(['inventory_no'])) {
+                $errors1['inventory_no_err'] = '庫別代號為必填';
             }
             //inventory_no為唯一值
             if (Inventory::where('inventory_no', $request->inventory_no)->exists()) {
-                return response()->json([
-                    'status' => true,
-                    'message' => '庫別代號已存在'
-                ], 422);
+                $errors1['inventory_no_err'] = '庫別代號已存在';
             }
+
+            // 如果有錯誤，回傳統一格式
+            if (!empty($errors1)) {
+                return response()->json([
+                    'status' => false,
+                    'message' => '缺少必填的欄位及欄位格式錯誤',
+                    'errors' => $errors1
+                ], 400);
+            }
+
 
 
             // 建立庫別資料
             $Inventory = Inventory::create([
                 'uuid'                    => Str::uuid(),  // 自動生成 UUID
-                'inventory_no'             => $request['inventory_no'],
-                'inventory_nm'             => $request['inventory_nm'],
+                'inventory_no'             => $request['inventory_no'] ?? 0,
                 'note'                      => $request['note'] ?? null,
                 'is_valid'                 => $request['is_valid'],
                 'create_user'     => Auth::user()->username ?? 'admin',
@@ -186,24 +190,26 @@ class InventoryController extends Controller
     public function update(Request $request)
     {
         try {
-            //必填欄位
-            if (!$request->has(['inventory_no', 'inventory_nm', 'is_valid'])) {
-                return response()->json([
-                    'status' => true,
-                    'message' => '缺少必要的欄位'
-                 ], 422);
+            //開立年月起為必填欄位
+            if (!$request->has(['inventory_no'])) {
+                $errors1['inventory_no_err'] = '庫別代號為必填';
             }
             //inventory_no為唯一值
             if (Inventory::where('inventory_no', $request->inventory_no)->exists()) {
-                return response()->json([
-                    'status' => true,
-                    'message' => '庫別代號已存在'
-                ], 422);
+                $errors1['inventory_no_err'] = '庫別代號已存在';
             }
 
-            // 查詢庫別資料
-            $Inventory = Inventory::findByInventoryNO($request['inventory_no'])->where('is_valid', '1')->first();
+            // 如果有錯誤，回傳統一格式
+            if (!empty($errors1)) {
+                return response()->json([
+                    'status' => false,
+                    'message' => '缺少必填的欄位及欄位格式錯誤',
+                    'errors' => $errors1
+                ], 400);
+            }
 
+            // 驗證 UUID 是否存在
+            $Inventory = Inventory::where('uuid', $request['uuid'])->where('is_valid','1')->first();
             if (!$Inventory) {
                 return response()->json([
                     'status' => true,
@@ -284,8 +290,8 @@ class InventoryController extends Controller
     public function showno($InventoryNO)
     {
         try{
-            $Inventory = Inventory::findByInventoryNO($InventoryNO)->where('is_valid', '1')->first();
-        
+            $Inventory = Inventory::where('is_valid', '1')->where('inventory_no', $InventoryNO)->first();
+
             if (!$Inventory) {
                  return response()->json([
                      'status' => false,
@@ -387,7 +393,7 @@ class InventoryController extends Controller
                     from inventory
                     where inventory.is_valid = '1'  
                     and ( inventory.inventory_no LIKE ? 
-                        OR inventory.inventory_nm LIKE ?)
+                        OR inventory.note LIKE ? )
                     order by update_time,create_time asc
                     LIMIT ? OFFSET ?;";
             $likeKeyword = '%' . $keyword . '%';
@@ -400,7 +406,7 @@ class InventoryController extends Controller
                     from inventory
                     where inventory.is_valid = '1'  
                     and ( inventory.inventory_no LIKE ? 
-                        OR inventory.inventory_nm LIKE ? )
+                        OR inventory.note LIKE ? )
                     order by update_time,create_time asc;
                 ";
             $stmt = $pdo->prepare($sql_count);
