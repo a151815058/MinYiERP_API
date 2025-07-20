@@ -646,11 +646,11 @@ class SysuserController extends Controller
                 $groupedUsers = [];
 
                 foreach ($users as $row) {
-                    $userId = $row['uuid'];
+                    $userId = $row['user_id'];
 
                     if (!isset($groupedUsers[$userId])) {
                         $groupedUsers[$userId] = [
-                            'uuid'          => $row['uuid'],
+                            'uuid'          => $row['user_id'],
                             'user_no'       => $row['user_no'],
                             'user_nm'       => $row['user_nm'],
                             'note'          => $row['note'],
