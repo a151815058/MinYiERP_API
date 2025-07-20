@@ -255,7 +255,6 @@ class SysuserController extends Controller
     // 更新人員資料
     public function update(Request $request, $id)
     {
-        $errors1 = [];
 
         $errors1 = [];
 
@@ -647,11 +646,11 @@ class SysuserController extends Controller
                 $groupedUsers = [];
 
                 foreach ($users as $row) {
-                    $userId = $row['user_id'];
+                    $userId = $row['uuid'];
 
                     if (!isset($groupedUsers[$userId])) {
                         $groupedUsers[$userId] = [
-                            'user_id'       => $row['user_id'],
+                            'uuid'          => $row['uuid'],
                             'user_no'       => $row['user_no'],
                             'user_nm'       => $row['user_nm'],
                             'note'          => $row['note'],
@@ -674,7 +673,7 @@ class SysuserController extends Controller
                     ];
                 }
 
-                // 轉成 array values 給前端（移除 user_id 為 key）
+                // 轉成 array values 給前端（移除 uuid 為 key）
                 $output = array_values($groupedUsers);
 
                 // 回應 JSON
