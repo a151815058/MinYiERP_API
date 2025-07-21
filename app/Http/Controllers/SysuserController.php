@@ -609,8 +609,7 @@ class SysuserController extends Controller
                     inner JOIN depts ON depts.`uuid` = sysuser_depts.dept_id  and (depts.uuid = ? OR ? IS NULL)
                     WHERE sysusers.`uuid` = sysuser_depts.user_id
                     )
-                    
-                ";
+                    ";
                 $stmt = $pdo->prepare($sql_count);
                 $stmt->execute([$likeKeyword, $likeKeyword, $dept_id, $dept_id]);
                 $total = $stmt->fetchColumn();
@@ -626,14 +625,17 @@ class SysuserController extends Controller
                 $sql_data = "select  *
                     FROM sysusers
                     INNER JOIN sysuser_depts ON sysuser_depts.user_id = sysusers.`uuid`
-                    INNER JOIN depts ON depts.`uuid` = sysuser_depts.dept_id
                     WHERE sysusers.is_valid = '1'
                     AND (
                         sysusers.user_no LIKE ? OR sysusers.user_nm LIKE ?
-                    )
-                    AND (
-                        depts.uuid = ? OR ? IS NULL
-                    )
+                        )
+                    AND exists  (
+                        SELECT 'x'
+                        FROM  sysuser_depts  
+                        INNER JOIN depts ON depts.`uuid` = sysuser_depts.dept_id
+                        WHERE ( depts.uuid = ? OR ? IS NULL)
+                            AND sysuser_depts.user_id = sysusers.`uuid`
+                        )
                     ORDER BY sysusers.user_no
                     LIMIT ? OFFSET ?
                     ;";      
