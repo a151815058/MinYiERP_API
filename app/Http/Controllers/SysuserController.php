@@ -625,6 +625,7 @@ class SysuserController extends Controller
                 $sql_data = "select  *
                     FROM sysusers
                     INNER JOIN sysuser_depts ON sysuser_depts.user_id = sysusers.`uuid`
+                    left join depts ON depts.uuid = sysuser_depts.dept_id
                     WHERE sysusers.is_valid = '1'
                     AND (
                         sysusers.user_no LIKE ? OR sysusers.user_nm LIKE ?
