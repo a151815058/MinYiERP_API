@@ -253,7 +253,7 @@ class SysuserController extends Controller
      * )
      */
     // 更新人員資料
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
 
         $errors1 = [];
