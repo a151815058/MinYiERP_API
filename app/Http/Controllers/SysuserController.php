@@ -608,6 +608,7 @@ class SysuserController extends Controller
                     FROM sysuser_depts
                     inner JOIN depts ON depts.`uuid` = sysuser_depts.dept_id  and (depts.uuid = ? OR ? IS NULL)
                     WHERE sysusers.`uuid` = sysuser_depts.user_id
+                    and depts.is_valid = '1'
                     )
                     ";
                 $stmt = $pdo->prepare($sql_count);
@@ -636,6 +637,7 @@ class SysuserController extends Controller
                         INNER JOIN depts ON depts.`uuid` = sysuser_depts.dept_id
                         WHERE ( depts.uuid = ? OR ? IS NULL)
                             AND sysuser_depts.user_id = sysusers.`uuid`
+                            and depts.is_valid = '1'
                         )
                     ORDER BY sysusers.user_no
                     LIMIT ? OFFSET ?
