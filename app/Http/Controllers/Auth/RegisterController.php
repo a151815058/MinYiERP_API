@@ -49,7 +49,7 @@ class RegisterController extends Controller
     {
         $errors1 = [];
         //使用者名稱為必填欄位
-        if (!$request->has('username')) {
+        if (!$request->filled('username')) {
             $errors1['username_err'] = '使用者名稱為必填欄位';
         }
         // 使用者帳號不能重複
@@ -58,23 +58,23 @@ class RegisterController extends Controller
         }
 
         // 使用者帳號必填欄位
-        if (!$request->has('useraccount') ) {
+        if (!$request->filled('useraccount') ) {
             $errors1['useraccount_err'] = '使用者帳號為必填欄位';
         }
 
         //密碼為必填欄位
-        if (!$request->has('password')) {
+        if (!$request->filled('password')) {
             $errors1['password_err'] = '密碼為必填欄位';
         }
 
         //信箱為必填欄位
-        if (!$request->has('mail')) {
+        if (!$request->filled('mail')) {
             $errors1['mail_err'] = '信箱為必填欄位';
         }
 
 
         // 信箱須符合格式
-        if ($request->has('mail') && !filter_var($request->mail, FILTER_VALIDATE_EMAIL)) {
+        if ($request->filled('mail') && !filter_var($request->mail, FILTER_VALIDATE_EMAIL)) {
             $errors1['mail_err'] = '信箱格式不正確';
         }
 
