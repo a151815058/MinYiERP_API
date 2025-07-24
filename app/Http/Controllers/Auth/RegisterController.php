@@ -47,8 +47,25 @@ class RegisterController extends Controller
      */
     public function register(Request $request)
     {
+        //使用者名稱為必填欄位
+        if (!$request->has('username')) {
+            return response()->json([
+                'status' => false,
+                'message' => '使用者名稱為必填欄位',
+                'data' => []
+            ], 422);
+        }
+        // 使用者帳號不能重複
+        if (User::where('useraccount', $request->useraccount)->exists()) {
+            return response()->json([
+                'status' => false,
+                'message' => '使用者帳號已存在',
+                'data' => []
+            ], 422);
+        }
+
         // 使用者帳號和密碼為必填欄位
-        if (!$request->has('username') || !$request->has('password')) {
+        if (!$request->has('useraccount') || !$request->has('password')) {
             return response()->json([
                 'status' => false,
                 'message' => '帳號和密碼為必填欄位',
@@ -57,13 +74,14 @@ class RegisterController extends Controller
         }
 
         //信箱為必填欄位
-        if (!$request->has('useraccount')) {
+        if (!$request->has('mail')) {
             return response()->json([
                 'status' => false,
-                'message' => '使用者帳號為必填欄位',
+                'message' => '信箱為必填欄位',
                 'data' => []
             ], 422);
         }
+
 
         // 信箱須符合格式
         if ($request->has('mail') && !filter_var($request->mail, FILTER_VALIDATE_EMAIL)) {
