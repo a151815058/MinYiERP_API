@@ -49,48 +49,38 @@ class RegisterController extends Controller
     {
         //使用者名稱為必填欄位
         if (!$request->has('username')) {
-            return response()->json([
-                'status' => false,
-                'message' => '使用者名稱為必填欄位',
-                'data' => []
-            ], 422);
+            $errors1['username_err'] = '使用者名稱為必填欄位';
         }
         // 使用者帳號不能重複
         if (User::where('useraccount', $request->useraccount)->exists()) {
-            return response()->json([
-                'status' => false,
-                'message' => '使用者帳號已存在',
-                'data' => []
-            ], 422);
+            $errors1['useraccount_err'] = '使用者帳號已存在';
         }
 
         // 使用者帳號和密碼為必填欄位
         if (!$request->has('useraccount') || !$request->has('password')) {
-            return response()->json([
-                'status' => false,
-                'message' => '帳號和密碼為必填欄位',
-                'data' => []
-            ], 422);
+            $errors1['useraccount_err'] = '使用者帳號為必填欄位';
+            $errors1['password_err'] = '密碼為必填欄位';
         }
 
         //信箱為必填欄位
         if (!$request->has('mail')) {
-            return response()->json([
-                'status' => false,
-                'message' => '信箱為必填欄位',
-                'data' => []
-            ], 422);
+            $errors1['mail_err'] = '信箱為必填欄位';
         }
 
 
         // 信箱須符合格式
         if ($request->has('mail') && !filter_var($request->mail, FILTER_VALIDATE_EMAIL)) {
+            $errors1['mail_err'] = '信箱格式不正確';
+        }
+
+        // 如果有錯誤，回傳統一格式
+        if (!empty($errors1)) {
             return response()->json([
                 'status' => false,
-                'message' => '電子郵件格式不正確',
-                'data' => []
-            ], 422);
-        }
+                'message' => '缺少必填的欄位及欄位格式錯誤',
+                'errors' => $errors1
+            ], 400);
+            }        
 
         $user = User::create([
             'id' => Str::uuid(),
