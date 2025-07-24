@@ -38,8 +38,12 @@ class LoginController extends Controller
     {
         $captcha = Captcha::create('default', true); // 第二參數 true 表示回傳 base64
         return response()->json([
-            'captcha_img' => $captcha['img'], // base64 圖片
-            'key' => $captcha['key']          // Laravel session 裡會對應此 key
+            'status' => true,
+            'message' => '取得驗證碼成功',
+            'output' => [
+                'captcha_img' => $captcha['img'], // base64 圖片
+                'key' => $captcha['key']          // Laravel session 裡會對應此 key
+            ]
         ]);
     }
     /**
