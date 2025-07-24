@@ -47,6 +47,7 @@ class RegisterController extends Controller
      */
     public function register(Request $request)
     {
+        $errors1 = [];
         //使用者名稱為必填欄位
         if (!$request->has('username')) {
             $errors1['username_err'] = '使用者名稱為必填欄位';
@@ -56,9 +57,13 @@ class RegisterController extends Controller
             $errors1['useraccount_err'] = '使用者帳號已存在';
         }
 
-        // 使用者帳號和密碼為必填欄位
-        if (!$request->has('useraccount') || !$request->has('password')) {
+        // 使用者帳號必填欄位
+        if (!$request->has('useraccount') ) {
             $errors1['useraccount_err'] = '使用者帳號為必填欄位';
+        }
+
+        //密碼為必填欄位
+        if (!$request->has('password')) {
             $errors1['password_err'] = '密碼為必填欄位';
         }
 
