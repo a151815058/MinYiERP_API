@@ -56,6 +56,24 @@ class RegisterController extends Controller
             ], 422);
         }
 
+        //信箱為必填欄位
+        if (!$request->has('useraccount')) {
+            return response()->json([
+                'status' => false,
+                'message' => '使用者帳號為必填欄位',
+                'data' => []
+            ], 422);
+        }
+
+        // 信箱須符合格式
+        if ($request->has('mail') && !filter_var($request->mail, FILTER_VALIDATE_EMAIL)) {
+            return response()->json([
+                'status' => false,
+                'message' => '電子郵件格式不正確',
+                'data' => []
+            ], 422);
+        }
+
         $user = User::create([
             'id' => Str::uuid(),
             'username' => $request->username,
