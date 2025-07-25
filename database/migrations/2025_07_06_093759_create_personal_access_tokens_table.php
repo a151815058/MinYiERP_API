@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('personal_access_tokens', function (Blueprint $table) {
             $table->bigIncrements('id')->comment('ID');
-            $table->string(column: 'tokenable_type')->comment('tokenable_type')->unique();
+            $table->string(column: 'tokenable_type')->comment('tokenable_type');
             $table->string('tokenable_id',255)->comment('tokenable_id');
             $table->string('name')->comment('name');
             $table->string('token',255)->comment('token');
