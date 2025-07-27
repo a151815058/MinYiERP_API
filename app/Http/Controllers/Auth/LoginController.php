@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Mews\Captcha\Facades\Captcha;
+use Illuminate\Support\Facades\DB;
 class LoginController extends Controller
 {
     /**
@@ -109,12 +110,62 @@ class LoginController extends Controller
         if ($user && password_verify($request->password, $user->password_hash)) {
             // user寫入remember_token
             $user->remember_token = $user->createToken('auth_token')->plainTextToken;
-            // 如果驗證成功，登入使用者
-            Auth::login($user,$remember = true);
+
+            // 取得使用者角色和菜單資料
+            $sql_data = "SELECT user.id as user_id,
+                        user.useraccount ,
+                        user.remember_token,
+                        role.`code` as role_code,
+                        sysmenu.uuid,
+                        sysmenu.no_prog,
+                        sysmenu.nm_text,
+                        sysmenu.gn_url
+                    FROM user
+                    INNER JOIN user_roles ON user_roles.user_id = user.id
+                    INNER JOIN role ON role.`uuid` = user_roles.role_id
+                    INNER JOIN role_menus ON role_menus.role_id = role.`uuid`
+                    INNER JOIN sysmenu ON sysmenu.`uuid` = role_menus.menu_id
+                    WHERE user.id = ?";
+            $user_payload = DB::select($sql_data, [$user->id]);
+
+            // 將使用者資料寫入 session
+            session(['user' => $user]);
+            // 將 stdClass 轉成 array（optional）
+            $users = json_decode(json_encode($user_payload), true);
+
+                // 重組資料：以 user_id 分組，整合部門資料
+                $groupedUsers = [];
+
+                foreach ($users as $row) {
+                    $userId = $row['user_id'];
+
+                    if (!isset($groupedUsers[$userId])) {
+                        $groupedUsers[$userId] = [
+                            'uuid'          => $row['user_id'],
+                            'user_no'       => $row['useraccount'],
+                            'remember_token'       => $row['remember_token'],
+                            'role_code'          => $row['role_code'],
+                            'sysmenu'   => [],
+                        ];
+                    }
+
+                    $groupedUsers[$userId]['sysmenu'][] = [
+                        'menu_id'     => $row['uuid'],
+                        'no_prog'     => $row['no_prog'],
+                        'nm_text'     => $row['nm_text'],
+                        'gn_url'      => $row['gn_url']
+                    ];
+                }
+
+            // 轉成 array values 給前端（移除 uuid 為 key）
+            $output = array_values($groupedUsers);
+
+            // 登入使用者
+            Auth::login($user, $remember = true);
             return response()->json([
                 'status' => true,
                 'message' => '登入成功',
-                'output' => $user
+                'output' => $output
             ])->setStatusCode(200);
 
         }else{
