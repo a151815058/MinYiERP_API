@@ -23,7 +23,7 @@ return new class extends Migration
 
             // 設定外鍵約束
             $table->foreign('role_id')->references('uuid')->on('role')->onDelete('cascade');
-            $table->foreign('user_id')->references('uuid')->on('sysusers')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('user')->onDelete('cascade');
 
             // 避免同樣的 user-role 兩次重複
             $table->unique(['role_id', 'user_id']);
