@@ -110,6 +110,7 @@ class LoginController extends Controller
         if ($user && password_verify($request->password, $user->password_hash)) {
             // user寫入remember_token
             $user->remember_token = $user->createToken('auth_token')->plainTextToken;
+            $user->save();
 
             // 取得使用者角色和菜單資料
             $sql_data = "SELECT user.id as user_id,
