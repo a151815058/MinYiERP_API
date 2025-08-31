@@ -85,7 +85,7 @@ class RegisterController extends Controller
                 'message' => '缺少必填的欄位及欄位格式錯誤',
                 'errors' => $errors1
             ], 400);
-            }        
+        }        
 
         $user = User::create([
             'id' => Str::uuid(),

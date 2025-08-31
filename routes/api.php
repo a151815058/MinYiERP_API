@@ -14,14 +14,18 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\InvoiceInfoController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\OrderController;
-use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\RegisterController;
 
 
 //登入帳號密碼相關  API
-Route::post('/verifyuser', [LoginController::class, 'verifyuser']); // 驗證登入帳號密碼
-Route::post('/logout', [LoginController::class, 'logout']); // 登出
-Route::get('/getcaptcha', [LoginController::class, 'captcha']); // 取得驗證碼
+Route::get('/getcaptcha', [AuthController::class, 'captcha']); // 取得驗證碼
+
+Route::post('/auth/login',   [AuthController::class, 'login']); // 登入
+Route::get('/auth/refresh', [AuthController::class, 'refresh']); // 重新整理 Token
+Route::get('/auth/logout',  [AuthController::class, 'logout']); // 登出
+
+Route::post('/me/menus', [AuthController::class, 'meMenus']);
 Route::post('/RegisterAccount', [RegisterController::class, 'register']); // 註冊帳號密碼
 
 Route::middleware(['auth', 'menu.permission:SYS005'])->group(function () {

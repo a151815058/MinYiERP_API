@@ -592,49 +592,26 @@
                 "tags": [
                     "base_auth"
                 ],
-                "summary": "取得驗證碼",
-                "description": "取得驗證碼",
-                "operationId": "getcaptcha",
+                "summary": "取得驗證碼（base64 + key）",
+                "operationId": "b9ea6016d6af4d996868585eefbf6724",
                 "responses": {
                     "200": {
-                        "description": "成功",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "captcha_img": {
-                                            "type": "string",
-                                            "example": "data:image/png;base64,iVBORw0K..."
-                                        },
-                                        "key": {
-                                            "type": "string",
-                                            "example": "f2bb62f0fae1f8b935d..."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "201": {
-                        "description": "取得驗證碼失敗"
+                        "description": "OK"
                     }
                 }
             }
         },
-        "/api/verifyuser": {
+        "/api/auth/login": {
             "post": {
                 "tags": [
                     "base_auth"
                 ],
-                "summary": "驗證登入帳號密碼",
-                "description": "驗證登入帳號密碼",
-                "operationId": "verifyuser",
+                "summary": "登入（簽發 Access Token、設定 Refresh Token Cookie）",
+                "operationId": "535ffeda4b78916efd658b2844ea897a",
                 "parameters": [
                     {
                         "name": "useraccount",
                         "in": "query",
-                        "description": "使用者名稱",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -643,7 +620,6 @@
                     {
                         "name": "password",
                         "in": "query",
-                        "description": "密碼",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -652,7 +628,6 @@
                     {
                         "name": "captcha_input",
                         "in": "query",
-                        "description": "驗證碼",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -661,7 +636,66 @@
                     {
                         "name": "captcha_key",
                         "in": "query",
-                        "description": "驗證碼 Key",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "remember",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/auth/refresh": {
+            "get": {
+                "tags": [
+                    "base_auth"
+                ],
+                "summary": "用 Cookie 中的 RT 兌換新的 AT（旋轉 RT）",
+                "operationId": "44a8b7df2a40a89bf2ca4fd8f53909c1",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/auth/logout": {
+            "get": {
+                "tags": [
+                    "base_auth"
+                ],
+                "summary": "登出（撤銷當前 RT、清 Cookie）",
+                "operationId": "8e5dc3654b57a13f0272f04962926281",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/me/menus": {
+            "post": {
+                "tags": [
+                    "base_auth"
+                ],
+                "summary": "依 Access Token 取得當前使用者選單",
+                "operationId": "be520082845c782f400f8eb75134806c",
+                "parameters": [
+                    {
+                        "name": "access_token",
+                        "in": "query",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -670,51 +704,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "成功",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "uuid": {
-                                            "type": "string",
-                                            "example": "0b422f02-5acf-4bbb-bddf-4f6fdd843b08"
-                                        },
-                                        "useraccount": {
-                                            "type": "string",
-                                            "example": "wendyyao"
-                                        },
-                                        "password_hash": {
-                                            "type": "string",
-                                            "example": "$2y$10$xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-                                        },
-                                        "is_valid": {
-                                            "type": "string",
-                                            "example": "1"
-                                        },
-                                        "create_user": {
-                                            "type": "string",
-                                            "example": "admin"
-                                        },
-                                        "update_user": {
-                                            "type": "string",
-                                            "example": "admin"
-                                        },
-                                        "create_time": {
-                                            "type": "string",
-                                            "example": "2025-03-31T08:58:52.001975Z"
-                                        },
-                                        "update_time": {
-                                            "type": "string",
-                                            "example": "2025-03-31T08:58:52.001986Z"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "201": {
-                        "description": "驗證帳號密碼失敗"
+                        "description": "OK"
                     }
                 }
             }
